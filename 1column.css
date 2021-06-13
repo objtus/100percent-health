@@ -1,0 +1,265 @@
+/*===================
+ 全体への装飾
+===================*/
+* {
+  margin: 0;
+  padding: 0 0rem;
+}
+
+body {
+  font: 400 14px/16px "PicoA", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  font-feature-settings: "palt"1;
+  overflow-wrap: break-word;
+}
+
+::-moz-selection {
+  color: #ffffff;
+  background-color: rgb(0, 0, 255);
+}
+
+::selection {
+  color: #ffffff;
+  background-color: rgb(0, 0, 255);
+}
+
+a {
+  color: #000000;
+}
+
+a:hover {
+  color: #ffffff;
+  background-color: #000000;
+}
+
+a:hover img{
+  background-color: none;
+  text-indent: 100%;
+}
+
+img {
+  padding: 0 0;
+  image-rendering: pixelated;
+  width: 70%;
+  min-width: 250px;
+}
+
+iframe {
+  width: 80%;
+  margin: 0 auto;
+  border: none;
+}
+
+/*===================
+  wrapperBlock
+===================*/
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  border: 40px solid;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+/*===================
+  headerBlock
+===================*/
+#header {
+  background-color: white;
+  border-bottom: solid 2px;
+  border-color: black;
+}
+
+#header-flex {
+  display: flex;
+  width: 100%
+}
+
+a#backicon, a.addressbar {
+  color: #000000;
+  overflow: auto;
+  text-decoration: none;
+}
+
+a#backicon:hover, a.addressbar:hover {
+  background-color: transparent;
+}
+
+#back, #address {
+  font-size: large;
+  font-weight: bold;
+  line-height: 2rem;
+}
+
+#back {
+  margin: 0.8rem 10% 12px 0;
+}
+
+#address {
+  margin: 12px 0 12px 0;
+}
+
+/*===================
+ mainBlock
+===================*/
+#main {
+  background-color: white;
+  margin-left: 10%;
+}
+
+#galleryspace {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.caption a:hover{
+  text-decoration: underline;
+}
+
+.date {
+  display: inline-block;
+  /* background-color: rgba(0, 0, 255, 255);*/
+  font-size: 0.8em;
+  color: #ddd;
+  margin-bottom: 20px;
+}
+
+@media screen and (min-width:435px) {
+  .date {
+    margin-left: calc(70% - 64px);
+  }
+}
+
+@media screen and (max-width:435px) {
+  .date {
+    margin-left: 186px;
+  }
+}
+
+#galleryhtml {
+  width: calc(70% - 20px);
+  border-top: solid 1px;
+  margin: 30px 0 0 20px;
+}
+
+.boxes a{
+  text-decoration: none;
+}
+
+/*===================
+  linksBlock
+===================*/
+#foot_links{
+  font-size: 0.8em;
+  margin: 80px 0 -10px 10%;
+}
+
+#foot_links a{
+  text-decoration: none;
+}
+
+#social_links{
+  text-indent: -0.6em;
+  padding-left: 0.6em;
+  margin-bottom: 30px;
+}
+
+#social_links p::before{
+  content: '♥';
+  display: inline-block;
+}
+
+
+
+#banner200-40, #banner88-31{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#mybanner{
+  border-bottom: 1px solid;
+  width: calc(70% - 20px);
+  margin-bottom: 20px;
+}
+
+div.banner200-40 img{
+  width: 200px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  min-width: inherit;
+}
+
+div.banner88-31 img{
+  width: 88px;
+  padding-right: 0;
+  padding-bottom: 0;
+  min-width: inherit;
+}
+
+
+/*===================
+  footerBlock
+===================*/
+#footer {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  width: 100%;
+  background-color: none;
+}
+
+#foot_comment {
+  display: inline;
+  font-size: 0.8;
+  margin-top: 23px;
+}
+
+.logo::before {
+  content: '';
+  display: inline-block;
+  width: 35px;
+  height: 12px;
+  background-image: url(heart_3.webp);
+  background-repeat: no-repeat;
+  background-size: contain;
+  vertical-align: right;
+  image-rendering: pixelated;
+}
+
+#logo_footer {
+  width: 35px;
+  min-width: 35px;
+  padding: 0;
+}
+/*===================
+  @media
+===================*/
+
+@media screen and (max-width: 1024px) {
+/* 1024pxまでの幅の場合に適応される */
+
+}
+@media screen and (max-width: 768px) {
+/* 768pxまでの幅の場合に適応される */
+
+}
+@media screen and (max-width: 480px) {
+/* 480pxまでの幅の場合に適応される */
+  #banner200-40{
+    flex-direction: column;
+  }
+
+}
+@media screen and (max-width: 320px) {
+/* 320pxまでの幅の場合に適応される */
+  #wrapper{
+    border: none;
+  }
+
+  #foot_links{
+    display:flex;
+    flex-direction: column;
+  }
+}
