@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>gallery</title>
+  <link rel="stylesheet" href="../style.css">
+  <script type="text/javascript">
+    window.onload = function() {
+        var height = document.getElementsByTagName("html")[0].scrollHeight;
+        window.parent.postMessage(["setHeight_gallery", height], "*");
+    }
+  </script>
+</head>
+<body>
+<p>template</p>
+<p>
+  <iframe
+    id="iframe_gallery"
+    class="iframe"
+    src="gallery/gallery.html"
+    height="auto">
+  </iframe>
+  <br>
+  iframeタグのidを変更し、子、親のscriptをコピー、適宜変数を変えよ。また、cssでiframeのボーダーを消すこと。
+  <a href="https://tomoosuzuki.blogspot.com/2016/08/iframe.html">これを参照のこと。</a>
+
+</p>
+</body>
+</html>
