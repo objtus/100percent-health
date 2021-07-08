@@ -28,12 +28,13 @@ a {
 
 a:hover {
   color: #ffffff;
-  background-color: #000000;
+  background-color: black;
+
 }
 
-a:hover img{
-  background-color: none;
-  text-indent: 100%;
+a img {
+  vertical-align: sub;
+  font-size: 0pt;
 }
 
 img {
