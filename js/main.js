@@ -2,6 +2,7 @@ $(function() {
 $("#galleryhtml").load("/include/gallery.html");
 $("#workshtml").load("/include/works.html");
 $("#footerhtml").load("/include/footer.html");
+$("#headerhtml").load("/include/header.html");
 $("#accesscounterhtml").load("/include/accesscounter.html");
 $("#last_updatedhtml").load("/include/last_updated.html");
 });
@@ -23,6 +24,11 @@ function header(){
   head +=    '<a class="addressbar" href="../gallery_main.html">';
   head +=     'gallery ';
   head +=    '</a>/ ';
+  let str = document.getElementById("parentFile");
+  if (str === null) {
+}else{
+  head +=    '<a class="addressbar" href="' + str.textContent.replace(' / ', '') + '.html">' + str.textContent;
+}
   head +=    '<a class="addressbar" href="' + getPageTitle.replace(' - 100%health', '') + '.html">';
   head +=     getPageTitle.replace(' - 100%health', '');
   head +=    '</a>';
