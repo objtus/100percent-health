@@ -117,6 +117,10 @@ a#backicon:hover, a.addressbar:hover {
   text-decoration: underline;
 }
 
+summary {
+  cursor: pointer;
+}
+
 .date {
   display: inline-block;
   /* background-color: rgba(0, 0, 255, 255);*/
