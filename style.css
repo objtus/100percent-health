@@ -3,8 +3,30 @@
   padding: 0 0rem;
 }
 
+@font-face {
+  font-family: "saitamaar_light";
+  src: url("saitamaar_light.woff2") format("woff2"),
+    url("saitamaar_light.woff") format("woff"),
+    url("saitamaar_light.ttf") format("ttf");
+  font-display: swap;
+}
+
+.saitamaar_light {
+  font-family: "saitamaar_light";
+  white-space: pre;
+  font-size: 16px;
+  line-height: 18px;
+}
+
 body {
-  font: 400 14px/16px "PicoA", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  /*===================
+  font: 400 14px/16px "MS Pゴシック", "PicoA", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  font-feature-settings: "palt"1;
+    ===================*/
+  line-height: 16px;
+  font-weight: normal; 
+  font-family: "saitamaar_light", 'PikoA', "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  letter-spacing:-0.04em;
   font-feature-settings: "palt"1;
   overflow-wrap: break-word;
 }
