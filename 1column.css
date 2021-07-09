@@ -267,6 +267,13 @@ div.banner88-31 img{
 }
 @media screen and (max-width: 480px) {
 /* 480pxまでの幅の場合に適応される */
+  #wrapper {
+    border: 20px solid;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+  }
+
   #banner200-40{
     flex-direction: column;
   }
