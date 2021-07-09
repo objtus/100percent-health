@@ -18,12 +18,19 @@
     </script>
     <div id="main">
       <div id="galleryspace">
-        <img src="../../img/original/oc2_5.png" alt="original character illust">
+        <a href="../../img/original/oc2_5.png"><img src="../../img/original/oc2_5.png" alt="original character illust"></a>
         <p class="title"></p>
         <p class="caption">
 
         </p>
         <p class="date">>2020-02-13</p>
+        <nav class='arrow'>
+          <a class="uparrow" href="oc1.html">^</a>
+          <nav class='rowarrow'>
+            <br><a class="leftarrow" href="oc2_5.html" style="">&lt;</a>
+            <br><a class="rightarrow" href="oc2_7.html" style="">&gt;</a>
+          </nav>
+        </nav>
       </div>
       <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
       <div id="galleryhtml"></div>
@@ -31,6 +38,12 @@
     <!-- main.jsから#footerへfooter.htmlの挿入 -->
     <div id="footerhtml"></div>
   </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="/luminous-basic.min.css">
+    <script src="/luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
 </body>
 
 </html>

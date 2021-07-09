@@ -18,7 +18,7 @@
     </script>
     <div id="main">
       <div id="galleryspace">
-        <img src="../../img/original/ao-chan.jpg" alt="ao">
+        <a href="../../img/original/ao-chan.jpg"><img src="../../img/original/ao-chan.jpg" alt="ao"></a>
         <p class="title">ao-chan#1</p>
         <p class="caption">
           <details>
@@ -29,7 +29,7 @@
           </details>
         </p>
         <p class="date">>2018-07-25</p>
-        <img src="../../img/original/ao-chan-gif.gif" alt="aogif">
+        <a href="../../img/original/ao-chan-gif.gif"><img src="../../img/original/ao-chan-gif.gif" alt="aogif"></a>
         <p class="title">ao-chan#2</p>
         <p class="caption">
           <details>
@@ -44,6 +44,13 @@
     </div>
     <!-- main.jsから#footerへfooter.htmlの挿入 -->
     <div id="footerhtml"></div>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="/luminous-basic.min.css">
+    <script src="/luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
   </div>
 </body>
 
