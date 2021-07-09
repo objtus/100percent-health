@@ -17,7 +17,7 @@
     </script>
     <div id="main">
       <div id="galleryspace">
-        <img src="../../img/original/フライヤー.png" alt="stilldreamingflyer">
+        <a href="../../img/original/フライヤー.png"><img src="../../img/original/フライヤー.png" alt="stilldreamingflyer"></a>
         <p class="title"></p>
         <p class="caption">
         </p>
@@ -26,7 +26,7 @@
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         <iframe style="border: 0; width: 70%; height: 120px;" src="https://bandcamp.com/EmbeddedPlayer/album=611022987/size=large/bgcol=ffffff/linkcol=333333/tracklist=false/artwork=none/transparent=true/" seamless><a
             href="https://happyender-girl.bandcamp.com/album/210411">21.04.11 by (ex.) happyender girl</a></iframe>
-        <img src="../../img/original/21​.​04​.​11.jpg" alt="ap2001">
+        <a href="../../img/original/21​.​04​.​11.jpg"><img src="../../img/original/21​.​04​.​11.jpg" alt="ap2001"></a>
         <p class="title"></p>
         <p class="caption">
           蝉暮せせせと初音ミクからなる音楽サークルex. happyender girlによるYouTube Live"still dreaming (hour) vol.0"にアートワークを提供しました。</br>
@@ -39,6 +39,14 @@
     </div>
     <!-- main.jsから#footerへfooter.htmlの挿入 -->
     <div id="footerhtml"></div>
+    <div id="lightbox">
+      <link rel="stylesheet" href="/luminous-basic.min.css">
+      <script src="/luminous.min.js"></script>
+      <script>
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      </script>
+    </div>
+
   </div>
 </body>
 

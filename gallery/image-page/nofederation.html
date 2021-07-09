@@ -17,7 +17,7 @@
     </script>
     <div id="main">
       <div id="galleryspace">
-        <img src="../../img/original/albumart_original-min.webp" alt="att13">
+        <a href="../../img/original/albumart_original-min.webp"><img src="../../img/original/albumart_original-min.webp" alt="att13"></a>
         <p class="title"></p>
         <p class="caption">
           <iframe style="border: 0; width: 70%; height: 373px;" src="https://bandcamp.com/EmbeddedPlayer/album=3150324076/size=large/bgcol=ffffff/linkcol=333333/artwork=none/transparent=true/" seamless><a
@@ -32,6 +32,13 @@
     </div>
     <!-- main.jsから#footerへfooter.htmlの挿入 -->
     <div id="footerhtml"></div>
+    <div id="lightbox">
+      <link rel="stylesheet" href="/luminous-basic.min.css">
+      <script src="/luminous.min.js"></script>
+      <script>
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+      </script>
+    </div>
   </div>
 </body>
 
