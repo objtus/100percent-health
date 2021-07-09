@@ -27,6 +27,10 @@ body {
   overflow-wrap: break-word;
 }
 
+img{
+  image-rendering: pixelated;
+}
+
 ::-moz-selection {
   color: #ffffff;
   background-color: rgb(0, 0, 255);
@@ -50,13 +54,6 @@ a:hover {
 a img {
   vertical-align: sub;
   font-size: 0pt;
-}
-
-img {
-  padding: 0 0;
-  image-rendering: pixelated;
-  width: 70%;
-  min-width: 250px;
 }
 
 iframe {
@@ -129,6 +126,13 @@ a#backicon:hover, a.addressbar:hover {
   margin-top: 30px;
 }
 
+div#galleryspace > a > img {
+  padding: 0 0;
+  image-rendering: pixelated;
+  width: 70%;
+  min-width: 250px;
+}
+
 .caption a:hover{
   text-decoration: underline;
 }
@@ -145,22 +149,60 @@ summary {
   margin-bottom: 20px;
 }
 
+nav.rowarrow{
+  display:flex;
+  flex-direction:row;
+}
+
+.leftarrow{
+  display: inline-block;
+  text-decoration: none;
+}
+
+.uparrow{
+  display: inline-block;
+  text-decoration: none;
+  margin-left: calc((70% - 5px) / 2);
+}
+
+.rightarrow{
+  display: inline-block;
+  text-decoration: none;
+}
+
 @media screen and (min-width:435px) {
   .date {
-    margin-left: calc(70% - 64px);
+    margin-left: calc(70% - 68px);
+  }
+  .rightarrow{
+    margin-left: calc(70% - 1em);
+  }
+  .uparrow{
+    margin-left: calc((70% - 5px) / 2);
+  }
+  #galleryhtml {
+    width: calc(70% - 20px);
   }
 }
 
 @media screen and (max-width:435px) {
   .date {
-    margin-left: 186px;
+    margin-left: 180px;
+  }
+  .rightarrow{
+    margin-left: calc(180px - 0.5em + 64px);
+  }
+  .uparrow{
+    margin-left: 128.3px;
+  }
+  #galleryhtml {
+    width: calc(20px + 41.5px + 20px + 150px);
   }
 }
 
 #galleryhtml {
   line-height: 16px;
   letter-spacing:-0.04em;
-  width: calc(70% - 20px);
   border-top: solid 1px;
   margin: 30px 0 0 20px;
 }
@@ -254,6 +296,7 @@ div.banner88-31 img{
   width: 35px;
   min-width: 35px;
   padding: 0;
+  image-rendering: pixelated;
 }
 /*===================
   @media
