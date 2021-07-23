@@ -51,9 +51,10 @@ a:hover {
 
 }
 
-a img {
-  vertical-align: sub;
+a:hover img{
   font-size: 0pt;
+  color: rgba(0,0,0,0);
+  background-color: rgba(0,0,0,0);
 }
 
 iframe {
@@ -126,10 +127,11 @@ a#backicon:hover, a.addressbar:hover {
   margin-top: 30px;
 }
 
-div#galleryspace > a > img {
+div#galleryspace img {
   padding: 0 0;
   image-rendering: pixelated;
   width: 70%;
+  max-width: 600px;
   min-width: 250px;
 }
 
@@ -145,28 +147,53 @@ summary {
   display: inline-block;
   /* background-color: rgba(0, 0, 255, 255);*/
   font-size: 0.8em;
-  color: #ddd;
-  margin-bottom: 20px;
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+
+}
+
+nav.childpagearrow > a{
+  display: inline-block;
+  color: white;
+  background-color: black;
+  text-decoration: none;
+  margin-bottom: 80px;
 }
 
 nav.rowarrow{
+  position: relative;
   display:flex;
   flex-direction:row;
+  justify-content: space-between;
+  right: 0px;
 }
 
 .leftarrow{
   display: inline-block;
+  color: white;
+  background-color: black;
   text-decoration: none;
 }
 
 .uparrow{
-  display: inline-block;
+  color: white;
+  background-color: black;
   text-decoration: none;
-  margin-left: calc((70% - 5px) / 2);
+  font-size: 10pt;
+  top: 10%;
 }
 
 .rightarrow{
   display: inline-block;
+  color: white;
+  background-color: black;
+  text-decoration: none;
+}
+
+nav.rightarrow > a {
+  color: white;
+  background-color: black;
   text-decoration: none;
 }
 
@@ -174,7 +201,13 @@ nav.rowarrow{
   .date {
     margin-left: calc(70% - 68px);
   }
+  nav.rowarrow {
+    width: calc(70% - 0px);
+  }
   .rightarrow{
+    margin-left: calc(((70% - 1em) / 2));
+  }
+  .childpagearrow{
     margin-left: calc(70% - 1em);
   }
   .uparrow{
@@ -189,11 +222,17 @@ nav.rowarrow{
   .date {
     margin-left: 180px;
   }
+  nav.rowarrow {
+    width: calc(180px + 70px);
+  }
   .rightarrow{
+    margin-left: calc(calc((20px + 41.5px + 20px + 150px) / 2) - 10px);
+  }
+  .childpagearrow{
     margin-left: calc(180px - 0.5em + 64px);
   }
   .uparrow{
-    margin-left: 128.3px;
+    margin-left: calc((20px + 10% + 20px + 150px) / 2);
   }
   #galleryhtml {
     width: calc(20px + 41.5px + 20px + 150px);
@@ -207,6 +246,16 @@ nav.rowarrow{
   margin: 30px 0 0 20px;
 }
 
+.boxes{
+  line-height: 16px;
+  text-decoration: none;
+}
+
+.lowerbox{
+  margin-top: 3px;
+  margin-left: -0.14rem;
+}
+
 .boxes a{
   text-decoration: none;
 }
@@ -216,7 +265,7 @@ nav.rowarrow{
 ===================*/
 #foot_links{
   font-size: 0.8em;
-  margin: 80px 0 -10px 10%;
+  margin: 80px 0 0px 10%;
 }
 
 #foot_links a{
@@ -224,9 +273,13 @@ nav.rowarrow{
 }
 
 #social_links{
-  text-indent: -0.6em;
-  padding-left: 0.6em;
+  text-indent: 0;
+  padding-left: 0em;
   margin-bottom: 30px;
+}
+
+.heart {
+  margin-left: 0em;
 }
 
 #social_links p::before{
@@ -248,16 +301,16 @@ nav.rowarrow{
   margin-bottom: 20px;
 }
 
-div.banner200-40 img{
+div#galleryspace .banner200-40 img{
   width: 200px;
   padding-right: 10px;
   padding-bottom: 10px;
   min-width: inherit;
 }
 
-div.banner88-31 img{
+div#galleryspace .banner88-31 img{
   width: 88px;
-  padding-right: 0;
+  padding-right: 5px;
   padding-bottom: 0;
   min-width: inherit;
 }
