@@ -17,36 +17,58 @@
     </script>
     <div id="main">
       <div id="galleryspace">
-        <a href="oc1_1.html">
-          <img src="../../img/original/oc1_1.gif" alt="original character illust 1">
-        </a>
-        <p class="title"></p>
-        <p class="caption">
+        <div class="card">
+          <div class="piccard">
+            <a href="../../img/original/oc1_1.gif"><img src="../../img/original/oc1_1.gif" alt="original character illust 1"></a>
+            <p class="title"></p>
+            <p class="caption">
 
-        </p>
-        <p class="date">>2020-10-16</p>
-        <a href="oc1_2.html">
-          <img src="../../img/original/oc1_2.gif" alt="original character illust 2">
-        </a>
-        <p class="title"></p>
-        <p class="caption">
+            </p>
+            <p class="date">>2020-10-16</p>
+          </div>
+          <nav class="childpagearrow">
+            <a href="oc1_1.html">>></a>
+          </nav>
+        </div>
+        <div class="card">
+          <div class="piccard">
+            <a href="../../img/original/oc1_2.gif"><img src="../../img/original/oc1_2.gif" alt="original character illust 2"></a>
+            <p class="title"></p>
+            <p class="caption">
+            </p>
+            <p class="date">>2020-10-16</p>
+          </div>
+          <nav class="childpagearrow">
+            <a href="oc1_2.html">>></a>
+          </nav>
+        </div>
+        <div class="card">
+          <div class="piccard">
+            <a href="../../img/original/oc1_3.gif"><img src="../../img/original/oc1_3.gif" alt="original character illust 3"></a>
+            <p class="title"></p>
+            <p class="caption">
 
-        </p>
-        <p class="date">>2020-10-16</p>
-        <a href="oc1_3.html">
-        <img src="../../img/original/oc1_3.gif" alt="original character illust 3">
-        </a>
-        <p class="title"></p>
-        <p class="caption">
-
-        </p>
-        <p class="date">>2020-10-16</p>
+            </p>
+            <p class="date">>2020-10-16</p>
+          </div>
+          <nav class="childpagearrow">
+            <a href="oc1_3.html">>></a>
+          </nav>
+        </div>
       </div>
       <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
       <div id="galleryhtml"></div>
     </div>
     <!-- main.jsから#footerへfooter.htmlの挿入 -->
     <div id="footerhtml"></div>
+    <div id="lightbox">
+      <link rel="stylesheet" href="../../luminous-basic.min.css">
+      <script src="../../Luminous.min.js"></script>
+      <script>
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+      </script>
+    </div>
+
   </div>
 </body>
 
