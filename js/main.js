@@ -5,6 +5,7 @@ $(function() {
   $("#headerhtml").load("/include/header.html");
   $("#accesscounterhtml").load("/include/accesscounter.html");
   $("#last_updatedhtml").load("/include/last_updated.html");
+  $("#odaibakohtml").load("/include/odaibako.html");
 });
 
 function header() {
