@@ -57,6 +57,12 @@ a:hover img{
   background-color: rgba(0,0,0,0);
 }
 
+.piccard > a {
+  font-size: 0pt;
+  color: rgba(0,0,0,0);
+  background-color: rgba(0,0,0,0);
+}
+
 iframe {
   width: 80%;
   margin: 0 auto;
@@ -314,6 +320,11 @@ div#galleryspace .banner88-31 img{
   padding-bottom: 0;
   min-width: inherit;
 }
+
+div#galleryspace .banner88-31 a{
+  background-color: rgba(0,0,0,0);
+}
+
 
 
 /*===================
