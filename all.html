@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>all</title>
+  <link rel="stylesheet" href="1column.css">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="./js/mouse.js" defer></script>
+  <script src="../../js/test.js"></script>
+  <script>
+    $(document).ready(function() {
+      var cards = [];
+      var sortOrder = 'desc'; // 初期値は降順
+
+      // 各HTMLファイルからカードを取得して、cards配列に追加する
+      function getCards() {
+        cards = [];
+        $.ajax({
+          url: 'gallery/image-page/oc1.html',
+          dataType: 'html',
+          success: function(data) {
+            var cardHtml = $(data).find('.card');
+            cards.push.apply(cards, cardHtml.toArray());
+            sortAndDisplayCards();
+            // ライトボックスを初期化
+            new LuminousGallery(document.querySelectorAll('.card a[href$=jpg], .card a[href$=png], .card a[href$=gif]'));
+          }
+        });
+
+        $.ajax({
+          url: 'gallery/image-page/oc2.html',
+          dataType: 'html',
+          success: function(data) {
+            var cardHtml = $(data).find('.card');
+            cards.push.apply(cards, cardHtml.toArray());
+            sortAndDisplayCards();
+            // ライトボックスを初期化
+            new LuminousGallery(document.querySelectorAll('.card a[href$=jpg], .card a[href$=png], .card a[href$=gif]'));
+          }
+        });
+
+        // 追加のHTMLファイルがあればここにajaxを追加する
+      }
+
+      // カードを並び替えて表示する
+      function sortAndDisplayCards() {
+        var sortedCards = cards.sort(function(a, b) {
+          var aDate = new Date($(a).find('.piccard .date').text());
+          var bDate = new Date($(b).find('.piccard .date').text());
+          return sortOrder === 'asc' ? aDate - bDate : bDate - aDate;
+        });
+
+        $('#galleryspace').empty();
+
+        for (var i = 0; i < sortedCards.length; i++) {
+          $('#galleryspace').append(sortedCards[i]);
+        }
+      }
+
+      // カードの取得と並び替えを実行する
+      getCards();
+
+      // 昇順と降順を切り替えるボタンのクリックイベントを追加する
+      $('.sort-button').on('click', function() {
+        sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+        sortAndDisplayCards();
+        $(this).text(sortOrder === 'asc' ? '昇順に並び替える' : '降順に並び替える');
+      });
+    });
+  </script>
+  <style>
+    .caption {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <div id="header">
+      <div id="header-flex">
+        <nav id="back">
+          <a id="backicon" href="../index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar">
+          <a class="addressbar" href="/index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="/gallery/gallery_main.html">
+            gallery
+          </a>/
+          <a class="addressbar" href="/all.html">all</a>
+        </nav>
+      </div>
+    </div>
+    <div id="main">
+      <button class="sort-button">降順に並び替える</button>
+      <div id="galleryspace">
+      </div>
+
+    </div>
+    <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+    <div id="galleryhtml"></div>
+  </div>
+  <!-- main.jsから#footerへfooter.htmlの挿入 -->
+  <div id="footerhtml"></div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="luminous-basic.min.css">
+    <script src="../../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+</body>
+
+</html>

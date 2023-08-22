@@ -1,0 +1,238 @@
+/*---------------------------------------------------------
+
+.desc{
+  font-size: 0.8em;
+}
+div.favlinks > p{
+  margin-bottom: 0.4rem;
+}
+.banner88-31, .banner200-40, .desc{
+  padding-left: 6px;
+  border-left: 2px dashed;
+  margin-left: 4.5px;
+}
+
+---------------------------------------------------------*/
+
+
+/*===================
+  linksBlock
+===================*/
+.highlight{
+  transform: scale(1, 0.75);
+  text-align: left;
+  display: inline-block;
+  font-size: 1.5rem;
+  font-weight: normal;
+  color: white;
+  background-color: black;
+}
+
+.heart {
+  margin-left: 0em;
+}
+
+#favorite_links p::before {
+  content: '♥';
+  display: inline-block;
+}
+
+.favlinks {
+  margin-bottom: 20px;
+}
+
+#social_links p::before {
+  content: '♥';
+  display: inline-block;
+}
+
+.banner200-40, .banner88-31 {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#mybanner {
+  border-bottom: 1px solid;
+  width: calc(70% - 20px);
+  margin-bottom: 60px;
+}
+
+div#linkspagelayout .banner200-40 img {
+  width: 200px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  min-width: inherit;
+}
+
+div#linkspagelayout .banner88-31 img {
+  width: 88px;
+  padding-right: calc(((200px - 88px) / 2) + 10px);
+  padding-left: calc((200px - 88px) / 2);
+  padding-bottom: 10px;
+  min-width: inherit;
+}
+
+div#galleryspace .banner88-31 a {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+div#galleryspace .banner200-40 a {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+div#thispage .banner200-40 img{
+  width: 200px;
+  padding-right: 10px;
+  padding-left: 0px;
+}
+
+div#thispage .banner88-31 img{
+  width: 88px;
+  min-width: 0px;
+  padding-right: 10px;
+  padding-left: 0px;
+}
+
+/*===================
+  @media
+===================*/
+@media screen and (max-width: 1024px) {
+  /* 1024pxまでの幅の場合に適応される */
+}
+
+@media screen and (max-width: 768px) {
+  /* 768pxまでの幅の場合に適応される */
+  #linkspagelayout{
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* 480pxまでの幅の場合に適応される */
+  #banner200-40 {
+    flex-direction: column;
+  }
+  #linkspagelayout{
+    width: 95%;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  /* 320pxまでの幅の場合に適応される */
+}
+
+@media screen and (min-width: 768px) {
+  /* 1024pxより広い幅の場合に適応される */
+  #linkspagelayout{
+    width: 80%;
+  }
+}
+
+#linkspagelayout > h1{
+  margin-bottom: 40px;
+}
+
+.link_title_box{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.title_and_url{
+  display: flex;
+  flex-direction: column;
+}
+
+.site_name{
+  transform: scale(1, 0.75);
+  font-size: 1.5em;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-bottom: -5px;
+}
+
+.url{
+  font-size: 0.8em;
+  color: #ababab;
+}
+
+.link_caption{
+  font-size: 0.9em;
+  text-indent: -7px;
+  padding-left: 7px;
+  margin-left: 7px;
+}
+
+.link_caption a{
+  text-decoration: underline;
+}
+
+.link_caption p::before {
+  content: '♥';
+  display: inline-block;
+}
+
+.link_caption > details{
+  margin-top: -15px;
+}
+
+details > summary{
+  margin-right: -10px;
+}
+
+.favs{
+  border-bottom: 0px solid;
+  margin-bottom: 0px;
+}
+
+#crosslinks{
+  margin-bottom: 60px;
+}
+
+#crosslinks_header{
+}
+
+#crosslinks_elements{
+  padding-left: 20px;
+  background-image : linear-gradient(to bottom, #000 8px, transparent 8px);
+  background-size:  2px 15px;
+  background-repeat: repeat-y;
+  background-position: left bottom;
+}
+
+.link_title_box{
+}
+
+#favlinks{
+  margin-bottom: 60px;
+}
+
+#favlinks_header{
+}
+
+#favlinks_elements{
+  padding-left: 20px;
+  background-image : linear-gradient(to bottom, #000 8px, transparent 8px);
+  background-size:  2px 15px;
+  background-repeat: repeat-y;
+  background-position: left bottom;
+}
+
+#thispage{
+}
+
+#thispage_header{
+}
+
+#thispage_elements{
+  padding-left: 20px;
+  background-image : linear-gradient(to bottom, #000 8px, transparent 8px);
+  background-size:  2px 15px;
+  background-repeat: repeat-y;
+  background-position: left bottom;
+}
+
+#thispage_elements > p{
+  font-size: 0.9em;
+}

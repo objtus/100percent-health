@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>littlegirlisdead - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+
+</head>
+
+<body>
+  <div id="wrapper">
+    <script type="text/javascript">
+      header();
+    </script>
+    <div id="main">
+      <div id="galleryspace">
+        <div class="card">
+          <div class="piccard">
+            <a href="../../img/original/littlegirlisdead.png"><img src="../../img/original/littlegirlisdead.png" alt="little girl is dead lyric video artwork"></a>
+            <p class="title"></p>
+            <p class="caption">
+              蝉暮せせせと初音ミクからなる音楽サークルex. happyender girlのLyric Video ''リトルガールイズデッド''のためにイラストを制作しました。<br>
+              <a href="https://www.youtube.com/embed/6G52k1uxVqU">【初音ミク】ex. happyender girl - リトルガールイズデッド (Lyric Video)</a>
+            </p>
+            <p class="date">>2022-01-30</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="piccard">
+            <a href="../../img/original/girlgonehome.png"><img src="../../img/original/girlgonehome.png" alt="girl gone home e.p. artwork"></a>
+            <p class="title"></p>
+            <p class="caption">
+              ex. happyender girlのep、''girl gome home e.p.''のジャケを制作しました。
+            </p>
+            <p class="date">>2022-03-27</p>
+            <iframe style="border: 0; width: 70%; height: 241px;" src="https://bandcamp.com/EmbeddedPlayer/album=3967021222/size=large/bgcol=ffffff/linkcol=333333/artwork=none/transparent=true/" seamless><a href="https://happyender-girl.bandcamp.com/album/girl-gone-home-e-p">girl gone home e.p. by ex. happyender girl</a></iframe>
+          </div>
+        </div>
+      </div>
+      <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+      <div id="galleryhtml"></div>
+    </div>
+    <!-- main.jsから#footerへfooter.htmlの挿入 -->
+    <div id="footerhtml"></div>
+    <div id="lightbox">
+      <link rel="stylesheet" href="../../luminous-basic.min.css">
+      <script src="../../Luminous.min.js"></script>
+      <script>
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      </script>
+    </div>
+
+  </div>
+</body>
+
+</html>
