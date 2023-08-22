@@ -2,6 +2,7 @@ $(function() {
   $("#galleryhtml").load("/include/gallery.html");
   $("#workshtml").load("/include/works.html");
   $("#footerhtml").load("/include/footer.html");
+  $("#sitenavhtml").load("/include/sitenav.html");
   $("#headerhtml").load("/include/header.html");
   $("#accesscounterhtml").load("/include/accesscounter.html");
   $("#last_updatedhtml").load("/include/last_updated.html");

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sameji-chan - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+</head>
+
+<body>
+  <div id="wrapper">
+    <p id="parentFile" style="display:none;">fanart / </p>
+    <script type="text/javascript">
+      header();
+    </script>
+    <div id="main">
+      <div id="galleryspace">
+        <div class="card">
+          <div class="piccard">
+            <a href="../../img/fanart/sameji-chan.png"><img src="../../img/fanart/sameji-chan.png" alt="fanart sameji-chan yoki youni siteiru darouka"></a>
+            <p class="title"></p>
+            <p class="caption">
+              <details>
+                <summary></summary>
+                fediverseユーザー、さめじまさめじさんのファンアート（？）。<br>
+                タイムライン上でお題を募集していたところ氏の診断メーカー「あなたを女子高生化してみたー」の結果が流れてきたことがきっかけで描きました。<br>
+                さめじまさめじさんはfediverseを引退しましたが、今でも時々氏はよきようにしているだろうか、と思い出します。
+              </details>
+            </p>
+            <p class="date">>2018-12-22</p>
+          </div>
+          <nav class='arrow'>
+            <nav class="rowarrow">
+              <a class="leftarrow" href="remilia2.html">&lt;</a>
+              <a class="uparrow" href="fanart.html">&lt;&lt;</a>
+              <a class="rightarrow" href="" style=""></a>
+            </nav>
+          </nav>
+        </div>
+      </div>
+      <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+      <div id="galleryhtml"></div>
+    </div>
+    <!-- main.jsから#footerへfooter.htmlの挿入 -->
+    <div id="footerhtml"></div>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../../luminous-basic.min.css">
+    <script src="../../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+</body>
+
+</html>

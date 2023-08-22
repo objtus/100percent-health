@@ -1,0 +1,408 @@
+:root {
+  --no-dsns: #aaa;
+  --no-dsns-background: #fff;
+
+  --d-related: #888;
+}
+
+#textblock {
+  margin-right: 15%;
+}
+
+/*
+追従するボタン
+*/
+
+
+
+/*===================
+  TextBlock
+===================*/
+
+#timeline_layout{
+  line-height: 1.2em;
+}
+
+#timeline_layout li {
+   text-indent: -4.7em;
+   padding-left: 4.5em;
+   padding-bottom: 1em;
+   list-style: none;
+}
+
+#timeline_layout a{
+  text-decoration: underline;
+}
+
+h1 {
+  margin-bottom: 5px;
+}
+
+h2{
+  border-bottom: 2px dashed;
+  margin-bottom: 5px;
+}
+
+.str {
+  font-weight: bold;                /* 太字                    */
+  font-size: 125%;                /* 文字を大きくする        */
+  color: black!important;
+}
+
+.str2 {
+  font-weight: bold;                /* 太字                    */
+  font-size: 115%;                /* 文字を大きくする        */
+}
+
+/*===================
+  liのclassごとに色を変えるやつ
+===================*/
+.priority1{
+  font-weight: bold;
+}
+
+.meme {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.meme a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.sns {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.sns a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.hacker {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.hacker a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.site {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.site a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.tech {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.tech a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.web {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.web a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.network {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.network a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.p2p {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.p2p a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.book {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.book a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.crypto {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.crypto a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.incident {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.incident a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.web3 {
+  color: var(--d-related);
+  background-color: var(--no-dsns-background);
+  border-right: #ddd 2px solid;
+}
+
+.web3 a {
+  color: var(--d-related);
+  background-color: var(--no-dsns-background);
+}
+
+.culture {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.culture a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.etc {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.etc a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.bbs {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.bbs a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.fire {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.fire a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.acid {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.acid a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.subculture {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.subculture a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.mentalhealth {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.mentalhealth a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.game {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.game a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.metaverse {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+.metaverse a {
+  color: var(--no-dsns);
+  background-color: var(--no-dsns-background);
+}
+
+#reference, #change_log {
+  list-style-type: disc;
+}
+
+.d {
+  color: black;
+  background-color: #ffffff;
+  border-right: black 2px solid;
+}
+
+.d a {
+  color: black;
+  background-color: #ffffff;
+}
+
+/*===================
+  サイドバー
+===================*/
+#sidebar-toggle {
+  position: fixed;
+  top: 100px;
+  left: 0px;
+  width: 80px;
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border: none;
+}
+
+#sidebar {
+  position: fixed;
+  top: 159px;
+  left: 0px;
+  width: 90px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 0.8em;
+  transition: transform 0.3s ease;
+  transform: translateX(-200px);
+  padding: 20px;
+}
+
+#sidebar a {
+  color: white;
+  text-decoration: underline;
+}
+
+#sidebar.active {
+  transform: translateX(0);
+}
+
+input[type="checkbox"] {
+  appearance: none; /* デフォルトのチェックボックスを非表示 */
+  display: inline-block; /* チェックボックスをインラインブロック要素に */
+  width: 16px; /* チェックボックスのサイズ */
+  height: 16px;
+  border: 1px solid #ccc; /* ボーダーを設定 */
+  border-radius: 3px; /* ボーダーの角を丸める */
+  position: relative; /* 擬似要素の位置を決めるために、相対的な位置を設定 */
+  margin-right: 0px; /* チェックボックスとラベルの間隔 */
+}
+
+input[type="checkbox"]::before {
+  content: "✓"; /* チェックマークを挿入 */
+  font-size: 12px; /* フォントサイズを設定 */
+  position: absolute; /* チェックマークの位置を決めるために、絶対的な位置を設定 */
+  top: -2px;
+  left: 2px;
+  color: #fff; /* チェックマークの色 */
+  visibility: visible; /* チェックマークを非表示 */
+}
+
+input[type="checkbox"]:checked::before {
+  visibility: hidden; /* チェックマークを表示 */
+}
+
+.checkbox_txt {
+  padding-left: 10px;
+  vertical-align: 3px;
+}
+
+/*===================
+  @media
+===================*/
+@media screen and (max-width: 1024px) {
+
+  /* 1024pxまでの幅の場合に適応される */
+
+}
+
+@media screen and (max-width: 768px) {
+
+  /* 768pxまでの幅の場合に適応される */
+
+}
+
+@media screen and (max-width: 480px) {
+
+  /* 480pxまでの幅の場合に適応される */
+  #textblock{
+    margin-right: 10px;
+  }
+  #sidebar-toggle {
+    position: fixed;
+    top: 80vh;
+    left: 0px;
+    width: 80px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    padding: 20px;
+    border: none;
+  }
+  #sidebar {
+    display:flex;
+    justify-content:space-between;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 80vw;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+    transform: translateX(-600px);
+    padding: 20px;
+    line-height: 2rem;
+  }
+}
+
+@media screen and (max-width: 320px) {
+
+  /* 320pxまでの幅の場合に適応される */
+
+}

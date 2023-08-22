@@ -1,0 +1,84 @@
+:root {
+  --no-dsns: #aaa;
+  --no-dsns-background: #fff;
+
+  --d-related: #888;
+}
+
+
+#textblock {
+  margin-right: 15%;
+}
+
+#textblock a {
+  text-decoration: underline;
+}
+
+/*===================
+  TextBlock
+===================*/
+
+#timeline_layout{
+  line-height: 1.2em;
+}
+
+#timeline_layout li {
+   text-indent: -7.5em;
+   padding-left: 7.5em;
+   padding-bottom: 1em;
+   list-style: none;
+}
+
+#timeline_layout a{
+  text-decoration: underline;
+}
+
+h2{
+  border-bottom: 2px dashed;
+  margin-bottom: 5px;
+}
+
+
+#reference, #change_log {
+  list-style-type: disc;
+}
+
+.d {
+  color: black;
+  background-color: #ffffff;
+  border-right: black 2px solid;
+}
+
+.d a {
+  color: black;
+  background-color: #ffffff;
+}
+
+/*===================
+  @media
+===================*/
+@media screen and (max-width: 1024px) {
+
+  /* 1024pxまでの幅の場合に適応される */
+
+}
+
+@media screen and (max-width: 768px) {
+
+  /* 768pxまでの幅の場合に適応される */
+
+}
+
+@media screen and (max-width: 480px) {
+
+  /* 480pxまでの幅の場合に適応される */
+  #textblock{
+    margin-right: 10px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+
+  /* 320pxまでの幅の場合に適応される */
+
+}
