@@ -17,13 +17,13 @@
     <script type="text/javascript">
       header();
     </script>
-    <div id="main">
+    <main id="main">
       <div id="galleryspace">
         <div class="card">
           <div class="piccard">
-            <a href="../../img/original/oc2_10.png"><img src="../../img/original/oc2_10.png" alt="original character illust"></a>
+            <a href="../../img/original/oc2_10.png"><img src="../../img/original/oc2_10.png" style="image-rendering: auto !important;" alt="original character illust"></a>
             <p class="title"></p>
-            <p class="caption"></p>
+            <div class="caption"></div>
             <p class="date">>2020-06-01</p>
           </div>
           <nav class='arrow'>
@@ -36,18 +36,22 @@
           </nav>
         </div>
       </div>
+
+    </main>
+    <footer id="main-footer">
       <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
       <div id="galleryhtml"></div>
-    </div>
-    <!-- main.jsから#footerへfooter.htmlの挿入 -->
-    <div id="footerhtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
   </div>
   <div id="lightbox">
-    <link rel="stylesheet" href="../../luminous-basic.min.css">
+    <link rel="stylesheet" href="../../luminous-basic.min.css" />
     <script src="../../Luminous.min.js"></script>
     <script>
-      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      new LuminousGallery(document.querySelectorAll("a[href$=jpg],a[href$=png],a[href$=gif]"));
     </script>
+  </div>
 </body>
 
 </html>

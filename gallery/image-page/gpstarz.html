@@ -1,58 +1,68 @@
 <!DOCTYPE html>
 <html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>gpstarz - 100%health</title>
+		<link rel="stylesheet" href="../../1column.css" />
+		<script src="../../js/jquery-3.6.0.min.js"></script>
+		<script src="../../js/main.js"></script>
+		<script src="/js/mouse.js" defer></script>
+	</head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>gpstarz - 100%health</title>
-  <link rel="stylesheet" href="../../1column.css">
-  <script src="../../js/jquery-3.6.0.min.js"></script>
-  <script src="../../js/main.js"></script>
-  <script src="/js/mouse.js" defer></script>
-</head>
-
-<body>
-  <div id="wrapper">
-    <p id="parentFile" style="display:none;">groundpolis_paint2 / </p>
-    <script type="text/javascript">
-      header();
-    </script>
-    <div id="main">
-      <div id="galleryspace">
-        <div class="card">
-          <div class="piccard">
-            <a href="../../img/fanart/gpstarz.png"><img src="../../img/fanart/gpstarz.png" alt="yung lean starz fanart"></a>
-            <p class="title"></p>
-            <p class="caption">
-              <details>
-                <summary></summary>
-                yung leanのstarzのファンアートや！<a href="https://youtu.be/AbSSch--j1I">https://youtu.be/AbSSch--j1I</a>
-              </details>
-            </p>
-            <p class="date">>2021-11-04</p>
-          </div>
-          <nav class='arrow'>
-            <nav class="rowarrow">
-              <a class="leftarrow" href="gpmutant.html">&lt;</a>
-              <a class="uparrow" href="groundpolis_paint2.html#gpstarz">&lt;&lt;</a>
-              <a class="rightarrow" href="gpug.html" style="">></a>
-            </nav>
-          </nav>
-        </div>
-      </div>
-      <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
-      <div id="galleryhtml"></div>
-    </div>
-    <!-- main.jsから#footerへfooter.htmlの挿入 -->
-    <div id="footerhtml"></div>
-  </div>
-  <div id="lightbox">
-    <link rel="stylesheet" href="../../luminous-basic.min.css">
-    <script src="../../Luminous.min.js"></script>
-    <script>
-      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
-    </script>
-  </div>
-</body>
-
+	<body>
+		<div id="wrapper">
+			<header id="header">
+				<div id="header-flex">
+					<nav id="back">
+						<a id="backicon" href="../index.html">&lt;</a>
+					</nav>
+					<nav id="address" class="addressbar">
+						<a class="addressbar" href="/index.html">100%health</a>/
+						<a class="addressbar" href="/gallery/gallery_main.html">gallery</a>/
+						<a class="addressbar" href="/gallery/image-page/groundpolis_paint_2.html">groundpolis_paint_2</a>/
+						<a class="addressbar" href="/gallery/image-page/gpstarz.html">gpstarz</a>
+					</nav>
+				</div>
+			</header>
+			<main id="main">
+				<div id="galleryspace">
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/fanart/gpstarz.png"><img src="../../img/fanart/gpstarz.png" alt="yung lean starz fanart" /></a>
+							<p class="title"></p>
+							<div class="caption">
+								<details open>
+									<summary></summary>
+									yung leanのstarzのファンアートや
+									<a href="https://youtu.be/AbSSch--j1I" target="_blank">https://youtu.be/AbSSch--j1I</a>
+								</details>
+							</div>
+							<p class="date">>2021-11-04</p>
+						</div>
+						<nav class="arrow">
+							<nav class="rowarrow">
+								<a class="leftarrow" href="gpmutant.html">&lt;</a>
+								<a class="uparrow" href="groundpolis_paint_2.html#gpstarz">&lt;&lt;</a>
+								<a class="rightarrow" href="gpug.html" style="">></a>
+							</nav>
+						</nav>
+					</div>
+				</div>
+			</main>
+			<footer id="main-footer">
+				<!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+				<div id="galleryhtml"></div>
+				<!-- main.jsから#footerへfooter.htmlの挿入 -->
+				<div id="footerhtml"></div>
+			</footer>
+		</div>
+		<div id="lightbox">
+			<link rel="stylesheet" href="../../luminous-basic.min.css" />
+			<script src="../../Luminous.min.js"></script>
+			<script>
+				new LuminousGallery(document.querySelectorAll("a[href$=jpg],a[href$=png],a[href$=gif]"));
+			</script>
+		</div>
+	</body>
 </html>

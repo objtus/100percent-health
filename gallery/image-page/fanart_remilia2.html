@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fanart_remilia2 - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+</head>
+
+<body>
+  <div id="wrapper">
+    <p id="parentFile" style="display:none;">fanart / </p>
+    <script type="text/javascript">
+      header();
+    </script>
+    <main id="main">
+      <div id="galleryspace">
+        <div class="card">
+          <div class="piccard">
+            <a href="../../img/fanart/remilia2.gif"><img src="../../img/fanart/remilia2.gif"
+                alt="touhou remilia scarlet fan art"></a>
+            <p class="title"></p>
+            <div class="caption">
+              <details>
+                <summary></summary>
+              東方のレミリア・スカーレットさんのファンアートです。1は<a href="https://groundpolis.app/notes/8qmndvmubu">こちら</a>へ<br>
+              <a href="fanart_remilia2piyo.html">remilia2-piyo ver.</a><br>
+              </details>
+            </div>
+            <p class="date">>2021-09-23</p>
+          </div>
+          <nav class='arrow'>
+            <nav class="rowarrow">
+              <a class="leftarrow" href=""></a>
+              <a class="uparrow" href="fanart.html#fanart_remilia2">&lt;&lt;</a>
+              <a class="rightarrow" href="fanart_sameji-chan.html" style="">></a>
+            </nav>
+          </nav>
+        </div>
+      </div>
+    </main>
+    <footer id="main-footer">
+      <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+      <div id="galleryhtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../../luminous-basic.min.css">
+    <script src="../../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+</body>
+
+</html>

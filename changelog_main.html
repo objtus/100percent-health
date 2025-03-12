@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>changelog_main - 100%health</title>
+    <link rel="stylesheet" href="../1column.css">
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <script src="../js/main.js" defer></script>
+    <script src="./js/mouse.js" defer></script>
+    <style>
+        #changeloghtml {
+            padding-left: 6.3em;
+            text-indent: -6.3em;
+            margin-bottom: 40%;
+            ol{
+                display: flex;
+                flex-direction: column-reverse;
+                list-style: none;
+                gap: 8px;
+            }
+            li:has(details){
+                display: flex;
+            }
+            details{
+                display: inline;
+                text-indent: -9px;
+                ul{
+                    list-style-type: "- ";
+                    padding-left: 10px;
+                    text-indent: 0px;
+                }
+            }
+            details[open]{
+                display: inline;
+                padding-left: 0px;
+                text-indent: -9px;
+            }
+            summary{
+                list-style-type: none;
+                display: block;
+                position: relative;
+                text-decoration: underline dotted;
+            }
+        }
+        #galleryspace{
+            h2{
+                margin-bottom: 10px;
+            }
+        }
+        #idoko_sleep{
+            width: 200px;
+            position: absolute;
+            bottom: 0%;
+            left: 20%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <header id="header">
+            <div id="header-flex">
+                <nav id="back">
+                    <a id="backicon" href="../index.html">
+                        &lt;
+                    </a>
+                </nav>
+                <nav id="address" class="addressbar">
+                    <a class="addressbar" href="../index.html">
+                        100%health
+                    </a>/
+                    <a class="addressbar" href="changelog_main.html">
+                        changelog_main
+                    </a>
+                </nav>
+            </div>
+        </header>
+        <main id="main">
+            <div id="galleryspace">
+                <h2>更新履歴</h2>
+                <div id="changeloghtml"></div>
+                <div id="idoko_sleep">
+                    <img src="/img/idoko_sleep.gif" alt="idoko sleeping image">
+                </div>
+            </div>
+        </main>
+        <footer id="main-footer">
+            <!-- main.jsから#footerへfooter.htmlの挿入 -->
+            <div id="footerhtml"></div>
+        </footer>
+    </div>
+</body>
+
+</html>

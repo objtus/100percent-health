@@ -16,34 +16,36 @@
     <script type="text/javascript">
       header();
     </script>
-    <div id="main">
+    <main id="main">
       <div id="galleryspace">
         <div class="card">
           <div class="piccard">
-            <a href="../../img/original/albumart_original-min.webp"><img src="../../img/original/albumart_original-min.webp" alt="att13"></a>
+            <a href="../../img/original/albumart_original-min.webp"><img src="../../img/original/albumart_original-min.webp" style="image-rendering: auto !important;" alt="att13"></a>
             <p class="title"></p>
-            <p class="caption">
-              <iframe style="border: 0; width: 70%; height: 373px;" src="https://bandcamp.com/EmbeddedPlayer/album=3150324076/size=large/bgcol=ffffff/linkcol=333333/artwork=none/transparent=true/" seamless><a
+            <div class="caption">
+              <iframe style="border: 0; width: 100%; height: 373px;" src="https://bandcamp.com/EmbeddedPlayer/album=3150324076/size=large/bgcol=ffffff/linkcol=333333/artwork=none/transparent=true/" seamless><a
                   href="https://no-federation.bandcamp.com/album/no-federation">No Federation by No Federation Production Committee</a></iframe><br>
               >"No Federation" is a compilation album born from fediverse (e.g. Mastodon, Misskey).
-            </p>
+            </div>
             <p class="date">>2020-07-23</p>
           </div>
         </div>
         <img style="width: 40%" src="../../img/original/nofed.gif" alt="no federation animation gif">
       </div>
+    </main>
+    <footer id="main-footer">
       <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
       <div id="galleryhtml"></div>
-    </div>
-    <!-- main.jsから#footerへfooter.htmlの挿入 -->
-    <div id="footerhtml"></div>
-    <div id="lightbox">
-      <link rel="stylesheet" href="../../luminous-basic.min.css">
-      <script src="../../Luminous.min.js"></script>
-      <script>
-        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
-      </script>
-    </div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../../luminous-basic.min.css">
+    <script src="../../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+    </script>
   </div>
 </body>
 

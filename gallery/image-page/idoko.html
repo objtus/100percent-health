@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>idoko - 100%health</title>
+		<link rel="stylesheet" href="../../1column.css" />
+		<script src="../../js/jquery-3.6.0.min.js"></script>
+		<script src="../../js/main.js"></script>
+		<script src="/js/mouse.js" defer></script>
+		<script src="/js/test3.js"></script>
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<script type="text/javascript">
+				header();
+			</script>
+			<main id="main">
+				<div id="galleryspace">
+					<div class="card">
+						<div class="piccard" id="idoko_taningoto1">
+							<a href="../../img/original/other1.gif"><img src="../../img/original/other1.gif" alt="original character illust" class="border_img" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2024-11-18</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/idoko_taningoto1.html">>></a>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</main>
+			<footer id="main-footer">
+				<!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+				<div id="galleryhtml"></div>
+				<!-- main.jsから#footerへfooter.htmlの挿入 -->
+				<div id="footerhtml"></div>
+			</footer>
+		</div>
+		<div id="lightbox">
+			<link rel="stylesheet" href="../../luminous-basic.min.css" />
+			<script src="../../Luminous.min.js"></script>
+			<script>
+				new LuminousGallery(document.querySelectorAll("a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]"));
+			</script>
+		</div>
+	</body>
+</html>

@@ -1,64 +1,147 @@
 <!DOCTYPE html>
 <html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>fanart - 100%health</title>
+		<link rel="stylesheet" href="../../1column.css" />
+		<script src="../../js/jquery-3.6.0.min.js"></script>
+		<script src="../../js/main.js"></script>
+		<script src="/js/mouse.js" defer></script>
+	</head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>fanart - 100%health</title>
-  <link rel="stylesheet" href="../../1column.css">
-  <script src="../../js/jquery-3.6.0.min.js"></script>
-  <script src="../../js/main.js"></script>
-  <script src="/js/mouse.js" defer></script>
-</head>
-
-<body>
-  <div id="wrapper">
-    <script type="text/javascript">
-      header();
-    </script>
-    <div id="main">
-      <div id="galleryspace">
-        <div class="card">
-          <div class="piccard">
-            <a href="../../img/fanart/remilia2.gif"><img src="../../img/fanart/remilia2.gif" alt="touhou remilia scarlet fan art"></a>
-            <p class="title"></p>
-            <p class="caption">
-
-            </p>
-            <p class="date">>2021-09-23</p>
-          </div>
-          <nav class="childpagearrow">
-            <a href="remilia2.html">>></a>
-          </nav>
-        </div>
-        <div class="card">
-          <div class="piccard">
-            <a href="../../img/fanart/sameji-chan.png"><img src="../../img/fanart/sameji-chan.png" alt="fanart sameji-chan yoki youni siteiru darouka"></a>
-            <p class="title"></p>
-            <p class="caption">
-
-            </p>
-            <p class="date">>2018-12-22</p>
-          </div>
-          <nav class="childpagearrow">
-            <a href="sameji-chan.html">>></a>
-          </nav>
-        </div>
-      </div>
-      <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
-      <div id="galleryhtml"></div>
-    </div>
-    <!-- main.jsから#footerへfooter.htmlの挿入 -->
-    <div id="footerhtml"></div>
-    <div id="lightbox">
-      <link rel="stylesheet" href="../../luminous-basic.min.css">
-      <script src="../../Luminous.min.js"></script>
-      <script>
-        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
-      </script>
-    </div>
-
-  </div>
-</body>
-
+	<body>
+		<div id="wrapper">
+			<script type="text/javascript">
+				header();
+			</script>
+			<main id="main">
+				<div id="galleryspace">
+					<div class="card">
+						<div class="piccard" id="fanart_remilia2">
+							<a href="../../img/fanart/remilia2.gif"><img src="../../img/fanart/remilia2.gif" alt="touhou remilia scarlet fan art" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2021-09-23</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_remilia2.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_sameji-chan">
+							<a href="../../img/fanart/sameji-chan.png"><img src="../../img/fanart/sameji-chan.png" alt="fanart sameji-chan yoki youni siteiru darouka" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2018-12-22</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_sameji-chan.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_syudojo-chan">
+							<a href="../../img/fanart/syudojo-chan.png"><img src="../../img/fanart/syudojo-chan.png" alt="fanart syudojo-chan" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2018-10-08</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_syudojo-chan.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_taniguchi-chan">
+							<a href="../../img/fanart/2022-06-11_taniguchi-chan.png"><img src="../../img/fanart/2022-06-11_taniguchi-chan.png" alt="fanart taniguchi-chan" class="border_img" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2022-06-11</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_taniguchi-chan.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_taniguchi-chan_and_eri-chan">
+							<a href="../../img/fanart/2022-12-10_taniguchi-chan_and_eri-chan.png"><img src="../../img/fanart/2022-12-10_taniguchi-chan_and_eri-chan.png" alt="fanart taniguchi-chan and eri-chan" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2022-12-10</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_taniguchi-chan_and_eri-chan.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_misuzu-chan">
+							<a href="../../img/fanart/2022-12-22_misuzu-chan.png"><img src="../../img/fanart/2022-12-22_misuzu-chan.png" alt="fanart misuzu-chan" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2022-12-22</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_misuzu-chan.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_kagamin">
+							<a href="../../img/fanart/2021-04-22_1.jpg"><img src="../../img/fanart/2021-04-22_1.jpg" alt="fanart kagamin" class="border_img" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2021-04-22</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_kagamin.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_hatsune">
+							<a href="../../img/fanart/2021-04-22_2.jpg"><img src="../../img/fanart/2021-04-22_2.jpg" alt="fanart hatsune miku" class="border_img" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2021-04-22</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_hatsune.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_helve">
+							<a href="../../img/fanart/helve.png"><img src="../../img/fanart/helve.png" style="image-rendering: auto !important;" alt="fanart semikure helve" class="border_img" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2023-12-26</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_helve.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_murakami-san">
+							<a href="../../img/fanart/fanart_murakami.webp"><img src="../../img/fanart/fanart_murakami.webp" style="image-rendering: auto !important;" alt="fanart 村上さん" class="border_img" /></a>
+							<p class="title"></p>
+							<div class="caption"></div>
+							<p class="date">>2024-04-14</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_murakami-san.html">>></a>
+						</nav>
+					</div>
+				</div>
+			</main>
+			<footer id="main-footer">
+				<!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+				<div id="galleryhtml"></div>
+				<!-- main.jsから#footerへfooter.htmlの挿入 -->
+				<div id="footerhtml"></div>
+			</footer>
+			<div id="lightbox">
+				<link rel="stylesheet" href="../../luminous-basic.min.css" />
+				<script src="../../Luminous.min.js"></script>
+				<script>
+					new LuminousGallery(document.querySelectorAll("a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]"));
+				</script>
+			</div>
+		</div>
+	</body>
 </html>

@@ -18,81 +18,101 @@ div.favlinks > p{
 /*===================
   linksBlock
 ===================*/
+div#galleryspace{
+  .banner88-31 > img{
+    max-width: fit-content;
+    min-width: fit-content;
+  }
+
+  .banner200-40 > img{
+    max-width: fit-content;
+    min-width: fit-content;
+  }
+}
+
+/*----文字装飾----*/
+
 .highlight{
-  transform: scale(1, 0.75);
-  text-align: left;
   display: inline-block;
-  font-size: 1.5rem;
-  font-weight: normal;
-  color: white;
-  background-color: black;
+  color: #fff;
+  background-color: #000;
+  font-size: 1.3em;
+  clip-path: inset(0 0 4px 0);
 }
 
-.heart {
-  margin-left: 0em;
+.site_name{
+  font-size: 16pt;
 }
 
-#favorite_links p::before {
-  content: '♥';
-  display: inline-block;
+.url{
+  font-size: 10pt;
+  color: #aaa;
 }
 
-.favlinks {
-  margin-bottom: 20px;
+/*----インデント&レイアウト----*/
+
+#galleryspace > div{
+  margin-top: 40px;
+  .highlight{
+    margin-bottom: 20px;
+  }
 }
 
-#social_links p::before {
-  content: '♥';
-  display: inline-block;
+.links_contents{
+  padding-left: 10px;
+  margin-left: 5px;
 }
 
-.banner200-40, .banner88-31 {
+.favs{
+  padding-left: 10px;
+  background-image: linear-gradient(to bottom, #000 4px, transparent 4px);
+  background-size: 2px 8px;
+  background-repeat: repeat-y;
+  background-position: left bottom;
+  margin-bottom: 32px;
+  margin-left: 5px;
+}
+
+.link_title_box{
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  padding-bottom: 5px;
+  border-left: solid #444 5px;
+  border-bottom: dotted #444 2px;
+  margin-bottom: 10px;
+  div:nth-child(1){
+    width: 220px;
+    min-width: 220px;
+    margin-right: 0px;
+  }
+  div:nth-child(2){
+    flex-grow: 1;
+    word-break: break-all;
+  }
 }
 
-#mybanner {
-  border-bottom: 1px solid;
-  width: calc(70% - 20px);
-  margin-bottom: 60px;
+.link_caption {
+  font-size: 10pt;
+  text-indent: -2em;
+  padding-left: 3em;
+
+  p::before{
+  content: '♥ ';
+  display: inline;
+  padding-right: 1em;
+  }
 }
 
-div#linkspagelayout .banner200-40 img {
-  width: 200px;
-  padding-right: 10px;
-  padding-bottom: 10px;
-  min-width: inherit;
+/*リンクカードのヘッダー*/
+.title_and_url{
+  display: flex;
+  flex-direction: column;
 }
 
-div#linkspagelayout .banner88-31 img {
-  width: 88px;
-  padding-right: calc(((200px - 88px) / 2) + 10px);
-  padding-left: calc((200px - 88px) / 2);
-  padding-bottom: 10px;
-  min-width: inherit;
-}
 
-div#galleryspace .banner88-31 a {
-  background-color: rgba(0, 0, 0, 0);
-}
 
-div#galleryspace .banner200-40 a {
-  background-color: rgba(0, 0, 0, 0);
-}
 
-div#thispage .banner200-40 img{
-  width: 200px;
-  padding-right: 10px;
-  padding-left: 0px;
-}
-
-div#thispage .banner88-31 img{
-  width: 88px;
-  min-width: 0px;
-  padding-right: 10px;
-  padding-left: 0px;
-}
 
 /*===================
   @media
@@ -103,18 +123,29 @@ div#thispage .banner88-31 img{
 
 @media screen and (max-width: 768px) {
   /* 768pxまでの幅の場合に適応される */
-  #linkspagelayout{
-    width: 90%;
+  #main{
+    width: 80%;
+  }
+  .link_title_box{
+    div:nth-child(1){
+      width: 200px;
+      min-width: 200px;
+    }
   }
 }
 
 @media screen and (max-width: 480px) {
   /* 480pxまでの幅の場合に適応される */
-  #banner200-40 {
+  #main{
+    width: fit-content;
+    margin-right: 10%;
+  }
+  .link_title_box{
     flex-direction: column;
   }
-  #linkspagelayout{
-    width: 95%;
+  .link_caption{
+    text-indent: -2em;
+    padding-left: 2em;
   }
 }
 
@@ -124,115 +155,4 @@ div#thispage .banner88-31 img{
 
 @media screen and (min-width: 768px) {
   /* 1024pxより広い幅の場合に適応される */
-  #linkspagelayout{
-    width: 80%;
-  }
-}
-
-#linkspagelayout > h1{
-  margin-bottom: 40px;
-}
-
-.link_title_box{
-  display:flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.title_and_url{
-  display: flex;
-  flex-direction: column;
-}
-
-.site_name{
-  transform: scale(1, 0.75);
-  font-size: 1.5em;
-  font-weight: bold;
-  text-decoration: underline;
-  margin-bottom: -5px;
-}
-
-.url{
-  font-size: 0.8em;
-  color: #ababab;
-}
-
-.link_caption{
-  font-size: 0.9em;
-  text-indent: -7px;
-  padding-left: 7px;
-  margin-left: 7px;
-}
-
-.link_caption a{
-  text-decoration: underline;
-}
-
-.link_caption p::before {
-  content: '♥';
-  display: inline-block;
-}
-
-.link_caption > details{
-  margin-top: -15px;
-}
-
-details > summary{
-  margin-right: -10px;
-}
-
-.favs{
-  border-bottom: 0px solid;
-  margin-bottom: 0px;
-}
-
-#crosslinks{
-  margin-bottom: 60px;
-}
-
-#crosslinks_header{
-}
-
-#crosslinks_elements{
-  padding-left: 20px;
-  background-image : linear-gradient(to bottom, #000 8px, transparent 8px);
-  background-size:  2px 15px;
-  background-repeat: repeat-y;
-  background-position: left bottom;
-}
-
-.link_title_box{
-}
-
-#favlinks{
-  margin-bottom: 60px;
-}
-
-#favlinks_header{
-}
-
-#favlinks_elements{
-  padding-left: 20px;
-  background-image : linear-gradient(to bottom, #000 8px, transparent 8px);
-  background-size:  2px 15px;
-  background-repeat: repeat-y;
-  background-position: left bottom;
-}
-
-#thispage{
-}
-
-#thispage_header{
-}
-
-#thispage_elements{
-  padding-left: 20px;
-  background-image : linear-gradient(to bottom, #000 8px, transparent 8px);
-  background-size:  2px 15px;
-  background-repeat: repeat-y;
-  background-position: left bottom;
-}
-
-#thispage_elements > p{
-  font-size: 0.9em;
 }

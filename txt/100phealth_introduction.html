@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>100%health_introduction - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+  <style>
+    p {
+      font-size: 1rem;
+      margin-left: 1rem;
+    }
+    #change_log ul {
+      list-style-type: none;
+      font-size: 10pt;
+    }
+    #linklist {
+      font-size: 11pt;
+      margin-left: 1rem;
+  
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        margin: 10px 0;
+        display: flex;
+      }
+      li a {
+        display: inline-block;
+        min-width: 130px;
+        margin-right: 10px;
+      }
+    }
+    #textblock {
+      margin-bottom: 3rem;
+  
+      h2 {
+        font-size: 1.2rem;
+        display: inline-block;
+        border-bottom: dotted 3px;
+        margin-bottom: 15px;
+        line-height: 10px;
+      }
+      h3 {
+        font-size: 1rem;
+      }
+      .title {
+        text-align: right;
+        line-height: 24px;
+      }
+      .str {
+        font-size: large;
+        font-weight: bold;
+      }
+      .smalltext {
+        font-size: 11pt;
+      }
+      p {
+        margin-bottom: 1rem;
+      }
+      hr {
+        border: none;
+        text-align: center;
+        font-size: 1em;
+        margin-right: 40px;
+      }
+      hr::before {
+        content: '*****';
+        letter-spacing: 1em;
+        padding-left: 1em;
+      }
+      section {
+        margin-bottom: 2rem;
+      }
+      .section-item {
+        border-left: dotted 2px #000;
+        padding-left: 1rem;
+        margin-left: 1rem;
+      }
+      .content-item {
+        display: flex;
+        flex-direction: row;
+        margin-left: 10px;
+  
+        h3 {
+          width: 80px;
+          flex-shrink: 0;
+        }
+      }
+    }
+  
+    #texthtml,
+    ol {
+      list-style-type: none;
+    }
+  
+    @media screen and (max-width: 1024px) {
+      /* 1024pxまでの幅の場合に適応される */
+    }
+  
+    @media screen and (max-width: 768px) {
+      /* 768pxまでの幅の場合に適応される */
+    }
+
+    @media screen and (max-width: 600px) {
+      /* 600pxまでの幅の場合に適応される */
+      #main{
+        width: 85%;
+      }
+      .content-item{
+        margin-bottom: 15px;
+
+        h3{
+          width: 60px;
+        }
+        #linklist{
+          li{
+            flex-direction: column;
+            margin-bottom: 20px;
+          }
+          li a{
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
+          li a + * {
+            margin-left: 20px;
+          }
+        }
+      }
+    }
+  
+    @media screen and (max-width: 480px) {
+      /* 480pxまでの幅の場合に適応される */
+      #textblock h2{
+        margin-top: 20px;
+      }
+      #textblock .section-item{
+        padding-left: 3px;
+        margin-left: 5px;
+      }
+    }
+  
+    @media screen and (max-width: 375px) {
+      /* 320pxまでの幅の場合に適応される */
+      p{
+        font-size: 10pt;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back">
+          <a id="backicon" href="../index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar">
+          <a class="addressbar" href="../index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="/txt/txt_main.html">
+            txt
+          </a>/
+          <a href="/txt/100phealth_introduction.html" class="addressbar">100%health_introduction</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <article id="textblock">
+        <h1 class="title">100%health_introduction</h1>
+        <section>
+          <h2>このサイトについて</h2>
+          <div class="section-item">
+            <p>
+              このサイトは、yuinoid / いど子の個人サイトであり、<span class="str">創作系個人サイトのスタイルを模倣したポートフォリオサイト</span>です。<br>
+            </p>
+            <p>
+              このサイトは、<a href="https://neocities.org/site/yuinoid" target="_blank">neocities</a>によってホスティングされています。
+            </p>
+          </div>
+        </section>
+        <section>
+          <h2>コンテンツ</h2>
+          <div class="section-item">
+            <p>主要なページは5つあります。</p>
+            <div class="content-item">
+              <h3><a href="/aboutme.html">♥about</a></h3>
+              <p>
+                自己紹介ページです。各種リンクもまとめています。
+              </p>
+            </div>
+            <div class="content-item">
+              <h3><a href="/gallery/gallery_main.html">♥gallery</a></h3>
+              <div id="gallery-content">
+                <p>
+                  描いた絵を展示するコーナーです。<br>
+                  galleryページのなかでもいくつかのカテゴリに分けられています。<br>
+                  代表的なページのリンクをここに記しておきます。
+                </p>
+                <div id="linklist">
+                  <ul>
+                    <li><a href="/all.html">♥all</a><span>だいたいすべての絵が一覧で見ることができます。重いかも。</span></li>
+                    <li><a href="/gallery/image-page/oc.html">♥original_character</a><span>オリジナルキャラクターの絵を一覧で見ることができます。</span></li>
+                    <li><a href="/gallery/image-page/groundpolis_paint.html">♥groundpolis_paint</a><span>groundpolis paintで描いた絵を見ることができます。</span></li>
+                    <li><a href="/gallery/image-page/fanart.html">♥fanart</a><span>ファンアートを見ることができます。</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="content-item">
+              <h3><a href="/works/works_main.html">♥works</a></h3>
+              <p>行った仕事を掲載しています。</p>
+            </div>
+            <div class="content-item">
+              <h3><a href="/txt/txt_main.html">♥txt</a></h3>
+              <p>
+                書いたテキストをアーカイブしています。<br>
+                また、不定期更新の雑記帳（日記のようなもの？）をまとめています。
+              </p>
+            </div>
+            <div class="content-item">
+              <h3><a href="/links/links_main.html">♥links</a></h3>
+              <p>このページと<a href="/links/links_main.html#crosslinks_header">相互リンクしていただいているサイト</a>の紹介をしています。<br>
+                また、<a href="/links/links_main.html#favlinks_header">yuinoidが紹介したいサイトのリンク</a>も紹介しています。<br>
+                最下部では、<a href="/links/links_main.html#thispage_header">このページのバナー</a>を掲載しています。
+              </p>
+            </div>
+            <div class="content-item">
+              <h3><a href="/changelog_main.html">♥changelog</a></h3>
+              <p>このページの更新履歴がまとめてあります。</p>
+            </div>
+          </div>
+        </section>
+        <section>
+          <h2>このページについて</h2>
+          <div class="section-item">
+            <p>
+              このページは『<a href="https://adventar.org/calendars/10172" target="_blank">個人ホームページ訪問 Advent Calendar
+                2024</a>』の11日目の記事として書かれたものです。<br>
+              <br>
+              adventerで偶然見つけて登録したのですが、いい機会だと思ってこのサイト「100%health」の紹介を行うページを作成しました。
+            </p>
+            <p>
+              Advent Calendarの記事というより、このサイトの紹介ページのような内容を目指して書いています。<br>
+              ご了承ください。<br>
+            </p>
+          </div>
+        </section>
+        <section>
+          <details>
+            <summary>
+              <h2>経緯の話</h2>
+            </summary>
+            <div class="section-item">
+              <div class="smalltext" id="keii">
+                <p>
+                  『100%health』は静的サイトホスティングサービスである<a href="https://neocities.org/site/yuinoid"
+                    target="_blank">「neocities」を利用</a>している。<br>
+                  <br>
+                  このサイトを作る前、私はTumblrブログ『<a href="https://yuinoid.tumblr.com" target="_blank">Girl's
+                    Surface</a>』でイラストを公開していた。<br>
+                  <br>
+                  『Girl's Surface』をはじめたのがいつ頃なのかは正直記憶が曖昧で定かでないが、Tumblr自体にはすでに数年前からアカウントを持っており、どんなSNSなのかは把握していた。<br>
+                  <br>
+                  『Girl's Surface』にイラストを公開しはじめたのが2017年06月頃だった。途中でイラストを整理しているため、現在残っている最も古いイラストは<a
+                    href="https://yuinoid.tumblr.com/post/162677154931" target="_blank">2017年07月07日のもの</a>である。<br>
+                  <br>
+                  neocitiesとの出会いは、当時Tumblrユーザーの一部の間でneocitoesに移行する人が増えており、それを見ていたことがきっかけだった。
+                </p>
+                <p>
+                  はじめてインターネットに触れたのが小学5年生だった。それが西暦何年かはここには書かない。<br>
+                  <br>
+                  少しぼかして説明するならば、web2.0の名のもとに企業のプラットフォームがインターネットを被い、そのなかでユーザーがコミュニティを築くようになっても、web1.0的な「個人サイト」の面影が消えてなくなるほど情報化されていない時代だった、といえるだろうか。<br>
+                  <br>
+                  『100%health』のスタイルの源流にあるのは、当時見ていたような昔ながらの創作系個人サイトであり、なぜそうなったのかといえば、そうしたサイトにずっと憧れがあったからだった。
+                </p>
+                <p>
+                  個人サイトをやりたいと思う直接のきっかけを考えてみると、2014年頃に2chの「<a href="https://w.atwiki.jp/vipts2/"
+                    target="_blank">VIPでテキストサイトやろうぜ</a>」というムーブメントを知ったことが挙げられるかもしれない。<br>
+                  <br>
+                  「VIPでテキストサイトやろうぜ」は「VIPでテキストサイトブームをまた引き起こそうぜｗｗｗｗｗｗｗｗ」という2013年05月01日に立てたれたスレからはじまるムーブメントで、まとめwikiが作成されるほど参加者が生まれていた。<br>
+                  <br>
+                  テキストサイト自体に思い入れはなく、どちらかといえばイラストやテキストをコンテンツにする創作系個人サイトのほうが憧れがあった。<br>
+                  <br>
+                  しかし、かつてあったインターネットを自分たちでもう一度再現するという試みに共感したのだった。
+                </p>
+                <p>
+                  直接のきっかけをもうひとつ挙げるとすると、Tumblr独特の「aestethic」な文化のなかに、web1.0風の個人サイトをTumblrブログ上に再現するという流れがあったからだった。<br>
+                  <br>
+                  Tumblrの独特な画像文化は2010年代のインターネットを彩っていた。<br>
+                  <br>
+                  2010年代を通してTumblrを中心に、vaporwaveに代表されるノスタルジックモードを基調とする画像文化と、当時ポスト・インターネットアートなどと呼ばれていたコンセプチュアルなテーマを持ったTumblrブログをムードボード的・キュレーション的に運用する潮流が相互参照しながら同時に拡大していた。<br>
+                  <br>
+                  そうした流れのなかで、レトロデザイン風のテーマを自作して、リブログするそれぞれ好みの美学をTumblrブログ全体で演出する文化が生まれていった。<br>
+                  <br>
+                  自分個人としては、レトロなデザインをそのまま再現するようなベタなサイトは好みではなかったが、こうした文化を横目で見ながら、楽しそうでいいなあと思ったのを覚えている。
+                </p>
+                <p>
+                  実際にneocitiesのアカウントを取得したのは2019年07月18日のことで、翌日にmisskey.ioでURLを共有した。当初、公開してからしばらくはほとんどコンテンツがない状態だった。<br>
+                  <br>
+                  そこから、今の『100%health』の原型となるサイトができたのが2020年05月はじめのころだった。<br>
+                  <br>
+                  Tumblrブログのほうで公開していたイラストにはある程度リアクションが付くようになっていてうれしかった。しかし、TwitterやPixivといった大手プラットフォームにイラストを公開するのが、だんだんと嫌になってきていた。<br>
+                  <br>
+                  UCGなどといわれるように、コンテンツが一種の広告として利用されているように感じて、また、個々のプラットフォームのなかでアテンションを稼ぐよう急き立てられている感じがしていたからだった。これには被害妄想的なところもあるかもしれない。
+                </p>
+                <p>
+                  個人サイトを作った理由を簡単にいえば、凝ったことはできないが、自分のペースで自分の絵を見せられる場が欲しかったということだ。<br>
+                  <br>
+                  さいごにまとめると、Tumblrでの活動、テキストサイト復興運動を目にしていたこと、自分の場をもちたいという欲求と関心が重なったことでこのサイトは生まれた。<br>
+                  <br>
+                  このようにして『100%health』は私達の元へ届けられている。
+                </p>
+              </div>
+            </div>
+          </details>
+        </section>
+        <section id="change_log">
+          <h2>更新履歴</h2>
+          <div class="section-item">
+            <ul>
+              <li>2024年12月11日初版公開</li>
+              <li>2025年02月14日更新</li>
+            </ul>
+          </div>
+        </section>
+      </article>
+    </main>
+    <footer id="main-footer">
+      <div id="texthtml"></div>
+      <!-- main.jsからsitenav.htmlの挿入 -->
+      <div id="sitenavhtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../../luminous-basic.min.css">
+    <script src="../../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+</body>
+
+</html>

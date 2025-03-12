@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fanart_hatsune - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+</head>
+
+<body>
+  <div id="wrapper">
+    <p id="parentFile" style="display:none;">fanart / </p>
+    <script type="text/javascript">
+      header();
+    </script>
+    <main id="main">
+      <div id="galleryspace">
+        <div class="card">
+          <div class="piccard">
+            <a href="../../img/fanart/2021-04-22_2.jpg"><img src="../../img/fanart/2021-04-22_2.jpg"
+                alt="fan art hatsune miku" class="border_img"></a>
+            <p class="title"></p>
+            <div class="caption">
+              <details open>
+                <summary></summary>
+                初音ミク<br>
+                <a href="https://yuinoid.tumblr.com/post/649143917550469120" target="_blank">tumblr</a>
+              </details>
+            </div>
+            <p class="date">>2022-12-22</p>
+          </div>
+          <nav class='arrow'>
+            <nav class="rowarrow">
+              <a class="leftarrow" href="fanart_kagamin.html">&lt;</a>
+              <a class="uparrow" href="fanart.html#fanart_hatsune">&lt;&lt;</a>
+              <a class="rightarrow" href="fanart_helve.html">&gt;</a>
+            </nav>
+          </nav>
+        </div>
+      </div>
+    </main>
+    <footer id="main-footer">
+      <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+      <div id="galleryhtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../../luminous-basic.min.css">
+    <script src="../../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+</body>
+
+</html>

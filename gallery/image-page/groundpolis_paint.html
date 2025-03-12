@@ -1,67 +1,364 @@
 <!DOCTYPE html>
 <html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>groundpolis_paint - 100%health</title>
+		<link rel="stylesheet" href="../../1column.css" />
+		<script src="../../js/jquery-3.6.0.min.js"></script>
+		<script src="../../js/main.js"></script>
+		<script src="/js/mouse.js" defer></script>
+	</head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>groundpolis_paint - 100%health</title>
-  <link rel="stylesheet" href="../../1column.css">
-  <script src="../../js/jquery-3.6.0.min.js"></script>
-  <script src="../../js/main.js"></script>
-  <script src="/js/mouse.js" defer></script>
-</head>
-
-<body>
-  <div id="wrapper">
-    <script type="text/javascript">
-      header();
-    </script>
-    <div id="main">
-      <div id="galleryspace">
-        <div class="card">
-          <div class="piccard">
-            <a href="../../img/original/allthistime13_min.webp">
-              <img src="../../img/original/allthistime13_min.webp" alt="att13">
-            </a>
-            <p class="title">all this time 13</p>
-            <p class="caption">
-              groundpolis
-            </p>
-            <p class="date">>2020-06-08</p>
-            <nav class="childpagearrow">
-              <a href="/gallery/image-page/gpp_allthistime13.html">>></a>
-            </nav>
-          </div>
-        </div>
-        <div class="card">
-          <div class="piccard">
-            <a href="../../img/original/airpocket2001_min.webp">
-              <img src="../../img/original/airpocket2001_min.webp" alt="ap2001">
-            </a>
-            <p class="title">air pocket 2001</p>
-            <p class="caption">
-              airpocket
-            </p>
-            <p class="date">>2020-06-14</p>
-            <nav class="childpagearrow">
-              <a href="/gallery/image-page/gpp_airpocket2001.html">>></a>
-            </nav>
-          </div>
-        </div>
-      </div>
-      <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
-      <div id="galleryhtml"></div>
-    </div>
-    <!-- main.jsから#footerへfooter.htmlの挿入 -->
-    <div id="footerhtml"></div>
-    <div id="lightbox">
-      <link rel="stylesheet" href="../../luminous-basic.min.css">
-      <script src="../../Luminous.min.js"></script>
-      <script>
-        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
-      </script>
-    </div>
-  </div>
-</body>
-
+	<body>
+		<div id="wrapper">
+			<script type="text/javascript">
+				header();
+			</script>
+			<main id="main">
+				<div id="galleryspace">
+					<div id="groundpolis_paint_1" class="series">
+						<div class="card">
+							<div class="piccard" id="att13">
+								<a href="../../img/original/allthistime13_min.webp">
+									<img src="../../img/original/allthistime13_min.webp" alt="att13" />
+								</a>
+								<p class="title">all this time 13</p>
+								<div class="caption">groundpolis</div>
+								<p class="date">>2020-06-08</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpp_allthistime13.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="ap2001">
+								<a href="../../img/original/airpocket2001_min.webp">
+									<img src="../../img/original/airpocket2001_min.webp" alt="ap2001" />
+								</a>
+								<p class="title">air pocket 2001</p>
+								<div class="caption">airpocket</div>
+								<p class="date">>2020-06-14</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpp_airpocket2001.html">>></a>
+								</nav>
+							</div>
+						</div>
+					</div>
+					<div id="groundpolis_paint_2" class="series">
+						<div class="card">
+							<div class="piccard" id="gpbakaaho">
+								<a href="../../img/original/Bakaaho.png"><img src="../../img/original/Bakaaho.png" alt="att13" /></a>
+								<p class="title"></p>
+								<div class="caption"></div>
+								<p class="date">>2020-05-27</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpbakaaho.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gpyukiko">
+								<a href="../../img/original/ゆきこ.png"><img src="../../img/original/ゆきこ.png" alt="ap2001" /></a>
+								<p class="title"></p>
+								<div class="caption"></div>
+								<p class="date">>2020-06-04</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpyukiko.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gpforyoureyesonly">
+								<a href="../../img/fanart/gpforyoureyesonly.png"><img src="../../img/fanart/gpforyoureyesonly.png"
+										alt="Cashmere Catのファンアート" /></a>
+								<p class="title"></p>
+								<div class="caption"><a href="https://youtu.be/piv3XwFpd9E">PRINCESS CATGIRL</a></div>
+								<p class="date">>2020-06-05</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpforyoureyesonly.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gpASFPC">
+								<a href="../../img/fanart/gpASFPC.png"><img src="../../img/fanart/gpASFPC.png"
+										alt="amnesia scannerのファンアート" /></a>
+								<p class="title"></p>
+								<div class="caption"><a href="https://pan.lnk.to/ASAca">AS</a></div>
+								<p class="date">>2020-06-05</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpASFPC.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gpmutant">
+								<a href="../../img/fanart/gpmutant.png"><img src="../../img/fanart/gpmutant.png" alt="" /></a>
+								<p class="title"></p>
+								<div class="caption"><a href="https://youtu.be/0SYMoTBYT04">Arca Mutant</a></div>
+								<p class="date">>2020-06-25</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpmutant.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gpstarz">
+								<a href="../../img/fanart/gpstarz.png"><img src="../../img/fanart/gpstarz.png" alt="" /></a>
+								<p class="title"></p>
+								<div class="caption"><a href="https://youtu.be/AbSSch--j1I">starz</a></div>
+								<p class="date">>2020-06-25</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpstarz.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gpug">
+								<a href="../../img/fanart/gpug.png"><img src="../../img/fanart/gpug.png" alt="" /></a>
+								<p class="title"></p>
+								<div class="caption"><a href="https://opn.ffm.to/uncut-gems">uncut gems</a></div>
+								<p class="date">>2020-06-25</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpug.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gpsyuua">
+								<a href="../../img/fanart/gpsyuua.png"><img src="../../img/fanart/gpsyuua.png"
+										alt="fan syuudoujo underground chan art" /></a>
+								<p class="title"></p>
+								<div class="caption"></div>
+								<p class="date">>2021-11-04</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpsyuua.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gpmerimi">
+								<a href="../../img/fanart/gpmerimi.png"><img src="../../img/fanart/gpmerimi.png"
+										alt="fanart merimi-chan (c)muuque." /></a>
+								<p class="title"></p>
+								<div class="caption"></div>
+								<p class="date">>2021-11-04</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gpmerimi.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gphelve">
+								<a href="../../img/fanart/gphelve.png"><img src="../../img/fanart/gphelve.png"
+										alt="fanart semikure helve (c)cicada-sss" /></a>
+								<p class="title"></p>
+								<div class="caption"></div>
+								<p class="date">>2021-11-04</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gphelve.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gptaniguchi">
+								<a href="../../img/fanart/gptaniguchi.png"><img src="../../img/fanart/gptaniguchi.png"
+										alt="fanart taniguchi-chan (c)tktekuno" /></a>
+								<p class="title"></p>
+								<div class="caption"></div>
+								<p class="date">>2021-11-10</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gptaniguchi.html">>></a>
+								</nav>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard" id="gp1">
+								<a href="../../img/original/gp1.png"><img src="../../img/original/gp1.png" alt="groundpolis paint" /></a>
+								<p class="title"></p>
+								<div class="caption"></div>
+								<p class="date">>2021-11-10</p>
+								<nav class="childpagearrow">
+									<a href="/gallery/image-page/gp1.html">>></a>
+								</nav>
+							</div>
+						</div>
+					</div>
+					<div id="groundpolis_paint_rip" class="series">
+						<p>thank you, groundpolis paint</p>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_shikako.png"><img src="../../img/original/gp_shikako.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">rakugaki</div>
+								<p class="date">>2020-06-04</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_rakugaki3.png"><img src="../../img/original/gp_rakugaki3.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">rakugaki</div>
+								<p class="date">>2020-12-22</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_dai.png"><img src="../../img/original/gp_dai.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">rakugaki</div>
+								<p class="date">>2021-10-30</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_rakugaki2.png"><img src="../../img/original/gp_rakugaki2.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">rakugaki</div>
+								<p class="date">>2021-11-01</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/fanart/gp_tenten.png"><img src="../../img/fanart/gp_tenten.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">幽幻道士 恬恬</div>
+								<p class="date">>2021-11-03</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_rakugaki.png"><img src="../../img/original/gp_rakugaki.png" alt="gp illust" /></a>
+								<p class="title">rakugaki</p>
+								<div class="caption"></div>
+								<p class="date">>2021-11-05</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_crossfall.png"><img src="../../img/original/gp_crossfall.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">rakugaki</div>
+								<p class="date">>2021-11-05</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_floor.png"><img src="../../img/original/gp_floor.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">rakugaki</div>
+								<p class="date">>2021-11-05</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/fanart/gp_gomamayo.png"><img src="../../img/fanart/gp_gomamayo.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">
+									<a href="https://soundcloud.com/thinaticsystem/gomamayo" target="_blank">gomamayo</a>
+								</div>
+								<p class="date">>2021-11-05</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_kana.png"><img src="../../img/original/gp_kana.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">rakugaki kana chan</div>
+								<p class="date">>2021-11-23</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_p1.png"><img src="../../img/original/gp_p1.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">rakugaki</div>
+								<p class="date">>2021-11-23</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_p2.png"><img src="../../img/original/gp_p2.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">rakugaki</div>
+								<p class="date">>2021-11-23</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/fanart/gp_neko.png"><img src="../../img/fanart/gp_neko.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">kusaneko</div>
+								<p class="date">>2021-12-03</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/fanart/gp_helve.png"><img src="../../img/fanart/gp_helve.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">helvetica_youth</div>
+								<p class="date">>2021-12-06</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/fanart/gp_ruchika.png"><img src="../../img/fanart/gp_ruchika.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">ebise lutica</div>
+								<p class="date">>2021-12-06</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_aanoshi.png"><img src="../../img/original/gp_aanoshi.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">熨斗</div>
+								<p class="date">>2022-03-31</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/fanart/gp_sukigirlz.png"><img src="../../img/fanart/gp_sukigirlz.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption">
+									<a href="https://youtu.be/laZKLNCOg8A" target="_blank">suki-girlz</a>
+								</div>
+								<p class="date">>2022-05-06</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_mirrorroom.png"><img src="../../img/original/gp_mirrorroom.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption"></div>
+								<p class="date">>2022-05-06</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="piccard">
+								<a href="../../img/original/gp_kema.png"><img src="../../img/original/gp_kema.png" alt="gp illust" /></a>
+								<p class="title"></p>
+								<div class="caption"></div>
+								<p class="date">>2022-03-31</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+			<footer id="main-footer">
+				<!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+				<div id="galleryhtml"></div>
+				<!-- main.jsから#footerへfooter.htmlの挿入 -->
+				<div id="footerhtml"></div>
+			</footer>
+		</div>
+		<div id="lightbox">
+			<link rel="stylesheet" href="../../luminous-basic.min.css" />
+			<script src="../../Luminous.min.js"></script>
+			<script>
+				new LuminousGallery(document.querySelectorAll("a[href$=jpg],a[href$=png],a[href$=gif]"));
+			</script>
+		</div>
+	</body>
 </html>

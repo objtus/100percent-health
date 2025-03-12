@@ -1,0 +1,771 @@
+{
+	"categories": [
+		{
+			"name": "basics",
+			"subcategories": [
+				{
+					"name": "background",
+					"elements": [
+						{
+							"id": "bg1",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							]
+						},
+						{
+							"id": "bg2",
+							"images": [
+								{
+									"fileName": "parts/basics/background/bg2.png",
+									"zIndex": 0
+								}
+							]
+						},
+						{
+							"id": "bg3",
+							"images": [
+								{
+									"fileName": "parts/basics/background/bg3.png",
+									"zIndex": 0
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "body",
+					"elements": [
+						{
+							"id": "body1",
+							"images": [
+								{
+									"fileName": "parts/basics/body/body1.png",
+									"zIndex": 100
+								}
+							],
+                            "dependentElements": {
+								"head": "head1"
+							}
+						},
+						{
+							"id": "body2",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 100
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "head",
+					"elements": [
+						{
+							"id": "head1",
+							"images": [
+								{
+									"fileName": "parts/basics/head/head1.png",
+									"zIndex": 200
+								}
+							]
+						},
+						{
+							"id": "head2",
+							"images": [
+								{
+									"fileName": "parts/basics/head/head2.png",
+									"zIndex": 200
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "face",
+			"subcategories": [
+				{
+					"name": "ear",
+					"elements": [
+						{
+							"id": "ear1",
+							"images": [
+								{
+									"fileName": "parts/face/ear/ear1-1.png",
+									"zIndex": 400
+								},
+								{
+									"fileName": "parts/face/ear/ear1-2.png",
+									"zIndex": 150
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "eyebrow",
+					"elements": [
+						{
+							"id": "eyebrow1",
+							"images": [
+								{
+									"fileName": "parts/face/eyebrow/eyebrow1.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyebrow2",
+							"images": [
+								{
+									"fileName": "parts/face/eyebrow/eyebrow2.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyebrow3",
+							"images": [
+								{
+									"fileName": "parts/face/eyebrow/eyebrow3.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyebrow4",
+							"images": [
+								{
+									"fileName": "parts/face/eyebrow/eyebrow4.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyebrow5",
+							"images": [
+								{
+									"fileName": "parts/face/eyebrow/eyebrow5.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyebrow6",
+							"images": [
+								{
+									"fileName": "parts/face/eyebrow/eyebrow6.png",
+									"zIndex": 400
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "eyes",
+					"elements": [
+						{
+							"id": "eyes1",
+							"images": [
+								{
+									"fileName": "parts/face/eyes/eye1.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyes2",
+							"images": [
+								{
+									"fileName": "parts/face/eyes/eye2.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyes3",
+							"images": [
+								{
+									"fileName": "parts/face/eyes/eye3.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyes4",
+							"images": [
+								{
+									"fileName": "parts/face/eyes/eye4.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyes5",
+							"images": [
+								{
+									"fileName": "parts/face/eyes/eye5.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyes6",
+							"images": [
+								{
+									"fileName": "parts/face/eyes/eye6.png",
+									"zIndex": 400
+								}
+							]
+						},
+						{
+							"id": "eyes7",
+							"images": [
+								{
+									"fileName": "parts/face/eyes/eye7.png",
+									"zIndex": 400
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "nose",
+					"elements": [
+						{
+							"id": "nose1",
+							"images": [
+								{
+									"fileName": "parts/face/nose/nose1.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "nose2",
+							"images": [
+								{
+									"fileName": "parts/face/nose/nose2.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "nose3",
+							"images": [
+								{
+									"fileName": "parts/face/nose/nose3.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "none",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 300
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "mouth",
+					"elements": [
+						{
+							"id": "mouth1",
+							"images": [
+								{
+									"fileName": "parts/face/mouth/mouth1.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "mouth2",
+							"images": [
+								{
+									"fileName": "parts/face/mouth/mouth2.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "mouth3",
+							"images": [
+								{
+									"fileName": "parts/face/mouth/mouth3.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "mouth4",
+							"images": [
+								{
+									"fileName": "parts/face/mouth/mouth4.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "mouth5",
+							"images": [
+								{
+									"fileName": "parts/face/mouth/mouth5.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "mouth6",
+							"images": [
+								{
+									"fileName": "parts/face/mouth/mouth6.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "mouth67",
+							"images": [
+								{
+									"fileName": "parts/face/mouth/mouth7.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "mouth8",
+							"images": [
+								{
+									"fileName": "parts/face/mouth/mouth8.png",
+									"zIndex": 300
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "hair",
+			"subcategories": [
+				{
+					"name": "basehair",
+					"elements": [
+						{
+							"id": "basehair1",
+							"images": [
+								{
+									"fileName": "parts/hair/basehair/basehair1/basehair1-1.png",
+									"zIndex": 300
+								}
+							]
+						},
+                        {
+							"id": "basenone",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							]
+						}
+					]
+				},
+                {
+					"name": "maegami",
+					"elements": [
+						{
+							"id": "maegami1",
+							"images": [
+								{
+									"fileName": "parts/hair/maegami/maegami1.png",
+									"zIndex": 600
+								}
+							]
+						},
+						{
+							"id": "maegami2",
+							"images": [
+								{
+									"fileName": "parts/hair/maegami/maegami2.png",
+									"zIndex": 600
+								}
+							]
+						},
+						{
+							"id": "maegami3",
+							"images": [
+								{
+									"fileName": "parts/hair/maegami/maegami3.png",
+									"zIndex": 600
+								}
+							]
+						},
+						{
+							"id": "maegami4",
+							"images": [
+								{
+									"fileName": "parts/hair/maegami/maegami4.png",
+									"zIndex": 600
+								}
+							]
+						},
+						{
+							"id": "maegami5",
+							"images": [
+								{
+									"fileName": "parts/hair/maegami/maegami5/maegami5-1.png",
+									"zIndex": 600
+								},
+								{
+									"fileName": "parts/hair/maegami/maegami5/maegami5-2.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "maegami6",
+							"images": [
+								{
+									"fileName": "parts/hair/maegami/maegami6.png",
+									"zIndex": 600
+								}
+							]
+						},
+						{
+							"id": "maegami7",
+							"images": [
+								{
+									"fileName": "parts/hair/maegami/maegami7.png",
+									"zIndex": 600
+								}
+							]
+						},
+                        {
+							"id": "maenone",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							],
+                            "dependentElements": {
+								"basehair": "basehair1"
+							}
+						}
+					]
+				},
+                {
+					"name": "yokogami",
+					"elements": [
+						{
+							"id": "yokogami1",
+							"images": [
+								{
+									"fileName": "parts/hair/yokogami/yokogami1.png",
+									"zIndex": 500
+								}
+							]
+						},
+						{
+							"id": "yokogami2",
+							"images": [
+								{
+									"fileName": "parts/hair/yokogami/yokogami2.png",
+									"zIndex": 500
+								}
+							]
+						},
+						{
+							"id": "yokogami3",
+							"images": [
+								{
+									"fileName": "parts/hair/yokogami/yokogami3.png",
+									"zIndex": 500
+								}
+							]
+						},
+						{
+							"id": "yokogami4",
+							"images": [
+								{
+									"fileName": "parts/hair/yokogami/yokogami4.png",
+									"zIndex": 500
+								}
+							]
+						},
+                        {
+							"id": "yokonone",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							]
+						}
+					]
+				},
+                {
+					"name": "ushirogami",
+					"elements": [
+                        {
+							"id": "ushironone",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							]
+						},
+						{
+							"id": "ushirogami1",
+							"images": [
+								{
+									"fileName": "parts/hair/ushirogami/ushirogami1/ushirogami1-1.png",
+									"zIndex": 50
+								},
+                                {
+                                    "fileName": "parts/hair/ushirogami/ushirogami1/ushirogami1-2.png",
+                                    "zIndex": 590
+                                }
+                            ]
+						},
+						{
+							"id": "ushirogami2",
+							"images": [
+								{
+									"fileName": "parts/hair/ushirogami/ushirogami2/ushirogami2-1.png",
+									"zIndex": 50
+								},
+                                {
+                                    "fileName": "parts/hair/ushirogami/ushirogami2/ushirogami2-2.png",
+                                    "zIndex": 590
+                                }
+                            ],
+                            "dependentElements": {
+								"basehair": "basehair2"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "clothes",
+			"subcategories": [
+				{
+					"name": "underwear",
+					"elements": [
+						{
+							"id": "underwear",
+							"images": [
+								{
+									"fileName": "parts/clothes/underwear/underwear1.png",
+									"zIndex": 200
+								}
+							]
+						},
+						{
+							"id": "underwear",
+							"images": [
+								{
+									"fileName": "parts/clothes/underwear/underwear2.png",
+									"zIndex": 200
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "tops",
+					"elements": [
+						{
+							"id": "t-shirts",
+							"images": [
+								{
+									"fileName": "parts/clothes/tops/tops1.png",
+									"zIndex": 300
+								}
+							]
+						},
+						{
+							"id": "topsnone",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 20
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "ribbons",
+					"elements": [
+						{
+							"id": "no_ribbon",
+							"images": [
+								{
+									"fileName": "parts/clothes/ribbons/none.png",
+									"zIndex": 20
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "accessories",
+			"subcategories": [
+				{
+					"name": "head1",
+					"elements": [
+						{
+							"id": "none",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							]
+						},
+						{
+							"id": "head-accessory1",
+							"images": [
+								{
+									"fileName": "parts/accessories/head/glasses1.png",
+									"zIndex": 700
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "head2",
+					"elements": [
+						{
+							"id": "none",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							]
+						},
+						{
+							"id": "head-accessory1",
+							"images": [
+								{
+									"fileName": "parts/accessories/head/glasses1.png",
+									"zIndex": 700
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "head3",
+					"elements": [
+						{
+							"id": "none",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							]
+						},
+						{
+							"id": "head-accessory1",
+							"images": [
+								{
+									"fileName": "parts/accessories/head/glasses1.png",
+									"zIndex": 700
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "body1",
+					"elements": [
+						{
+							"id": "none",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							]
+						},
+						{
+							"id": "body-accessory1",
+							"images": [
+								{
+									"fileName": "parts/clothes/tops/tops1.png",
+									"zIndex": 300
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "body2",
+					"elements": [
+						{
+							"id": "none",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							]
+						},
+						{
+							"id": "body-accessory1",
+							"images": [
+								{
+									"fileName": "parts/clothes/tops/tops1.png",
+									"zIndex": 300
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "body3",
+					"elements": [
+						{
+							"id": "none",
+							"images": [
+								{
+									"fileName": "parts/none.png",
+									"zIndex": 0
+								}
+							]
+						},
+						{
+							"id": "body-accessory1",
+							"images": [
+								{
+									"fileName": "parts/clothes/tops/tops1.png",
+									"zIndex": 300
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

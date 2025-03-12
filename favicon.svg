@@ -7,7 +7,6 @@
     @media (prefers-color-scheme: dark) {
       path {
         fill: white; <!-- ダークモード時のカラー -->
-        opacity: 0;
       }
     }
   </style>
