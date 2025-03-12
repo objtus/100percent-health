@@ -1,0 +1,203 @@
+  <!DOCTYPE html>
+  <html lang="ja">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 - 100%health</title>
+    <link rel="stylesheet" href="/1column.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/mouse.js" defer></script>
+    <script>
+      $(function () {
+        $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+      });
+    </script>
+    <script>
+      $(document).ready(function () {
+        var yearDiv = $('#y2025');
+        const year = '2025';
+
+        // 月別スクリプトを動的にロードする関数
+        function loadMonthScript(month) {
+          return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = `/txt/zakki/${year}/${month}/zakki${month}.js`;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+          });
+        }
+
+        // 12ヶ月分のdiv要素を作成
+        for (var i = 1; i <= 12; i++) {
+          var monthId = 'm' + ('0' + i).slice(-2);
+          var monthDiv = $('<div>').attr('id', monthId);
+          yearDiv.append(monthDiv);
+        }
+
+        var counter = 1;
+        var totalMonths = 12;
+
+        async function loadMonth(month) {
+          var paddedMonth = ('0' + month).slice(-2);
+          var monthId = 'm' + paddedMonth;
+
+          try {
+            // 1. 月別HTMLの読み込み
+            const response = await $.ajax({
+              url: `/txt/zakki/${year}/${paddedMonth}/${year}-${paddedMonth}.html`,
+              type: 'GET'
+            });
+
+            var content = $(response).find('#zakki' + paddedMonth).html();
+            if (content) {
+              $('#' + monthId).html(content);
+
+              // 2. 月別スクリプトの読み込み
+              await loadMonthScript(paddedMonth);
+
+              // 3. 記事読み込み関数の実行
+              const funcName = `loadDailyArticles${paddedMonth}`;
+              if (typeof window[funcName] === 'function') {
+                await window[funcName]();
+              }
+            }
+          } catch (error) {
+            console.error(`Error loading month ${paddedMonth}:`, error);
+          }
+
+          // 次の月の処理
+          counter++;
+          if (counter <= totalMonths) {
+            await loadMonth(counter);
+          }
+        }
+
+        // 1月から読み込み開始
+        loadMonth(1);
+      });
+    </script>
+    <style>
+      #texthtml {
+        padding-left: 6.3em;
+        text-indent: -6.3em;
+        margin-bottom: 40%;
+    
+        ol {
+          display: flex;
+          flex-direction: column-reverse;
+          list-style: none;
+        }
+      }
+      .month-article{
+        padding-left: 0px;
+        background-image: linear-gradient(to bottom, #000 4px, transparent 4px);
+        background-size: 2px 8px;
+        background-repeat: repeat-y;
+        background-position: left bottom;
+        margin-bottom: 32px;
+        margin-left: 10px;
+      }
+      article{
+        overflow: hidden;
+        display: -webkit-box;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 7;
+
+        h3{
+          font-size: 14pt;
+          padding-left: 10px;
+          border-left: 5px solid;
+          border-bottom: 2px dotted;
+          margin-left: 20px;
+        }
+        p{
+          font-size: 10pt;
+          padding-left: 40px;
+        }
+        ul{
+          font-size: 10pt;
+          text-indent: -4.8em;
+          margin-left: 9em;
+          list-style: none;
+        }
+        hr{
+          border: none;
+          text-align: center;
+          font-size: 1em;
+          margin-right: 40px;
+        }
+        hr::before{
+          content: '*****';
+          letter-spacing: 1em;
+          padding-left: 1em;
+        }
+      }
+      #zakkizone{
+        list-style-type: none;
+      }
+      #monthlist{
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 20px;
+      }
+      .month{
+        margin-right: 20px;
+      }
+      #zakkihtml{
+        margin-top: 60px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="wrapper">
+      <header id="header">
+        <div id="header-flex">
+          <nav id="back">
+            <a id="backicon" href="/index.html">
+              &lt;
+            </a>
+          </nav>
+          <nav id="address" class="addressbar">
+            <a class="addressbar" href="/index.html">
+              100%health
+            </a>/
+            <a class="addressbar" href="/txt/txt_main.html">
+              txt
+            </a>/
+            <a class="addressbar" href="/txt/zakki/2025.html">
+              2025
+            </a>
+            </a>
+          </nav>
+        </div>
+      </header>
+      <main id="main">
+        <br>
+        <h1>2025年の雑記帳</h1>
+
+        <div id="y2025">
+        </div>
+        
+      </main>
+      <footer id="main-footer">
+        <div id="zakkihtml"></div>
+        <!-- main.jsから#footerへfooter.htmlの挿入 -->
+        <div id="footerhtml"></div>
+      </footer>
+    </div>
+    <div id="lightbox">
+      <link rel="stylesheet" href="/luminous-basic.min.css">
+      <script src="/Luminous.min.js"></script>
+      <script>
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+      </script>
+    </div>
+  </body>
+
+  </html>

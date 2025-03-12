@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>それっぽいジェネレーター</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            margin: 1rem auto;
+            max-width: 42rem;
+            padding: 1.5rem;
+        }
+
+        .display-box {
+            border-radius: 0.5rem;
+            min-height: 5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+        }
+
+        .term-display {
+            background-color: #EBF8FF;
+        }
+
+        .book-display {
+            background-color: #F0FFF4;
+        }
+
+        .display-text {
+            font-weight: bold;
+            font-size: 1.25rem;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .term-text {
+            color: #2C5282;
+        }
+
+        .book-text {
+            color: #276749;
+        }
+
+        .history {
+            color: #718096;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .history ul {
+            list-style-type: disc;
+            padding-left: 1.25rem;
+        }
+
+        .history li {
+            word-break: break-all;
+            margin-bottom: 0.25rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-blue {
+            background-color: #4299E1;
+            color: white;
+        }
+
+        .btn-blue:hover {
+            background-color: #3182CE;
+        }
+
+        .btn-green {
+            background-color: #48BB78;
+            color: white;
+        }
+
+        .btn-green:hover {
+            background-color: #38A169;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .icon {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .icon-yellow {
+            color: #ECC94B;
+        }
+
+        .icon-green {
+            color: #48BB78;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <!-- 専門用語ジェネレーター -->
+    <div class="card mb-8">
+        <div class="section-title">
+            <svg class="icon icon-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+            </svg>
+            <h2>それっぽい専門用語</h2>
+        </div>
+        
+        <div class="display-box term-display">
+            <p id="currentTerm" class="display-text term-text">生成中...</p>
+        </div>
+
+        <div id="termHistory" class="history" style="display: none;">
+            <p class="mb-2">最近生成された用語：</p>
+            <ul id="termHistoryList"></ul>
+        </div>
+
+        <button onclick="generateNewTerm()" class="btn btn-blue">
+            新しい専門用語を生成
+        </button>
+    </div>
+
+    <!-- 書名ジェネレーター -->
+    <div class="card">
+        <div class="section-title">
+            <svg class="icon icon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+            <h2>それっぽい書名</h2>
+        </div>
+        
+        <div class="display-box book-display">
+            <p id="currentBook" class="display-text book-text">生成中...</p>
+        </div>
+
+        <div id="bookHistory" class="history" style="display: none;">
+            <p class="mb-2">最近生成された書名：</p>
+            <ul id="bookHistoryList"></ul>
+        </div>
+
+        <button onclick="generateNewBook()" class="btn btn-green">
+            新しい書名を生成
+        </button>
+    </div>
+
+    <script>
+        window.termParts = null;
+        window.bookParts = null;
+    </script>
+    <script src="data.js"></script>
+    <script src="book_data.js"></script>
+    <script src="generator.js"></script>
+    <script src="book_generator.js"></script>
+</body>
+</html>

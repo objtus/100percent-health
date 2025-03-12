@@ -6,15 +6,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>about_me - 100%health</title>
   <link rel="stylesheet" href="../1column.css">
-  <link rel="stylesheet" href="./links.css">
   <script src="../js/jquery-3.6.0.min.js" defer></script>
   <script src="../js/main.js" defer></script>
   <script src="./js/mouse.js" defer></script>
+  <link rel="profile" href="https://microformats.org/profile/hcard">
+  <style>
+    #galleryspace {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 30px;
+    }
+
+    .heading {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+  
+    p.contact {
+      border: solid 1px;
+      text-indent: -4rem;
+      padding-left: 4rem;
+    }
+
+    #bio {
+      h1{
+        margin-top: 0;
+      }
+    }
+  
+    #biocard {
+      border: solid 0px;
+      margin-bottom: 20px;
+    }
+  
+    div#bio, div#social_links {
+      margin-bottom: 30px;
+    }
+  
+    .profile-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12pt;
+  
+      th {
+        position: relative;
+        width: 100px;
+        text-align: left;
+        padding: 15px 40px 15px 0;
+        font-weight: normal;
+        vertical-align: top;
+      }
+      th::after {
+        content: '：';
+      position: absolute;
+      right: 20px;
+      }
+      td {
+        padding: 10px 0;
+      }
+      tr{
+        border-bottom: 1px solid #f0f0f0;
+      }
+      tr:last-child{
+        border-bottom: none;
+      }
+    }
+  
+    div#site_introduction,
+    table.profile-table {
+      a::before {
+        content: '♥';
+      }
+    }
+
+    @media screen and (max-width:628px) {
+      .profile-table {
+        th {
+          width: 88px;
+        }
+      }
+    }
+  </style>
 </head>
 
 <body>
   <div id="wrapper">
-    <div id="header">
+    <header id="header">
       <div id="header-flex">
         <nav id="back">
           <a id="backicon" href="../index.html">
@@ -30,43 +107,130 @@
           </a>
         </nav>
       </div>
-    </div>
-    <div id="main">
-      <div id="galleryspace">
-        <div id="social_links">
-          <h1>my links</h1>
-          <p><a href="https://pon.icu/@health" target="_blank">pon.icu</a><br>
-            個人用misskeyサーバーを立ち上げました。<br>
-            現在はpon.icuをメインに投稿しています。いつ壊れるか心配です。<br>
-          </p>
-          <p><a href="https://msk.ilnk.info/@google">msk.ilnk.info</a><br>
-            <s>メインで使っているSNSです。</s>現在はサブアカウントとして運用しています。<br>
-            サーバー管理者はこのサイトと相互リンクしている<a href="https://home.ilnk.info" target="_blank">たんぬふぇでぃばーす</a>の管理者でもあるこんこんたんぬもろてさんです。<br>
-            （2023年2月25日追記）個人用misskeyサーバーを立ち上げたのでメインアカウントはそっちに移動しました。
-          </p>
-          <p><a class="heart" href="https://groundpolis.app/@healthcare" target="_blank">groundpolis.app</a><br>
-            <s>メインで使っているSNSです。</s> groundpolis.appはgroundpolis開発者の運営するインスタンス、groundpolisはmisskeyというActivityPub対応の分散型マイクロブログSNSをベースにしたミニブログソフトウェアです。<br>
-            (2022年11月17日追記)groundpolisの開発中止にともないgroundpolis.appの閉鎖が発表されたので、<s>メインSNSを<a href="https://msk.ilnk.info" target="_blank">msk.ilnk.info</a>へ移動しました。</s>
-          </p>
-          <p><a class="heart" href="https://yuinoid.tumblr.com" target="_blank">tumblr</a><br>
-            yuinoid's tumblr page "girl's surface"<br>
-          </p>
-          <p><a class="heart" href="https://twitter.com/yuinoid" target="_blank">twitter</a><br>
-            投稿はあまりしていません。
-          </p>
-          <p><a href="https://keybase.io/yuinoid" target="_blank" class="heart">keybase</a><br>
-            girl's surface(tumblr)の証明、このサイトの証明はここから確認できます。twitterアカウントの紐付けは行っていません。<br>
-            @healthcare@groundpolis.appの証明は<a href="https://groundpolis.app/@healthcare/pages/keybase" target="_blank">こちら</a>へ。
-          </p>
-          <br>
-          <p><a class="heart" href="https://listography.com/yuinoid" target="_blank">list of other Fediverse accounts HERE</a></p>
-        </div>
-      </div>
-    </div>
-    <!-- main.jsからsitenav.htmlの挿入 -->
-    <div id="sitenavhtml"></div>
-    <!-- main.jsから#footerへfooter.htmlの挿入 -->
-    <div id="footerhtml"></div>
+    </header>
+    <main id="main">
+      <section id="galleryspace">
+        <article id="bio" class="vcard" itemscope itemtype="http://schema.org/Person">
+          <h1 class="heading">about me</h1>
+          <div id="biocard">
+            <div style="background-color: black;height: 100%;">
+              <img class="photo" src="/img/idoko4.png" alt="idoko illust" style="opacity: 0.5;" itemprop="image">
+            </div>
+            <table class="profile-table">
+              <tbody>
+                <tr>
+                  <th>名前</th>
+                  <td><span class="fn nickname" itemprop="name">yuinoid</span> / <span class="nickname" itemprop="alternateName">いど子</span></td>
+                </tr>
+                <tr>
+                  <th>プロフィール</th>
+                  <td class="note" itemprop="description">ネットユーザー。日々の気持ちの表明などは分散SNSネットワークの一つであるfediverseで行っており、また時々イラストの制作を行っています。</td>
+                </tr>
+                <tr>
+                  <th>所在地</th>
+                  <td class="adr" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                    <span class="country-name" itemprop="addressCountry">日本</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>趣味</th>
+                  <td class="hobby" itemprop="description">ネットサーフィン, お絵描き, 年表作り, 音楽鑑賞, Webラジオ制作, 配信</td>
+                </tr>
+                <tr>
+                  <th>ウェブサイト</th>
+                  <td>
+                    <a class="url" href="https://yuinoid.neocities.org" rel="me" itemprop="url">yuinoid.neocities.org</a>
+                  </td>
+                </tr>
+                <tr>
+                  <th><small>名義について</small></th>
+                  <td class="note" itemprop="description">オフィシャルな雰囲気を出したいときは''yuinoid''、パーソナリティを必要とするときには''いど子''を使っています。</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="text-align: right;">
+              <a href="https://microformats.org/profile/hcard" class="badge" style="font: 9px Geneva, Verdana, sans-serif; padding: 0 1.0em 1px 0; border: 1px solid #000; background: linear-gradient(to left, #679A06, #AEE219); color: #fff; text-decoration: none; margin-right: 5px;" target="_blank"><span style="background: #000; border-right: 1px solid #000; color: #FFF; padding: 0.1em 0.75em; margin-right: 0.1em;">&#8250;&#8250;&#8250;</span> hCard</a>
+              <a href="https://schema.org/Person" class="badge" style="font: 9px Geneva, Verdana, sans-serif; padding: 0 1.0em 1px 0; border: 1px solid #000; background: linear-gradient(to left, #2B5F9E, #5A9DDC); color: #fff; text-decoration: none;" target="_blank"><span style="background: #000; border-right: 1px solid #000; color: #FFF; padding: 0.1em 0.75em; margin-right: 0.1em;">&#8250;&#8250;&#8250;</span> Schema.org</a>
+            </div>
+          </div>
+        </article>
+        <section id="site_introduction">
+          <p style="text-align: right;">このサイトについては<a href="/txt/100phealth_introduction.html">こちら</a>をご覧ください。</p>
+        </section>
+
+        <section id="social_links">
+          <h1 class="heading">my links</h1>
+          <table class="profile-table">
+            <tbody>
+              <tr>
+                <th><small>イラスト保管庫</small></th>
+                <td>
+                  <a href="https://yuinoid.tumblr.com" target="_blank" rel="me">tumblr</a>
+                </td>
+              </tr>
+              <tr>
+                <th>commission</th>
+                <td>
+                  <a href="https://skeb.jp/@yuinoid" target="_blank">skeb</a><br>
+                  <small>リクエストを募集しています。常にリクエストを募集しているわけではありません。</small>
+                </td>
+              </tr>
+              <tr>
+                <th>sns①</th>
+                <td>
+                  <a href="https://tanoshii.site/@health" target="_blank" rel="me">@tanoshii.site@health ⁂</a><br>
+                  <small>
+                    health名義。普段の投稿はここにすることが多いです。<br>
+                    連絡はこのアカウントにするのが最も確実だと思います。
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <th>sns②</th>
+                <td>
+                  <a href="https://misskey.io/@yuinoid" target="_blank" rel="me">@misskey.io@yuinoid ⁂</a><br>
+                  <small>いど子名義。だいたい告知をすることが多いです。</small>
+                </td>
+              </tr>
+              <tr>
+                <th>sns③</th>
+                <td>
+                  <a href="https://sushi.ski/@idoko" target="_blank" rel="me">@sushi.ski@idoko ⁂</a><br>
+                  <small>いど子名義。すしすきーの内輪向け。</small>
+                </td>
+              </tr>
+              <tr>
+                <th><small>いど子のページ</small></th>
+                <td>
+                  <a href="https://yuinoid.notion.site/d2dd3dde767c45f09673a1c0580a378c" target="_blank">notion site</a><br>
+                  <small>いど子について情報がまとめてあるページです。ここにはないいど子のイラストもみることができます。</small>
+                </td>
+              </tr>
+              <tr>
+                <th><small>他人事ラジオ</small></th>
+                <td>
+                  <a href="https://yuinoid.notion.site/e2b5f05dedf74563b91689832eadfd0a" target="_blank">notion site</a><br>
+                  <small>私とてく野さんがやっているwebラジオ『他人事ラジオ』のページです。</small>
+                </td>
+              </tr>
+              <tr>
+                <th>twitch</th>
+                <td>
+                  <a href="https://twitch.tv/yuinoid/about" target="_blank">いど子チャンネル</a><br>
+                  <small>いど子の配信チャンネルです。チャンネル登録よろしくお願いします。</small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+    </main>
+
+    <footer id="main-footer">
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
   </div>
 </body>
+
 </html>

@@ -13,7 +13,7 @@
 
 <body>
   <div id="wrapper">
-    <div id="header">
+    <header id="header">
       <div id="header-flex">
         <nav id="back">
           <a id="backicon" href="../index.html">
@@ -29,18 +29,25 @@
           </a>
         </nav>
       </div>
-    </div>
-    <div id="main">
+    </header>
+    <main id="main">
       <div id="galleryspace">
         <p>main gallery</p>
         <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
         <div id="galleryhtml"></div>
       </div>
-    </div>
-    <!-- main.jsからsitenav.htmlの挿入 -->
-    <div id="sitenavhtml"></div>
-    <!-- main.jsから#footerへfooter.htmlの挿入 -->
-    <div id="footerhtml"></div>
+    </main>
+    <footer id="main-footer">
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../luminous-basic.min.css">
+    <script src="../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+    </script>
   </div>
 </body>
 

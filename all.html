@@ -10,77 +10,153 @@
   <script src="../../js/main.js"></script>
   <script src="./js/mouse.js" defer></script>
   <script src="../../js/test.js"></script>
+  <script src="./js/scroll.js"></script>
   <script>
-    $(document).ready(function() {
-      var cards = [];
-      var sortOrder = 'desc'; // 初期値は降順
+    document.addEventListener('DOMContentLoaded', function () {
+      const sortSelect = document.getElementById('sortSelect');
+      const gallerySpace = document.getElementById('galleryspace');
+      const series = Array.from(gallerySpace.children).filter(child => child.classList.contains('series'));
 
-      // 各HTMLファイルからカードを取得して、cards配列に追加する
-      function getCards() {
-        cards = [];
-        $.ajax({
-          url: 'gallery/image-page/oc1.html',
-          dataType: 'html',
-          success: function(data) {
-            var cardHtml = $(data).find('.card');
-            cards.push.apply(cards, cardHtml.toArray());
-            sortAndDisplayCards();
-            // ライトボックスを初期化
-            new LuminousGallery(document.querySelectorAll('.card a[href$=jpg], .card a[href$=png], .card a[href$=gif]'));
-          }
-        });
+      // 元の順序を保存するための配列を作成
+      const originalOrder = Array.from(gallerySpace.children).map(child => child.outerHTML);
 
-        $.ajax({
-          url: 'gallery/image-page/oc2.html',
-          dataType: 'html',
-          success: function(data) {
-            var cardHtml = $(data).find('.card');
-            cards.push.apply(cards, cardHtml.toArray());
-            sortAndDisplayCards();
-            // ライトボックスを初期化
-            new LuminousGallery(document.querySelectorAll('.card a[href$=jpg], .card a[href$=png], .card a[href$=gif]'));
-          }
-        });
+      // 初期表示時に"newest"で並び替えを実行
+      sortSelect.value = 'newest';
+      sortImages();
 
-        // 追加のHTMLファイルがあればここにajaxを追加する
-      }
+      sortSelect.addEventListener('change', sortImages);
 
-      // カードを並び替えて表示する
-      function sortAndDisplayCards() {
-        var sortedCards = cards.sort(function(a, b) {
-          var aDate = new Date($(a).find('.piccard .date').text());
-          var bDate = new Date($(b).find('.piccard .date').text());
-          return sortOrder === 'asc' ? aDate - bDate : bDate - aDate;
-        });
+      function sortImages() {
+        const selectedOption = sortSelect.value;
 
-        $('#galleryspace').empty();
-
-        for (var i = 0; i < sortedCards.length; i++) {
-          $('#galleryspace').append(sortedCards[i]);
+        if (selectedOption === 'newest') {
+          const cards = Array.from(gallerySpace.querySelectorAll('.card'));
+          cards.sort((a, b) => {
+            const dateA = new Date(a.querySelector('.date').textContent.slice(1));
+            const dateB = new Date(b.querySelector('.date').textContent.slice(1));
+            return dateB - dateA;
+          });
+          gallerySpace.innerHTML = '';
+          cards.forEach(card => gallerySpace.appendChild(card));
+          gallerySpace.classList.add('sorted');
+        } else if (selectedOption === 'oldest') {
+          const cards = Array.from(gallerySpace.querySelectorAll('.card'));
+          cards.sort((a, b) => {
+            const dateA = new Date(a.querySelector('.date').textContent.slice(1));
+            const dateB = new Date(b.querySelector('.date').textContent.slice(1));
+            return dateA - dateB;
+          });
+          gallerySpace.innerHTML = '';
+          cards.forEach(card => gallerySpace.appendChild(card));
+          gallerySpace.classList.add('sorted');
+        } else if (selectedOption === 'series') {
+          // シリーズ順の場合は、元の並び順を復元する
+          gallerySpace.innerHTML = originalOrder.join('');
+          gallerySpace.classList.remove('sorted');
         }
       }
-
-      // カードの取得と並び替えを実行する
-      getCards();
-
-      // 昇順と降順を切り替えるボタンのクリックイベントを追加する
-      $('.sort-button').on('click', function() {
-        sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-        sortAndDisplayCards();
-        $(this).text(sortOrder === 'asc' ? '昇順に並び替える' : '降順に並び替える');
-      });
     });
   </script>
   <style>
-    .caption {
+    .title{
       display: none;
+    }
+    .caption{
+      display: none;
+    }
+    #galleryspace{
+      display: grid;
+    }
+    #galleryspace.sorted .series {
+      display: contents;
+    }
+    .series{
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .card{
+      width: 50%;
+    }
+    #galleryspace.sorted .card {
+      width: 100% !important;
+    }
+    #sidebar{
+      position: fixed;
+      height: 105px;
+      bottom: 10vh;
+      transform: scale(1, 0.85);
+
+      #sortOptions {
+        position: relative;
+        top: 0px;
+        font-weight: bold;
+        font-size: large;
+        #sortLabel{
+          display: inline-flex;
+          flex-wrap: no-wrap;
+          align-items: center;
+          position: relative;
+          appearance: none;
+          -webkit-appearance: none;
+        }
+        #sortLabel::after {
+          position: absolute;
+          right: 8px;
+          width: 10px;
+          height: 7px;
+          background-color: #202020;
+          clip-path: polygon(0 0, 100% 0, 50% 100%);
+          content: '';
+          pointer-events: none;
+        }
+        #sortLabel select {
+          appearance: none;
+          padding: .2em calc(.4em + 16px) .2em .4em;
+          border: 1px solid #000000;
+          border-radius: 3px;
+          background-color: #ffffff00;
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+          color: #000000;
+          font-size: 1em;
+        }
+        #sortSelect{
+          font-family: 'saitamaar';
+        }
+      }
+      #to{
+        position: absolute;
+        bottom: 0px;
+      }
+      button{
+        font-family: 'saitamaar', 'PikoA';
+        color: #000;
+        padding: 5px 10px 5px 10px;
+        border: 1px solid;
+        border-radius: 3px;
+        margin-bottom: 5px;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(10px);
+        cursor: pointer;
+      }
+    }
+    @media screen and (max-width:900px) {
+    }
+    @media screen and (max-width:480px) {
+      .card{
+        width: 100%;
+      }
+      #sortOptions {
+        font-size: medium;
+        top: 40px;
+    }
     }
   </style>
 </head>
 
 <body>
   <div id="wrapper">
-    <div id="header">
+    <header id="header">
       <div id="header-flex">
         <nav id="back">
           <a id="backicon" href="../index.html">
@@ -97,24 +173,1088 @@
           <a class="addressbar" href="/all.html">all</a>
         </nav>
       </div>
-    </div>
+    </header>
     <div id="main">
-      <button class="sort-button">降順に並び替える</button>
-      <div id="galleryspace">
+
+      <div id="animation-container">
+        <div id="animation-frame">
+            <!-- 画像はJavaScriptで動的に追加されます -->
+        </div>
+        <style>
+          #animation-container {
+            position: fixed;
+            top: 80px;
+            /* ヘッダーの高さに応じて調整 */
+            right: 20px;
+            z-index: 1000;
+            pointer-events: none;
+            /* 下のコンテンツのクリックを妨げない */
+          }
+        
+          #animation-frame {
+            width: 200px;
+            height: 150px;
+            position: relative;
+          }
+        
+          #animation-frame img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            object-fit: contain;
+          }
+        
+          #animation-frame img.active {
+            display: block !important;
+          }
+        </style>
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            if (window.ScrollAnimationModule) {
+              const animation = ScrollAnimationModule.createAnimation({
+                imagePath: '/game/gif/',      // 画像フォルダのパス
+                prefix: 'frame-',       // ファイル名のプレフィックス（オプション）
+                scrollSensitivity: 50  // スクロール感度（オプション）
+
+              });
+              animation.initialize();
+            }
+          });
+        </script>
       </div>
 
+      <div id="galleryspace">
+        <div class="series" id="ao-chan">
+          <div class="card">
+            <div class="piccard">
+              <a href="../../img/original/ao-chan.jpg"><img src="../../img/original/ao-chan.jpg" alt="ao"></a>
+              <div class="caption">
+                <p class="title">ao-chan#1</p>
+              </div>
+              <p class="date">>2018-07-25</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/ao-chan_1.html">>></a>
+              </nav>
+            </div>
+          </div>
+          <div class="card">
+            <div class="piccard">
+              <a href="../../img/original/ao-chan-gif.gif"><img src="../../img/original/ao-chan-gif.gif" style="image-rendering: auto !important;" alt="aogif"></a>
+              <div class="caption">
+                <p class="title">ao-chan#2</p>
+              </div>
+              <p class="date">>2020-02-02</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/ao-chan_2.html">>></a>
+              </nav>
+  
+            </div>
+          </div>
+        </div>
+        <div class="series"  id="oc1">
+					<div class="card">
+						<div class="piccard" id="oc1_1">
+							<a href="../../img/original/oc1_1.gif"><img src="../../img/original/oc1_1.gif" alt="original character illust 1" class="border_img" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2020-10-16</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/oc1_1.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="oc1_2">
+							<a href="../../img/original/oc1_2.gif"><img src="../../img/original/oc1_2.gif" alt="original character illust 2" class="border_img" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2020-10-16</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/oc1_2.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="oc1_3">
+							<a href="../../img/original/oc1_3.gif"><img src="../../img/original/oc1_3.gif" alt="original character illust 3" class="border_img" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2020-10-16</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/oc1_3.html">>></a>
+							</nav>
+						</div>
+					</div>
+				</div>
+        <div class="series"  id="oc2">
+          <div class="card">
+            <div class="piccard" id="oc2_1">
+              <a href="../../img/original/oc2_6.png"><img src="../../img/original/oc2_6.png" style="image-rendering: auto !important;" alt="original character illust"></a>
+              <p class="title"></p>
+              <p class="caption"></p>
+              <p class="date">>2020-06-01</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc2_1.html">>></a>
+              </nav>
+            </div>
+          </div>
+          <div class="card">
+            <div class="piccard" id="oc2_2">
+              <a href="../../img/original/oc2_10.png"><img src="../../img/original/oc2_10.png" alt="original character illust"></a>
+              <p class="title"></p>
+              <p class="caption"></p>
+              <p class="date">>2020-06-01</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc2_2.html">>></a>
+              </nav>
+            </div>
+          </div>
+          <div class="card">
+            <div class="piccard" id="oc2_3">
+              <a href="../../img/original/oc2_1.jpg"><img src="../../img/original/oc2_1.jpg" alt="オリジナルキャラクターのラフイラスト" class="border_img"></a>
+              <p class="title"></p>
+              <p class="caption"></p>
+              <p class="date">>2020-01-29</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc2_3.html">>></a>
+              </nav>
+            </div>
+          </div>
+          <div class="card">
+            <div class="piccard" id="oc2_4">
+              <a href="../../img/original/oc2_2.png"><img src="../../img/original/oc2_2.png" alt="original character illust" class="border_img"></a>
+              <p class="title"></p>
+              <p class="caption">
+              </p>
+              <p class="date">>2019-02-24</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc2_4.html">>></a>
+              </nav>
+            </div>
+          </div>
+          <div class="card">
+            <div class="piccard" id="oc2_5">
+              <a href="../../img/original/oc2_4.png"><img src="../../img/original/oc2_4.png" alt="original character illust" class="border_img"></a>
+              <p class="title"></p>
+              <p class="caption"></p>
+              <p class="date">>2020-02-09</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc2_5.html">>></a>
+              </nav>
+            </div>
+          </div>
+          <div class="card">
+            <div class="piccard" id="oc2_6">
+              <a href="../../img/original/oc2_5.png"><img src="../../img/original/oc2_5.png" alt="original character illust" class="border_img"></a>
+              <p class="title"></p>
+              <p class="caption"></p>
+              <p class="date">>2020-02-13</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc2_6.html">>></a>
+              </nav>
+            </div>
+          </div>
+          <div class="card">
+            <div class="piccard" id="oc2_7">
+              <a href="../../img/original/oc2_3.png"><img src="../../img/original/oc2_3.png" alt="original character illust"></a>
+              <p class="title"></p>
+              <p class="caption"></p>
+              <p class="date">>2019-03-08</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc2_7.html">>></a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <div class="series" id="oc3">
+          <div class="card">
+            <div class="piccard" id="oc3_1">
+              <a href="../../img/original/2022-05-13.png"><img src="../../img/original/2022-05-13.png" alt="original character illust"></a>
+              <p class="title"></p>
+              <p class="caption"></p>
+              <p class="date">>2022-05-13</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc3_1.html">>></a>
+              </nav>
+            </div>
+          </div>
+          <div class="card">
+            <div class="piccard" id="oc3_2">
+              <a href="../../img/original/2022-05-13-3dcg.jpg"><img src="../../img/original/2022-05-13-3dcg.jpg" alt="original character illust"></a>
+              <p class="title"></p>
+              <p class="caption"></p>
+              <p class="date">>2022-05-13</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc3_2.html">>></a>
+              </nav>
+            </div>
+          </div>
+          <div class="card">
+            <div class="piccard" id="oc3_3">
+              <a href="../../img/original/2023-10-09.png"><img src="../../img/original/2023-10-09.png" alt="original character illust" class="border_img"></a>
+              <p class="title"></p>
+              <p class="caption"></p>
+              <p class="date">>2023-10-09</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc3_3.html">>></a>
+              </nav>
+            </div>
+          </div>
+          <div class="card">
+            <div class="piccard" id="oc3_4">
+              <a href="../../img/original/2024-05-25-1.webp"><img src="../../img/original/2024-05-25-1.webp" alt="original character illust" class="border_img"></a>
+              <p class="title"></p>
+              <p class="caption">
+                <details open>
+                  <summary></summary>
+                  oc1とoc3。
+                </details>
+              </p>
+              <p class="date">>2024-05-25</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/oc3_4.html">>></a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <div class="series"  id="oc_misc">
+					<div class="card">
+						<div class="piccard" id="oc_misc_1">
+							<a href="../../img/original/oc3_1.png"><img src="../../img/original/oc3_1.png" alt="original character illust" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2020-06-18</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/oc_misc_1.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="oc_misc_2">
+							<a href="../../img/original/oc3_21.gif"><img src="../../img/original/oc3_21.gif" alt="original character illust" class="border_img" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2019-08-10</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/oc_misc_2.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="oc_misc_3">
+							<a href="../../img/original/oc3_3.png"><img src="../../img/original/oc3_3.png" alt="original character illust" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2020-12-25</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/oc_misc_3.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="oc_misc_4">
+							<a href="../../img/original/2022-01-13.jpg"><img src="../../img/original/2022-01-13.jpg" alt="original character illust" class="border_img" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2022-01-13</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/oc_misc_4.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="oc_misc_5">
+							<a href="../../img/original/2022-03-17.jpg"><img src="../../img/original/2022-03-17.jpg" alt="original character illust" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2022-03-17</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/oc_misc_5.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="oc_misc_6">
+							<a href="../../img/original/2022-11-05.png"><img src="../../img/original/2022-11-05.png" alt="original character illust" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2022-11-05</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/oc_misc_6.html">>></a>
+							</nav>
+						</div>
+					</div>
+				</div>
+        <div class="series" id="idoko" >
+          <div class="card">
+            <div class="piccard" id="idoko_taningoto1">
+              <a href="../../img/original/other1.gif"><img src="../../img/original/other1.gif" alt="original character illust" class="border_img" /></a>
+              <p class="title"></p>
+              <p class="caption"></p>
+              <p class="date">>2024-11-18</p>
+              <nav class="childpagearrow">
+                <a href="/gallery/image-page/idoko_taningoto1.html">>></a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <div class="series"  id="groundpolis_paint_1">
+					<div class="card">
+						<div class="piccard" id="att13">
+							<a href="../../img/original/allthistime13_min.webp">
+								<img src="../../img/original/allthistime13_min.webp" alt="att13" />
+							</a>
+							<p class="title">all this time 13</p>
+							<p class="caption">groundpolis</p>
+							<p class="date">>2020-06-08</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpp_allthistime13.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="ap2001">
+							<a href="../../img/original/airpocket2001_min.webp">
+								<img src="../../img/original/airpocket2001_min.webp" alt="ap2001" />
+							</a>
+							<p class="title">air pocket 2001</p>
+							<p class="caption">airpocket</p>
+							<p class="date">>2020-06-14</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpp_airpocket2001.html">>></a>
+							</nav>
+						</div>
+					</div>
+				</div>
+        <div class="series"  id="groundpolis_paint_2">
+					<div class="card">
+						<div class="piccard" id="gpbakaaho">
+							<a href="../../img/original/Bakaaho.png"><img src="../../img/original/Bakaaho.png" alt="att13" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2020-05-27</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpbakaaho.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gpyukiko">
+							<a href="../../img/original/ゆきこ.png"><img src="../../img/original/ゆきこ.png" alt="ap2001" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2020-06-04</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpyukiko.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gpforyoureyesonly">
+							<a href="../../img/fanart/gpforyoureyesonly.png"><img src="../../img/fanart/gpforyoureyesonly.png" alt="Cashmere Catのファンアート" /></a>
+							<p class="title"></p>
+							<p class="caption"><a href="https://youtu.be/piv3XwFpd9E">PRINCESS CATGIRL</a></p>
+							<p class="date">>2020-06-05</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpforyoureyesonly.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gpASFPC">
+							<a href="../../img/fanart/gpASFPC.png"><img src="../../img/fanart/gpASFPC.png" alt="amnesia scannerのファンアート" /></a>
+							<p class="title"></p>
+							<p class="caption"><a href="https://pan.lnk.to/ASAca">AS</a></p>
+							<p class="date">>2020-06-05</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpASFPC.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gpmutant">
+							<a href="../../img/fanart/gpmutant.png"><img src="../../img/fanart/gpmutant.png" alt="" /></a>
+							<p class="title"></p>
+							<p class="caption"><a href="https://youtu.be/0SYMoTBYT04">Arca Mutant</a></p>
+							<p class="date">>2020-06-25</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpmutant.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gpstarz">
+							<a href="../../img/fanart/gpstarz.png"><img src="../../img/fanart/gpstarz.png" alt="" /></a>
+							<p class="title"></p>
+							<p class="caption"><a href="https://youtu.be/AbSSch--j1I">starz</a></p>
+							<p class="date">>2020-06-25</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpstarz.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gpug">
+							<a href="../../img/fanart/gpug.png"><img src="../../img/fanart/gpug.png" alt="" /></a>
+							<p class="title"></p>
+							<p class="caption"><a href="https://opn.ffm.to/uncut-gems">uncut gems</a></p>
+							<p class="date">>2020-06-25</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpug.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gpsyuua">
+							<a href="../../img/fanart/gpsyuua.png"><img src="../../img/fanart/gpsyuua.png" alt="fan syuudoujo underground chan art" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2021-11-04</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpsyuua.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gpmerimi">
+							<a href="../../img/fanart/gpmerimi.png"><img src="../../img/fanart/gpmerimi.png" alt="fanart merimi-chan (c)muuque." /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2021-11-04</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gpmerimi.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gphelve">
+							<a href="../../img/fanart/gphelve.png"><img src="../../img/fanart/gphelve.png" alt="fanart semikure helve (c)cicada-sss" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2021-11-04</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gphelve.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gptaniguchi">
+							<a href="../../img/fanart/gptaniguchi.png"><img src="../../img/fanart/gptaniguchi.png" alt="fanart taniguchi-chan (c)tktekuno" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2021-11-10</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gptaniguchi.html">>></a>
+							</nav>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard" id="gp1">
+							<a href="../../img/original/gp1.png"><img src="../../img/original/gp1.png" alt="groundpolis paint" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2021-11-10</p>
+							<nav class="childpagearrow">
+								<a href="/gallery/image-page/gp1.html">>></a>
+							</nav>
+						</div>
+					</div>
+				</div>
+        <div class="series"  id="groundpolis_paint_rip">
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_shikako.png"><img src="../../img/original/gp_shikako.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">rakugaki</p>
+							<p class="date">>2020-06-04</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_rakugaki3.png"><img src="../../img/original/gp_rakugaki3.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">rakugaki</p>
+							<p class="date">>2020-12-22</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_dai.png"><img src="../../img/original/gp_dai.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">rakugaki</p>
+							<p class="date">>2021-10-30</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_rakugaki2.png"><img src="../../img/original/gp_rakugaki2.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">rakugaki</p>
+							<p class="date">>2021-11-01</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/fanart/gp_tenten.png"><img src="../../img/fanart/gp_tenten.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">幽幻道士 恬恬</p>
+							<p class="date">>2021-11-03</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_rakugaki.png"><img src="../../img/original/gp_rakugaki.png" alt="gp illust" /></a>
+							<p class="title">rakugaki</p>
+							<p class="caption"></p>
+							<p class="date">>2021-11-05</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_crossfall.png"><img src="../../img/original/gp_crossfall.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">rakugaki</p>
+							<p class="date">>2021-11-05</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_floor.png"><img src="../../img/original/gp_floor.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">rakugaki</p>
+							<p class="date">>2021-11-05</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/fanart/gp_gomamayo.png"><img src="../../img/fanart/gp_gomamayo.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">
+								<a href="https://soundcloud.com/thinaticsystem/gomamayo" target="_blank">gomamayo</a>
+							</p>
+							<p class="date">>2021-11-05</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_kana.png"><img src="../../img/original/gp_kana.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">rakugaki kana chan</p>
+							<p class="date">>2021-11-23</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_p1.png"><img src="../../img/original/gp_p1.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">rakugaki</p>
+							<p class="date">>2021-11-23</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_p2.png"><img src="../../img/original/gp_p2.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">rakugaki</p>
+							<p class="date">>2021-11-23</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/fanart/gp_neko.png"><img src="../../img/fanart/gp_neko.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">kusaneko</p>
+							<p class="date">>2021-12-03</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/fanart/gp_helve.png"><img src="../../img/fanart/gp_helve.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">helvetica_youth</p>
+							<p class="date">>2021-12-06</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/fanart/gp_ruchika.png"><img src="../../img/fanart/gp_ruchika.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">ebise lutica</p>
+							<p class="date">>2021-12-06</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_aanoshi.png"><img src="../../img/original/gp_aanoshi.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">熨斗</p>
+							<p class="date">>2022-03-31</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/fanart/gp_sukigirlz.png"><img src="../../img/fanart/gp_sukigirlz.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption">
+								<a href="https://youtu.be/laZKLNCOg8A" target="_blank">suki-girlz</a>
+							</p>
+							<p class="date">>2022-05-06</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_mirrorroom.png"><img src="../../img/original/gp_mirrorroom.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2022-05-06</p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/original/gp_kema.png"><img src="../../img/original/gp_kema.png" alt="gp illust" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2022-03-31</p>
+						</div>
+					</div>
+				</div>
+        <div class="series" id="works_main">
+          <div id="nofederation" class="series">
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/albumart_original-min.webp"><img src="../../img/original/albumart_original-min.webp" style="image-rendering: auto !important;" alt="att13"></a>
+                <p class="title"></p>
+                <p class="caption">
+                  >"No Federation" is a compilation album born from fediverse (e.g. Mastodon, Misskey).
+                </p>
+                <p class="date">>2020-07-23</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/nofederation.html">>></a>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div id="stilldreaminghour0" class="series">
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/フライヤー.png"><img src="../../img/original/フライヤー.png" alt="stilldreamingflyer"></a>
+                <p class="title"></p>
+                <div class="caption">
+                </div>
+                <p class="date">>2021-04-11</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/stilldreaminghour0.html">>></a>
+                </nav>
+              </div>
+            </div>
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/21.04.11.jpg"><img src="../../img/original/21.04.11.jpg" alt="ap2001"></a>
+                <p class="title"></p>
+                <div class="caption">
+                  蝉暮せせせと初音ミクからなる音楽サークルex. happyender girlによるYouTube Live"still dreaming (hour) vol.0"のフライヤーを制作しました。</br>
+                  また、同イベントのライブアルバム"21.04.11"のアルバムアートも制作しました。
+                </div>
+                <p class="date">>2021-05-07</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/stilldreaminghour0.html">>></a>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div id="littlegirlisdead" class="series">
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/littlegirlisdead.png"><img src="../../img/original/littlegirlisdead.png" alt="little girl is dead lyric video artwork" /></a>
+                <p class="title"></p>
+                <p class="caption">
+                  蝉暮せせせと初音ミクからなる音楽サークルex. happyender girlのLyric Video ''リトルガールイズデッド''のためにイラストを制作しました。
+                  <br />
+                  <a href="https://www.youtube.com/embed/6G52k1uxVqU">【初音ミク】ex. happyender girl - リトルガールイズデッド (Lyric Video)</a>
+                </p>
+                <p class="date">>2022-01-30</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/littlegirlisdead.html">>></a>
+                </nav>
+              </div>
+            </div>
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/girlgonehome.png"><img src="../../img/original/girlgonehome.png" alt="girl gone home e.p. artwork" /></a>
+                <p class="title"></p>
+                <div class="caption">
+                  <p>ex. happyender girlのep、''girl gome home e.p.''のジャケを制作しました。</p>
+                </div>
+                <p class="date">>2022-03-27</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/littlegirlisdead.html">>></a>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div id="remain_in" class="series">
+            <div class="card">
+              <div class="piccard">
+                <iframe class="youtube" src="https://www.youtube-nocookie.com/embed/xPPMp7IRDQM"
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+                <p class="title"></p>
+                <div class="caption">
+                  音楽サークルex. happyender girlのLyric Video ''ニノコルモノ''を制作しました。<br>
+                  <details open>
+                    <summary></summary>
+                    ニノコルモノ<br>
+                    / ex. happyender girl<br>
+                    <br>
+                    ''remain in''<br>
+                    directed by yuinoid (<a href="/index.html">https://yuinoid.neocities.org/</a>)<br>
+                    composed by cicada_sss / 蝉暮せせせ<br>
+                    starring 初音ミク<br>
+                    mixed and mastered by CookieRamen (<a target="_blank" href="https://twitter.com/cookieramen">https://twitter.com/cookieramen</a>)<br>
+                    happyend recordings (c) 2022<br>
+                    <br>
+                    ex. happyender girl's albums is here on bandcamp.<br>
+                    <a href="https://happyender-girl.bandcamp.com">https://happyender-girl.bandcamp.com</a>
+                  </details>
+                </div>
+                <p class="date">>2022-04-26</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/remain_in.html">>></a>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div id="elastic_cubes" class="series">
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/elastic_cubes.gif"><img src="../../img/original/elastic_cubes.gif" alt="elastic cubesのアルバム、「elastic cubes
+                          」のアルバムアート"></a>
+                <p class="title"></p>
+                <div class="caption">
+                  <a href="https://elasticcubes.bandcamp.com/album/elastic-cubes" target="_blank">''Elastic Cubes''</a><br>
+                  <br>
+                <details open>
+                  <summary></summary>
+                  Elastic Cubesのアルバム ''Elastic Cubes''にアートワークを提供しました。<br>
+                  <br>
+                  Elastic Cubes (@ElasticCubes)<br>
+                  Twitter <a href="https://twitter.com/ElasticCubes" target="_blank">@ElasticCubes</a><br>
+                  SoundCloud <a href="https://soundcloud.com/elasticcubes" target="_blank">Elastic Cubes</a>
+                  <br>
+                </details>
+                </div>
+                <p class="date">>2022-12-05</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/elastic_cubes.html">>></a>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div id="a_perfect_day_to_eat_pancakes" class="series">
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/a_perfect_day_to_eat_pancakes_ep.webp"><img src="../../img/original/a_perfect_day_to_eat_pancakes_ep.webp" style="image-rendering: auto !important;" alt="ex. happyender girlのEP、「a perfect day to eat pancakes e.p.」のアルバムアート"></a>
+                <p class="title"></p>
+                <div class="caption">
+                  <a href="https://happyender-girl.bandcamp.com/album/a-perfect-day-to-eat-pancakes-e-p" target="_blank">''a perfect day to eat pancakes e.p.''</a><br>
+                  <br>
+                  <details open>
+                    <summary></summary>
+                    ex. happyender girlのEP ''<a href="https://happyender-girl.bandcamp.com/album/a-perfect-day-to-eat-pancakes-e-p" target="_blank">a perfect day to eat pancakes e.p.</a>''にアートワークを提供しました。<br>
+                    <br>
+                    ex. happyender girl (@happyender_girl)<br>
+                    Twitter <a href="https://twitter.com/happyender_girl" target="_blank">@happyender_girl</a><br>
+                    little-girl-float.in <a href="https://little-girl-float.in/girls" target="_blank">/girls</a>
+                    <br>
+                    <br>
+                    <a href="../../img/original/a_perfect_day_to_eat_pancakes_ep_o.webp"><img src="../../img/original/a_perfect_day_to_eat_pancakes_ep_o.webp" style="image-rendering: auto !important;" alt="original_size_albumart"></a>
+                  </details>
+                </div>
+                <p class="date">>2023-01-14</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/a_perfect_day_to_eat_pancakes.html">>></a>
+                </nav>
+            </div>
+            </div>
+          </div>
+          <div id="23.11.18" class="series">
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/23.11.18.png"><img src="../../img/original/23.11.18.png" style="image-rendering: auto !important;" alt="ex. happyender girlのEP、「a perfect day to eat pancakes e.p.」のアルバムアート"></a>
+                <p class="title"></p>
+                <div class="caption">
+                  <a href="https://happyender-girl.bandcamp.com/album/231118" target="_blank">''23.11.18''</a>
+                  <br>
+                  <details open>
+                    <summary></summary>
+                    ex. happyender girlの2ndライブアルバム ''<a href="https://happyender-girl.bandcamp.com/album/231118" target="_blank">23.11.18</a>''にアートワークを提供しました。<br>
+                    ''23.11.18''は2023年11月18日にYouTude上でライブ配信されたバーチャルライブパフォーマンス''<a href="https://www.youtube.com/watch?v=S0hxjbytvJo" target="_blank">一と一と三回忌のハッピーエンダーガール</a>''を収録したライブアルバムです。
+                    <br>
+                    ex. happyender girl (@happyender_girl)<br>
+                    Twitter <a href="https://twitter.com/happyender_girl" target="_blank">@happyender_girl</a><br>
+                    <a href="https://little-girl-float.in/girls" target="_blank">little-girl-float.in/girls</a>
+                  </details>
+                </div>
+                <p class="date">>2023-12-24</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/23.11.18.html">>></a>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div id="tiny-lo" class="series">
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/tiny-lo_albumart.jpg"><img src="../../img/original/tiny-lo_albumart.jpg" alt="ex. happyender girlのEP、「小さな恋人 - tiny lo.」のアルバムアート"></a>
+                <p class="title"></p>
+                <div class="caption">
+                  <a href="https://happyender-girl.bandcamp.com/album/tiny-lo" target="_blank">''小​さ​な​恋​人 - tiny lo.''</a>
+                  <iframe style="border: 0; width: 100%; height: 210px;" src="https://bandcamp.com/EmbeddedPlayer/album=1311215230/size=large/bgcol=ffffff/linkcol=333333/artwork=none/transparent=true/" seamless><a href="https://happyender-girl.bandcamp.com/album/tiny-lo">小さな恋人 - tiny lo. ex. happyender girl</a></iframe>
+                </div>
+                <p class="date">>2024-07-21</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/tiny-lo.html">>></a>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div id="this-years-loid" class="series">
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/this-years-loid.png"><img src="../../img/original/this-years-loid.png" style="image-rendering: auto !important;" alt="ex. happyender girlのアルバム、「機械上位時代 - this year's loid」のアルバムアート"></a>
+                <p class="title"></p>
+                <div class="caption">
+                  <a href="https://happyender-girl.bandcamp.com/album/tiny-lo" target="_blank">''機械上位時代 - this year's loid''</a>
+                  <br>
+                  <details open>
+                    <summary></summary>
+                    ex. happyender girlの12th EP ''<a href="https://happyender-girl.bandcamp.com/album/this-years-loid" target="_blank">機械上位時代 - this year's loid</a>''にアートワークを提供しました。<br>
+                    <br>
+                    ex. happyender girl (@happyender_girl)<br>
+                    Twitter <a href="https://twitter.com/happyender_girl" target="_blank">@happyender_girl</a><br>
+                    <a href="https://little-girl-float.in/girls" target="_blank">little-girl-float.in/girls</a>
+                  </details>
+                  <br>
+                  <br>
+                </div>
+                <p class="date">>2024-08-30</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/this-years-loid.html">>></a>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div id="re-summer(never)ends" class="series">
+            <div class="card">
+              <div class="piccard">
+                <a href="../../img/original/re-summer(never)ends.webp"><img src="../../img/original/re-summer(never)ends.webp" style="image-rendering: auto !important;" alt="ex. happyender girlのアルバム、「機械上位時代 - this year's loid」のアルバムアート"></a>
+                <p class="title"></p>
+                <div class="caption">
+                  <a href="https://happyender-girl.bandcamp.com/album/re-summer-never-ends" target="_blank">''re: summer (never) ends''</a>
+                  <br>
+                  <details open>
+                    <summary></summary>
+                    ex. happyender girlの3rd live (remix) album ''<a href="https://happyender-girl.bandcamp.com/album/re-summer-never-ends" target="_blank">追憶の夏のハッピーエンダーガール - re: summer (never) ends</a>''にアートワークを提供しました。<br>
+                    <br>
+                    ♥ex. happyender girl (@happyender_girl)<br>
+                    ♥Twitter <a href="https://twitter.com/happyender_girl" target="_blank">@happyender_girl</a><br>
+                    ♥<a href="https://little-girl-float.in/girls" target="_blank">little-girl-float.in/girls</a>
+                  </details>
+                </div>
+                <p class="date">>2025-01-27</p>
+                <nav class="childpagearrow">
+                  <a href="/gallery/image-page/re-summer(never)ends.html">>></a>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="series"  id="fanart">
+					<div class="card">
+						<div class="piccard" id="fanart_remilia2">
+							<a href="../../img/fanart/remilia2.gif"><img src="../../img/fanart/remilia2.gif" alt="touhou remilia scarlet fan art" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2021-09-23</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_remilia2.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_sameji-chan">
+							<a href="../../img/fanart/sameji-chan.png"><img src="../../img/fanart/sameji-chan.png" alt="fanart sameji-chan yoki youni siteiru darouka" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2018-12-22</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_sameji-chan.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_syudojo-chan">
+							<a href="../../img/fanart/syudojo-chan.png"><img src="../../img/fanart/syudojo-chan.png" alt="fanart syudojo-chan" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2018-10-08</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_syudojo-chan.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_taniguchi-chan">
+							<a href="../../img/fanart/2022-06-11_taniguchi-chan.png"><img src="../../img/fanart/2022-06-11_taniguchi-chan.png" alt="fanart taniguchi-chan" class="border_img" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2022-06-11</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_taniguchi-chan.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_taniguchi-chan_and_eri-chan">
+							<a href="../../img/fanart/2022-12-10_taniguchi-chan_and_eri-chan.png"><img src="../../img/fanart/2022-12-10_taniguchi-chan_and_eri-chan.png" alt="fanart taniguchi-chan and eri-chan" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2022-12-10</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_taniguchi-chan_and_eri-chan.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_misuzu-chan">
+							<a href="../../img/fanart/2022-12-22_misuzu-chan.png"><img src="../../img/fanart/2022-12-22_misuzu-chan.png" alt="fanart misuzu-chan" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2022-12-22</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_misuzu-chan.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_kagamin">
+							<a href="../../img/fanart/2021-04-22_1.jpg"><img src="../../img/fanart/2021-04-22_1.jpg" alt="fanart kagamin" class="border_img" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2021-04-22</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_kagamin.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_hatsune">
+							<a href="../../img/fanart/2021-04-22_2.jpg"><img src="../../img/fanart/2021-04-22_2.jpg" alt="fanart hatsune miku" class="border_img" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2021-04-22</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_hatsune.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_helve">
+							<a href="../../img/fanart/helve.png"><img src="../../img/fanart/helve.png" style="image-rendering: auto !important;" alt="fanart semikure helve" class="border_img" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2023-12-26</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_helve.html">>></a>
+						</nav>
+					</div>
+					<div class="card">
+						<div class="piccard" id="fanart_murakami-san">
+							<a href="../../img/fanart/fanart_murakami.webp"><img src="../../img/fanart/fanart_murakami.webp" style="image-rendering: auto !important;" alt="fanart 村上さん" class="border_img" /></a>
+							<p class="title"></p>
+							<p class="caption"></p>
+							<p class="date">>2024-04-14</p>
+						</div>
+						<nav class="childpagearrow">
+							<a href="/gallery/image-page/fanart_murakami-san.html">>></a>
+						</nav>
+					</div>
+				</div>
+      </div>
+      <div id="bottom"></div>
+
     </div>
-    <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
-    <div id="galleryhtml"></div>
-  </div>
-  <!-- main.jsから#footerへfooter.htmlの挿入 -->
-  <div id="footerhtml"></div>
-  <div id="lightbox">
-    <link rel="stylesheet" href="luminous-basic.min.css">
-    <script src="../../Luminous.min.js"></script>
-    <script>
-      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
-    </script>
+    <footer id="main-footer">
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+    
+    <div id="sidebar">
+      <div id="sortOptions">
+        <label for="sortSelect" id="sortLabel">
+          <select id="sortSelect">
+            <option value="newest">newest</option>
+            <option value="oldest">oldest</option>
+            <option value="series">series</option>
+          </select>
+      </label>
+      </div>
+      <nav id="to">
+        <nav id="totop">
+          <button id="scrollToTopBtn"><p>△</p></button>
+        </nav>
+        <nav id="tobottom">
+          <button id="scrollToBottomBtn">▽</button>
+        </nav>
+      </nav>
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+          const scrollToBottomBtn = document.getElementById('scrollToBottomBtn');
+          const wrapper = document.getElementById('wrapper');
+          const hideContent = document.getElementById('sortOptions');
+          const hideContentOffset = 740; // ページ下部からのオフセット（ピクセル単位）
+
+          scrollToTopBtn.addEventListener('click', function () {
+            wrapper.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+          });
+
+          scrollToBottomBtn.addEventListener('click', function () {
+            wrapper.scrollTo({
+              top: wrapper.scrollHeight,
+              behavior: 'smooth'
+            });
+          });
+
+          wrapper.addEventListener('scroll', function () {
+            const scrollPosition = wrapper.scrollTop + wrapper.clientHeight;
+            const scrollHeight = wrapper.scrollHeight;
+
+            if (scrollHeight - scrollPosition <= hideContentOffset) {
+              hideContent.style.display = 'none';
+            } else {
+              hideContent.style.display = 'block';
+            }
+          });
+        });
+      </script>
+    </div>
+    <div id="lightbox">
+      <link rel="stylesheet" href="luminous-basic.min.css">
+      <script src="../../Luminous.min.js"></script>
+      <script>
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+      </script>
+    </div>
   </div>
 </body>
 

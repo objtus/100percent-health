@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>スクロールアニメーション</title>
+    <style>
+        #animation-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            background: transparent;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        #animation-frame {
+            width: 100%;
+            height: 150px;
+            background: transparent;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #animation-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            mix-blend-mode: normal;
+        }
+
+        #animation-frame img.active {
+            display: block;
+        }
+    </style>
+    <script src="/js/scroll.js"></script>
+</head>
+
+<body>
+    <div id="animation-container">
+        <div id="animation-frame">
+            <!-- 画像はJavaScriptで動的に追加されます -->
+        </div>
+    </div>
+
+    <div id="scroll-content" style="height: 20000px; padding: 20px">
+        <h1>スクロールしてアニメーションを制御</h1>
+        <p>ページをスクロールすると、アニメーションがループします。</p>
+    </div>
+
+</body>
+
+</html>

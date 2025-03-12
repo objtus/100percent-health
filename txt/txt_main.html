@@ -10,11 +10,35 @@
     <script src="../../js/jquery-3.6.0.min.js"></script>
     <script src="../../js/main.js"></script>
     <script src="/js/mouse.js" defer></script>
+    <style>
+      #texthtml {
+        padding-left: 6.3em;
+        text-indent: -6.3em;
+        margin-bottom: 10%;
+    
+        ol {
+          display: flex;
+          flex-direction: column-reverse;
+          list-style: none;
+        }
+      }
+      #zakkizone{
+        list-style-type: none;
+      }
+      #monthlist{
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 20px;
+      }
+      .month{
+        margin-right: 20px;
+      }
+    </style>
   </head>
 
   <body>
     <div id="wrapper">
-      <div id="header">
+      <header id="header">
         <div id="header-flex">
           <nav id="back">
             <a id="backicon" href="../index.html">
@@ -30,17 +54,44 @@
             </a>
           </nav>
         </div>
-      </div>
-      <div id="main">
+      </header>
+      <main id="main">
         <br>
-        <h1>my txet archive</h1>
-        <p>>2022/12/03 "my dsns timeline" <a href="/txt/my_dsns_timeline.html">♥</a></p>
-        <p>>2023/03/06 "yosano_akiko_meme_memo" <a href="/txt/yosano_akiko_meme_memo.html">♥</a></p>
-      </div>
-      <!-- main.jsからsitenav.htmlの挿入 -->
-      <div id="sitenavhtml"></div>
-      <!-- main.jsから#footerへfooter.htmlの挿入 -->
-      <div id="footerhtml"></div>
+        <h1>text archive</h1>
+
+        <div id="texthtml"></div>
+
+        <h2>雑記帳</h2>
+        <div id="zakki-list">
+          <ol id="zakkizone">
+            <li class="year">♥<a href="/txt/zakki/2024/2024.html">2024</a></li>
+            <div id="monthlist">
+              <li class="month">01</li>
+              <li class="month">02</li>
+              <li class="month">03</li>
+              <li class="month">04</li>
+              <li class="month">05</li>
+              <li class="month">06</li>
+              <li class="month"><a href="/txt/zakki/2024/07/2024-07.html">07</a></li>
+              <li class="month"><a href="/txt/zakki/2024/08/2024-08.html">08</a></li>
+              <li class="month">09</li>
+              <li class="month"><a href="/txt/zakki/2024/10/2024-10.html">10</a></li>
+              <li class="month">11</li>
+              <li class="month"><a href="/txt/zakki/2024/12/2024-12.html">12</a></li>
+            </div>
+            <li class="year">♥<a href="/txt/zakki/2025/2025.html">2025</a></li>
+            <div id="monthlist">
+              <li class="month"><a href="/txt/zakki/2025/01/2025-01.html">01</a></li>
+              <li class="month"><a href="/txt/zakki/2025/02/2025-02.html">02</a></li>
+              <li class="month"><a href="/txt/zakki/2025/03/2025-03.html">03</a></li>
+            </div>
+          </ol>
+        </div>
+      </main>
+      <footer id="main-footer">
+        <!-- main.jsから#footerへfooter.htmlの挿入 -->
+        <div id="footerhtml"></div>
+      </footer>
     </div>
     <div id="lightbox">
       <link rel="stylesheet" href="../../luminous-basic.min.css">

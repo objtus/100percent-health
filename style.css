@@ -1,31 +1,51 @@
 * {
   margin: 0;
-  padding: 0 0rem;
-  box-sizing: border-box;
+  padding: 0;
 }
 
 @font-face {
-  font-family: "saitamaar_light";
-  src: url("saitamaar_light.woff2") format("woff2"),
-    url("saitamaar_light.woff") format("woff"),
-    url("saitamaar_light.ttf") format("ttf");
+  font-family: "saitamaar";
+  src: url("saitamaar.woff2") format("woff2"),
+    url("saitamaar.woff") format("woff"),
+    url("saitamaar.ttf") format("ttf");
   font-display: swap;
 }
 
 .saitamaar_light {
-  font-family: "saitamaar_light";
+  font-family: "saitamaar";
   white-space: pre;
   font-size: 16px;
   line-height: 18px;
 }
 
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#wrapper{
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
 body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   line-height: 14px;
   font-weight: normal;
-  font-family: "saitamaar_light", 'PikoA', "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  font-family: "saitamaar", 'PikoA', "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   letter-spacing:-0.05em;
   font-feature-settings: "palt"1;
-  overflow-wrap: break-word;
+  word-break: auto-phrase;
+  overflow: hidden;
 }
 
 a {
@@ -40,7 +60,6 @@ a:hover {
 a, a:hover {
   text-decoration: none;
 }
-
 
 ::-moz-selection {
   color: #ffffff;
@@ -60,6 +79,10 @@ img {
 h2{
   line-height: 1;
   font-size: 0;
+}
+
+summary {
+  cursor: pointer;
 }
 
 /*===================
@@ -104,18 +127,26 @@ h2{
 }
 
 #about{
-  grid-area: 1 / 1 / 2 / 1;
+  grid-area: 1 / 1 / 1 / 1;
   padding-bottom: 20px;
  }
+
+#changelog{
+  grid-area: 2 / 1 / 2 /1;
+  padding-bottom: 20px;
+}
+
 #txt{
-  grid-area: 2 / 1 / 2 / 1;
+  grid-area: 3 / 1 / 3 / 1;
   padding-bottom: 20px;
 }
 #gallery{
-  grid-area: 1 / 2 / 5 / 2;
-  padding-left: 20px;
+  grid-area: 1 / 2 / 6 / 2;
 }
-#works{ grid-area: 3 / 1 / 3 / 1; }
+
+#works{ 
+  grid-area: 4 / 1 / 4 / 1;
+}
 
 #item3 {
   flex: 0 1 200px;
@@ -250,7 +281,7 @@ a.highlight_anchor {
 }
 
 h3 {
-  transform: scale(1.15, 0.75);
+  /*transform: scale(1.15, 0.75);*/
   display: inline-block;
   font-size: 1em;
   font-weight: normal;
@@ -271,6 +302,11 @@ h3 {
   background-size: contain;
   vertical-align: top;
   image-rendering: pixelated;
+}
+
+.internallink{
+  font-size: 10pt;
+  padding-left: 0.4rem;
 }
 
 .section{
@@ -299,6 +335,104 @@ h3 {
 }
 
 /*===================
+  changelog and text
+===================*/
+#changelogcontainer, #textcontainer{
+  width: 235px;
+  line-height: 1.2rem;
+  padding-left: 5.6em;
+  text-indent: -5.6em;
+}
+#changeloghtml, #texthtml{
+  ol{
+    display: flex;
+    flex-direction: column-reverse;
+    list-style: none;
+    li:nth-last-child(n+11){
+      display: none;
+    }
+  }
+  li:has(details){
+    display: flex;
+  }
+  details{
+      display: inline;
+      text-indent: -7px;
+      ul{
+        list-style-type: "- ";
+        padding-left: 10px;
+        text-indent: 0px;
+    }
+  }
+  details[open]{
+      display: inline;
+      padding-left: 0px;
+      text-indent: -7px;
+  }
+  summary{
+      list-style-type: none;
+      text-decoration: underline;
+  }
+}
+#changelogcontainer{
+  a{
+    text-decoration: underline;
+  }
+}
+
+/*===================
+  galleryセクション
+===================*/
+summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+#galleryhtml{
+  padding-left: 20px;
+}
+
+.gallery_summary{
+  color: #fff;
+  background-color: #000000;
+}
+
+.gallery_summary:hover{
+  color:#000;
+  background-color: #fff;
+}
+
+#rootbox{
+  padding-left: 4px;
+}
+
+.summary_boxes{
+  border-left: dotted 2px;
+  padding-left: 10px;
+  margin: 5px 0 5px 5px;
+}
+
+.lowerbox {
+  text-indent: -56px;
+  padding-left: 53px;
+  margin-top: 3px;
+  margin-left: -0.14rem;
+}
+
+#randomjump > a:hover {
+  background-color: #00000000;
+}
+
+/*===================
+  worksセクション
+===================*/
+#workshtml{
+  ol{
+    list-style-type: none;
+  }
+}
+
+/*===================
   Button
 ===================*/
 
@@ -322,15 +456,25 @@ button:hover {
 /*===================
   footerBlock
 ===================*/
+
+#footerhtml{
+  margin-top: 2rem;
+  z-index: -100;
+}
+
+#nav_links{
+  display: none;
+}
+
+#foot_links{
+  display: none;
+}
+
 #footer {
   display: flex;
   position: relative;
   justify-content: space-between;
   width: 100%;
-}
-
-#foot_links{
-  display: none;
 }
 
 #foot_comment {
@@ -343,6 +487,12 @@ button:hover {
   width: 35px;
   min-width: 35px;
   padding: 0;
+}
+
+.logo{
+  a:hover{
+    background-color: #00000000;
+  }
 }
 
 .boxes{
@@ -379,19 +529,25 @@ button:hover {
     display: none;
     position: absolute;
     top: 2.5em;
-    left: 20px;
+    left: 0px;
   }
   a.linkImg:hover span {
     border: none;
     display: block;
   }
   a.linkImg:hover span > img {
-    width: 400px;
+    width: 200px;
   }
 }
 
 @media screen and (max-width: 480px) {
   /* 480pxまでの幅の場合に適応される */
+  body{
+    letter-spacing: 0em;
+    line-height: 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
   .section{
     padding: 0 0 5px 0;
   }
@@ -417,8 +573,13 @@ button:hover {
 
   .boxes{
     line-height: 17px;
-    letter-spacing: 0.2em;
     margin: 3px 0 3px 0;
+  }
+
+  #changelogcontainer{
+    width: 65vw;
+    padding-left: 6.3em;
+    text-indent: -6.3em;
   }
 
   #social_links{

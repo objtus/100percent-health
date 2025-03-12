@@ -18,38 +18,46 @@
     <script type="text/javascript">
       header();
     </script>
-    <div id="main">
+    <main id="main">
       <div id="galleryspace">
         <div class="card">
           <div class="piccard">
             <a href="../../img/original/ao-chan.jpg"><img src="../../img/original/ao-chan.jpg" alt="ao"></a>
-            <p class="title">ao-chan#1</p>
-            <p class="caption">
+            <div class="caption">
+              <p class="title">ao-chan#1</p>
               <details>
                 <summary></summary>
                 mastodon.cloudでかつて採用されていた、
                 <a href="https://glitch-soc.github.io/docs/features/doodle/">Mastodon Glitch Editionのペイント機能</a>を用いて描かれた絵。
               </details>
-            </p>
+            </div>
             <p class="date">>2018-07-25</p>
+            <nav class="childpagearrow">
+              <a href="/gallery/image-page/ao-chan_1.html">>></a>
+            </nav>
           </div>
         </div>
         <div class="card">
           <div class="piccard">
-            <a href="../../img/original/ao-chan-gif.gif"><img src="../../img/original/ao-chan-gif.gif" alt="aogif"></a>
-            <p class="title">ao-chan#2</p>
-            <p class="caption">
-
-            </p>
+            <a href="../../img/original/ao-chan-gif.gif"><img src="../../img/original/ao-chan-gif.gif" style="image-rendering: auto !important;" alt="aogif"></a>
+            <div class="caption">
+              <p class="title">ao-chan#2</p>
+            </div>
             <p class="date">>2020-02-02</p>
+            <nav class="childpagearrow">
+              <a href="/gallery/image-page/ao-chan_2.html">>></a>
+            </nav>
+
           </div>
         </div>
       </div>
+    </main>
+    <footer id="main-footer">
       <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
       <div id="galleryhtml"></div>
-    </div>
-    <!-- main.jsから#footerへfooter.htmlの挿入 -->
-    <div id="footerhtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
   </div>
   <div id="lightbox">
     <link rel="stylesheet" href="../../luminous-basic.min.css">

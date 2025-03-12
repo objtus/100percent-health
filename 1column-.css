@@ -1,0 +1,529 @@
+/*===================
+ 全体への装飾
+===================*/
+
+:root {
+  --min-width768: 95%;
+  --max-width768 : 85%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: "saitamaar";
+  src: url("saitamaar.woff2") format("woff2"),
+    url("saitamaar.woff") format("woff"),
+    url("saitamaar.ttf") format("ttf");
+  font-display: swap;
+}
+
+.saitamaar_light {
+  font-family: "saitamaar";
+  white-space: pre;
+  font-size: 16px;
+  line-height: 18px;
+}
+
+html{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  font-size: 13pt;
+  font-family: "saitamaar", 'PikoA', "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  overflow-wrap: break-word;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#wrapper{
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+img {
+  image-rendering: pixelated;
+}
+
+::-moz-selection {
+  color: #ffffff;
+  background-color: rgb(0, 0, 255);
+}
+
+::selection {
+  color: #ffffff;
+  background-color: rgb(0, 0, 255);
+}
+
+h1, h2{
+  margin-top: 1rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+a {
+  color: #000000;
+}
+
+a:hover {
+  color: #ffffff;
+  background-color: black;
+}
+
+a:hover img {
+  font-size: 0pt;
+  color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.piccard>a {
+  font-size: 0pt;
+  color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0);
+}
+
+iframe {
+  margin: 0 auto;
+  border: none;
+}
+
+/*===================
+  wrapperBlock
+===================*/
+#wrapper {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  min-height: 100%;
+  border: 40px solid;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+/*===================
+  headerBlock
+===================*/
+#header {
+  background-color: white;
+  border-bottom: solid 2px;
+  border-color: black;
+}
+
+#header-flex {
+  display: flex;
+  width: 100%
+}
+
+a#backicon, a.addressbar {
+  color: #000000;
+  overflow: auto;
+  text-decoration: none;
+}
+
+a#backicon:hover, a.addressbar:hover {
+  background-color: transparent;
+}
+
+#back, #address {
+  font-size: large;
+  font-weight: bold;
+  line-height: 2rem;
+}
+
+#back {
+  margin: 0.8rem 10% 12px 0;
+}
+
+#address {
+  margin: 12px 0 12px 0;
+  transform: scale(1.15, 0.85);
+}
+
+/*===================
+ mainBlock
+===================*/
+#main {
+  background-color: white;
+  margin-left: 10%;
+}
+
+#galleryspace {
+  width: 75%;
+  margin-top: 30px;
+}
+
+[lang="ru"] {
+  font-size: 0.93em;
+  letter-spacing: -0.4em;
+}
+
+div#galleryspace img {
+  padding: 0 0;
+  image-rendering: pixelated;
+  width: 100%;
+  max-width: 800px;
+  min-width: 250px;
+}
+
+.border_img {
+  border: 1px solid rgb(190, 190, 190);
+}
+
+div.license {
+  font-size: 0.8em;
+}
+
+.caption a:hover {
+  text-decoration: underline;
+}
+
+#galleryhtml summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.date {
+  display: inline-block;
+  /* background-color: rgba(0, 0, 255, 255);*/
+  font-size: 0.8em;
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+nav.childpagearrow>a {
+  display: inline-block;
+  color: white;
+  background-color: black;
+  text-decoration: none;
+  margin-bottom: 80px;
+}
+
+nav.rowarrow {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  right: 0px;
+}
+
+.leftarrow {
+  display: inline-block;
+  color: white;
+  background-color: black;
+  text-decoration: none;
+}
+
+.uparrow {
+  color: white;
+  background-color: black;
+  text-decoration: none;
+  font-size: 10pt;
+  top: 10%;
+}
+
+.rightarrow {
+  display: inline-block;
+  color: white;
+  background-color: black;
+  text-decoration: none;
+}
+
+nav.rightarrow>a {
+  color: white;
+  background-color: black;
+  text-decoration: none;
+}
+
+#galleryhtml {
+  line-height: 16px;
+  letter-spacing: -0.04em;
+  border-top: solid 1px;
+  margin: 30px 0 0 20px;
+}
+
+@media screen and (min-width:435px) {
+  .date {
+    margin-left: calc(100% - 75px);
+  }
+
+  .youtube {
+    width: 100%;
+    height: 400px;
+  }
+
+  nav.rowarrow {
+    width: calc(100% - 0px);
+  }
+
+  .rightarrow {
+    margin-left: calc(((100% - 4em) / 2));
+  }
+
+  .childpagearrow {
+    margin-left: calc(100% - 1em);
+  }
+
+  .uparrow {
+    margin-left: calc((100% - 5px) / 2);
+  }
+
+  #galleryhtml {
+    width: calc(100% - 20px);
+    margin-bottom: 100px;
+  }
+
+  a.linkImg:hover {
+    position: relative;
+    text-decoration: none;
+  }
+
+  a.linkImg span {
+    display: none;
+    position: absolute;
+    left: 20px;
+    bottom: 10px;
+  }
+
+  a.linkImg:hover span {
+    border: none;
+    display: block;
+  }
+
+  a.linkImg:hover span>img {
+    height: 200px;
+  }
+}
+
+@media screen and (max-width:435px) {
+  .date {
+    margin-left: calc(90% - 70px);
+  }
+
+  .youtube {
+    position: relative;
+    margin-left: -2%;
+    width: 99.7vw;
+    height: 200px;
+  }
+
+  .arrow {
+    width: 90%;
+    min-width: 250px;
+  }
+
+  .childpagearrow {
+    margin-left: 85%;
+  }
+
+  #galleryhtml {
+    width: calc(85%);
+    min-width: 250px;
+  }
+
+  div#galleryspace img {
+    padding: 0 0;
+    image-rendering: pixelated;
+    width: 90%;
+  }
+
+  a.linkImg span {
+    display: none;
+    position: absolute;
+    top: 2.5em;
+    left: 20px;
+  }
+}
+
+.topborder {
+  height: 1px;
+  position: relative;
+}
+
+.topborder::before {
+  content: "";
+  background-image: linear-gradient(to right, #000, #000 10px, transparent 3px, transparent 8px);
+  background-size: 20px 1px;
+  background-repeat: repeat-x;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.gallery_summary{
+  color: #fff;
+  background-color: #000;
+}
+
+.summary_boxes{
+  border-left: dotted 2px;
+  padding-left: 10px;
+  margin: 5px 0 5px 5px;
+}
+
+.gallery_summary:hover{
+  color:#000;
+  background-color: #fff;
+}
+
+.boxes {
+  line-height: 20px;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.boxes>p {
+  display: inline;
+  letter-spacing: -0.05em;
+}
+
+.lowerbox {
+  margin-top: 3px;
+  margin-left: -0.14rem;
+}
+
+.boxes a {
+  text-decoration: none;
+}
+
+/*===================
+  linksBlock
+===================*/
+#nav_links {
+  font-size: 0.8em;
+  margin: 50px 0 10px 10%;
+}
+
+#foot_links {
+  font-size: 0.8em;
+  margin: 0 0 0 10%;
+}
+
+#foot_links a{
+  text-decoration: none;
+}
+
+#nav_links a{
+  text-decoration: none;
+}
+
+#favorite_links, #social_links {
+  padding-left: 0.5em;
+  margin-bottom: 60px;
+  margin-right: 50px;
+}
+
+.footer-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-decoration: inherit;
+  cursor: pointer;
+}
+
+.footer-button:hover {
+  text-decoration: underline;
+}
+
+
+/*===================
+  footerBlock
+===================*/
+#footer {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  width: 100%;
+  background-color: none;
+}
+
+#foot_comment {
+  display: inline;
+  font-size: 0.8;
+  margin-top: 23px;
+}
+
+.logo::before {
+  content: '';
+  display: inline-block;
+  width: 35px;
+  height: 12px;
+  background-image: url(heart_3.webp);
+  background-repeat: no-repeat;
+  background-size: contain;
+  vertical-align: right;
+  image-rendering: pixelated;
+}
+
+#logo_footer {
+  width: 35px;
+  min-width: 35px;
+  padding: 0;
+  image-rendering: pixelated;
+}
+
+/*===================
+  @media
+===================*/
+@media screen and (max-width: 1024px) {
+  /* 1024pxまでの幅の場合に適応される */
+}
+
+@media screen and (max-width: 768px) {
+  /* 768pxまでの幅の場合に適応される */
+  #galleryspace{
+    width: var(--max-width768);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* 480pxまでの幅の場合に適応される */
+  #wrapper {
+    border: 5px solid;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+  }
+  #galleryspace{
+    width: var(--min-width768);
+  }
+  #main {
+    margin-left: 10%;
+  }
+  body{
+    font-size: 12pt;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  /* 320pxまでの幅の場合に適応される */
+  #wrapper {
+    border: none;
+  }
+
+  #foot_links {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media screen and (min-width: 768px) {
+
+}

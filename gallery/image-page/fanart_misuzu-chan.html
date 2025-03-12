@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fanart_misuzu-chan - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+</head>
+
+<body>
+  <div id="wrapper">
+    <p id="parentFile" style="display:none;">fanart / </p>
+    <script type="text/javascript">
+      header();
+    </script>
+    <main id="main">
+      <div id="galleryspace">
+        <div class="card">
+          <div class="piccard">
+            <a href="../../img/fanart/2022-12-22_misuzu-chan.png"><img src="../../img/fanart/2022-12-22_misuzu-chan.png"
+                alt="fan misuzu-chan art (c)てく野."></a>
+            <p class="title"></p>
+            <div class="caption">
+              <details open>
+                <summary></summary>
+                fanart for みすずちゃん (c)<a href="https://www.pixiv.net/users/91386857" target="_blank">てく野</a> with procreate
+              </details>
+            </div>
+            <p class="date">>2022-12-22</p>
+          </div>
+          <nav class='arrow'>
+            <nav class="rowarrow">
+              <a class="leftarrow" href="fanart_taniguchi-chan_and_eri-chan.html">&lt;</a>
+              <a class="uparrow" href="fanart.html#fanart_misuzu-chan">&lt;&lt;</a>
+              <a class="rightarrow" href="fanart_kagamin.html">&gt;</a>
+            </nav>
+          </nav>
+        </div>
+      </div>
+    </main>
+    <footer id="main-footer">
+      <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+      <div id="galleryhtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../../luminous-basic.min.css">
+    <script src="../../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+</body>
+
+</html>

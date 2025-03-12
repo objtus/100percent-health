@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>charamake - 100%health</title>
+    <link rel="stylesheet" href="../1column.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <script src="../js/main.js" defer></script>
+    <script src="/js/mouse.js" defer></script>
+    <style>
+        #character-container {
+            position: relative;
+            height: 500px;
+            margin: 0 auto;
+        }
+
+        #character-container img {
+            position: absolute;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        #controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #controls ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #controls li {
+            margin-bottom: 10px;
+        }
+
+        #controls details {
+            margin-bottom: 10px;
+        }
+
+        #controls summary {
+            cursor: pointer;
+            color: #ffffff;
+            background-color: black;
+        }
+
+        #controls .category,
+        #controls .subcategory {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 20px;
+
+            button {
+                padding: 3px 8px;
+            }
+        }
+
+        #reset-button {
+            display: block;
+            margin: 20px auto;
+        }
+
+        /* 他の要素のスタイルも同様に定義 */
+
+        .category {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin: 0 5px;
+        }
+    </style>
+    <script>
+        // グローバル変数 categories を宣言し、初期値を空の配列に設定
+        let categories = [];
+
+        // data.json ファイルからデータを取得し、categories 配列に格納
+        // 取得が完了したら initializeGame 関数を呼び出してゲームを初期化
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                categories = data.categories;
+                initializeGame();
+            });
+
+        // ゲームの初期化を行う関数
+        function initializeGame() {
+            const characterContainer = document.getElementById('character-container');
+            const controlsContainer = document.getElementById('controls');
+            const categoriesList = document.createElement('ul');
+
+            // categories 配列から各カテゴリーに対して次の処理を行う
+            categories.forEach(category => {
+                const listItem = document.createElement('li');
+                // カテゴリー要素を作成し、listItem に追加する
+                const categoryElement = createCategoryOrSubcategoryElement(category, characterContainer);
+                listItem.appendChild(categoryElement);
+                categoriesList.appendChild(listItem);
+            });
+
+            // 作成した categoriesList をコントロール領域に追加する
+            controlsContainer.appendChild(categoriesList);
+
+            // 各カテゴリーとサブカテゴリーの最初の要素のIDを再帰的に設定
+            function setInitialElementIds(categoryOrSubcategory) {
+                // categoryOrSubcategory に要素が存在する場合
+                if (categoryOrSubcategory.elements && categoryOrSubcategory.elements.length > 0) {
+                    // 最初の要素のIDをカテゴリー名のスパンに設定する
+                    document.getElementById(`${categoryOrSubcategory.name}-name`).textContent = categoryOrSubcategory.elements[0].id;
+                }
+                // categoryOrSubcategory にサブカテゴリが存在する場合
+                if (categoryOrSubcategory.subcategories) {
+                    // 各サブカテゴリに対して再帰的に setInitialElementIds を呼び出す
+                    categoryOrSubcategory.subcategories.forEach(subcategory => {
+                        setInitialElementIds(subcategory);
+                    });
+                }
+            }
+
+            // 各カテゴリーに対して setInitialElementIds を呼び出す
+            categories.forEach(category => {
+                setInitialElementIds(category);
+            });
+        }
+
+        // カテゴリ要素を作成する関数
+        function createCategoryOrSubcategoryElement(categoryOrSubcategory, characterContainer, isSubcategory = false) {
+            const name = categoryOrSubcategory.name;
+            const div = document.createElement('div');
+            div.className = isSubcategory ? 'subcategory' : 'category';
+
+            // categoryオブジェクトにdivを追加
+            categoryOrSubcategory.div = div;
+
+            // categoryOrSubcategory にサブカテゴリが存在する場合
+            if (categoryOrSubcategory.subcategories) {
+                const detailsElement = document.createElement('details');
+                detailsElement.open = true;
+                const summaryElement = document.createElement('summary');
+                summaryElement.textContent = name;
+                detailsElement.appendChild(summaryElement);
+
+                const subcategoriesContainer = document.createElement('div');
+                subcategoriesContainer.className = 'subcategories-container';
+
+                // 各サブカテゴリに対して次の処理を行う
+                categoryOrSubcategory.subcategories.forEach(subcategory => {
+                    // サブカテゴリ要素を作成し、subcategoriesContainer に追加する
+                    const subcategoryElement = createCategoryOrSubcategoryElement(subcategory, characterContainer, true);
+                    subcategoriesContainer.appendChild(subcategoryElement);
+                });
+
+                detailsElement.appendChild(subcategoriesContainer);
+
+                // categoryOrSubcategory に要素が存在する場合
+                if (categoryOrSubcategory.elements) {
+                    // キャラクター画像要素を作成し、characterContainer に追加する
+                    addCharacterElements(categoryOrSubcategory, characterContainer);
+                }
+
+                return detailsElement;
+            } else {
+                // 前へ移動ボタンを作成する
+                const prevButton = createButton('prev', '<i class="fas fa-chevron-left"></i>');
+                // カテゴリ名のスパン要素を作成する
+                const nameSpan = createNameSpan(name);
+                // 次へ移動ボタンを作成する
+                const nextButton = createButton('next', '<i class="fas fa-chevron-right"></i>');
+                // リセットボタンを作成する
+                const resetButton = createButton('reset', 'Reset');
+                // リセットボタンにクリックイベントリスナーを追加する
+                resetButton.addEventListener('click', () => resetElement(categoryOrSubcategory));
+
+                // 作成した要素をdiv に追加する
+                div.appendChild(prevButton);
+                div.appendChild(nameSpan);
+                div.appendChild(nextButton);
+                div.appendChild(resetButton);
+
+                // 前へ移動ボタンにクリックイベントリスナーを追加する
+                prevButton.addEventListener('click', () => changeElement(name, -1));
+                // 次へ移動ボタンにクリックイベントリスナーを追加する
+                nextButton.addEventListener('click', () => changeElement(name, 1));
+
+                if (categoryOrSubcategory.elements) {
+                    // キャラクター画像要素を作成し、characterContainer に追加する
+                    addCharacterElements(categoryOrSubcategory, characterContainer);
+                }
+
+                return div;
+            }
+        }
+
+        // ボタン要素を作成する関数
+        function createButton(className, innerHTML) {
+            const button = document.createElement('button');
+            button.className = className;
+            button.innerHTML = innerHTML;
+            return button;
+        }
+
+        // カテゴリ名のスパン要素を作成する関数
+        function createNameSpan(categoryName, elementId) {
+            const nameSpan = document.createElement('span');
+            nameSpan.id = `${categoryName}-name`;
+            nameSpan.textContent = elementId;
+            return nameSpan;
+        }
+
+        // キャラクター画像要素を作成し、characterContainer に追加する関数
+        function addCharacterElements(category, characterContainer) {
+            // 各要素に対して次の処理を行う
+            category.elements.forEach((element, elementIndex) => {
+                // 各画像に対して次の処理を行う
+                element.images.forEach((image, imageIndex) => {
+                    const img = document.createElement('img');
+                    img.id = `${category.name}-${elementIndex}-${imageIndex}`;
+                    img.src = image.fileName;
+                    img.alt = category.name;
+                    img.style.zIndex = image.zIndex;
+
+                    // 画像の読み込みエラーを処理
+                    img.addEventListener('error', function () {
+                        console.warn(`Image not found: ${image.fileName}`);
+                        this.style.display = 'none';
+                    });
+
+                    // 最初の要素の画像は表示し、他の要素の画像は非表示にする
+                    if (elementIndex === 0) {
+                        img.style.display = 'block';
+                    } else {
+                        img.style.display = 'none';
+                    }
+
+                    characterContainer.appendChild(img);
+                });
+
+                // 最初の要素の ID を表示する
+                if (elementIndex === 0) {
+                    // createNameSpan 関数の呼び出しを削除
+                    // const nameSpan = createNameSpan(category.name, element.id);
+                    // category.div.appendChild(nameSpan);
+                }
+            });
+        }
+
+        // 依存する要素の更新を行う関数
+        function updateDependentElements(selectedElement) {
+            // selectedElement に依存する要素が存在する場合
+            if (selectedElement.dependentElements) {
+                // 各依存するカテゴリとIDを取得し、次の処理を行う
+                for (const [dependentCategoryName, dependentElementId] of Object.entries(selectedElement.dependentElements)) {
+                    // 依存するカテゴリを取得する
+                    const dependentCategory = findCategory(dependentCategoryName);
+                    // dependentCategory と要素が存在する場合
+                    if (dependentCategory && dependentCategory.elements) {
+                        // 依存する要素のインデックスを取得する
+                        const dependentElementIndex = dependentCategory.elements.findIndex(element => element.id === dependentElementId);
+                        // 依存する要素が存在する場合
+                        if (dependentElementIndex !== -1) {
+                            // 依存するカテゴリの現在のインデックスを更新する
+                            dependentCategory.currentIndex = dependentElementIndex;
+                            // 依存するカテゴリの画像を更新する
+                            updateImage(dependentCategory, dependentCategoryName, dependentCategory.elements, dependentElementIndex);
+                        }
+                    } else {
+                        console.warn(`Category or elements not found: ${dependentCategoryName}`);
+                    }
+                }
+            }
+        }
+
+        // 要素を変更する関数
+        function changeElement(categoryName, direction) {
+            // カテゴリを取得する
+            const category = findCategory(categoryName);
+
+            // category と要素が存在する場合
+            if (category && category.elements) {
+                const elements = category.elements;
+                const currentIndex = category.currentIndex || 0;
+                const newIndex = (currentIndex + direction + elements.length) % elements.length;
+
+                // 現在のインデックスを更新する
+                category.currentIndex = newIndex;
+
+                const selectedElement = elements[newIndex];
+
+                // 依存する要素を更新する
+                updateDependentElements(selectedElement);
+
+                // 画像を更新する
+                updateImage(category, categoryName, elements, newIndex);
+
+                // サブカテゴリの要素のIDを更新
+                const nameSpan = document.getElementById(`${categoryName}-name`);
+                if (nameSpan) {
+                    nameSpan.textContent = selectedElement.id;
+                }
+                // category とサブカテゴリが存在する場合
+            } else if (category && category.subcategories) {
+                // サブカテゴリがある場合は、現在のサブカテゴリの要素を変更
+                const currentSubcategoryIndex = category.currentSubcategoryIndex || 0;
+                let subcategory = category.subcategories[currentSubcategoryIndex];
+                // サブカテゴリと要素が存在する場合
+                if (subcategory && subcategory.elements) {
+                    // サブカテゴリのインデックスを更新する
+                    const newSubcategoryIndex = (currentSubcategoryIndex + direction + category.subcategories.length) % category.subcategories.length;
+                    category.currentSubcategoryIndex = newSubcategoryIndex;
+                    subcategory = category.subcategories[newSubcategoryIndex];
+                    // サブカテゴリの要素を変更する
+                    changeElement(subcategory.name, direction);
+                }
+            }
+        }
+
+        // カテゴリを検索する関数
+        function findCategory(categoryName) {
+            let category = categories.find(cat => cat.name === categoryName);
+
+            // カテゴリが見つからない場合、サブカテゴリを検索
+            if (!category) {
+                categories.forEach(cat => {
+                    if (cat.subcategories) {
+                        const subcategory = cat.subcategories.find(subcat => subcat.name === categoryName);
+                        if (subcategory) {
+                            category = subcategory;
+                        }
+                    }
+                });
+            }
+
+            return category;
+        }
+
+        // 画像の表示/非表示を切り替える関数
+        function updateImage(category, categoryName, elements, newIndex) {
+            // category と要素が存在する場合
+            if (category && category.elements) {
+                const element = elements[newIndex];
+                console.log(`Changing image for ${categoryName} to element index ${newIndex}`);
+                // 各要素に対して次の処理を行う
+                category.elements.forEach((_, elementIndex) => {
+                    // 指定したインデックスの要素の場合
+                    if (elementIndex === newIndex) {
+                        // 各画像を表示する
+                        element.images.forEach((image, imageIndex) => {
+                            const img = document.getElementById(`${categoryName}-${newIndex}-${imageIndex}`);
+                            if (img) {
+                                console.log(`Showing image ${categoryName}-${newIndex}-${imageIndex}`);
+                                img.style.display = 'block';
+                            } else {
+                                console.log(`Image element not found: ${categoryName}-${newIndex}-${imageIndex}`);
+                            }
+                        });
+                    } else {
+                        // 指定したインデックス以外の要素の場合、各画像を非表示にする
+                        elements[elementIndex].images.forEach((_, imageIndex) => {
+                            const img = document.getElementById(`${categoryName}-${elementIndex}-${imageIndex}`);
+                            if (img) {
+                                console.log(`Hiding image ${categoryName}-${elementIndex}-${imageIndex}`);
+                                img.style.display = 'none';
+                            }
+                        });
+                    }
+                });
+
+                // サブカテゴリの要素のIDを更新
+                const nameSpan = document.getElementById(`${categoryName}-name`);
+                if (nameSpan) {
+                    nameSpan.textContent = element.id;
+                }
+                // category とサブカテゴリが存在する場合
+            } else if (category && category.subcategories) {
+                // 現在のサブカテゴリのインデックスを取得する
+                const currentSubcategoryIndex = category.currentSubcategoryIndex || 0;
+                const subcategory = category.subcategories[currentSubcategoryIndex];
+                // サブカテゴリと要素が存在する場合
+                if (subcategory && subcategory.elements) {
+                    // サブカテゴリの現在のインデックスを取得する
+                    const subcategoryCurrentIndex = subcategory.currentIndex || 0;
+                    // サブカテゴリの画像を更新する
+                    updateImage(subcategory, subcategory.name, subcategory.elements, subcategoryCurrentIndex);
+                }
+            }
+        }
+
+        // 画像を変更する関数
+        function changeImage(category, categoryName, elements, direction) {
+            // 要素が存在しない場合、警告を出力して関数を終了する
+            if (!elements || elements.length === 0) {
+                console.warn(`No images found for category: ${categoryName}`);
+                return;
+            }
+
+            const currentIndex = category.currentIndex || 0;
+            const newIndex = (currentIndex + direction + elements.length) % elements.length;
+
+            // 現在のインデックスを更新する
+            category.currentIndex = newIndex;
+
+            // 画像を更新する
+            updateImage(category, categoryName, elements, newIndex);
+        }
+
+        // カテゴリをリセットする関数
+        function resetCategories(categories) {
+            // 各カテゴリに対して次の処理を行う
+            categories.forEach(category => {
+                // categoryに要素が存在する場合
+                if (category.elements) {
+                    // 現在のインデックスを0に設定する
+                    category.currentIndex = 0;
+                    const categoryName = category.name;
+                    const elements = category.elements;
+
+                    console.log(`Resetting elements for category ${categoryName}`);
+                    // 各要素に対して次の処理を行う
+                    elements.forEach((element, elementIndex) => {
+                        // 各画像に対して次の処理を行う
+                        element.images.forEach((image, imageIndex) => {
+                            const img = document.getElementById(`${categoryName}-${elementIndex}-${imageIndex}`);
+                            if (img) {
+                                // 最初の要素の画像は表示し、他の要素の画像は非表示にする
+                                if (elementIndex === 0) {
+                                    img.style.display = 'block';
+                                } else {
+                                    img.style.display = 'none';
+                                }
+                            } else {
+                                console.log(`Image element not found: ${categoryName}-${elementIndex}-${imageIndex}`);
+                            }
+                        });
+                    });
+
+                    const firstElement = elements[0];
+                    if (firstElement) {
+                        // 最初の要素のIDを表示する
+                        document.getElementById(`${categoryName}-name`).textContent = firstElement.id;
+                    } else {
+                        console.warn(`No elements found for category ${categoryName}`);
+                    }
+                }
+
+                // categoryにサブカテゴリが存在する場合
+                if (category.subcategories) {
+                    // サブカテゴリのインデックスを0に設定する
+                    category.currentSubcategoryIndex = 0; 
+                    // 各サブカテゴリに対して次の処理を行う
+                    category.subcategories.forEach((subcategory, subcategoryIndex) => {
+                        if (subcategory && subcategory.elements) {
+                            // サブカテゴリの現在のインデックスを0に設定する
+                            subcategory.currentIndex = 0;
+                            const subcategoryName = subcategory.name;
+                            const subcategoryElements = subcategory.elements;
+
+                            console.log(`Resetting elements for subcategory ${subcategoryName}`);
+                            // 各要素に対して次の処理を行う
+                            subcategoryElements.forEach((element, elementIndex) => {
+                                // 各画像に対して次の処理を行う
+                                element.images.forEach((image, imageIndex) => {
+                                    const img = document.getElementById(`${subcategoryName}-${elementIndex}-${imageIndex}`);
+                                    if (img) {
+                                        // 最初の要素の画像は表示し、他の要素の画像は非表示にする
+                                        if (elementIndex === 0) {
+                                            img.style.display = 'block';
+                                        } else {
+                                            img.style.display = 'none';
+                                        }
+                                    } else {
+                                        console.log(`Image element not found: ${subcategoryName}-${elementIndex}-${imageIndex}`);
+                                    }
+                                });
+                            });
+
+                            const firstElement = subcategoryElements[0];
+                            if (firstElement) {
+                                // 最初の要素のIDを表示する
+                                document.getElementById(`${subcategoryName}-name`).textContent = firstElement.id;
+                            } else {
+                                console.warn(`No elements found for subcategory ${subcategoryName}`);
+                            }
+                        }
+                    });
+
+                    // 残りのサブカテゴリをリセットする
+                    resetCategories(category.subcategories);
+                }
+            });
+        }
+
+        // すべての要素をリセットする関数
+        function resetElements(categories) {
+            // resetCategoriesを呼び出す
+            resetCategories(categories);
+        }
+
+        function resetElement(element) {
+            // 指定した要素だけをリセットする
+            resetCategories([element]);
+        }
+    </script>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <div id="header-flex">
+                <nav id="back">
+                    <a id="backicon" href="/index.html">
+                        &lt;
+                    </a>
+                </nav>
+                <nav id="address" class="addressbar">
+                    <a class="addressbar" href="/index.html">
+                        100%health
+                    </a>/
+                    <a class="addressbar" href="/game/">
+                        game
+                    </a>/
+                    <a class="addressbar" href="/game/charamake.html">
+                        charamake
+                    </a>
+                </nav>
+            </div>
+        </div>
+        <div id="main">
+            <div id="galleryspace">
+                <div id="game">
+                    <div id="character-container"></div>
+                    <button id="reset-button" onclick="resetElements(categories)">リセット</button>
+                    <div id="controls"></div>
+                </div>
+            </div>
+            <section id="main-footer">
+                <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+                <div id="galleryhtml"></div>
+                <!-- main.jsから#footerへfooter.htmlの挿入 -->
+                <div id="footerhtml"></div>
+              </section>
+        </div>
+</body>
+
+</html>
