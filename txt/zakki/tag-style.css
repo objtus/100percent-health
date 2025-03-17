@@ -1,0 +1,14 @@
+#taghtml{
+    margin-top: 20px;
+}
+#tagzone{
+    list-style-type: none;
+  }
+  #taglist{
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 20px;
+  }
+  .tags{
+    margin-right: 20px;
+  }

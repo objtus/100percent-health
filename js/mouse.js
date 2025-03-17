@@ -16,6 +16,14 @@
 		tinyx = [],
 		tinyy = [],
 		tinyv = [];
+	
+	// スライダー操作中かどうかのフラグ
+	var isInteractingWithControls = false;
+	// アニメーション一時停止フラグ
+	var isPaused = false;
+	// アニメーションタイマーID
+	var animationTimer = null;
+	
 	window.onload = function () {
 		var i, rats, rlef, rdow;
 		for (var i = 0; i < sparkles; i++) {
@@ -37,11 +45,105 @@
 			rdow.style.left = "2px";
 			document.body.appendChild((star[i] = rats));
 		}
-		sparkle();
+		
+		// アニメーション開始
+		startAnimation();
+		
+		// コントロール要素との干渉を検出するイベントリスナーを追加
+		setupControlInteractionDetection();
 	};
+	
+	// アニメーション開始関数
+	function startAnimation() {
+		if (!animationTimer) {
+			animationTimer = setInterval(sparkle, 40);
+		}
+	}
+	
+	// アニメーション停止関数
+	function stopAnimation() {
+		if (animationTimer) {
+			clearInterval(animationTimer);
+			animationTimer = null;
+		}
+	}
+	
+	// コントロール要素との干渉を検出する関数
+	function setupControlInteractionDetection() {
+		// マウスダウン時にコントロール要素かどうかをチェック
+		document.addEventListener('mousedown', function(e) {
+			if (isControlElement(e.target)) {
+				isInteractingWithControls = true;
+				// スライダー操作開始時にアニメーションを停止
+				isPaused = true;
+				stopAnimation();
+				
+				// すべてのエフェクトを非表示にする
+				hideAllEffects();
+			}
+		});
+		
+		// マウスアップ時にフラグをリセット
+		document.addEventListener('mouseup', function() {
+			if (isInteractingWithControls) {
+				isInteractingWithControls = false;
+				// 操作終了時にアニメーションを再開
+				isPaused = false;
+				startAnimation();
+			}
+		});
+		
+		// マウス移動時にコントロール要素上かどうかをチェック
+		document.addEventListener('mousemove', handleMouseMove);
+		
+		// スライダーの変更イベントを監視
+		document.addEventListener('input', function(e) {
+			if (e.target.classList.contains('tag-slider')) {
+				// スライダー操作中はアニメーションを停止
+				isPaused = true;
+				stopAnimation();
+			}
+		});
+		
+		// スライダーの変更完了イベントを監視
+		document.addEventListener('change', function(e) {
+			if (e.target.classList.contains('tag-slider')) {
+				// スライダー操作完了時にアニメーションを再開
+				setTimeout(function() {
+					isPaused = false;
+					startAnimation();
+				}, 200); // 少し遅延を入れて再開
+			}
+		});
+	}
+	
+	// すべてのエフェクトを非表示にする関数
+	function hideAllEffects() {
+		for (var i = 0; i < sparkles; i++) {
+			if (star[i]) star[i].style.visibility = "hidden";
+			if (tiny[i]) tiny[i].style.visibility = "hidden";
+		}
+	}
+	
+	// コントロール要素かどうかをチェックする関数
+	function isControlElement(element) {
+		// スライダーやボタンなどのコントロール要素をチェック
+		return element.tagName === 'INPUT' || 
+			   element.tagName === 'BUTTON' ||
+			   element.tagName === 'SELECT' ||
+			   element.classList.contains('tag-slider') ||
+			   element.classList.contains('relevance-btn') ||
+			   element.classList.contains('tag-sort-btn') ||
+			   element.closest('.tag-controls') !== null;
+	}
+	
 	function sparkle() {
 		var c;
-		if (x != ox || y != oy) {
+		// アニメーション一時停止中は何もしない
+		if (isPaused) return;
+		
+		// コントロール操作中はエフェクトを更新しない
+		if (!isInteractingWithControls && (x != ox || y != oy)) {
 			ox = x;
 			oy = y;
 			for (c = 0; c < sparkles; c++)
@@ -50,9 +152,9 @@
 					star[c].style.top = (stary[c] = y) + "px";
 					star[c].style.clip = "rect(0px, 5px, 5px, 0px)";
 					star[c].childNodes[0].style.backgroundColor = star[c].childNodes[1].style.backgroundColor = colour[cNum % colour.length];
-					cNum++; //■修正
+					cNum++;
 					star[c].style.visibility = "visible";
-					star[c].style.pointerEvents = "none"; // ポインターイベントを無効化
+					star[c].style.pointerEvents = "none";
 					starv[c] = 50;
 					break;
 				}
@@ -61,8 +163,8 @@
 			if (starv[c]) update_star(c);
 			if (tinyv[c]) update_tiny(c);
 		}
-		setTimeout(sparkle, 40);
 	}
+	
 	function update_star(i) {
 		if (--starv[i] == 25) star[i].style.clip = "rect(1px, 4px, 4px, 1px)";
 		if (starv[i]) {
@@ -82,12 +184,13 @@
 			tiny[i].style.left = (tinyx[i] = starx[i]) + "px";
 			tiny[i].style.width = "2px";
 			tiny[i].style.height = "2px";
-			tiny[i].style.backgroundColor = star[i].childNodes[0].style.backgroundColor; //■2013年版追加
+			tiny[i].style.backgroundColor = star[i].childNodes[0].style.backgroundColor;
 			star[i].style.visibility = "hidden";
 			tiny[i].style.visibility = "visible";
-			tiny[i].style.pointerEvents = "none"; // ポインターイベントを無効化
+			tiny[i].style.pointerEvents = "none";
 		}
 	}
+	
 	function update_tiny(i) {
 		if (--tinyv[i] == 25) {
 			tiny[i].style.width = "1px";
@@ -105,21 +208,34 @@
 				return;
 			}
 		} else tiny[i].style.visibility = "hidden";
-		tiny[i].style.pointerEvents = "none"; // ポインターイベントを無効化
+		tiny[i].style.pointerEvents = "none";
 	}
-	document.onmousemove = function (e) {
+	
+	// マウス移動イベントハンドラを分離して改善
+	function handleMouseMove(e) {
+		// アニメーション一時停止中は何もしない
+		if (isPaused) return;
+		
+		// コントロール要素上ではカーソル位置を更新しない
+		if (isControlElement(e.target)) {
+			isInteractingWithControls = true;
+			return;
+		}
+		
+		isInteractingWithControls = false;
 		y = e.pageY;
 		x = e.pageX;
 		sdown = window.pageYOffset;
 		sleft = window.pageXOffset;
-	};
+	}
+	
 	function createDiv(height, width) {
 		var div = document.createElement("div");
 		div.style.position = "absolute";
 		div.style.height = height + "px";
 		div.style.width = width + "px";
 		div.style.overflow = "hidden";
-		div.style.pointerEvents = "none"; // ポインターイベントを無効化
+		div.style.pointerEvents = "none";
 		return div;
 	}
 })();

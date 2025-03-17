@@ -13,9 +13,11 @@
   <script>
     $(function () {
       $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+      $("#taghtml").load("/txt/txt_main.html #tag-list");
     });
   </script>
   <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
+  <link rel="stylesheet" href="/txt/zakki/tag-style.css">
 </head>
 
 <body>
@@ -142,6 +144,7 @@
     </main>
     <footer id="main-footer">
       <div id="zakkihtml"></div>
+      <div id="taghtml"></div>
       <!-- main.jsから#footerへfooter.htmlの挿入 -->
       <div id="footerhtml"></div>
     </footer>

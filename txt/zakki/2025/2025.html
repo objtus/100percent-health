@@ -10,9 +10,11 @@
     <script src="/js/jquery-3.6.0.min.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/mouse.js" defer></script>
+    <link rel="stylesheet" href="/txt/zakki/tag-style.css">
     <script>
       $(function () {
         $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+        $("#taghtml").load("/txt/txt_main.html #tag-list");
       });
     </script>
     <script>
@@ -115,6 +117,10 @@
           border-bottom: 2px dotted;
           margin-left: 20px;
         }
+        h4{
+          font-size: 12pt;
+          margin-left: 40px;
+        }
         p{
           font-size: 10pt;
           padding-left: 40px;
@@ -134,7 +140,7 @@
         hr::before{
           content: '*****';
           letter-spacing: 1em;
-          padding-left: 1em;
+          padding-left: 2em;
         }
       }
       #zakkizone{
@@ -187,6 +193,7 @@
       </main>
       <footer id="main-footer">
         <div id="zakkihtml"></div>
+        <div id="taghtml"></div>
         <!-- main.jsから#footerへfooter.htmlの挿入 -->
         <div id="footerhtml"></div>
       </footer>

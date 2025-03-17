@@ -4,7 +4,7 @@
 
 :root {
   --min-width768: 95%;
-  --max-width768 : 85%;
+  --max-width768: 85%;
 }
 
 * {
@@ -27,7 +27,7 @@
   line-height: 18px;
 }
 
-html{
+html {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -42,12 +42,21 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
-#wrapper{
+#wrapper {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   box-sizing: border-box;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  min-height: 100%;
+  border: 40px solid;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
 }
 
 img {
@@ -66,47 +75,30 @@ img {
   background-color: rgb(0, 0, 255);
 }
 
-h1, h2{
+h1, h2 {
   margin-top: 1rem;
 }
 
 a {
   color: #000000;
-}
-
-a:hover {
-  color: #ffffff;
-  background-color: black;
-}
-
-a:hover img {
-  font-size: 0pt;
-  color: rgba(0, 0, 0, 0);
-  background-color: rgba(0, 0, 0, 0);
+  
+  &:hover {
+    color: #ffffff;
+    background-color: black;
+    
+    img {
+      font-size: 0pt;
+      color: rgba(0, 0, 0, 0);
+      background-color: rgba(0, 0, 0, 0);
+    }
+  }
 }
 
 button {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   border: 0;
   border-radius: 0;
   background: #00000000;
-}
-
-/*===================
-  wrapperBlock
-===================*/
-#wrapper {
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  height: 100px;
-  min-height: 100%;
-  border: 40px solid;
-  border-top: none;
-  border-right: none;
-  border-bottom: none;
 }
 
 /*===================
@@ -120,14 +112,16 @@ button {
   width: 100%
 }
 
-a#backicon, a.addressbar {
-  color: #000000;
-  overflow: auto;
-  text-decoration: none;
-}
-
-a#backicon:hover, a.addressbar:hover {
-  background-color: transparent;
+a {
+  &#backicon, &.addressbar {
+    color: #000000;
+    overflow: auto;
+    text-decoration: none;
+    
+    &:hover {
+      background-color: transparent;
+    }
+  }
 }
 
 #back, #address {
@@ -153,47 +147,34 @@ a#backicon:hover, a.addressbar:hover {
   transform: scale(1.15, 0.85);
 }
 
-@media screen and (min-width:900px) {
-  #header-flex{
-    position: absolute;
-  }
-  #back{
-    position: relative;
-  }
-  #address {
-    position: relative;
-    left: calc((18.5% * 2) - 330px);
-  }
-}
-
 /*===================
  mainBlock
 ===================*/
-#main, #main-footer{
+#main, #main-footer {
   width: 70%;
   max-width: 600px;
   margin: 0 auto;
   margin-top: 40px;
 }
 
-.youtube{
+.youtube {
   width: 100%;
   height: 400px;
 }
 
-.card{
+.card {
   margin-bottom: 40px;
 }
 
-.piccard{
-  a:hover{
+.piccard {
+  a:hover {
     text-decoration: none;
     background-color: #00000000;
   }
 }
 
-.caption{
-  a:hover{
+.caption {
+  a:hover {
     background-color: #000000ff;
   }
 }
@@ -201,34 +182,37 @@ a#backicon:hover, a.addressbar:hover {
 p.date {
   display: block;
   text-align: right;
-  /* background-color: rgba(0, 0, 255, 255);*/
   font-size: 0.8em;
   color: #aaa;
   white-space: nowrap;
   overflow: hidden;
 }
 
-nav.rowarrow{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  a{
-    background-color: #000;
-    color: #fff;
-    text-decoration: none;
+nav {
+  &.rowarrow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+    a {
+      background-color: #000;
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+  
+  &.childpagearrow {
+    text-align: right;
+    
+    a {
+      background-color: #000;
+      color: #fff;
+      text-decoration: none;
+    }
   }
 }
 
-nav.childpagearrow{
-  text-align: right;
-  a{
-    background-color: #000;
-    color: #fff;
-    text-decoration: none;
-  }
-}
-
-.lum-lightbox-inner img{
+.lum-lightbox-inner img {
   max-width: fit-content;
   max-height: 100vh;
 }
@@ -239,37 +223,37 @@ nav.childpagearrow{
 .topborder {
   height: 1px;
   position: relative;
+  
+  &::before {
+    content: "";
+    background-image: linear-gradient(to right, #000, #000 10px, transparent 3px, transparent 8px);
+    background-size: 20px 1px;
+    background-repeat: repeat-x;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 }
 
-.topborder::before {
-  content: "";
-  background-image: linear-gradient(to right, #000, #000 10px, transparent 3px, transparent 8px);
-  background-size: 20px 1px;
-  background-repeat: repeat-x;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-.gallery_summary{
+.gallery_summary {
   color: #fff;
   background-color: #000;
+  
+  &:hover {
+    color: #000;
+    background-color: #fff;
+  }
 }
 
-.summary_boxes{
+.summary_boxes {
   padding-left: 10px;
   border-left: dotted 2px;
   margin: 5px 0 5px 5px;
 }
 
-.gallery_summary:hover{
-  color:#000;
-  background-color: #fff;
-}
-
-#rootbox{
+#rootbox {
   padding-left: 1px;
 }
 
@@ -277,19 +261,23 @@ nav.childpagearrow{
   line-height: 20px;
   font-size: 18px;
   text-decoration: none;
-}
-
-.galleryhtml {
-  summary{
-    a{
-      color: #fff;
-    }
+  
+  > p {
+    display: inline;
+    letter-spacing: -0.05em;
+  }
+  
+  a {
+    text-decoration: none;
   }
 }
 
-.boxes>p {
-  display: inline;
-  letter-spacing: -0.05em;
+.galleryhtml {
+  summary {
+    a {
+      color: #fff;
+    }
+  }
 }
 
 .lowerbox {
@@ -299,69 +287,25 @@ nav.childpagearrow{
   margin-left: -0.14rem;
 }
 
-.boxes a {
-  text-decoration: none;
-}
-
-@media screen and (min-width:435px) {
-  #galleryhtml {
-    width: calc(100% - 20px);
-    margin-bottom: 30px;
-  }
-
-  a.linkImg:hover {
-    position: relative;
-    text-decoration: none;
-  }
-
-  a.linkImg span {
-    display: none;
-    position: absolute;
-    left: 20px;
-    bottom: 10px;
-  }
-
-  a.linkImg:hover span {
-    border: none;
-    display: block;
-  }
-
-  a.linkImg:hover span>img {
-    height: 200px;
-  }
-}
-
-@media screen and (max-width:435px) {
-
-  a.linkImg span {
-    display: none;
-    position: absolute;
-    top: 2.5em;
-    left: 20px;
-  }
-}
-
 /*===================
   linksBlock
 ===================*/
 
-#nav_links {
+#nav_links, #foot_links {
   font-size: 0.8em;
+  
+  a {
+    text-decoration: none;
+  }
+}
+
+#nav_links {
   margin-top: 15px;
 }
 
 #foot_links {
-  font-size: 0.8em;
   max-width: 600px;
   margin-top: 10px;
-}
-
-#foot_links a{
-  text-decoration: none;
-}
-
-#nav_links a{
-  text-decoration: none;
 }
 
 #favorite_links {
@@ -378,10 +322,10 @@ nav.childpagearrow{
   color: inherit;
   text-decoration: inherit;
   cursor: pointer;
-}
-
-.footer-button:hover {
-  text-decoration: underline;
+  
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 /*===================
@@ -401,20 +345,20 @@ nav.childpagearrow{
   margin-top: 23px;
 }
 
-.logo::before {
-  content: '';
-  display: inline-block;
-  width: 35px;
-  height: 12px;
-  background-image: url(heart_3.webp);
-  background-repeat: no-repeat;
-  background-size: contain;
-  vertical-align: right;
-  image-rendering: pixelated;
-}
-
-.logo{
-  a:hover{
+.logo {
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 35px;
+    height: 12px;
+    background-image: url(heart_3.webp);
+    background-repeat: no-repeat;
+    background-size: contain;
+    vertical-align: right;
+    image-rendering: pixelated;
+  }
+  
+  a:hover {
     background-color: #00000000;
   }
 }
@@ -429,50 +373,102 @@ nav.childpagearrow{
 /*===================
   @media
 ===================*/
-@media screen and (max-width: 1024px) {
-  /* 1024pxまでの幅の場合に適応される */
-}
-
-@media screen and (max-width: 768px) {
-  /* 768pxまでの幅の場合に適応される */
-  #main, #main-footer{
-    width: 80%;
+@media screen and (min-width: 900px) {
+  #header-flex {
+    position: absolute;
+  }
+  
+  #back {
+    position: relative;
+  }
+  
+  #address {
+    position: relative;
+    left: calc((18.5% * 2) - 330px);
   }
 }
 
 @media screen and (max-width: 480px) {
-  /* 480pxまでの幅の場合に適応される */
-  body{
+  body {
     font-size: 12pt;
   }
+  
   #wrapper {
     border: 5px solid;
     border-top: none;
     border-right: none;
     border-bottom: none;
   }
-  #main, #main-footer{
+  
+  #main, #main-footer {
     width: 85%;
     margin-top: 60px;
   }
-  #address{
+  
+  #address {
     font-size: medium;
   }
-  article{
-    h1.title{
+  
+  article {
+    h1.title {
       background-color: #ccc;
     }
   }
 }
 
+@media screen and (max-width: 435px) {
+  #galleryhtml {
+    width: calc(100% - 20px);
+    margin-bottom: 30px;
+  }
+  
+  a.linkImg {
+    span {
+      display: none;
+      position: absolute;
+      top: 2.5em;
+      left: 20px;
+    }
+  }
+}
+
+@media screen and (min-width: 435px) {
+  a.linkImg {
+    &:hover {
+      position: relative;
+      text-decoration: none;
+      
+      span {
+        border: none;
+        display: block;
+        
+        > img {
+          height: 200px;
+        }
+      }
+    }
+    
+    span {
+      display: none;
+      position: absolute;
+      left: 20px;
+      bottom: 10px;
+    }
+  }
+}
+
 @media screen and (max-width: 375px) {
-  /* 320pxまでの幅の場合に適応される */
   #wrapper {
     border: none;
   }
-  #main, #main-footer{
+  
+  #main, #main-footer {
     width: 90%;
   }
 }
-@media screen and (min-width: 768px) {
+
+@media screen and (max-width: 768px) {
+  #main, #main-footer {
+    width: 80%;
+  }
 }

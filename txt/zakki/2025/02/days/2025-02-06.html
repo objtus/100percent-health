@@ -13,9 +13,11 @@
   <script>
     $(function () {
       $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+      $("#taghtml").load("/txt/txt_main.html #tag-list");
     });
   </script>
   <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
+  <link rel="stylesheet" href="/txt/zakki/tag-style.css">
 </head>
 
 <body>
@@ -66,23 +68,29 @@
             ともかく、例によって、前回からの活動のふりかえりをしてみます。<br>
             前回が01月01日だったので、だいたい1ヶ月くらいの振り返りだね。<br>
           </p>
-          <ul class="timeline_md">
-            <li>01月04日 いど子通信#12@twitch</li>
-            <li>01月06日 いど子通信#13@twitch</li>
-            <li>01月09日 雑記ページのファイル構造を変更。</li>
-            <li>01月11日 いど子通信#14@twitch</li>
-            <li>01月13日 <a href="https://www.misononoa.cc" target="_blank">misononoaさんのサイト</a>と相互リンクになる。</li>
-            <li>01月18日 いど子通信#15@twitch</li>
-            <li>01月18日 <a href="https://eap.vg" target="_blank">かんたん宛名印刷さんのサイト</a>と相互リンクになる。</li>
-            <li>01月21日 作業配信@twitch</li>
-            <li>01月28日 いど子通信#16@twitch</li>
-            <li>01月29日 ex. happyender girlのアルバム''<a href="https://happyender-girl.bandcamp.com/album/re-summer-never-ends" target="_blank">追憶の夏のハッピーエンダーガール - re: summer (never) ends</a>''に<a href="/gallery/image-page/re-summer(never)ends.html">アートワークを提供</a>。</li>
-            <li>01月29日 Philips Hueを導入。</li>
-            <li>01月29日 <a href="https://yuinoid.umblr.com" target="_blank">Tumblr</a>に投稿していなかったイラストをまとめて投稿。3年ぶりくらい。</li>
-            <li>01月30日 LLMにsvgで絵を描かせると味がある絵を描いてきておもしろいことを発見。</li>
-            <li>02月03日 <a href="https://skeb.jp/@yuinoid" target="_blank">skeb</a>をはじめる。</li>
-            <li>02月03日 <a href="https://www.youtube.com/watch?v=UP2BJB4IhwA" target="_blank">他人事ラジオ#17@youtube</a></li>
-          </ul>
+          <section>
+            <h4>まとめの表</h4>
+            <ul class="timeline_md">
+              <li>01月04日 いど子通信#12@twitch</li>
+              <li>01月06日 いど子通信#13@twitch</li>
+              <li>01月09日 雑記ページのファイル構造を変更。</li>
+              <li>01月11日 いど子通信#14@twitch</li>
+              <li>01月13日 <a href="https://www.misononoa.cc" target="_blank">misononoaさんのサイト</a>と相互リンクになる。</li>
+              <li>01月18日 いど子通信#15@twitch</li>
+              <li>01月18日 <a href="https://eap.vg" target="_blank">かんたん宛名印刷さんのサイト</a>と相互リンクになる。</li>
+              <li>01月21日 作業配信@twitch</li>
+              <li>01月28日 いど子通信#16@twitch</li>
+              <li>01月29日 ex. happyender girlのアルバム''<a href="https://happyender-girl.bandcamp.com/album/re-summer-never-ends"
+                  target="_blank">追憶の夏のハッピーエンダーガール - re: summer (never) ends</a>''に<a
+                  href="/gallery/image-page/re-summer(never)ends.html">アートワークを提供</a>。</li>
+              <li>01月29日 Philips Hueを導入。</li>
+              <li>01月29日 <a href="https://yuinoid.umblr.com" target="_blank">Tumblr</a>に投稿していなかったイラストをまとめて投稿。3年ぶりくらい。</li>
+              <li>01月30日 LLMにsvgで絵を描かせると味がある絵を描いてきておもしろいことを発見。</li>
+              <li>02月03日 <a href="https://skeb.jp/@yuinoid" target="_blank">skeb</a>をはじめる。</li>
+              <li>02月03日 <a href="https://www.youtube.com/watch?v=UP2BJB4IhwA" target="_blank">他人事ラジオ#17@youtube</a></li>
+            </ul>
+            <span class="hashtag"><a href="/txt/zakki/tag/timeline.html">#timeline</a></span>
+          </section>
           <hr><br>
           <p>
             前回も書いたけど、こうやって並べて書くと活動的に過ごした気がしてくるが、実際のところはそこまで活動してはいない。<br>
@@ -195,6 +203,10 @@
             <br>
             嫌な目論見やな。
           </p>
+          <section>
+            テスト<br>
+            <span class="hashtag" data-relevance="80"><a href="/txt/zakki/tag/music.html">#music</a></span>
+          </section>
         </div>
       </article>
 
@@ -209,6 +221,7 @@
     </main>
     <footer id="main-footer">
       <div id="zakkihtml"></div>
+      <div id="taghtml"></div>
       <!-- main.jsから#footerへfooter.htmlの挿入 -->
       <div id="footerhtml"></div>
     </footer>

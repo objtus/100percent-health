@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>タグ一覧 - 100%health</title>
+  <link rel="stylesheet" href="/1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+  <style>
+    #tagichiran {
+      margin: 20px 0;
+      padding-left: 20px;
+    }
+    
+    .tag-item {
+      margin-bottom: 10px;
+      list-style-type: none;
+    }
+    
+    .tag-item:before {
+      content: "♥";
+      margin-right: 8px;
+    }
+    
+    .tag-description {
+      font-size: 0.9em;
+      margin-left: 20px;
+      color: #666;
+    }
+    
+    .tag-count {
+      font-size: 0.85em;
+      color: #888;
+      margin-left: 5px;
+    }
+  </style>
+  <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
+  <link rel="stylesheet" href="/txt/zakki/tag-style.css">
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back">
+          <a id="backicon" href="/index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar">
+          <a class="addressbar" href="/index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="/txt/txt_main.html">
+            txt
+          </a>/
+          <a class="addressbar" href="/txt/zakki/tag/tag_main.html">
+            tag
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <br>
+      <h1>タグ一覧</h1>
+
+      <p>
+        雑記の内容をタグで整理しています。各タグをクリックすると、そのタグが付けられた記事の一覧が表示されます。
+      </p>
+
+      <ul id="tagichiran">
+        <li class="tag-item">
+          <a href="music.html">music</a>
+          <span class="tag-count">(音楽関連の記事)</span>
+          <div class="tag-description">音楽の感想や考察など</div>
+        </li>
+        <li class="tag-item">
+          <a href="timeline.html">timeline</a>
+          <span class="tag-count">(タイムライン/時系列)</span>
+          <div class="tag-description">時系列でまとめられた記録、年表など</div>
+        </li>
+        <!-- 今後、新しいタグが増えたら以下に追加していく -->
+        <!-- 
+        <li class="tag-item">
+          <a href="tech.html">tech</a>
+          <span class="tag-count">(技術関連)</span>
+          <div class="tag-description">技術的な話題、プログラミング、ウェブ制作など</div>
+        </li>
+        <li class="tag-item">
+          <a href="diary.html">diary</a>
+          <span class="tag-count">(日記)</span>
+          <div class="tag-description">日々の記録や思い出など</div>
+        </li>
+        -->
+      </ul>
+
+      <h2>タグについて</h2>
+      <p>
+        記事内にタグを付けることで、関連する話題をまとめて閲覧できるようになっています。
+        新しいタグは随時追加されます。
+      </p>
+      
+      <p>
+        タグの提案や、特定のタグが欲しい場合は、
+        <a href="https://misskey.io/@idoko" target="_blank">Misskey</a>や
+        <a href="https://tanoshii.site/@idoko" target="_blank">Tanoshii Site</a>
+        などで連絡ください。
+      </p>
+    </main>
+    <footer id="main-footer">
+      <div id="zakkihtml"></div>
+      <div id="taghtml"></div>
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="/luminous-basic.min.css">
+    <script src="/Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+  <script>
+    $(function () {
+      $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+      $("#taghtml").load("/txt/txt_main.html #tag-list");
+    });
+  </script>
+</body>
+
+</html>
