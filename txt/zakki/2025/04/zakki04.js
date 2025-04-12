@@ -1,0 +1,61 @@
+async function loadDailyArticles04() {
+	const month = "04";
+	const year = "2025";
+	const dates = ["02"];
+
+	let monthContainer = document.querySelector("#zakki04");
+	if (!monthContainer) {
+		const m04 = document.querySelector("#m04");
+		if (!m04) {
+			console.error("No container found for month 04");
+			return;
+		}
+
+		// #zakki02を作成
+		monthContainer = document.createElement("div");
+		monthContainer.id = "zakki04";
+
+		// h2を追加
+		const h2 = document.createElement("h2");
+		const a = document.createElement("a");
+		a.href = `/txt/zakki/${year}/${month}/${year}-${month}.html`;
+		a.textContent = `${year}-${month}`;
+		h2.appendChild(a);
+		monthContainer.appendChild(h2);
+
+		m04.innerHTML = ""; // 既存のコンテンツをクリア
+		m04.appendChild(monthContainer);
+	}
+
+	// month-articleコンテナを探すか作成
+	let articleContainer = monthContainer.querySelector(".month-article");
+	if (!articleContainer) {
+		articleContainer = document.createElement("div");
+		articleContainer.className = "month-article";
+		monthContainer.appendChild(articleContainer);
+	}
+
+	// 既存の記事をクリア
+	articleContainer.innerHTML = "";
+
+	for (const date of dates) {
+		try {
+			const response = await fetch(`/txt/zakki/${year}/${month}/days/${year}-${month}-${date}.html`);
+			if (!response.ok) {
+				console.log(`No article found for ${date}`);
+				continue;
+			}
+
+			const text = await response.text();
+			const parser = new DOMParser();
+			const doc = parser.parseFromString(text, "text/html");
+			const article = doc.querySelector("article");
+
+			if (article) {
+				articleContainer.appendChild(article);
+			}
+		} catch (error) {
+			console.error(`Error loading article for ${date}:`, error);
+		}
+	}
+}

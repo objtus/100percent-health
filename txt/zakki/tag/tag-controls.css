@@ -1,9 +1,9 @@
 /* タグページ用ソートとフィルターコントロール */
 .tag-controls {
   font-family: 'saitamaar';
-  background: #f9f9f9;
+  background: #ffffff00;
   padding: 1rem;
-  border-radius: 5px;
+  border-bottom: 2px dotted;
   margin-bottom: 2rem;
   font-size: 0.9em;
 
@@ -13,7 +13,12 @@
 
   /* 見出し */
   .tag-controls-heading {
+    display: inline-block;
+    padding-left: 0;
+    border-bottom: 2px dotted;
+    border-left: none;
     margin-top: 0;
+    margin-left: 0;
     margin-bottom: 0.8rem;
     font-size: 1em;
   }
@@ -36,7 +41,7 @@
     /* ラベル */
     label {
       font-size: 0.85em;
-      color: #555;
+      color: #777;
     }
   }
 
@@ -48,7 +53,7 @@
 
   .tag-sort-btn, .tag-reset-btn {
     background: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid #000000;
     padding: 0.1rem 0.3rem;
     border-radius: 3px;
     font-size: 0.8em;
