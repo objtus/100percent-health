@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>gpmerimi - 100%health</title>
+		<link rel="stylesheet" href="../../1column.css" />
+		<script src="../../js/jquery-3.6.0.min.js"></script>
+		<script src="../../js/main.js"></script>
+		<script src="/js/mouse.js" defer></script>
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<header id="header">
+				<div id="header-flex">
+					<nav id="back">
+						<a id="backicon" href="../index.html">&lt;</a>
+					</nav>
+					<nav id="address" class="addressbar">
+						<a class="addressbar" href="/index.html">100%health</a>/
+						<a class="addressbar" href="/gallery/gallery_main.html">gallery</a>/
+						<a class="addressbar" href="/gallery/image-page/groundpolis_paint_2.html">groundpolis_paint_2</a>/
+						<a class="addressbar" href="/gallery/image-page/gpmerimi.html">gpmerimi</a>
+					</nav>
+				</div>
+			</header>
+			<main id="main">
+				<div id="galleryspace">
+					<div class="card">
+						<div class="piccard">
+							<a href="../../img/fanart/gpmerimi.png"><img src="../../img/fanart/gpmerimi.png" alt="fan merimi-san art (c)muuque." /></a>
+							<p class="title"></p>
+							<p class="caption">
+								<details>
+									<summary></summary>
+									fanart for
+									<a href="https://muuque.me/model" target="_blank">merimiさん</a>
+									(c)
+									<a href="https://muuque.me">muuque.</a>
+									with
+									<a href="https://groundpolis.app" target="_blank">groundpolis</a>
+									paint
+								</details>
+							</p>
+							<p class="date">>2021-11-04</p>
+						</div>
+						<nav class="arrow">
+							<nav class="rowarrow">
+								<a class="leftarrow" href="gpsyuua.html">&lt;</a>
+								<a class="uparrow" href="groundpolis_paint_2.html#gpmerimi">&lt;&lt;</a>
+								<a class="rightarrow" href="gphelve.html" style="">></a>
+							</nav>
+						</nav>
+					</div>
+				</div>
+			</main>
+			<footer id="main-footer">
+				<!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+				<div id="galleryhtml"></div>
+				<!-- main.jsから#footerへfooter.htmlの挿入 -->
+				<div id="footerhtml"></div>
+			</footer>
+		</div>
+		<div id="lightbox">
+			<link rel="stylesheet" href="../../luminous-basic.min.css" />
+			<script src="../../Luminous.min.js"></script>
+			<script>
+				new LuminousGallery(document.querySelectorAll("a[href$=jpg],a[href$=png],a[href$=gif]"));
+			</script>
+		</div>
+	</body>
+</html>

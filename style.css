@@ -124,6 +124,7 @@ summary {
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   grid-auto-flow: dense;
+  margin-left: 5px;
 }
 
 #about{
@@ -151,7 +152,22 @@ summary {
 #item3 {
   flex: 0 1 200px;
   order: 1;
+  margin-left: 0;
+  width: 100vw;
+
+  #links{
+    padding-bottom: 20px;
+  }
+
+  #contact{
+    padding-bottom: 20px;
+  }
+
+  #odai{
+    padding-bottom: 20px;
+  }
 }
+
 
 @media screen and (max-width: 1024px) {
 
@@ -161,7 +177,7 @@ summary {
   }
 }
 
-@media screen and (max-width: 870px) {
+@media screen and (max-width: 920px) {
   #item2 {
     display: block;
   }
@@ -183,9 +199,9 @@ summary {
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 576px) {
 
-  /* 480pxまでの幅の場合に適応される */
+  /* 576pxまでの幅の場合に適応される */
   #wrapper {
     border: 20px solid;
     border-top: none;
@@ -193,12 +209,34 @@ summary {
     border-bottom: none;
   }
 
+  #item1{
+    #sitetitle{
+      margin-right: 54px;
+    }
+    @supports (-webkit-touch-callout: none) {
+      #sitetitle{
+        margin-top: 0px;
+      }
+    }
+    &::after{
+      display: block;
+      content: '';
+      width: 100vw;
+      height: 120px;
+      background-image: url(img/ogp.gif);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 50% 6%;
+    }
+  }
+
   #item2 {
     flex: 0 1 100%;
   }
 
   #item3 {
-    flex: 0 1 310px;
+    flex: 0 1 100%;
+    margin-left: 0;
   }
 
 }
@@ -210,7 +248,6 @@ summary {
     border: none;
   }
 }
-
 
 .logo::before {
   content: '';
@@ -462,7 +499,7 @@ button:hover {
   z-index: -100;
 }
 
-#nav_links{
+.nav_links{
   display: none;
 }
 
@@ -519,8 +556,8 @@ button:hover {
 
 }
 
-@media screen and (min-width: 480px) {
-  /* 480px以上の幅の場合に適応される */
+@media screen and (min-width: 576px) {
+  /* 576px以上の幅の場合に適応される */
   a.linkImg:hover {
     position: relative;
     text-decoration: none;
@@ -540,8 +577,8 @@ button:hover {
   }
 }
 
-@media screen and (max-width: 480px) {
-  /* 480pxまでの幅の場合に適応される */
+@media screen and (max-width: 576px) {
+  /* 576pxまでの幅の場合に適応される */
   body{
     letter-spacing: 0em;
     line-height: 20px;
@@ -586,11 +623,22 @@ button:hover {
     margin-bottom: 1rem;
   }
 
+  #banner_container{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
+
   #randomjumpimg{
     position: relative;
-    width:100vw !important;
-    height: 120px;
+    width:100% !important;
+    height: 170px;
     object-fit: cover;
+    object-position: 50% 35%;
+    margin-right: 5px;
   }
 
   a.linkImg span {
@@ -601,7 +649,22 @@ button:hover {
   }
 }
 
-@media screen and (max-width: 320px) {
-  /* 320pxまでの幅の場合に適応される */
+@media screen and (max-width: 470px) {
+  /* 470pxまでの幅の場合に適応される */
+  #banner_container{
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
 
+@media screen and (max-width: 420px) {
+  #banner_container{
+    margin-left: 5px;
+
+    flex-direction: column;
+    .banner_img{
+      width: 200px;
+      height: 40px;
+    }
+  }
 }

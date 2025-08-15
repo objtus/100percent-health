@@ -1,0 +1,159 @@
+{
+    "mainSeries": "fanart",
+    "fanart_series": [
+        {
+            "id": "fanart_remilia2",
+            "path": "/gallery/image-page/fanart_remilia2.html",
+            "image_path": "/img/fanart/remilia2.gif",
+            "date": "2021-09-23",
+            "series": "fanart",
+            "tags": [
+                "fanart",
+                "remilia_scarlet",
+                "touhou_project",
+                "monochrome",
+                "1girl",
+                "drawing",
+                "request"
+            ]
+        },
+        {
+            "id": "fanart_sameji-chan",
+            "path": "/gallery/image-page/fanart_sameji-chan.html",
+            "image_path": "/img/fanart/sameji-chan.png",
+            "date": "2018-12-22",
+            "series": "fanart",
+            "tags": [
+                "fanart",
+                "sameji-chan",
+                "1girl",
+                "colored",
+                "request",
+                "fediverse"
+            ]
+        },
+        {
+            "id": "fanart_syudojo-chan",
+            "path": "/gallery/image-page/fanart_syudojo-chan.html",
+            "image_path": "/img/fanart/syudojo-chan.png",
+            "date": "2018-10-08",
+            "series": "fanart",
+            "tags": [
+                "fanart",
+                "syudojo-chan",
+                "torotsub-san",
+                "1girl",
+                "colored",
+                "fediverse"
+            ]
+        },
+        {
+            "id": "fanart_taniguchi-chan",
+            "path": "/gallery/image-page/fanart_taniguchi-chan.html",
+            "image_path": "/img/fanart/2022-06-11_taniguchi-chan.png",
+            "date": "2022-06-11",
+            "series": "fanart",
+            "tags": [
+                "fanart",
+                "techno-san",
+                "taniguchi-chan",
+                "1girl",
+                "drawing",
+                "fediverse"
+            ]
+        },
+        {
+            "id": "fanart_taniguchi-chan_and_eri-chan",
+            "path": "/gallery/image-page/fanart_taniguchi-chan_and_eri-chan.html",
+            "image_path": "/img/fanart/2022-12-10_taniguchi-chan_and_eri-chan.png",
+            "date": "2022-12-10",
+            "series": "fanart",
+            "tags": [
+                "fanart",
+                "techno-san",
+                "taniguchi-chan",
+                "eri-chan",
+                "2girls",
+                "drawing",
+                "monochrome",
+                "request",
+                "fediverse"
+            ]
+        },
+        {
+            "id": "fanart_misuzu-chan",
+            "path": "/gallery/image-page/fanart_misuzu-chan.html",
+            "image_path": "/img/fanart/2022-12-22_misuzu-chan.png",
+            "date": "2022-12-22",
+            "series": "fanart",
+            "tags": [
+                "fanart",
+                "techno-san",
+                "misuzu-chan",
+                "1girl",
+                "colored",
+                "request",
+                "fediverse",
+                "nsfw"
+            ]
+        },
+        {
+            "id": "fanart_kagamin",
+            "path": "/gallery/image-page/fanart_kagamin.html",
+            "image_path": "/img/fanart/2021-04-22_1.jpg",
+            "date": "2021-04-22",
+            "series": "fanart",
+            "tags": [
+                "fanart",
+                "hiiragi_kagami",
+                "lucky_star",
+                "1girl",
+                "drawing"
+            ]
+        },
+        {
+            "id": "fanart_hatsune",
+            "path": "/gallery/image-page/fanart_hatsune.html",
+            "image_path": "/img/fanart/2021-04-22_2.jpg",
+            "date": "2021-04-22",
+            "series": "fanart",
+            "tags": [
+                "fanart",
+                "hatsune_miku",
+                "vocaloid",
+                "1girl",
+                "drawing"
+            ]
+        },
+        {
+            "id": "fanart_helve",
+            "path": "/gallery/image-page/fanart_helve.html",
+            "image_path": "/img/fanart/helve.png",
+            "date": "2023-12-26",
+            "series": "fanart",
+            "tags": [
+                "fanart",
+                "semikura_helve",
+                "sesese-san",
+                "1girl",
+                "colored",
+                "request",
+                "fediverse"
+            ]
+        },
+        {
+            "id": "fanart_murakami-san",
+            "path": "/gallery/image-page/fanart_murakami-san.html",
+            "image_path": "/img/fanart/fanart_murakami.webp",
+            "date": "2024-01-05",
+            "series": "fanart",
+            "tags": [
+                "fanart",
+                "murakami-san",
+                "fediverse",
+                "1girl",
+                "colored"
+            ]
+        }
+    ]
+}

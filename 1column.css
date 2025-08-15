@@ -79,6 +79,12 @@ h1, h2 {
   margin-top: 1rem;
 }
 
+h1.title {
+  font-size: 1.5rem;
+  text-align: right;
+  line-height: 24px;
+}
+
 a {
   color: #000000;
   
@@ -126,14 +132,15 @@ a {
 
 #back, #address {
   position: relative;
+  top: -3px;
   font-size: large;
   background-color: #ffffff44;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   filter: grayscale(100%);
-  clip-path: inset(8px 0 8px 0);
   font-weight: bold;
-  line-height: 2rem;
+  line-height: 18px;
+  z-index: 10;
 }
 
 #back {
@@ -142,7 +149,7 @@ a {
 }
 
 #address {
-  margin-left: calc(13% - 19px);
+  margin-left: max(calc(50% - 350px), 11.5%);
   margin-right: 40px;
   transform: scale(1.15, 0.85);
 }
@@ -154,7 +161,7 @@ a {
   width: 70%;
   max-width: 600px;
   margin: 0 auto;
-  margin-top: 40px;
+  margin-top: 70px;
 }
 
 .youtube {
@@ -177,6 +184,16 @@ a {
   a:hover {
     background-color: #000000ff;
   }
+}
+
+.youtube_16-9 {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.youtube_16-9 iframe {
+  width: 100%;
+  height: 100%;
 }
 
 p.date {
@@ -215,6 +232,181 @@ nav {
 .lum-lightbox-inner img {
   max-width: fit-content;
   max-height: 100vh;
+}
+
+/*================================
+   NSFWフィルター機能（piccardベース・caption問題解決版）
+================================*/
+
+/* NSFWフィルター基本設定 */
+.nsfw {
+  position: relative;
+}
+
+/* ぼかしはみ出し防止のための画像コンテナ設定 */
+.nsfw > a {
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+/* デフォルト状態：ぼかし効果 */
+.nsfw img {
+  filter: blur(20px);
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.related-item.nsfw img{
+  filter: blur(5px);
+}
+
+/* フィルター解除状態 */
+.nsfw.revealed img {
+  filter: none;
+  transition: filter 0.15s ease-out;
+}
+
+/* 警告オーバーレイ */
+.nsfw::before {
+  content: "閲覧注意\Aクリックして表示";
+  white-space: pre;
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  padding: 8px 4px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+  z-index: 10;
+  pointer-events: auto;
+  /* iOS向けタッチ対応 */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.related-item.nsfw::before {
+  top: 44%;
+  font-size: 9px;
+}
+
+/* フィルター解除状態 */
+.nsfw.revealed::before {
+  display: none;
+}
+
+/* フィルター復活ボタン */
+.nsfw.revealed::after {
+  content: "隠す";
+  position: absolute;
+  top: -30px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.05);
+  color: black;
+  padding: 6px 12px;
+  border-radius: 2px;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 10;
+  backdrop-filter: blur(5px);
+  transition: background-color 0.2s ease;
+  /* iOS向けタッチ対応 */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.related-item.nsfw.revealed::after {
+  top: -14px;
+  padding: 3px 8px;
+  font-size: 9px;
+}
+
+.nsfw.revealed::after:hover {
+  background: rgba(85, 85, 85, 0.9);
+  color: white;
+}
+
+/* iOS向けタッチ対応：related-itemは例外 */
+.nsfw:not(.revealed) > a {
+  cursor: pointer;
+  /* pointer-events: none; を削除してタッチイベントを有効化 */
+}
+
+.related-item.nsfw:not(.revealed) > a {
+  pointer-events: auto;
+}
+
+/* iOS向け：画像自体にもタッチイベントを有効化 */
+.nsfw img {
+  pointer-events: auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ライトボックス内NSFWフィルター */
+.lum-lightbox .lum-img {
+  filter: blur(20px);
+}
+
+.lum-lightbox .lum-lightbox-image-wrapper:not(.nsfw-filtered) .lum-img {
+  filter: none !important;
+}
+
+.lum-lightbox .lum-lightbox-image-wrapper.nsfw-filtered::before {
+  content: "閲覧注意\Aクリックして表示";
+  white-space: pre;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  padding: 14px 10px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+  z-index: 10005;
+  pointer-events: auto;
+  display: block;
+  /* iOS向けタッチ対応 */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .nsfw::before,
+  .lum-lightbox .lum-lightbox-image-wrapper.nsfw-filtered::before {
+    font-size: 11px;
+    padding: 12px 8px;
+  }
+  
+  .nsfw.revealed::after {
+    font-size: 10px;
+    padding: 4px 6px;
+    top: -28px;
+  }
+}
+
+/* iOS Safari向け追加対応 */
+@supports (-webkit-touch-callout: none) {
+  .nsfw::before,
+  .nsfw.revealed::after,
+  .lum-lightbox .lum-lightbox-image-wrapper.nsfw-filtered::before {
+    /* タッチ時のハイライトを無効化 */
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 /*===================
@@ -291,7 +483,7 @@ nav {
   linksBlock
 ===================*/
 
-#nav_links, #foot_links {
+.nav_links, #foot_links {
   font-size: 0.8em;
   
   a {
@@ -299,7 +491,7 @@ nav {
   }
 }
 
-#nav_links {
+.nav_links {
   margin-top: 15px;
 }
 
@@ -384,13 +576,26 @@ nav {
   
   #address {
     position: relative;
-    left: calc((18.5% * 2) - 330px);
+    /* left: calc((18.5% * 2) - 313px); */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #address{
+    margin-left: calc(11% - 4.8vw);
+  }
+  #main, #main-footer {
+    width: 80%;
   }
 }
 
 @media screen and (max-width: 480px) {
   body {
     font-size: 12pt;
+  }
+
+  #back{
+    width: 0px;
   }
   
   #wrapper {
@@ -399,17 +604,22 @@ nav {
     border-right: none;
     border-bottom: none;
   }
+
+	#main {
+		margin-left: 5%;
+		margin-right: 0px;
+	}
   
   #main, #main-footer {
-    width: 85%;
-    margin-top: 60px;
+    width: 90%;
+    margin-top: 20px;
   }
   
   #address {
     font-size: medium;
   }
   
-  article {
+  article, #galleryspace {
     h1.title {
       background-color: #ccc;
     }
@@ -417,7 +627,7 @@ nav {
 }
 
 @media screen and (max-width: 435px) {
-  #galleryhtml {
+  #gallerymaphtml {
     width: calc(100% - 20px);
     margin-bottom: 30px;
   }
@@ -464,11 +674,5 @@ nav {
   
   #main, #main-footer {
     width: 90%;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  #main, #main-footer {
-    width: 80%;
   }
 }

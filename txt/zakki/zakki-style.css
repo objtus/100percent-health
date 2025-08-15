@@ -38,6 +38,30 @@ article {
 		content: "♥";
 		margin-right: -0.3em;
 	}
+	blockquote {
+		font-size: 1em;
+		margin-left: 1rem;
+		margin-bottom: 1rem;
+		border-left: solid 2px #bbb;
+		padding-left: 1rem;
+		color: #888;
+
+		cite {
+			display: block;
+			text-align: right;
+			color: #888;
+		}
+		cite a {
+			color: #888;
+			text-decoration: none;
+		}
+
+		cite a:hover {
+			color: #888;
+			background-color: #fff;
+			text-decoration: none;
+		}
+	}
 	ul.timeline_md {
 		text-indent: -4.3em;
 		margin-left: 6em;
@@ -108,10 +132,7 @@ article {
 	h2 {
 		margin-top: 0rem;
 	}
-	#main {
-		margin-left: 25px;
-		margin-right: 0px;
-	}
+	
 	article {
 		padding-bottom: 50px;
 		border-top: 1px dotted;

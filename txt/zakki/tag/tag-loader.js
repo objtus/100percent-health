@@ -120,7 +120,7 @@ function renderArticles(tag, container) {
   const groupedByDate = groupArticlesByDate(state.filteredArticles);
   
   // グループ化したデータをHTML形式に変換
-  const htmlContent = generateArticlesHTML(groupedByDate);
+  const htmlContent = generateArticlesHTML(groupedByDate, tag, state.sortMethod);
 
   // 結果を表示
   if (container) {
@@ -173,8 +173,8 @@ function groupArticlesByDate(articles) {
   return groupedByDate;
 }
 
-// 記事のHTMLを生成する関数
-function generateArticlesHTML(groupedByDate) {
+// 記事のHTMLを生成する関数（リスト反転対応）
+function generateArticlesHTML(groupedByDate, tagName, sortMethod) {
   return Object.entries(groupedByDate).map(([date, sections]) => {
     // 日付からリンクURLを生成
     const dateParts = date.split('-');
@@ -182,10 +182,10 @@ function generateArticlesHTML(groupedByDate) {
       const [year, month, day] = dateParts;
       const dateUrl = `/txt/zakki/${year}/${month}/days/${date}.html`;
       
-      // 関連度からタグ表示を修正
+      // 関連度からタグ表示を修正（リスト反転機能付き）
       const sectionsWithRelevance = sections.map(article => {
         const relevance = article.relevance || 100;
-        return formatArticleWithRelevance(article.section, relevance);
+        return formatArticleWithRelevance(article.section, relevance, tagName, sortMethod);
       });
       
       return `
@@ -196,25 +196,59 @@ function generateArticlesHTML(groupedByDate) {
       `;
     } else {
       // 日付形式が想定外の場合はリンクなしで表示
+      const sectionsWithRelevance = sections.map(article => {
+        const relevance = article.relevance || 100;
+        return formatArticleWithRelevance(article.section, relevance, tagName, sortMethod);
+      });
+      
       return `
         <article class="tag-article" data-date="${date}">
           <h2>${date}</h2>
-          ${sections.map(article => article.section).join('')}
+          ${sectionsWithRelevance.join('')}
         </article>
       `;
     }
   }).join('');
 }
 
-// タグの関連度を反映したフォーマットに変換する関数
-function formatArticleWithRelevance(sectionHtml, relevance) {
+// タグの関連度を反映したフォーマットに変換する関数（リスト反転機能付き）
+function formatArticleWithRelevance(sectionHtml, relevance, tagName, sortMethod) {
   const tagRegex = /<a href="\/txt\/zakki\/tag\/(.*?)\.html">#(.*?)<\/a>/g;
   
   // 各タグを関連度付きの形式に修正
-  return sectionHtml.replace(tagRegex, (match, tagPath, tagName) => {
+  let formattedHtml = sectionHtml.replace(tagRegex, (match, tagPath, tagNameInTag) => {
     // コロン形式のタグを生成
-    const formattedTag = formatTagWithRelevance(tagName, relevance);
+    const formattedTag = formatTagWithRelevance(tagNameInTag, relevance);
     return `<a href="/txt/zakki/tag/${tagPath}.html">${formattedTag}</a>`;
+  });
+  
+  // timelineタグで「新しい順」の場合、リスト項目を反転
+  if (needsListReversal(tagName, sortMethod)) {
+    formattedHtml = reverseListItems(formattedHtml);
+  }
+  
+  return formattedHtml;
+}
+
+// リスト反転が必要かどうかを判定する関数
+function needsListReversal(tagName, sortMethod) {
+  return tagName === 'timeline' && sortMethod === 'date-desc';
+}
+
+// リスト項目を反転する関数
+function reverseListItems(html) {
+  // ul.timeline_md のリストのみを対象とする
+  return html.replace(/<ul class="timeline_md">([\s\S]*?)<\/ul>/g, (match, listContent) => {
+    // li要素を抽出
+    const liMatches = listContent.match(/<li>[\s\S]*?<\/li>/g);
+    
+    if (!liMatches) {
+      return match; // li要素がない場合はそのまま返す
+    }
+    
+    // li要素を逆順にして再構築
+    const reversedLis = liMatches.reverse().join('');
+    return `<ul class="timeline_md">${reversedLis}</ul>`;
   });
 }
 
@@ -237,16 +271,86 @@ async function processMonth(year, month, tag) {
   }
 }
 
-// 日付一覧を取得する関数
+// 日付一覧を取得する関数（zakkiXX.jsファイルを利用）
 async function fetchDayLinks(year, month) {
-  const dayResponse = await fetch(`/txt/zakki/${year}/${month}/days/`);
-  const daysText = await dayResponse.text();
-  const parser = new DOMParser();
-  const daysDoc = parser.parseFromString(daysText, 'text/html');
+  try {
+    // zakkiXX.jsファイルのURLを構築
+    const zakkiFileName = `zakki${month}.js`;
+    const zakkiUrl = `/txt/zakki/${year}/${month}/${zakkiFileName}`;
+    
+    console.log(`Loading zakki file: ${zakkiUrl}`);
+    
+    // zakkiXX.jsファイルを読み込み
+    const response = await fetch(zakkiUrl);
+    if (!response.ok) {
+      console.warn(`No zakki file found: ${zakkiUrl} (${response.status})`);
+      return [];
+    }
+    
+    const jsContent = await response.text();
+    
+    // JavaScriptコードから日付配列を抽出
+    const dates = extractDatesFromZakkiJS(jsContent, year, month);
+    
+    console.log(`Found ${dates.length} dates in ${zakkiFileName}:`, dates);
+    return dates;
+    
+  } catch (error) {
+    console.error(`Error loading zakki file for ${year}-${month}:`, error);
+    return [];
+  }
+}
 
-  return Array.from(daysDoc.querySelectorAll('a'))
-    .filter(a => a.href.match(/\d{4}-\d{2}-\d{2}\.html$/))
-    .map(a => a.href.match(/\d{4}-\d{2}-\d{2}\.html/)[0].replace('.html', ''));
+// zakkiXX.jsファイルから日付情報を抽出する関数（複数形式対応版）
+function extractDatesFromZakkiJS(jsContent, year, month) {
+  try {
+    console.log(`Parsing zakki file for ${year}-${month}`);
+    
+    // dates配列を正規表現で抽出
+    const datesMatch = jsContent.match(/const\s+dates\s*=\s*\[(.*?)\]/s);
+    if (!datesMatch) {
+      console.error(`No dates array found in zakki file for ${year}-${month}`);
+      return [];
+    }
+    
+    console.log('Found dates match:', datesMatch[0]);
+    
+    // 文字列から日付を抽出
+    const datesString = datesMatch[1];
+    console.log('Dates string:', datesString);
+    
+    // 複数の形式に対応：'13', "13", 13
+    const dayMatches = datesString.match(/['"]*(\d+)['"]*[,\s]*/g);
+    
+    if (!dayMatches) {
+      console.warn(`No day matches found in dates string: ${datesString}`);
+      return [];
+    }
+    
+    console.log('Day matches:', dayMatches);
+    
+    // 数字部分のみを抽出してフォーマット
+    const formattedDates = dayMatches
+      .map(match => {
+        // 数字部分のみを抽出
+        const dayMatch = match.match(/(\d+)/);
+        if (!dayMatch) return null;
+        
+        const day = dayMatch[1].padStart(2, '0');
+        const fullDate = `${year}-${month}-${day}`;
+        console.log(`Converting ${match.trim()} to ${fullDate}`);
+        return fullDate;
+      })
+      .filter(date => date !== null) // null値を除外
+      .sort(); // 日付順にソート
+    
+    console.log(`Final formatted dates for ${year}-${month}:`, formattedDates);
+    return formattedDates;
+    
+  } catch (error) {
+    console.error(`Error parsing zakki JS content for ${year}-${month}:`, error);
+    return [];
+  }
 }
 
 // 日付ページを処理する関数

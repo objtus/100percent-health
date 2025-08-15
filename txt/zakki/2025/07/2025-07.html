@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025-07 - 100%health</title>
+  <link rel="stylesheet" href="/1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+  <script>
+    $(function () {
+      $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+      $("#taghtml").load("/txt/txt_main.html #tag-list");
+    });
+  </script>
+  <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
+  <link rel="stylesheet" href="/txt/zakki/tag-style.css">
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back">
+          <a id="backicon" href="/index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar">
+          <a class="addressbar" href="/index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="/txt/txt_main.html">
+            txt
+          </a>/
+          <a class="addressbar" href="../2025.html">
+            2025
+          </a>/
+          <a class="addressbar" href="../07/2025-07.html">
+            2025-07
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <br>
+      <h1>2025年07月の雑記</h1>
+      <nav class='arrow'>
+        <nav class='rowarrow'>
+          <a class="leftarrow" href="../05/2025-05.html" style="">&lt;</a>
+          <a class="uparrow" href="../2025.html"><<</a>
+          <a class="rightarrow" href="../08/2025-08.html" style="">&gt;</a>
+        </nav>
+      </nav>
+
+      <div id="zakki07">
+        <h2><a href="/txt/zakki/2025/07/2025-07.html">2025-07</a></h2>
+        <div class="month-article"></div> 
+      </div>
+      <script src="zakki07.js"></script>
+      <script>
+        window.addEventListener('load', loadDailyArticles07);
+      </script>
+
+      <nav class='arrow'> 
+        <nav class='rowarrow'>
+          <a class="leftarrow" href="../05/2025-05.html" style="">&lt;</a>
+          <a class="uparrow" href="../2025.html"><<</a>
+          <a class="rightarrow" href="../08/2025-08.html" style="">&gt;</a>
+        </nav>
+      </nav>
+
+    </main>
+    <footer id="main-footer">
+      <div id="zakkihtml"></div>
+      <div id="taghtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="/luminous-basic.min.css">
+    <script src="/Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+</body>
+
+</html>

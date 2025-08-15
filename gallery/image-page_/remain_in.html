@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>remain_in - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+
+</head>
+
+<body>
+  <div id="wrapper">
+    <script type="text/javascript">
+      header();
+    </script>
+    <main id="main">
+      <div id="galleryspace">
+        <div class="card">
+          <div class="piccard">
+            <iframe class="youtube" src="https://www.youtube-nocookie.com/embed/xPPMp7IRDQM"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+            <p class="title"></p>
+            <div class="caption">
+              音楽サークルex. happyender girlのLyric Video ''ニノコルモノ''を制作しました。<br>
+              <details open>
+                <summary></summary>
+                ニノコルモノ<br>
+                / ex. happyender girl<br>
+                <br>
+                ''remain in''<br>
+                directed by yuinoid (<a href="/index.html">https://yuinoid.neocities.org/</a>)<br>
+                composed by cicada_sss / 蝉暮せせせ<br>
+                starring 初音ミク<br>
+                mixed and mastered by CookieRamen (<a target="_blank" href="https://twitter.com/cookieramen">https://twitter.com/cookieramen</a>)<br>
+                happyend recordings (c) 2022<br>
+                <br>
+                ex. happyender girl's albums is here on bandcamp.<br>
+                <a href="https://happyender-girl.bandcamp.com">https://happyender-girl.bandcamp.com</a>
+              </details>
+            </div>
+            <p class="date">>2022-04-26</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+    <footer id="main-footer">
+      <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+      <div id="galleryhtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../../luminous-basic.min.css">
+    <script src="../../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+
+</body>
+
+</html>

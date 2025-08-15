@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>my_dsns_timeline - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <link rel="stylesheet" href="/txt/timeline.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+  <script>
+    var todayStr; // 今日の日付を格納する変数を宣言
+
+    $(function () {
+      var today = new Date();
+      var todayStr = ('00' + (today.getMonth() + 1)).slice(-2) + '月' + ('00' + today.getDate()).slice(-2) + '日';
+      var matchingEvents = [];
+
+      $('#timeline_layout > div').each(function () {
+        var eventYear = $(this).find('.year').text();
+        var events = $(this).find('li');
+
+        events.each(function () {
+          var $eventLi = $(this);
+          var eventHtml = $eventLi.html(); // イベントのHTML全体を取得
+          var eventText = $eventLi.text();
+          var eventDateMatch = eventText.match(/(\d{1,2}月\d{1,2}日)/);
+
+          if (eventDateMatch) {
+            var eventDate = eventDateMatch[0];
+            if (eventDate === todayStr) {
+              // 日付の部分だけを太字に変更し、他のHTML構造は保持
+              var formattedEventHtml = eventHtml.replace(
+                eventDate,
+                '<strong>' + eventDate + '</strong>'
+              );
+              matchingEvents.push(eventYear + formattedEventHtml);
+            }
+          }
+        });
+      });
+
+      if (matchingEvents.length > 0) {
+        var eventHtml = '<ul>';
+        for (var i = 0; i < matchingEvents.length; i++) {
+          eventHtml += '<li>' + matchingEvents[i] + '</li>';
+        }
+        eventHtml += '</ul>';
+        $('#today_event').html(eventHtml);
+      } else {
+        $('#today_event').html('なんの日でもありません');
+      }
+    });
+
+  </script>
+
+  <style>
+    /* 年単位の表示制御 */
+    #timeline_layout>div:not(.has-visible-items),
+    #timeline_layout>div.no-visible-items {
+      display: none !important;
+    }
+
+    #timeline_layout>div.has-visible-items {
+      display: block !important;
+    }
+
+    /* 項目レベルの表示制御 */
+    #timeline_layout li.timeline-hidden {
+      display: none !important;
+    }
+
+    #timeline_layout li.timeline-visible {
+      display: list-item !important;
+    }
+
+    /* 検索結果なしの場合のメッセージ */
+    body.timeline-no-results #timeline_layout::after {
+      content: "該当する項目が見つかりませんでした";
+      display: block;
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+      font-style: italic;
+      background: #f9f9f9;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-size: 1.1em;
+    }
+
+    /* JavaScript追加の項目数表示のスタイル */
+    .timeline-item-count {
+      font-size: 0.8em !important;
+      color: #666 !important;
+      font-weight: normal !important;
+      margin-left: 8px;
+    }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 768px) {
+      .timeline-item-count {
+        font-size: 0.6em !important;
+        margin-top: 5px;
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back">
+          <a id="backicon" href="../index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar">
+          <a class="addressbar" href="../index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="/txt/txt_main.html">
+            txt
+          </a>/
+          <a href="/txt/my_dsns_timeline.html" class="addressbar">my_dsns_timeline</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <div id="textblock">
+        <h1>分散SNS関連年表</h1>
+        <p><em>分散SNSに関連すると思われるできごとをまとめた年表</em>です。敬称略です。</p>       
+        <br>
+
+        <h2>今日はなんの日？</h2>
+        <div class="today-event-wrapper">
+          <style>
+            div#today_event li {
+              list-style: none;
+            }
+          </style>
+          今日は、<br>
+          <div id="today_event">
+            <ul></ul>
+          </div>
+          だそうです！よかったね！
+        </div>
+        <br>
+        <div id="timeline_layout">
+          <div id="1925">
+            <h2 class="year">1925年</h2>
+            <ul>
+              <li class="thought culture">07月11日　<span lang="ru">Володимир Вернадський</span> (Vladimir Vernadsky : <span class="str3">ウラジーミル・ヴェルナツキイ</span>)のソルボンヌ大学での講義を修正し、一部を収録した講義録"La Geochimie
+                (『地球化学概論』)"が出版される。1922年から1923年にかけてソルボンヌ大学へ招聘されており、そこで地球科学に関する講義を行っていた。</li>
+            </ul>
+          </div>
+
+          <div id="1928">
+            <h2 class="year">1928年</h2>
+            <ul>
+              <li class="thought culture">??月??日　1927年から1928年にかけて、コレージュ・ド・フランスでEdouard Le Roy（エドゥアール・ル・ロワ）が人間の進化についての講義を行う。<br>
+                この講義は1922年から1923年にかけて行われたVladimir Vernadskyのソルボンヌ大学での講義に影響を受けており、この講義ではじめて<span class="str">"noosphere (「精神圏」)"</span>という言葉が使われた。講義中、「精神圏」概念の共作者としてPierre Teilhard de Chardinの名前が挙げられた。<br>
+                この講義の講義録は1928年に"Les origines humaines et l'évolution de l'intelligence (『人間の起源と理性の進化』)"に収められた。この講義録が、Vladimir Vernadskyが「精神圏」を詳しく研究するきっかけとなったとされる。</li>
+            </ul>
+          </div>
+
+          <div id="1930">
+            <h2 class="year">1930年</h2>
+            <ul>
+              <li class="math science logic thought culture">09月05日　05日から07日にかけて、ケーニヒスベルクで第2回「厳密科学の認識論」会議 ("Tagung für Erkenntnislehre der exakten Wissenschaften")が開催される。<br>
+                「数学の基礎づけ」、「量子力学の哲学的基礎」をテーマに開催された。ヒルベルトプログラムについてのディスカッション中、<span class="str">Kurt Gödelがはじめて不完全性定理について言及</span>したとされる。<br>
+                形式主義の代表者としても参加していたJohn von Neumannはこの重要性にその場で気づいた数少ない一人だったとされ、この会議の数ヶ月後に第二不完全性定理を証明し、ヒルベルトプログラムが遂行困難であることを示した。<br>
+                第一、第二不完全性定理はKurt Gödelが論文化し、1930年11月17日に"On Formally Undecidable Propositions of Principia Mathematica and Related Systems"として提出、"Monatshefte für Mathematik und Physik"に掲載された。</li>
+            </ul>
+          </div>
+
+          <div id="1936">
+            <h2 class="year">1936年</h2>
+            <ul>
+              <li class="math science logic thought culture">05月28日　Alan Turingによる論文"On Computable Numbers, with an Application to the Entscheidungsproble"がロンドン数学会に提出される。1937年にジャーナル"Proceedings of the London Mathematical Society"へ掲載された。<br>
+                この論文は1928年にDavid HilbertとWilhelm Ackermannによって提起された「決定問題 ("Entscheidungsproblem")」にたいして、決定不能で一般的に解く有限的手続きは存在しないということを示したとされる。これとは独立して作成されたAlonzo Churchの論文と合わせ、「チャーチ＝チューリングのテーゼ」を構成する論文となった。
+              </li>
+            </ul>
+          </div>
+
+          <div id="1938">
+            <h2 class="year">1938年</h2>
+            <ul>
+              <li class="culture book">??月??日　H. G. Wells (H. G. ウェルズ)のエッセイや講演録をまとめた書籍『<span class="str">World Brain (世界の頭脳)</span>』が出版される。<br>
+                世界的な協働によって組織的に編纂される、オープンで総合的、恒久的な世界百科事典の構想を語った。H. G. Wellsは『タイムマシン』『透明人間』『宇宙戦争』などで有名なSF作家であるとともに未来志向的な社会活動家であった。学生時代にThomas Henry Huxley (トマス・ヘンリー・ハクスリー)のもとで生物学、進化論を学んでいる。<br>
+                <span class="str2">H. G. Wellsの小説『開放された世界』</span>で原子核反応による爆弾を描き、それを読んだLeo Szilard (レオ・シラード)に、<span class="str2">中性子を用いた原子核連鎖反応の理論的可能性というアイデアのきっかけを与えた</span>とされる。
+              </li>
+              <li class="tech logic culture computer">03月01日　MITの大学院でVannevar Bush (ヴァネバー・ブッシュ)の研究助手として微分解析機のスイッチボードを設計していたClaude Shannon (クロード・シャノン)が修士論文として"<span class="str">A Symbolic Analysis of Relay and Switching Circuits</span>"を提出する。<br>
+                この論文でブール代数による2進法の論理回路をスイッチで設計できることを示した。Vannevar Bushは送電網シミュレータをつかって安全性の問題を計算しようとしたが繰り返し計算に忙殺され、そのことが微分解析機の開発プロジェクトのきっかけとなった。</li>
+              <li class="thought culture">??月??日　Vladimir Vernadskyが書籍『地球とその周囲の生命圏の化学的な構造』の序文として"Scientific Thought as a Planetary Phenomenon (『惑星的現象としての科学思想』)"を執筆する。Vladimir Vernadskyは1930代において「精神圏」の考察を深め、この時期の仕事がロシアの知識人に「精神圏」概念を広めることとなったとされる。
+              </li>
+            </ul>
+          </div>
+
+          <div id="1939">
+            <h2 class="year">1939年</h2>
+            <ul>
+              <li class="event war etc">09月01日　ナチスドイツがポーランドへ侵攻、<span class="str">第二次世界大戦が始まる</span>。</li>
+            </ul>
+          </div>
+          
+          <div id="1940">
+            <h2 class="year">1940年</h2>
+            <ul>
+              <li class="war etc">06月27日　第32代アメリカ合衆国大統領Franklin Roosevelt (フランクリン・ルーズベルト)により<span class="str2">NDRC (国防研究委員会)が設立</span>される。ドイツがフランスへ侵攻したことをきっかけとして、NACA（国家航空諮問委員会）メンバーのFrederic Delano (フランクリン・デラノ)を通じ同委員会メンバーでカーネギー研究所所長であったVannevar BushがFranklin Rooseveltへ直訴、結果としてNDRCが設立された。<span class="str2">アインシュタイン＝シラードの手紙を受け計画された原子爆弾の開発プロジェクト「S-1ウラン委員会」</span>はNDRCの監督となり、後に<span class="str">マンハッタン計画</span>となった。</li>
+            </ul>
+          </div>
+          
+          <div id="1941">
+            <h2 class="year">1941年</h2>
+            <ul>
+              <li class="war etc">06月28日　Franklin Rooseveltによる大統領令8807によりOSRD (科学研究開発局)が正式に設立される。<br>連邦政府内の国防研究を統括するため、大統領府の緊急事態管理局 (OEM)内にOSRDが設立され、Vannevar Bushは局長に就任した。これによりBushは議会により承認された予算を配分できる立場として、アメリカ合衆国の国防研究の頂点となった。その後、OSRDはNDRCよりS-1ウラン委員会を引き継いでいる。<br>OSRDは新型爆弾やレーダーおよび早期警戒システム、誘導ミサイル、ペニシリンの開発など多岐にわたる研究の統括を行っていたが、その中にはミネソタ飢餓実験といった人体実験が含まれていた。
+              </li>
+              <li class="war etc event">12月07日　日本軍によりハワイのパールハーバーの奇襲攻撃<span class="str">「真珠湾攻撃」が起こる</span>。<br>
+                翌12月08日、アメリカは対日宣戦布告を行い、太平洋戦争が勃発する。12月11日にはドイツとイタリアがアメリカへ宣戦布告を行った。</li>
+            </ul>
+          </div>
+
+          <div id="1942">
+            <h2 class="year">1942年</h2>
+            <ul>
+              <li class="war etc">12月02日　シカゴ大学においてEnrico Fermi主導で世界初の原子炉「シカゴ・パイル1号」が建設され、行われた実験で<span class="str2">原子炉が歴史上はじめて臨界に達する</span>。その後、Enrico Fermiはマンハッタン計画に参加、ロスアラモス国立研究所で研究を行った。</li>
+            </ul>
+          </div>
+          <div id="1943">
+            <h2 class="year">1943年</h2>
+            <ul>
+              <li class="tech thought war">01月頃　　 シカゴ大学出版局の学術雑誌 "Philosophy of Science" の第10巻1号が出版される。<br>
+                Arturo Rosenblueth、Norbert Wiener、Julian Bigelowの論文 "Behavior, Purpose and Teleology" が掲載された。この論文は、1942年05月に開催された会議 "The cerebral Inhibition Meeting" で報告された内容を元に、機械と動物の特定の現象を、フィードバックを用いたモデルで統一的に扱えるのではないかという仮説を提唱したもの。<br>
+                この論文は、<a href="https://repository.kulib.kyoto-u.ac.jp/dspace/handle/2433/56991" target="_blank" class="str2">Norbert Wienerの「サイバネティクス」構想について学際研究を提案するきっかけとなった</a>とされる。<br>
+                対空高射砲の射撃制御装置を開発するという戦時研究から、自動追随装置のある挙動について、人体でも同様の現象が起こるという事実を知ったことで1942年の会議の構想が生まれた。この学際研究の提案で1943年にJohn von Neumannが参加し、計算機科学の流れが加わったとされる。<br>
+                1920年代にNorbert WienerはMITの同僚であったVannevar Bushから計算機に関する相談を受けている。
+              </li>
+            </ul>
+          </div>
+          <div id="1945">
+            <h2 class="year">1945年</h2>
+            <ul>
+              <li class="web culture hacker book">06月27日　Vannevar Bushがエッセイ "<a href="https://cruel.org/other/aswemaythink/aswemaythink.pdf" target="_blank" class="str">As We May Think</a>" を寄稿したアトランティック・マンスリー7月号が発売される。<br>
+                マイクロフィルムを用い情報を連想的に相互にリンクさせることができるディスプレイとキーボードがついたデスクサイズの機械 "<span class="str">Memex</span>" についてのアイデアが書かれていた。レーダー技術者として徴兵され船上で対日戦勝記念日を迎えたDouglas Engelbart (ダグラス・エンゲルバート) は、フィリピン・ライチ島の赤十字図書館で As We May Think が紹介されたLIFE誌を読み、「<span class="str2">人間の心の力を拡大する装置</span>」というビジョンに感銘を受けたとされる。</li>
+              <li class="war event">07月16日 アメリカのニューメキシコ州ソコロで <span class="str">人類最初の核実験であるトリニティ実験が行われる</span>。<br>
+                マンハッタン計画の元で創設されたロスアラモス国立研究所で原子爆弾の開発が進められており、インプロージョン方式の人類最初の原子爆弾「ガジェット」がトリニティ実験で使用された。ロスアラモス国立研究所の初代所長でマンハッタン計画を主導したRobert Oppenheimerが実験のコード名「トリニティ」を命名したとされる。</li>
+            </ul>
+          </div>
+
+          <div id="1946">
+            <h2 class="year">1946年</h2>
+              <ul>
+                <li class="culture thought">11月04日　国際連合教育科学文化機関（UNESCO）が発足する。<br>Julian Huxleyが設立に関わり、初代事務局長を努めた。Julian HuxleyはTeilhard de Chardinの信奉者でもあったとされ、このためにTeilhard de Chardinの思想はUNESCOに影響を与えたといわれることとなった。1965年のTeilhard de Chardinの英訳版"The Phenomenon of Man (『現象としての人間』)"はJulian Huxleyが序文を寄せている。</li>
+            </ul>
+          </div>
+
+          <div id="1953">
+            <h2 class="year">1953年</h2>
+            <ul>
+              <li class="acid culture">04月13日　CIAの行動制御研究プログラムであるプロジェクト"<span class="str">MKULTRA作戦</span>"が開始される。</li>
+              <li class="acid book">05月04日　Aldous Huxley (オルダス・ハクスリー)が精神科医Humphry Osmond (ハンフリー・オズモンド)の手により初めてメスカリンを服用し「知覚の扉」が開かれる。この経験をもとに本"The doors of perception (<span class="str2">『知覚の扉』</span>)"が書かれ翌1954年出版された。</li>
+            </ul>
+          </div>
+          
+          <div id="1955">
+            <h2 class="year">1955年</h2>
+            <ul>
+              <li class="thought culture">
+                04月10日　Pierre Teilhard de Chardinが死去する。<br>
+                ローマ教皇庁は当時、進化論を承認していなかったため、進化論に関する研究を含むTeilhard de Chardinの著作は禁書とされていた。Teilhard de Chardinの死後に禁書処置が解かれると、その著作が出版されはじめ、1955年の "Le Phénomène humain (『現象としての人間』)" や1959年の "L'Avenir de l'Homme (『人間の未来』)" といった著作はベストセラーとなった。<br>
+                この出来事で「精神圏」という概念は広く知られることとなった。
+              </li>
+              <li class="ai culture tech">
+                08月31日　1956年夏にダートマス大学で開催される会議のための提案書 "A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence" が、John McCarthy、Marvin Minsky、Nathaniel Rochester、Claude Shannonによって書かれる。<br>
+                提案書はロックフェラー財団へ会議のための資金提供を求めるため送られた。この提案書によって <span class="str">初めて "Artificial Intelligence (「人工知能」)" という言葉が使われる</span>。1956年夏に開催されたこの会議は「ダートマス会議」と呼ばれ、この会議によって、学術研究として人工知能研究が確立することとなったとされる。
+              </li>
+            </ul>
+          </div>
+          
+          <div id="1956">
+            <h2 class="year">1956年</h2>
+            <ul>
+              <li class="acid culture">
+                ??月??日 ロサンゼルスのGerald Heard (ジェラルド・ハード) 宅をMyron Stolaroff (マイロン・ストラロフ) が訪問した際、Al Hubbard (アル・ハバード) の話とともにLSDについて語られる。Gerald Heard は Aldous Huxley の東洋思想の紹介者、友人であり、Myron Stolaroff とはスタンフォード大学でビジネス法の教授をしていた Harry Rathbun (ハリー・ラズバン) の主催する瞑想セミナー「セコイア・セミナー」で知り合った。
+              </li>
+              <li class="acid culture">
+                04月頃　　 Myron Stolaroff がバンクーバーにある Al Hubbard のアパートで 66mg の LSD を試す。これにより Myron Stolaroff はカリフォルニアへ帰るとセコイア・セミナー会員の技術者仲間と LSD の非公式の研究会を開くこととなった。
+              </li>
+              <li class="acid culture">
+                04月頃　　 精神科医 Humphry Osmond がニューヨーク科学アカデミーで "psychotomimetic (サイコトミメティック)" に代わり <a href="http://www.hofmann.org/papers/osmond/index.html" target="_blank" class="str2">"psychedelic (サイケデリック)" という言葉の使用を提案する論文</a>を読み上げる。
+              </li>
+              <li class="acid culture">
+                08月頃　　 アルコール依存症の自助グループ「アルコホーリクス・アノニマス」の創始者 Bill Wilson (ビル・ウィルソン) が Gerald Heard の指導のもと、当時カリフォルニア退役軍人管理病院の精神科医であった Sidney Cohen (シドニー・コーヘン) 立ち会いのもとで初めて LSD を服用する。
+              </li>
+              <li class="culture politics">
+                末頃　　　 カリフォルニア大学で学生により ROTC志願委員会が結成される。カリフォルニア大学では陸軍士官候補生課程 (ROTC) の訓練の義務化が推進されていたため、それへの反対運動のために結成された。
+              </li>
+            </ul>
+          </div>
+          
+          <div id="1957">
+            <h2 class="year">1957年</h2>
+            <ul>
+              <li class="tech">
+                09月18日　ショックレー半導体研究所に所属する研究スタッフ8名が研究所をやめ、フェアチャイルド・カメラ・アンド・インスツルメンツから出資を受けてフェアチャイルド・セミコンダクターを創業する。<br>
+                フェアチャイルド・セミコンダクターは独自に開発した「プラーナー」という製造方法を用い、<span class="str2">世界で初めて半導体集積回路の商業生産を開始</span>した。この8人は "the Traitorous Eight (8人の反逆者)" を名乗り、その中の二人、Robert Noyce (ロバート・ノイス) と Gordon Moore (ゴードン・ムーア) はのち1968年にインテルを創業した。
+              </li>
+              <li class="war etc">
+                10月04日　ソ連により人工衛星「スプートニク1号」が打ち上げられる。<br>
+                世界初の人工衛星であり、人工衛星打ち上げでソ連に先を越されたアメリカ合衆国では <span class="str">スプートニク・ショック</span> が起こった。<br>
+                これを受け、翌年、研究開発プロジェクト支援のために国防総省下に高等研究計画局 (ARPA) が設立された。ARPA はのち設立される国防高等研究計画局 (DARPA) の前身組織。<br>
+                また、航空宇宙分野の研究開発支援のため、大統領直属の独立組織としてNACA（国家航空諮問委員会）を発展的に解消しNASA (アメリカ航空宇宙局) が設立されることとなった。
+              </li>
+            </ul>
+          </div>
+          
+          <div id="1959">
+            <h2 class="year">1959年</h2>
+            <ul>
+              <li class="culture politics">
+                10月19日　カリフォルニア大学の1年生であった Fred Moore (フレッド・ムーア) が、大学運営本部のあるスプロールホールの階段で、7日間の断食を行うと書かれた手書き看板を立て座り込んで抗議行動をはじめる。<br>
+                司法長官であったウィリアム・P・ロジャースへ ROTC 登録の免除を要請した手紙を送ったところ、学監長より ROTC 登録免除要請を取り下げるか退学するか選択を迫られていたため。<br>
+                Fred Moore の父親が国防総省に勤める現役の大佐であったことから、この抗議行動がアメリカ合衆国中で話題となった。<br>
+                Lee Swenson はこの抗議行動の噂を聞き座り込みに参加している。抗議行動は二晩続いたところで父親に家に連れ帰られ終了したが、嘆願書には 1300 名ほどの学生が署名したとされる。<br>
+                この出来事は数ヶ月後の学内反対運動の模範とされ、また、60年代の学生運動のはしりとされるバークレーのフリースピーチ運動の先駆けとなった。
+              </li>
+            </ul>
+          </div>
+
+          <!-- このあと続く -->
+          
+        </div>
+        <h2>参考</h2>
+        <ul id="reference">
+          <li><a href="https://wikipedia.org/">wikipedia.org</a></li>
+          <li><a href="https://www.wdic.org">通信用語の基礎知識</a></li>
+          <li><a href="https://dic.nicovideo.jp/">ニコニコ大百科</a></li>
+        </ul>
+
+      </div>
+
+      <button id="sidebar-toggle">menu</button>
+      <div id="sidebar">
+        <div id="sidebar_flex_1">
+          <div id="sidebar_jump">
+            <button id="back_to_top" class="sidebar-button">↑to top</button>
+            <br>
+            <a href="#1980" target="_self">to 1980</a><br>
+            <a href="#1990">to 1990</a><br>
+            <a href="#1995">to 1995</a><br>
+            <a href="#2000">to 2000</a><br>
+            <a href="#2005">to 2005</a><br>
+            <a href="#2010">to 2010</a><br>
+            <a href="#2015">to 2015</a><br>
+            <a href="#2017">to 2017</a><br>
+            <a href="#2020">to 2020</a><br>
+            <a href="#2023">to 2023</a><br>
+            <a href="#2024">to 2024</a><br>
+            <br>
+            <button id="back_to_bottom" class="sidebar-button">↓to bottom</button>
+          </div>
+        </div>
+        <div id="sidebar_flex_2">
+          <details open>
+            <summary id="filtering_options">filter</summary>
+            <button id="reset-all">RESET</button>
+            <input type="radio" name="class" value="mixed" checked>mixed<br>
+            <div id="filter_flex">
+              <div id="flex_radio">
+                <input type="radio" name="class" value="d">d-sns<br>
+                <input type="radio" name="class" value="sns">sns<br>
+                <input type="radio" name="class" value="web">web<br>
+                <input type="radio" name="class" value="network">network<br>
+                <input type="radio" name="class" value="web3">web3<br>
+                <input type="radio" name="class" value="hacker">hacker<br>
+                <input type="radio" name="class" value="tech">tech<br>
+                <input type="radio" name="class" value="culture">culture<br>
+                <input type="radio" name="class" value="law">law<br>
+                <input type="radio" name="class" value="bbs">BBS<br>
+                <input type="radio" name="class" value="site">site<br>
+                <input type="radio" name="class" value="p2p">P2P<br>
+                <input type="radio" name="class" value="crypto">crypto<br>
+                <input type="radio" name="class" value="book">book<br>
+                <input type="radio" name="class" value="incident">incident<br>
+                <input type="radio" name="class" value="metaverse">metaverse<br>
+                <input type="radio" name="class" value="mentalhealth">mentalculture<br>
+                <input type="radio" name="class" value="meme">meme<br>
+                <input type="radio" name="class" value="pol">pol<br>
+                <input type="radio" name="class" value="art">art<br>
+                <input type="radio" name="class" value="fire">flame<br>
+                <input type="radio" name="class" value="tool">tool<br>
+                <input type="radio" name="class" value="etc">etc<br>
+              </div>
+              <div id="flex_checkbox">
+                <input type="checkbox" name="class" value="d" checked><br>
+                <input type="checkbox" name="class" value="sns" checked><br>
+                <input type="checkbox" name="class" value="web" checked><br>
+                <input type="checkbox" name="class" value="network" checked><br>
+                <input type="checkbox" name="class" value="web3" checked><br>
+                <input type="checkbox" name="class" value="hacker" checked><br>
+                <input type="checkbox" name="class" value="tech" checked><br>
+                <input type="checkbox" name="class" value="culture" checked><br>
+                <input type="checkbox" name="class" value="law" checked><br>
+                <input type="checkbox" name="class" value="bbs" checked><br>
+                <input type="checkbox" name="class" value="site" checked><br>
+                <input type="checkbox" name="class" value="p2p" checked><br>
+                <input type="checkbox" name="class" value="crypto" checked><br>
+                <input type="checkbox" name="class" value="book" checked><br>
+                <input type="checkbox" name="class" value="incident" checked><br>
+                <input type="checkbox" name="class" value="metaverse" checked><br>
+                <input type="checkbox" name="class" value="mentalhealth" checked><br>
+                <input type="checkbox" name="class" value="meme" checked><br>
+                <input type="checkbox" name="class" value="pol" checked><br>
+                <input type="checkbox" name="class" value="art" checked><br>
+                <input type="checkbox" name="class" value="fire" checked><br>
+                <input type="checkbox" name="class" value="tool" checked><br>
+                <input type="checkbox" name="class" value="etc" checked><br>
+              </div>
+            </div>
+          </details>
+        </div>
+        <div id="searchform">
+          <input type="text" id="searchInput" placeholder="検索">
+          <button id="clearButton">×</button>
+        </div>
+      </div>
+      <script>
+        // サイドバーのトグルボタンがクリックされたら、サイドバーを表示または非表示にする
+        const sidebar = document.getElementById('sidebar'); // サイドバーの要素を取得
+        const toggleButton = document.getElementById('sidebar-toggle'); // トグルボタンの要素を取得
+        const body = document.getElementsByTagName('body')[0]; // body要素を取得
+
+        toggleButton.addEventListener('click', (event) => {
+          event.stopPropagation(); // トグルボタンクリック時にイベントが親要素に伝播しないようにする
+          sidebar.classList.toggle('active');
+        });
+
+        body.addEventListener('click', (event) => {
+          if (event.target !== sidebar && !sidebar.contains(event.target)) {
+            // クリックされた要素がサイドバーでなく、サイドバー内の要素でもない場合、サイドバーを閉じる
+            sidebar.classList.remove('active');
+          }
+        });
+        // =============================================================================
+        // メインシステムの初期化
+        // =============================================================================
+
+        // DOM読み込み後に初期化実行
+        $(document).ready(() => {
+          // TimelineFilterインスタンスを作成
+          window.timelineFilter = new TimelineFilter();
+
+          // 初期化実行
+          initializeTimelineFilter();
+        });
+      </script>
+
+
+    </main>
+    <footer id="main-footer">
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+
+    <script>
+      // =============================================================================
+      // メインシステム初期化
+      // =============================================================================
+
+      // メイン初期化関数
+      function initializeTimelineFilter() {
+        // TimelineFilterシステムを有効化
+        window.timelineFilter.enable();
+      }
+
+      // =============================================================================
+      // TimelineFilter 基盤クラス
+      // =============================================================================
+
+      class TimelineFilter {
+        constructor() {
+          // 基本状態の初期化
+          this.state = {
+            searchText: '',
+            selectedClass: 'mixed',
+            selectedCheckboxes: new Set()
+          };
+          this.yearCache = new Map();
+          this.searchButton = null;
+          
+          // Phase 1: カテゴリ管理機能の追加
+          this.categoryCache = null; // カテゴリキャッシュ
+        }
+
+        // システムを有効化
+        enable() {
+          // 文字選択機能の初期化
+          if (!this.searchButton) {
+            this.initializeTextSelection();
+          }
+        }
+
+        // 基本的な状態管理メソッド
+        updateState(changes) {
+          const oldState = { ...this.state };
+          Object.assign(this.state, changes);
+          // URLパラメータの更新は必要に応じて実装
+        }
+
+        // =============================================================================
+        // Phase 1: カテゴリ管理機能
+        // =============================================================================
+
+        // HTMLからカテゴリを動的取得
+        getAvailableCategories() {
+          if (this.categoryCache) {
+            return this.categoryCache; // キャッシュがあれば使用
+          }
+
+          try {
+            const categories = [];
+            const $checkboxes = $('input[type="checkbox"][name="class"]');
+            
+            if ($checkboxes.length === 0) {
+              throw new Error('チェックボックス要素が見つかりません');
+            }
+
+            $checkboxes.each((index, checkbox) => {
+              const value = $(checkbox).val();
+              if (value && value.trim()) {
+                categories.push(value.trim());
+              }
+            });
+
+            if (categories.length === 0) {
+              throw new Error('有効なカテゴリが見つかりません');
+            }
+
+            this.categoryCache = categories;
+            console.log('[TimelineFilter] カテゴリ取得成功:', categories);
+            return categories;
+
+          } catch (error) {
+            console.warn('[TimelineFilter] カテゴリ取得エラー:', error.message);
+            const fallback = this.getFallbackCategories();
+            this.categoryCache = fallback;
+            console.log('[TimelineFilter] フォールバック使用:', fallback);
+            return fallback;
+          }
+        }
+
+        // フォールバック用最小限カテゴリ
+        getFallbackCategories() {
+          return ['d', 'sns', 'web', 'tech', 'culture']; // 確実に存在するもののみ
+        }
+
+        // 動的なデフォルト状態生成
+        getDefaultState() {
+          return {
+            class: 'mixed',
+            checkboxes: this.getAvailableCategories()
+          };
+        }
+
+        // URLパラメータ管理で使用
+        getDefaultCheckboxesSet() {
+          return new Set(this.getAvailableCategories());
+        }
+
+        // 文字選択機能の初期化
+        initializeTextSelection() {
+
+          // 検索ボタンを作成
+          this.createTextSelectionSearchButton();
+
+          // 既存のTimelineFilter関連のイベントを削除
+          $(document).off('.timelineTextSelection');
+
+          // mouseupイベントリスナーを設定
+          $(document).on('mouseup.timelineTextSelection', (e) => {
+
+            // 検索ボタン自体のクリックは無視
+            if (this.searchButton && $(e.target).is(this.searchButton)) {
+              return;
+            }
+
+            // handleTextSelectionを呼び出し
+            this.handleTextSelection(e);
+          });
+
+          // 他の場所をクリックした時にボタンを非表示
+          $(document).on('click.timelineTextSelection', (e) => {
+            if (this.searchButton && !$(e.target).is(this.searchButton)) {
+              this.hideTextSelectionSearchButton();
+            }
+          });
+
+        }
+
+        // 文字選択用検索ボタンを作成
+        createTextSelectionSearchButton() {
+          // 既存のボタンがあれば削除
+          if (this.searchButton) {
+            this.searchButton.remove();
+          }
+
+          this.searchButton = $('<button>')
+            .text('検索')
+            .addClass('timeline-text-selection-button')
+            .css({
+              'position': 'absolute',
+              'z-index': '9999',
+              'display': 'none',
+              'background': '#ffffffaa',
+              'backdrop-filter': 'blur(2px)',
+              '-webkit-backdrop-filter': 'blur(2px)',
+              'color': 'black',
+              'border': 'none',
+              'padding': '5px 10px',
+              'border-radius': '2px',
+              'cursor': 'pointer',
+              'font-size': '14px',
+              'transition': 'all 0.2s ease'
+            });
+
+          // ホバー効果
+          this.searchButton.hover(
+            function () {
+              $(this).css({
+                'background': '#f0f0f0',
+                'transform': 'scale(1.05)'
+              });
+            },
+            function () {
+              $(this).css({
+                'background': '#ffffffaa',
+                'transform': 'scale(1)'
+              });
+            }
+          );
+
+          $('body').append(this.searchButton);
+        }
+
+        // テキスト選択時の処理
+        handleTextSelection(event) {
+          // 少し遅延させて確実に選択状態を取得
+          setTimeout(() => {
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+
+            if (selectedText && selectedText.length > 0) {
+              // 選択範囲の位置情報を取得
+              try {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                this.showTextSelectionSearchButton(rect, selectedText, event);
+              } catch (e) {
+                // 選択範囲の取得に失敗
+                this.hideTextSelectionSearchButton();
+              }
+            } else {
+              this.hideTextSelectionSearchButton();
+            }
+          }, 50);
+        }
+
+        // 文字選択用検索ボタンを表示
+        showTextSelectionSearchButton(rect, selectedText, originalEvent) {
+          if (!this.searchButton) return;
+
+          // 既存のクリックイベントを削除
+          this.searchButton.off('click.textSelectionSearch');
+
+          // 新しいクリックイベントを設定
+          this.searchButton.on('click.textSelectionSearch', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // 検索フィールドに選択テキストを設定
+            $('#searchInput').val(selectedText);
+
+            // 検索ボタンを非表示
+            this.hideTextSelectionSearchButton();
+
+            // 選択を解除
+            window.getSelection().removeAllRanges();
+
+            // フィルタリング実行（基本的な検索機能）
+            this.performBasicSearch(selectedText);
+          });
+
+          // 改良された位置計算
+          const buttonWidth = 50;
+          const buttonHeight = 28;
+          const margin = 8;
+
+          // 基本位置：選択範囲の右上
+          let left = rect.right + margin;
+          let top = rect.top - buttonHeight - margin;
+
+          // ビューポートの境界を取得
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+          const scrollX = window.scrollX;
+          const scrollY = window.scrollY;
+
+          // 右端チェック：画面外に出る場合は左側に配置
+          if (left + buttonWidth > viewportWidth + scrollX) {
+            left = rect.left - buttonWidth - margin;
+          }
+
+          // 左端チェック：画面外に出る場合は最小値に設定
+          if (left < scrollX) {
+            left = scrollX + margin;
+          }
+
+          // 上端チェック：画面外に出る場合は選択範囲の下に配置
+          if (top < scrollY) {
+            top = rect.bottom + margin;
+          }
+
+          // 下端チェック：画面外に出る場合は上に移動
+          if (top + buttonHeight > viewportHeight + scrollY) {
+            top = rect.top - buttonHeight - margin;
+            // それでも画面外の場合は選択範囲内に配置
+            if (top < scrollY) {
+              top = rect.top + margin;
+            }
+          }
+
+          // 最終的な位置調整（最小限の表示領域を確保）
+          left = Math.max(scrollX + 5, Math.min(left, viewportWidth + scrollX - buttonWidth - 5));
+          top = Math.max(scrollY + 5, Math.min(top, viewportHeight + scrollY - buttonHeight - 5));
+
+          this.searchButton.css({
+            display: 'block',
+            position: 'absolute',
+            top: top + 'px',
+            left: left + 'px',
+            'z-index': '10000'
+          });
+        }
+
+        // 文字選択用検索ボタンを非表示
+        hideTextSelectionSearchButton() {
+          if (this.searchButton) {
+            this.searchButton.hide();
+            this.searchButton.off('click.textSelectionSearch');
+          }
+        }
+
+        // 基本的な検索機能（Phase 3改良版：addYearControl相当の処理を統合）
+        performBasicSearch(searchText) {
+          // 状態を更新
+          this.updateState({ searchText: searchText });
+
+          // 既存の検索イベントを発火してフィルタリングをトリガー
+          const searchInput = $('#searchInput');
+          if (searchInput.length) {
+            // 各種イベントを発火（既存システムが何に反応するか不明なため）
+            searchInput.trigger('input');
+            searchInput.trigger('keyup');
+            searchInput.trigger('change');
+
+            // 少し遅延しても一度発火（非同期処理への対応）
+            setTimeout(() => {
+              searchInput.trigger('input');
+            }, 10);
+          }
+
+          // Phase 3改良: 既存の検索機能に加えて年単位制御も実行
+          if (typeof window.performSearch === 'function') {
+            window.performSearch();
+          }
+          
+          // addYearControl相当の処理を直接実行
+          this.addYearControl();
+        }
+
+        // =============================================================================
+        // Phase 2: URL パラメータ管理機能
+        // =============================================================================
+
+        // URLパラメータの更新（既存のupdateUrlParams関数を移植）
+        updateUrlParams() {
+
+          const urlParams = new URLSearchParams();
+          const searchValue = this.state.searchText.trim();
+          const selectedClass = this.state.selectedClass;
+          const selectedCheckboxes = Array.from(this.state.selectedCheckboxes);
+
+          // 【修正】デフォルト状態を動的取得に変更
+          const defaultState = this.getDefaultState();
+
+          if (searchValue) {
+            urlParams.set('search', searchValue);
+          }
+
+          // デフォルト状態と異なる場合のみパラメータを追加
+          if (selectedClass !== defaultState.class) {
+            urlParams.set('class', selectedClass);
+          }
+
+          if (JSON.stringify(selectedCheckboxes.sort()) !== JSON.stringify(defaultState.checkboxes.sort())) {
+            urlParams.set('checkboxes', selectedCheckboxes.join(','));
+          }
+
+          const newUrl = window.location.origin + window.location.pathname +
+            (urlParams.toString() ? '?' + urlParams.toString() : '');
+
+          window.history.replaceState(null, null, newUrl);
+        }
+
+        // URLからの状態復元（既存のrestoreSelectionFromUrlParams関数を移植）
+        restoreFromUrl() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const selectedClass = urlParams.get('class');
+          const selectedCheckboxes = urlParams.get('checkboxes');
+          const searchQuery = urlParams.get('search');
+
+          // 状態オブジェクトの更新
+          if (selectedClass) {
+            this.state.selectedClass = selectedClass;
+          }
+
+          if (selectedCheckboxes) {
+            const checkboxValues = selectedCheckboxes.split(',');
+            this.state.selectedCheckboxes = new Set(checkboxValues);
+          } else {
+            // 【修正】デフォルトチェックボックス選択を動的取得に変更
+            this.state.selectedCheckboxes = this.getDefaultCheckboxesSet();
+          }
+
+          if (searchQuery) {
+            this.state.searchText = searchQuery;
+          }
+
+          // 既存のフォーム要素にも反映（Phase 2では参考実装のみ）
+          this.syncStateToForm();
+        }
+
+        // 状態をフォーム要素に同期
+        syncStateToForm() {
+
+          // 検索フィールドの同期
+          const $searchInput = $('#searchInput');
+          if ($searchInput.length && $searchInput.val() !== this.state.searchText) {
+            $searchInput.val(this.state.searchText);
+          }
+
+          // ラジオボタンの同期
+          const $selectedRadio = $(`input[name="class"][value="${this.state.selectedClass}"]`);
+          if ($selectedRadio.length && !$selectedRadio.prop('checked')) {
+            $selectedRadio.prop('checked', true);
+          }
+
+          // チェックボックスの同期
+          $('input[type="checkbox"]').each((index, checkbox) => {
+            const $checkbox = $(checkbox);
+            const value = $checkbox.val();
+            const shouldBeChecked = this.state.selectedCheckboxes.has(value);
+
+            if ($checkbox.prop('checked') !== shouldBeChecked) {
+              $checkbox.prop('checked', shouldBeChecked);
+            }
+          });
+
+        }
+
+        // フォーム要素から状態を読み取り
+        readStateFromForm() {
+          const searchText = $('#searchInput').val() || '';
+          const selectedClass = $('input[name="class"]:checked').val() || 'all';
+          const selectedCheckboxes = new Set();
+
+          $('input[type="checkbox"]:checked').each((index, checkbox) => {
+            selectedCheckboxes.add($(checkbox).val());
+          });
+
+          const newState = {
+            searchText: searchText,
+            selectedClass: selectedClass,
+            selectedCheckboxes: selectedCheckboxes
+          };
+
+          return newState;
+        }
+
+        // 年キャッシュの基本操作
+        setYearVisibility(yearId, isVisible) {
+          this.yearCache.set(yearId, isVisible);
+        }
+
+        getYearVisibility(yearId) {
+          return this.yearCache.get(yearId);
+        }
+
+        // Phase 1では何もしないプレースホルダーメソッド
+        performSearch() {
+          this.recalculateAffectedYears();
+        }
+
+        // =============================================================================
+        // Phase 3: フィルタリングロジック
+        // =============================================================================
+
+        // 影響を受ける年の再計算（メインフィルタリングロジック）
+        recalculateAffectedYears() {
+
+          const startTime = performance.now();
+          let processedYears = 0;
+          let visibleYears = 0;
+          let totalItems = 0;
+          let visibleItems = 0;
+
+          // Phase 4: CSS駆動による効率的な表示制御
+          $('#timeline_layout > div').each((index, yearDiv) => {
+            const $yearDiv = $(yearDiv);
+            const yearId = $yearDiv.attr('id');
+            processedYears++;
+
+            // その年のli要素を取得してフィルタリング
+            const $items = $yearDiv.find('li');
+            const totalItemsInYear = $items.length;
+            totalItems += totalItemsInYear;
+
+            let yearVisibleCount = 0;
+
+            $items.each((itemIndex, item) => {
+              const $item = $(item);
+              const shouldShow = this.shouldShowItem($item);
+
+              // Phase 4: CSS クラスによる表示制御
+              $item.toggleClass('timeline-visible', shouldShow);
+              $item.toggleClass('timeline-hidden', !shouldShow);
+
+              if (shouldShow) {
+                yearVisibleCount++;
+                visibleItems++;
+              }
+            });
+
+            // 年全体の表示判定
+            const shouldShowYear = yearVisibleCount > 0;
+
+            // 年の表示状態をキャッシュに保存
+            this.yearCache.set(yearId, shouldShowYear);
+
+            // Phase 4: CSS classで年の表示制御
+            $yearDiv.toggleClass('has-visible-items', shouldShowYear);
+            $yearDiv.toggleClass('no-visible-items', !shouldShowYear);
+
+            // データ属性による詳細情報の追加（修正版）
+            $yearDiv.attr('data-visible-count', yearVisibleCount);
+            $yearDiv.attr('data-total-count', totalItemsInYear);
+
+            if (shouldShowYear) {
+              visibleYears++;
+            }
+          });
+
+          // Phase 4: 全体の統計情報をbody要素のデータ属性に設定
+          $('body').attr('data-timeline-visible-years', visibleYears);
+          $('body').attr('data-timeline-total-years', processedYears);
+          $('body').attr('data-timeline-visible-items', visibleItems);
+          $('body').attr('data-timeline-total-items', totalItems);
+
+          const endTime = performance.now();
+          const duration = endTime - startTime;
+
+          // Phase 4: フィルタリング完了イベントの発火
+          this.triggerFilteringComplete({
+            visibleYears,
+            totalYears: processedYears,
+            visibleItems,
+            totalItems,
+            duration
+          });
+        }
+
+        // Phase 4: フィルタリング完了イベントの発火
+        triggerFilteringComplete(stats) {
+          const event = new CustomEvent('timelineFilteringComplete', {
+            detail: stats
+          });
+          document.dispatchEvent(event);
+
+          // Phase 4: JavaScript による項目数表示の更新
+          this.updateItemCountsDisplay();
+        }
+
+        // JavaScript による項目数表示の実装
+        updateItemCountsDisplay() {
+
+          // 既存の項目数表示を削除
+          $('.timeline-item-count').remove();
+
+          let updatedCount = 0;
+
+          $('#timeline_layout > div').each((index, div) => {
+            const $div = $(div);
+            const $h2 = $div.find('h2.year');
+
+            if ($h2.length > 0) {
+              const visibleCount = parseInt($div.attr('data-visible-count') || '0');
+              const totalCount = parseInt($div.attr('data-total-count') || '0');
+
+              // 表示される年のみに項目数を追加
+              if ($div.hasClass('has-visible-items') && totalCount > 0) {
+                const countText = ` (${visibleCount}/${totalCount})`;
+                $h2.append(`<span class="timeline-item-count" style="font-size: 0.8em; color: #666; font-weight: normal;">${countText}</span>`);
+                updatedCount++;
+              }
+            }
+          });
+        }
+
+        // 個別項目の表示判定
+        shouldShowItem($item) {
+          const classMatch = this.checkClassMatch($item);
+          const checkboxMatch = this.checkCheckboxMatch($item);
+          const searchMatch = this.checkSearchMatch($item);
+
+          const result = classMatch && checkboxMatch && searchMatch;
+
+          return result;
+        }
+
+        // クラスマッチングの判定
+        checkClassMatch($item) {
+          if (this.state.selectedClass === 'mixed') {
+            return true;
+          }
+
+          return $item.hasClass(this.state.selectedClass);
+        }
+
+        // チェックボックスマッチングの判定
+        checkCheckboxMatch($item) {
+          if (this.state.selectedCheckboxes.size === 0) {
+            return false;
+          }
+
+          const itemClasses = $item.attr('class') ? $item.attr('class').split(' ') : [];
+
+          return itemClasses.some(className =>
+            this.state.selectedCheckboxes.has(className)
+          );
+        }
+
+        // 検索マッチングの判定
+        checkSearchMatch($item) {
+          if (!this.state.searchText || this.state.searchText.trim() === '') {
+            return true;
+          }
+
+          const searchText = this.state.searchText.toLowerCase();
+          const itemText = $item.text().toLowerCase();
+
+          return itemText.includes(searchText);
+        }
+
+        // 既存のフィルタリング結果に年単位制御を追加（文字選択→検索ボタン用）
+        addYearControl() {
+          let visibleYears = 0;
+
+          $('#timeline_layout > div').each((index, yearDiv) => {
+            const $yearDiv = $(yearDiv);
+            const yearId = $yearDiv.attr('id');
+
+            // その年に表示されているli要素があるかチェック
+            const $allItems = $yearDiv.find('li');
+            const $visibleItems = $yearDiv.find('li:visible');
+            const totalItemsInYear = $allItems.length;
+            const visibleItemsInYear = $visibleItems.length;
+            const shouldShowYear = visibleItemsInYear > 0;
+
+            // 年の表示状態をキャッシュに保存
+            this.yearCache.set(yearId, shouldShowYear);
+
+            // Phase 4: CSS classで年の表示制御（統一）
+            $yearDiv.toggleClass('has-visible-items', shouldShowYear);
+            $yearDiv.toggleClass('no-visible-items', !shouldShowYear);
+
+            // データ属性の更新（修正版）
+            $yearDiv.attr('data-visible-count', visibleItemsInYear);
+            $yearDiv.attr('data-total-count', totalItemsInYear);
+
+            if (shouldShowYear) {
+              visibleYears++;
+            }
+
+          });
+
+          // 統計情報の更新
+          $('body').attr('data-timeline-visible-years', visibleYears);
+
+          // イベント発火（項目数表示も含む）
+          this.triggerFilteringComplete({
+            visibleYears,
+            method: 'addYearControl'
+          });
+        }
+
+        // =============================================================================
+        // フィルタリング状態管理機能
+        // =============================================================================
+
+        // フィルタリング状態の視覚的フィードバック
+        updateFilteringStatus() {
+          const visibleYears = parseInt($('body').attr('data-timeline-visible-years') || '0');
+          const totalYears = parseInt($('body').attr('data-timeline-total-years') || '0');
+          const visibleItems = parseInt($('body').attr('data-timeline-visible-items') || '0');
+          const totalItems = parseInt($('body').attr('data-timeline-total-items') || '0');
+
+          // フィルタリング状態のCSSクラスを body に適用
+          $('body').toggleClass('timeline-filtered', visibleItems < totalItems);
+          $('body').toggleClass('timeline-no-results', visibleItems === 0);
+          $('body').toggleClass('timeline-partial-results', visibleItems > 0 && visibleItems < totalItems);
+          $('body').toggleClass('timeline-all-results', visibleItems === totalItems);
+        }
+
+        // フィルタ関連イベントのインターセプト
+        interceptFilterEvents() {
+          const $searchInput = $('#searchInput');
+          if ($searchInput.length) {
+            let isComposing = false;
+
+            $searchInput.on('compositionstart.timelineFilter', () => {
+              isComposing = true;
+            });
+
+            $searchInput.on('compositionend.timelineFilter', () => {
+              isComposing = false;
+              setTimeout(() => {
+                this.onFilterEvent('search_input', { type: 'compositionend' });
+              }, 10);
+            });
+
+            $searchInput.on('input.timelineFilter', (e) => {
+              if (!isComposing) {
+                clearTimeout(this.searchTimeout);
+                this.searchTimeout = setTimeout(() => {
+                  this.onFilterEvent('search_input', e);
+                }, 300);
+              }
+            });
+
+            $searchInput.on('blur.timelineFilter', (e) => {
+              if (!isComposing) {
+                this.onFilterEvent('search_blur', e);
+              }
+            });
+          }
+
+          const $radioButtons = $('input[name="class"]');
+          if ($radioButtons.length) {
+            $radioButtons.on('change.timelineFilter', (e) => {
+              this.onFilterEvent('radio_change', e);
+            });
+          }
+
+          const $checkboxes = $('input[type="checkbox"]');
+          if ($checkboxes.length) {
+            $checkboxes.on('change.timelineFilter', (e) => {
+              this.onFilterEvent('checkbox_change', e);
+            });
+          }
+
+          const $resetButton = $('#reset-all');
+          if ($resetButton.length) {
+            $resetButton.on('click.timelineFilter', (e) => {
+              this.onFilterEvent('reset_click', e);
+            });
+          }
+
+          const $clearButton = $('#clearButton');
+          if ($clearButton.length) {
+            $clearButton.on('click.timelineFilter', (e) => {
+              $('#searchInput').val('');
+              this.onFilterEvent('clear_click', e);
+            });
+          }
+        }
+
+        // フィルタイベントハンドラ
+        onFilterEvent(eventType, event) {
+          // リセットの場合は特別処理
+          if (eventType === 'reset_click') {
+            this.handleReset();
+            return;
+          }
+
+          // ラジオボタン変更時のチェックボックス同期
+          if (eventType === 'radio_change') {
+            this.syncCheckboxes();
+          }
+
+          // チェックボックス変更時のラジオボタン同期
+          if (eventType === 'checkbox_change') {
+            this.syncRadioButtons();
+          }
+
+          // Phase 2: フォームからの状態読み取りとURL更新
+          const newState = this.readStateFromForm();
+          this.state.searchText = newState.searchText;
+          this.state.selectedClass = newState.selectedClass;
+          this.state.selectedCheckboxes = newState.selectedCheckboxes;
+
+          // URL パラメータの更新
+          this.updateUrlParams();
+
+          // Phase 3: フィルタリング実行
+          this.performSearch();
+
+          // Phase 4: フィルタリング完了後の処理
+          setTimeout(() => {
+            this.updateFilteringStatus();
+          }, 10);
+        }
+
+        // ラジオボタンに応じてチェックボックスを同期（既存ロジック移植）
+        syncCheckboxes() {
+          const selectedClass = $('input[name="class"]:checked').val();
+
+          if (selectedClass !== "mixed") {
+            // 特定のクラスが選択された場合、そのクラスのみチェック
+            $('input[type="checkbox"]').prop('checked', false);
+            $(`input[type="checkbox"][value="${selectedClass}"]`).prop('checked', true);
+            console.log(`[TimelineFilter] チェックボックス同期: ${selectedClass} のみ選択`);
+          }
+          // "mixed" の場合は何もしない（現在の状態を維持）
+        }
+
+        // チェックボックス変更時にラジオボタンを同期（既存ロジック移植）
+        syncRadioButtons() {
+          // チェックボックスが変更された場合、ラジオボタンを "mixed" に設定
+          const $mixedRadio = $('input[name="class"][value="mixed"]');
+          if (!$mixedRadio.prop('checked')) {
+            $mixedRadio.prop('checked', true);
+          }
+        }
+
+        // リセット処理の専用ハンドラ
+        handleReset() {
+          // 【修正】デフォルト状態を動的取得に変更
+          this.state.searchText = '';
+          this.state.selectedClass = 'mixed';
+          this.state.selectedCheckboxes = this.getDefaultCheckboxesSet();
+
+          // フォームを更新
+          $('#searchInput').val('');
+          $('input[name="class"][value="mixed"]').prop('checked', true);
+          $('input[type="checkbox"]').prop('checked', true);
+
+          // URLをクリア
+          const newUrl = window.location.origin + window.location.pathname;
+          window.history.replaceState(null, null, newUrl);
+
+          // フィルタリング実行
+          this.performSearch();
+        }
+
+        // 有効化メソッド（統合版）
+        enable() {
+          console.log('[TimelineFilter] システム有効化');
+
+          // Phase 1: カテゴリ情報を事前に取得・キャッシュ
+          this.getAvailableCategories();
+          console.log('[TimelineFilter] カテゴリキャッシュ完了');
+
+          // 文字選択機能の初期化
+          if (!this.searchButton) {
+            this.initializeTextSelection();
+          }
+
+          // イベントインターセプトの設定
+          setTimeout(() => {
+            this.interceptFilterEvents();
+
+            // 初期状態での自動フィルタリング実行
+            this.restoreFromUrl();
+            this.syncStateToForm();
+            this.performSearch();
+            
+            console.log('[TimelineFilter] 初期化完了');
+          }, 50);
+        }
+
+        disable() {
+        }
+
+        // クリーンアップメソッド
+        cleanup() {
+          // 追加したイベントリスナーを削除
+          $('#searchInput').off('.timelineFilter');
+          $('input[name="class"]').off('.timelineFilter');
+          $('input[type="checkbox"]').off('.timelineFilter');
+          $('#reset-all').off('.timelineFilter');
+
+          // タイムアウトのクリア
+          if (this.searchTimeout) {
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = null;
+          }
+
+          // 文字選択関連のクリーンアップを追加
+          $(document).off('.timelineTextSelection');
+          if (this.searchButton) {
+            this.searchButton.remove();
+            this.searchButton = null;
+          }
+        }
+      }
+
+      // グローバルインスタンスの作成
+      window.timelineFilter = new TimelineFilter();
+
+      // =============================================================================
+      // システム初期化とイベント管理
+      // =============================================================================
+
+      // フィルタリングイベントのリスナー設定
+      document.addEventListener('timelineFilteringComplete', function (event) {
+      });
+
+      // 新システムを有効化
+      window.timelineFilter.enable();
+      
+      // =============================================================================
+      // Phase 4: デバッグと検証機能
+      // =============================================================================
+      
+      // コンソールで実行可能な検証関数
+      window.debugTimelineFilter = function() {
+        const filter = window.timelineFilter;
+        console.log('取得カテゴリ:', filter.getAvailableCategories());
+        console.log('デフォルト状態:', filter.getDefaultState());
+        console.log('現在の状態:', filter.state);
+        
+        // デバッグ用：カテゴリ整合性チェック（開発時のみ有効）
+        if (window.location.hostname === 'localhost') {
+          const htmlCategories = filter.getAvailableCategories();
+          const stateCategories = Array.from(filter.state.selectedCheckboxes);
+          
+          const missing = stateCategories.filter(cat => !htmlCategories.includes(cat));
+          if (missing.length > 0) {
+            console.warn('[Debug] 状態とHTMLの不整合:', missing);
+          }
+          
+          console.log('[Debug] HTMLカテゴリ:', htmlCategories);
+          console.log('[Debug] 状態カテゴリ:', stateCategories);
+        }
+      };
+    </script>
+    <div id="lightbox">
+      <link rel="stylesheet" href="../../luminous-basic.min.css">
+      <script src="../../Luminous.min.js"></script>
+      <script>
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      </script>
+      <script>
+        const sidebarHtml = document.getElementById('sidebar');
+        const dragButton = document.getElementById('sidebar-toggle');
+        let isDragging = false;
+        let startY;
+        let startTop;
+
+        dragButton.addEventListener('mousedown', startDragging);
+        dragButton.addEventListener('touchstart', startDragging);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('mouseup', stopDragging);
+        document.addEventListener('touchend', stopDragging);
+        document.addEventListener('mouseleave', stopDragging);
+
+        function startDragging(event) {
+          isDragging = true;
+          startY = event.type === 'mousedown' ? event.clientY : event.touches[0].clientY;
+          startTop = dragButton.offsetTop;
+        }
+
+        function drag(event) {
+          if (!isDragging) return;
+          const deltaY = (event.type === 'mousemove' ? event.clientY : event.touches[0].clientY) - startY;
+          const newTop = startTop + deltaY;
+          const sidebarHeight = sidebarHtml.offsetHeight;
+          const buttonHeight = dragButton.offsetHeight;
+          const minTop = 0;
+          const maxTop = sidebarHeight - buttonHeight;
+
+          if (newTop < minTop) {
+            dragButton.style.top = minTop + 'px';
+          } else if (newTop > maxTop) {
+            dragButton.style.top = maxTop + 'px';
+          } else {
+            dragButton.style.top = newTop + 'px';
+          }
+        }
+
+        function stopDragging() {
+          isDragging = false;
+        }
+
+        dragButton.addEventListener('click', toggleSidebar);
+
+        function toggleSidebar() {
+          sidebarHtml.classList.toggle('open');
+        }
+      </script>
+    </div>
+  </div>
+</body>
+
+</html>

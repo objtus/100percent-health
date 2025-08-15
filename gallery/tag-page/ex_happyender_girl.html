@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/1column.css">
+    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/mouse.js" defer></script>  
+    <title>#ex_happyender_girl - 100%health</title>
+    <link rel="stylesheet" href="tag-system.css">
+</head>
+
+<body>
+    <div id="wrapper">
+        <header id="header">
+            <div id="header-flex">
+                <nav id="back">
+                    <a id="backicon" href="/index.html">
+                        &lt;
+                    </a>
+                </nav>
+                <nav id="address" class="addressbar">
+                    <a class="addressbar" href="/index.html">
+                        100%health
+                    </a>/
+                    <a class="addressbar" href="../gallery_main.html">
+                        gallery
+                    </a>/
+                    <a class="addressbar" href="tags.html">
+                        tags
+                    </a>/
+                    <a class="addressbar" href="ex_happyender_girl.html">
+                        ex_happyender_girl
+                    </a>
+                </nav>
+            </div>
+        </header>
+        <main id="main">
+            <div id="galleryspace">
+                <div class="tag-header">
+                    <h1 class="title">#ex_happyender_girl の作品一覧</h1>
+                    <div class="tag-controls">
+                        <div class="filter-row">
+                            <select id="sort-select">
+                                <option value="date-desc">新しい順</option>
+                                <option value="date-asc">古い順</option>
+                                <option value="series">シリーズ別</option>
+                            </select>
+                            
+                            <select id="series-filter">
+                                <option value="">全シリーズ</option>
+                                <!-- 動的生成 -->
+                            </select>
+                            
+                            <select id="tag-filter">
+                                <option value="">追加タグなし</option>
+                                <!-- 動的生成 -->
+                            </select>
+                            
+                            <!-- リセットボタン -->
+                            <button id="reset-filters" type="button" class="reset-btn">
+                                リセット
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="works-container">
+                    <div id="loading-indicator">
+                        <p>♥ #ex_happyender_girl タグ付き作品を読み込み中 ♥</p>
+                        <div class="progress-container">
+                            <div class="progress-bar"></div>
+                        </div>
+                        <p id="loading-status">準備中...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer id="main-footer">
+            <!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+            <div id="galleryhtml"></div>
+            <!-- main.jsから#footerへfooter.htmlの挿入 -->
+            <div id="footerhtml"></div>
+        </footer>
+        <div id="lightbox">
+            <link rel="stylesheet" href="/luminous-basic.min.css" />
+            <script src="/Luminous.min.js"></script>
+        </div>
+        <script src="tag-system.js"></script>
+        <script>
+            // ページ固有設定
+            window.TagPageConfig = {
+                targetTag: 'ex_happyender_girl',
+                debug: false
+            };
+        </script>    
+    </div>
+</body>
+</html>

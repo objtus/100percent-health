@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tags - 100%health</title>
+  <link rel="stylesheet" href="/1column.css">
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+  <style>
+    .tag-list {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back">
+          <a id="backicon" href="/index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar">
+          <a class="addressbar" href="/index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="../gallery_main.html">
+            gallery
+          </a>/
+          <a class="addressbar" href="tags.html">
+            tags
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <div id="galleryspace">
+        <h1 class="title">タグ一覧</h1>
+        <section>
+          <h2>タグ一覧</h2>
+          <div id="popular-tags" data-tag-list
+            data-sort-by="count"
+            data-limit="100"
+            data-show-count="true">
+          </div>
+        </section>
+        <script src="../tag-list-generator.js"></script>
+      </div>
+    </main>
+    <footer id="main-footer">
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="/luminous-basic.min.css">
+    <script src="/Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+    </script>
+  </div>
+</body>
+
+</html>

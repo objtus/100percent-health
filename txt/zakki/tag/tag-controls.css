@@ -53,6 +53,9 @@
 
   .tag-sort-btn, .tag-reset-btn {
     background: #fff;
+    -webkit-appearance: none;
+    appearance: none;
+    color: #000000!important;
     border: 1px solid #000000;
     padding: 0.1rem 0.3rem;
     border-radius: 3px;
@@ -66,7 +69,7 @@
 
     &.active {
       background: #000000;
-      color: white;
+      color: white!important;
       border-color: #000000;
     }
   }

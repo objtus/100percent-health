@@ -318,3 +318,23 @@
   }
   */
 }
+
+/* ================================
+   z-index 修正（NSFWフィルターとの競合回避）
+   ================================ */
+
+   .lum-lightbox {
+    z-index: 9999 !important;
+}
+
+.lum-lightbox-inner {
+    z-index: 10000 !important;
+}
+
+.lum-close-button {
+    z-index: 10001 !important;
+}
+
+.lum-gallery-button {
+    z-index: 10001 !important;
+}

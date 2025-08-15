@@ -8,20 +8,23 @@
 		list-style: none;
 	}
 }
+
 #textblock {
 	margin-bottom: 3rem;
 
-  h1{
-    word-break: keep-all;
-    text-align: right;
-    line-height: 24px;
-  }
-  h2{
-    display: inline-block;
-    border-bottom: dotted 3px;
-    margin-bottom: 0.5rem;
-    line-height: 18px;
-  }
+	h1 {
+		word-break: keep-all;
+		text-align: right;
+		line-height: 24px;
+	}
+
+	h2 {
+		display: inline-block;
+		border-bottom: dotted 3px;
+		margin-bottom: 0.5rem;
+		line-height: 18px;
+	}
+
 	h3 {
 		font-size: 14pt;
 		padding-left: 10px;
@@ -30,149 +33,205 @@
 		margin-left: 20px;
 		margin-bottom: 1em;
 	}
+
 	p {
-    font-size: 1rem;
-    margin-left: 1rem;
-    margin-bottom: 1rem;
+		font-size: 1rem;
+		margin-left: 1rem;
+		margin-bottom: 1rem;
 	}
+
 	p:before {
 		content: "♥";
 		margin-right: -0.3em;
 	}
-	.str{
+
+	blockquote {
+		font-size: 1em;
+		margin-left: 1rem;
+		margin-bottom: 1rem;
+		border-left: solid 2px #bbb;
+		padding-left: 1rem;
+		color: #888;
+
+		cite {
+			display: block;
+			text-align: right;
+			color: #888;
+		}
+		cite a {
+			color: #888;
+			text-decoration: none;
+		}
+		cite a:hover {
+			color: #888;
+			background-color: #fff;
+			text-decoration: none;
+		}
+	}
+
+	.str {
 		font-weight: bold;
 	}
 
-  section {
-    margin-bottom: 2rem;
-  }
-  .section-item {
-    border-left: dotted 2px #000;
-    padding-left: 1rem;
-    margin-left: 1rem;
-  }
+	section {
+		margin-bottom: 2rem;
+	}
+
+	.section-item {
+		border-left: dotted 2px #000;
+		padding-left: 1rem;
+		margin-left: 1rem;
+	}
 
 	ul.timeline_md {
 		text-indent: -4.3em;
 		margin-left: 6em;
 		list-style: none;
 	}
+
 	ul.timeline_ymd {
 		text-indent: -7.7em;
 		margin-left: 9.3em;
 		list-style: none;
 	}
+
 	li {
 		margin-bottom: 15px;
 	}
+
 	.small {
 		font-size: 0.8em;
 	}
+
 	hr {
 		border: none;
 		text-align: center;
 		font-size: 1em;
 		margin-right: 40px;
 	}
+
 	hr::before {
 		content: "*****";
 		letter-spacing: 1em;
 		padding-left: 1em;
 	}
-  #change_log ul {
-    list-style-type: none;
-    font-size: 10pt;
-  }
+
+	#change_log ul {
+		list-style-type: none;
+		font-size: 10pt;
+	}
 }
+
 @media screen and (max-width: 900px) {
 	article {
-    h1{
-      word-break: auto-phrase;
-    }
+		h1 {
+			word-break: auto-phrase;
+		}
+
 		h3 {
 			margin-left: 10px;
 		}
+
 		.article-body {
 			padding-left: 20px;
 		}
+
 		hr {
 			margin-right: 20px;
 		}
+
 		iframe {
 			width: 100%;
 		}
 	}
 }
-@media screen and (max-width: 600px) {
-  #main{
-    width: 85%;
-  }
-  .content-item{
-    margin-bottom: 15px;
 
-    h3{
-      width: 60px;
-    }
-    #linklist{
-      li{
-        flex-direction: column;
-        margin-bottom: 20px;
-      }
-      li a{
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
-      li a + * {
-        margin-left: 20px;
-      }
-    }
-  }
+@media screen and (max-width: 600px) {
+	#main {
+		width: 85%;
+	}
+
+	.content-item {
+		margin-bottom: 15px;
+
+		h3 {
+			width: 60px;
+		}
+
+		#linklist {
+			li {
+				flex-direction: column;
+				margin-bottom: 20px;
+			}
+
+			li a {
+				font-weight: bold;
+				margin-bottom: 5px;
+			}
+
+			li a+* {
+				margin-left: 20px;
+			}
+		}
+	}
 }
+
 @media screen and (max-width: 480px) {
 	h1 {
-    word-break: auto-phrase!important;
+		word-break: auto-phrase !important;
 		font-size: 20pt;
 		margin-bottom: 20px;
 	}
+
 	h2 {
 		margin-top: 0rem;
 	}
+
 	#main {
-    width: 84%;
+		width: 84%;
 		margin-left: 25px;
 	}
+
 	article {
 		padding-bottom: 50px;
 		border-top: 1px dotted;
 		border-bottom: 1px dotted;
 		margin-bottom: 5px;
+
 		h3 {
 			margin-left: 0px;
 		}
+
 		.article-body {
 			padding-left: 7px;
 		}
+
 		ul.timeline_md {
 			text-indent: -4.3em;
 			margin-left: 4.5em;
 			margin-right: 5px;
 		}
+
 		ul.timeline_ymd {
 			text-indent: -7.7em;
-			margin-left: 7.7em!important;
+			margin-left: 7.7em !important;
 			margin-right: 5px;
 		}
+
 		hr {
 			margin-right: 0;
 		}
 	}
 }
+
 @media screen and (max-width: 375px) {
-  /* 320pxまでの幅の場合に適応される */
-  #main {
+
+	/* 320pxまでの幅の場合に適応される */
+	#main {
 		margin-left: 15px;
 	}
-  p{
-    font-size: 10pt;
-  }
+
+	p {
+		font-size: 10pt;
+	}
 }

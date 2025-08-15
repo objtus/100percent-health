@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>動的QRコード</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+        }
+        
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        #qrcode {
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #4ecdc4;
+        }
+        
+        .current-message {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #4ecdc4;
+        }
+        
+        .current-time {
+            font-size: 1.1em;
+            color: #ff6b6b;
+            font-family: monospace;
+        }
+        
+        .stats {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 5px;
+            min-width: 100px;
+        }
+        
+        .stat-label {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+        
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4ecdc4;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Dynamic QR</h1>
+        
+        <div id="qrcode"></div>
+        
+        <div class="info">
+            <div class="current-message" id="currentMessage"></div>
+            <div class="current-time" id="currentTime"></div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">更新回数</div>
+                <div class="stat-value" id="updateCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">メッセージ変更</div>
+                <div class="stat-value" id="messageChangeCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">稼働時間</div>
+                <div class="stat-value" id="uptime">00:00</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // QRコード生成ライブラリを動的に読み込み
+        function loadQRCodeLibrary() {
+            return new Promise((resolve, reject) => {
+                if (typeof QRCode !== 'undefined') {
+                    resolve();
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+                script.onload = () => resolve();
+                script.onerror = () => {
+                    // CDNが失敗した場合のフォールバック
+                    console.warn('CDNからのQRCodeライブラリ読み込みに失敗しました。代替方法を使用します。');
+                    resolve();
+                };
+                document.head.appendChild(script);
+            });
+        }
+    </script>
+    
+    <script>
+        // ランダムメッセージのパターン（容量拡大版）
+        const messages = [
+            "EASTER_EGG_FOUND",
+            "SPACE_GATEWAY_OPEN", 
+            "MAGIC_SPELL_UNLOCKED",
+            "SECRET_CODE_DISCOVERED",
+            "HIDDEN_MESSAGE_REVEALED",
+            "CIRCUS_SHOW_BEGINS",
+            "MASK_TRUTH_UNVEILED",
+            "ART_GOD_SMILES",
+            "MUSIC_STOPS_TIME",
+            "FATE_DICE_ROLLED"
+        ];
+        
+        let currentMessageIndex = 0;
+        let updateCount = 0;
+        let messageChangeCount = 0;
+        let startTime = Date.now();
+        let lastMessageChangeTime = Date.now();
+        
+        // QRコード要素
+        const qrcodeElement = document.getElementById('qrcode');
+        const currentMessageElement = document.getElementById('currentMessage');
+        const currentTimeElement = document.getElementById('currentTime');
+        const updateCountElement = document.getElementById('updateCount');
+        const messageChangeCountElement = document.getElementById('messageChangeCount');
+        const uptimeElement = document.getElementById('uptime');
+        
+        // QRコードを生成する関数
+        function generateQRCode(text) {
+            // 既存のQRコードをクリア
+            qrcodeElement.innerHTML = '';
+            
+            if (typeof QRCode !== 'undefined') {
+                // QRCodeライブラリが利用可能な場合
+                new QRCode(qrcodeElement, {
+                    text: text,
+                    width: 256,
+                    height: 256,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.L,  // 最低レベルで容量最大化
+                    typeNumber: 0  // 自動でサイズ選択（大きなQRコードも許可）
+                });
+            } else {
+                // フォールバック: Google Charts APIを使用
+                generateFallbackQRCode(text);
+            }
+            
+            // アニメーション効果
+            qrcodeElement.classList.add('pulse');
+            setTimeout(() => {
+                qrcodeElement.classList.remove('pulse');
+            }, 500);
+        }
+        
+        // フォールバック用QRコード生成（Google Charts API使用）
+        function generateFallbackQRCode(text) {
+            const encodedText = encodeURIComponent(text);
+            const size = '200x200';
+            const qrUrl = `https://chart.googleapis.com/chart?chs=${size}&cht=qr&chl=${encodedText}&chld=M|0`;
+            
+            const img = document.createElement('img');
+            img.src = qrUrl;
+            img.alt = 'QR Code';
+            img.style.width = '200px';
+            img.style.height = '200px';
+            img.style.border = '10px solid white';
+            img.style.borderRadius = '10px';
+            
+            qrcodeElement.appendChild(img);
+        }
+        
+        // 現在の日時を取得する関数
+        function getCurrentDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+        }
+        
+        // 稼働時間を計算する関数
+        function getUptime() {
+            const elapsed = Date.now() - startTime;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+        
+        // メッセージを更新する関数（5-15秒間隔でランダム）
+        function updateMessage() {
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            if (randomIndex !== currentMessageIndex) {
+                currentMessageIndex = randomIndex;
+                messageChangeCount++;
+                messageChangeCountElement.textContent = messageChangeCount;
+                lastMessageChangeTime = Date.now();
+            }
+        }
+        
+        // QRコードと表示を更新する関数
+        function updateQRCode() {
+            const currentMessage = messages[currentMessageIndex];
+            const currentTime = getCurrentDateTime();
+            
+            // より詳細なデータを含む
+            const now = new Date();
+            const fullTimestamp = now.toISOString();
+            const randomId = Math.floor(Math.random() * 10000);
+            
+            // 拡張データ形式
+            const qrData = `MSG:${currentMessage}|TIME:${fullTimestamp}|ID:${randomId}|COUNT:${updateCount + 1}`;
+            
+            // 毎秒QRコード生成
+            generateQRCode(qrData);
+            
+            // 表示更新（絵文字付きで表示）
+            const displayMessage = getDisplayMessage(currentMessage);
+            currentMessageElement.textContent = displayMessage;
+            currentTimeElement.textContent = currentTime;
+            updateCount++;
+            updateCountElement.textContent = updateCount;
+            uptimeElement.textContent = getUptime();
+        }
+        
+        // 表示用メッセージ（絵文字付き）
+        function getDisplayMessage(code) {
+            const displayMap = {
+                "EASTER_EGG_FOUND": "🎉 イースターエッグを発見！",
+                "SPACE_GATEWAY_OPEN": "🚀 宇宙への扉が開かれた",
+                "MAGIC_SPELL_UNLOCKED": "🔮 魔法の呪文が解かれた",
+                "SECRET_CODE_DISCOVERED": "🌟 秘密のコードを発見",
+                "HIDDEN_MESSAGE_REVEALED": "🎯 隠されたメッセージ",
+                "CIRCUS_SHOW_BEGINS": "🎪 サーカスの幕が上がる",
+                "MASK_TRUTH_UNVEILED": "🎭 仮面の下の真実",
+                "ART_GOD_SMILES": "🎨 芸術の神が微笑んだ",
+                "MUSIC_STOPS_TIME": "🎵 音楽が時を止めた",
+                "FATE_DICE_ROLLED": "🎲 運命のサイコロが振られた"
+            };
+            return displayMap[code] || code;
+        }
+        
+        // メッセージ変更のタイマー（5-15秒間隔）
+        function scheduleNextMessageChange() {
+            const delay = Math.random() * 10000 + 5000; // 5-15秒
+            setTimeout(() => {
+                updateMessage();
+                scheduleNextMessageChange();
+            }, delay);
+        }
+        
+        // 初期化
+        async function init() {
+            // QRCodeライブラリの読み込みを待つ
+            await loadQRCodeLibrary();
+            
+            updateMessage();
+            updateQRCode();
+            scheduleNextMessageChange();
+            
+            // 1秒ごとにQRコードを更新（時刻が変わるため）
+            setInterval(updateQRCode, 1000);
+        }
+        
+        // ページ読み込み完了後に開始
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

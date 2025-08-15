@@ -1,0 +1,191 @@
+/* タグページのスタイル */
+div.works-count{
+    color: #888;
+    font-size: 0.8em;
+}
+
+
+/* 各カードのスタイル */
+div.card {
+    margin-bottom: 40px;
+    border-bottom: 1px solid #888;
+    padding: 15px;
+    padding-bottom: 40px;
+}
+p.title{
+    display: inline-block;
+    color: white;
+    background-color: #888;
+    a{
+        color: white;
+        text-decoration: none;
+        &:hover{
+            color: #000000;
+        }
+    }
+    &:hover{
+        color: #000000;
+        background-color: white;
+    }
+    &::before{
+        content: ">>";
+    }
+}
+
+.series-info{
+    font-size: 0.8em;
+    color: #888;
+
+    &::before{
+        content: "series :";
+        margin-right: 5px;
+    }
+}
+
+
+/* タグセクションのスタイル */
+.tags-section {
+	font-size: 0.8em;
+	line-height: 1;
+	color: #888;
+	margin-top: 10px;
+    border-top: 1px dotted #ddd;
+	padding-top: 5px;
+	text-align: right;
+    .tags-list{
+        line-height: 1.4;
+    }
+
+	a{
+		color: #888;
+        margin-right: 8px;
+		text-decoration: none;
+		&:hover{
+			color: #fff;
+			background-color: #000000ff!important;
+		}
+	}
+}
+
+.tag-link:hover {
+    text-decoration: underline;
+}
+
+.no-tags {
+    color: #999;
+    font-style: italic;
+    font-size: 0.85em;
+}
+
+/* コントロールエリア */
+.tag-controls {
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+.filter-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-row select {
+    padding: 4px 4px;
+    font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
+    color: #000;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background-color: white;
+    font-size: 0.8em;
+}
+
+.reset-btn {
+    padding: 4px 8px;
+    font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: background-color 0.2s;
+}
+
+.reset-btn:hover {
+    background-color: #5a6268;
+}
+
+.reset-btn:active {
+    background-color: #495057;
+}
+
+/* ローディング表示のスタイル */
+#loading-indicator {
+    text-align: center;
+    padding: 20px;
+    margin: 20px 0;
+    font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
+}
+
+.progress-container {
+    width: 100%;
+    height: 1px;
+    margin: 15px 0;
+    position: relative;
+    border-top: 1px dotted #000000;
+    overflow: visible;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 1px;
+    background-color: #000000;
+    position: relative;
+    transition: width 0.3s steps(20, end);
+    margin-top: -1px;
+}
+
+#loading-status {
+    font-size: 1em;
+    color: #000000;
+    margin-top: 5px;
+    font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
+    letter-spacing: -0.05em;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.works-grid .card {
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* エラー状態とNoResults状態のスタイル */
+.error-state, .no-results {
+    text-align: center;
+    padding: 40px 20px;
+    font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
+}
+
+.error-state p, .no-results p {
+    font-size: 1.1em;
+    margin: 0;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-row select,
+    .reset-btn {
+        width: 100%;
+        height: 1.7em;
+        margin-bottom: -8px;
+    }
+}

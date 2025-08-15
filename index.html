@@ -22,7 +22,6 @@
   <div id="wrapper">
     <div id="flexrayout">
       <div id="item1">
-        <!--      <img class="icon" src="icon.webp" alt="icon"> -->
         <h2 id="sitetitle">100%health</h2>
         <br>
       </div>
@@ -37,8 +36,13 @@
           </div>
           <p>ようこそ！<br>
             わたしはyuinoid/いど子です<a href="all.html">。</a><br>
+            ここはyuinoidのwebページ「100%health」です。<br>
+            このサイトについては<a href="txt/100phealth_introduction.html" style="text-decoration: underline;">♥こちら</a>をご覧ください。<br>
             <br>
-            ここはyuinoidのwebページ「100%health」です。
+            Welcome!<br>
+            I am yuinoid/idoko.<br>
+            This is yuinoid's web page "100%health".<br>
+            About this site: <a href="txt/100phealth_introduction.html" style="text-decoration: underline;">♥here</a>.
           </p>
         </section>
         <section class="section" id="changelog">
@@ -73,9 +77,7 @@
               </a>
             </div>
           </div>
-          <div id="galleryhtml"></div>
-          <!-- <iframe id="iframe_gallery" class="iframe" src="./gallery/gallery.html" height="auto">
-        </iframe> -->
+          <div id="gallerymaphtml"></div>
         </section>
         <section class="section" id="works">
           <div class="highlight_logo">
@@ -86,8 +88,6 @@
             </div>
           </div>
           <div id="workshtml"></div>
-          <!-- <iframe id="iframe_works" class="iframe" src="./works/works.html" height="auto">
-        </iframe> -->
         </section>
       </div>
       <div id="item3">
@@ -106,8 +106,10 @@
           </div>
           <div id="banner">
             <p>♥my banners</p>
-            <img src="./img/banner.gif" alt="banner">
-            <img src="./img/banner2.gif" alt="banner2">
+            <div id="banner_container">
+              <img src="./img/banner.gif" alt="banner" class="banner_img">
+              <img src="./img/banner2.gif" alt="banner2" class="banner_img">
+            </div>
           </div>
         </section>
         <section class="section" id="contact">
@@ -116,8 +118,7 @@
               <h3>contact</h3>
             </div>
           </div>
-          <p>>@objtus:matrix-jp.net (<a href="https://matrix.org">matrix</a>)</p>
-          <p>>DO#3667 (<a href="https://discord.com">discord</a>)</p>
+          <p>>@yuinoid (<a href="https://discord.com">discord</a>)</p>
         </section>
         <section class="section" id="odai">
           <div class="highlight_logo">
@@ -126,14 +127,12 @@
             </div>
           </div>
           <div id="odaibakohtml"></div>
-          <!-- <iframe id="iframe_gallery" class="iframe" src="./gallery/gallery.html" height="auto">
-        </iframe> -->
-          <div id="randomjump">
-            <a href="javascript:random_jump();">
-              <img id="randomjumpimg" src="./img/d2000.gif" alt="site icon gif animation" style="width:200px;opacity:1;">
-            </a>
-          </div>
         </section>
+        <div id="randomjump">
+          <a href="javascript:random_jump();">
+            <img id="randomjumpimg" src="./img/d2000.gif" alt="site icon gif animation" style="width:200px;opacity:1;">
+          </a>
+        </div>
         <div id="accesscounterhtml"></div>
         <div id="last_updatedhtml"></div>
       </div>

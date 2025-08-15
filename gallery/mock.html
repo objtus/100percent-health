@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://yuinoid.neocities.org/1column.css">
+    <script src="https://yuinoid.neocities.org/js/jquery-3.6.0.min.js"></script>
+    <script src="https://yuinoid.neocities.org/js/main.js"></script>
+    <script src="https://yuinoid.neocities.org/js/mouse.js" defer></script>
+    <title>fanart_hatsune - 100%health</title>
+    <style>
+        /* 既存の個別ページスタイル */
+    
+        /* 関連作品表示エリア */
+        #galleryhtml_moc {
+            margin-top: 40px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+    
+        .related-section {
+            margin-bottom: 30px;
+        }
+    
+        .related-title {
+            display: inline-block;
+            font-size: 14px;
+        }
+    
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+    
+        .related-item {
+            text-align: center;
+        }
+    
+        .related-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            object-position: 0% 5%;
+            border: 1px solid #333;
+        }
+    
+        .related-item a {
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+    
+        .related-item a:hover {
+            color: #fff;
+        }
+    
+        .related-item {
+            a:has(img):hover {
+                background-color: white;
+            }
+    
+            a:has(span)::before {
+                content: "♥";
+                margin-right: 3px;
+            }
+        }
+    
+        .related-title a {
+            color: #ccc;
+        }
+    
+        .related-title a:hover {
+            color: #fff;
+        }
+    
+        .no-items {
+            color: #666;
+            font-style: italic;
+            font-size: 14px;
+        }
+    
+        .tags-info {
+            color: #888;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    
+        /* タグ一覧コーナー */
+        .tags-section {
+            margin-top: 10px;
+            padding-top: 5px;
+            text-align: right;
+        }
+    
+        .tags-title {
+            font-size: 0.8em;
+            color: #888;
+        }
+    
+        .tags-list {
+            line-height: 1.4;
+        }
+    
+        .tags-list a {
+            display: inline-block;
+            margin-right: 8px;
+            margin-bottom: 3px;
+            font-size: 0.8em;
+            color: #666;
+            text-decoration: none;
+        }
+    
+        .tags-list a:hover {
+            color: #fff;
+            background-color: #000;
+        }
+    
+        /* 表示切り替えボタン */
+        .view-toggle {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+    
+        .view-toggle button {
+            background: none;
+            border: 1px solid #000;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            color: #000;
+            margin-left: 5px;
+        }
+    
+        .view-toggle button:hover {
+            background-color: #000;
+            color: #fff;
+        }
+    
+        .view-toggle button[aria-selected="true"] {
+            background-color: #000;
+            color: #fff;
+        }
+    
+        /* 表示切り替え用クラス */
+        .view-mode-image .text-links {
+            display: none;
+        }
+    
+        .view-mode-text .related-grid {
+            display: none;
+        }
+    
+        .view-mode-text .related-grid+.tags-info {
+            display: none;
+        }
+    
+        /* テキスト版スタイル */
+        .text-links {
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+    
+        .text-links a {
+            font-size: 14px;
+            text-decoration: none;
+        }
+    
+        .text-links a:hover {
+            color: #fff;
+        }
+    
+        .text-links a::before {
+            content: "♥";
+            margin-right: 3px;
+        }
+    
+        @media (max-width: 768px) {
+            .related-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+    
+            #galleryhtml {
+                margin-top: 30px;
+            }
+        }
+    
+        /* 2カラムレイアウト（デスクトップ） */
+        @media (min-width: 769px) {
+            .related-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+    
+            .related-bottom {
+                grid-column: 1 / -1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <p id="parentFile" style="display:none;">fanart / </p>
+        <script type="text/javascript">
+            header();
+        </script>
+        <!-- 既存のメインコンテンツ -->
+        <main id="main">
+            <div id="galleryspace">
+                <div class="card">
+                    <div class="piccard">
+                        <a href="../../img/fanart/2021-04-22_2.jpg">
+                            <img src="../../img/fanart/2021-04-22_2.jpg" alt="fan art hatsune miku" class="border_img">
+                        </a>
+                        <p class="title"></p>
+                        <div class="caption">
+                            初音ミク<br>
+                            <a href="https://yuinoid.tumblr.com/post/649143917550469120" target="_blank">tumblr</a>
+                        </div>
+                        <p class="date">>2021-04-22</p>
+
+                        <!-- タグ一覧コーナー -->
+                        <nav class="tags-section" aria-label="作品タグ">
+                            <div class="tags-title">tags:</div>
+                            <div class="tags-list">
+                                <a href="/gallery/image-page/fanart.html">#fanart</a>
+                                <a href="/gallery/tag-page/hatsune_miku.html">#hatsune_miku</a>
+                                <a href="/gallery/tag-page/vocaloid.html">#vocaloid</a>
+                                <a href="/gallery/tag-page/1girl.html">#1girl</a>
+                                <a href="/gallery/tag-page/border_style.html">#border_style</a>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer id="main-footer">
+            <!-- 関連作品表示エリア -->
+            <section id="galleryhtml_moc" class="view-mode-text" aria-label="関連作品">
+                <!-- 表示切り替えボタン -->
+                <div class="view-toggle" role="tablist" aria-label="表示切り替え">
+                    <button role="tab"
+                        aria-selected="true"
+                        aria-controls="related-content"
+                        id="text-view-btn">
+                        テキスト表示
+                    </button>
+                    <button role="tab"
+                        aria-selected="false"
+                        aria-controls="related-content"
+                        id="image-view-btn">
+                        画像表示
+                    </button>
+                </div>
+
+                <div id="related-content" role="tabpanel">
+                    <div class="related-container">
+                        <!-- 同シリーズ -->
+                        <section class="related-section" aria-labelledby="same-series-heading">
+                            <h3 id="same-series-heading" class="related-title gallery_summary">
+                                &gt; 同シリーズ (<a href="/gallery/image-page/fanart.html">#fanart</a>)
+                            </h3>
+
+                            <!-- 画像版表示 -->
+                            <div class="related-grid">
+                                <div class="related-item"
+                                    data-id="fanart_kagamin"
+                                    data-url="/gallery/image-page/fanart_kagamin.html"
+                                    data-img="../../img/fanart/2021-04-22_1.jpg">
+                                    <a href="/gallery/image-page/fanart_kagamin.html">
+                                        <img src="../../img/fanart/2021-04-22_1.jpg" alt="fanart_kagamin">
+                                    </a>
+                                    <a href="/gallery/image-page/fanart_kagamin.html">
+                                        <span>fanart_kagamin</span>
+                                    </a>
+                                </div>
+                                <div class="related-item"
+                                    data-id="fanart_helve"
+                                    data-url="/gallery/image-page/fanart_helve.html"
+                                    data-img="../../img/fanart/helve.png">
+                                    <a href="/gallery/image-page/fanart_helve.html">
+                                        <img src="../../img/fanart/helve.png" alt="fanart_helve">
+                                    </a>
+                                    <a href="/gallery/image-page/fanart_helve.html">
+                                        <span>fanart_helve</span>
+                                    </a>
+                                </div>
+                                <div class="related-item"
+                                    data-id="fanart_murakami"
+                                    data-url="/gallery/image-page/fanart_murakami-san.html"
+                                    data-img="../../img/fanart/fanart_murakami.webp">
+                                    <a href="/gallery/image-page/fanart_murakami-san.html">
+                                        <img src="../../img/fanart/fanart_murakami.webp" alt="fanart_murakami">
+                                    </a>
+                                    <a href="/gallery/image-page/fanart_murakami-san.html">
+                                        <span>fanart_murakami</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <span class="tags-info">他7件</span>
+
+                            <!-- テキスト版表示 -->
+                            <div class="text-links summary_boxes">
+                                <a href="/gallery/image-page/fanart_kagamin.html">fanart_kagamin</a> |
+                                <a href="/gallery/image-page/fanart_helve.html">fanart_helve</a> |
+                                <a href="/gallery/image-page/fanart_murakami-san.html">fanart_murakami</a> |
+                                <span class="tags-info">他7件</span>
+                            </div>
+                        </section>
+
+                        <!-- 同時期 -->
+                        <section class="related-section" aria-labelledby="same-period-heading">
+                            <h3 id="same-period-heading" class="related-title gallery_summary">
+                                &gt; 同時期 (2021-04-22)
+                            </h3>
+
+                            <!-- 画像版表示 -->
+                            <div class="related-grid">
+                                <div class="related-item"
+                                    data-id="fanart_kagamin"
+                                    data-url="/gallery/image-page/fanart_kagamin.html"
+                                    data-img="../../img/fanart/2021-04-22_1.jpg">
+                                    <a href="/gallery/image-page/fanart_kagamin.html">
+                                        <img src="../../img/fanart/2021-04-22_1.jpg" alt="fanart_kagamin">
+                                    </a>
+                                    <a href="/gallery/image-page/fanart_kagamin.html">
+                                        <span>fanart_kagamin</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <span class="tags-info">同日制作</span>
+
+                            <!-- テキスト版表示 -->
+                            <div class="text-links summary_boxes">
+                                <a href="/gallery/image-page/fanart_kagamin.html">fanart_kagamin</a>
+                                <span class="tags-info">同日制作</span>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- 共通タグ（下部全幅） -->
+                    <section class="related-section related-bottom" aria-labelledby="common-tags-heading">
+                        <h3 id="common-tags-heading" class="related-title gallery_summary">
+                            &gt; <a href="/gallery/tab-page/border_style.html">#border_style</a>
+                        </h3>
+
+                        <!-- 画像版表示 -->
+                        <div class="related-grid">
+                            <div class="related-item"
+                                data-id="fanart_kagamin"
+                                data-url="/gallery/image-page/fanart_kagamin.html"
+                                data-img="../../img/fanart/2021-04-22_1.jpg">
+                                <a href="/gallery/image-page/fanart_kagamin.html">
+                                    <img src="../../img/fanart/2021-04-22_1.jpg" alt="fanart_kagamin">
+                                </a>
+                                <a href="/gallery/image-page/fanart_kagamin.html">
+                                    <span>fanart_kagamin</span>
+                                </a>
+                            </div>
+                            <div class="related-item"
+                                data-id="fanart_helve"
+                                data-url="/gallery/image-page/fanart_helve.html"
+                                data-img="../../img/fanart/helve.png">
+                                <a href="/gallery/image-page/fanart_helve.html">
+                                    <img src="../../img/fanart/helve.png" alt="fanart_helve">
+                                </a>
+                                <a href="/gallery/image-page/fanart_helve.html">
+                                    <span>fanart_helve</span>
+                                </a>
+                            </div>
+                            <div class="related-item"
+                                data-id="fanart_murakami"
+                                data-url="/gallery/image-page/fanart_murakami-san.html"
+                                data-img="../../img/fanart/fanart_murakami.webp">
+                                <a href="/gallery/image-page/fanart_murakami-san.html">
+                                    <img src="../../img/fanart/fanart_murakami.webp" alt="fanart_murakami">
+                                </a>
+                                <a href="/gallery/image-page/fanart_murakami-san.html">
+                                    <span>fanart_murakami</span>
+                                </a>
+                            </div>
+                        </div>
+                        <span class="tags-info">同じタグ</span>
+
+                        <!-- テキスト版表示 -->
+                        <div class="text-links summary_boxes">
+                            <a href="/gallery/image-page/fanart_kagamin.html">fanart_kagamin</a> |
+                            <a href="/gallery/image-page/fanart_helve.html">fanart_helve</a> |
+                            <a href="/gallery/image-page/fanart_murakami-san.html">fanart_murakami</a>
+                            <span class="tags-info">同じタグ</span>
+                        </div>
+                    </section>
+                </div>
+            </section>
+            <div id="footerhtml"></div>
+        </footer>
+
+    </div>
+    <div id="lightbox">
+        <link rel="stylesheet" href="../../luminous-basic.min.css">
+        <script src="../../Luminous.min.js"></script>
+        <script>
+          new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+        </script>
+    </div>
+    <script>
+        // 表示切り替え機能
+        document.addEventListener('DOMContentLoaded', function () {
+            const textViewBtn = document.getElementById('text-view-btn');
+            const imageViewBtn = document.getElementById('image-view-btn');
+            const galleryHtml = document.getElementById('galleryhtml_moc');
+
+            function switchToTextView() {
+                galleryHtml.className = 'view-mode-text';
+                textViewBtn.setAttribute('aria-selected', 'true');
+                imageViewBtn.setAttribute('aria-selected', 'false');
+            }
+
+            function switchToImageView() {
+                galleryHtml.className = 'view-mode-image';
+                textViewBtn.setAttribute('aria-selected', 'false');
+                imageViewBtn.setAttribute('aria-selected', 'true');
+                
+                // 画像読み込み時の処理（実際の実装では遅延読み込み等）
+                console.log('画像を読み込み中...');
+            }
+
+            textViewBtn.addEventListener('click', switchToTextView);
+            imageViewBtn.addEventListener('click', switchToImageView);
+            
+            // キーボードサポート
+            textViewBtn.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight') {
+                    imageViewBtn.focus();
+                }
+            });
+            
+            imageViewBtn.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    textViewBtn.focus();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

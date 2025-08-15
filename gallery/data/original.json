@@ -1,0 +1,359 @@
+{
+  "mainSeries": "original",
+  "original_series": [
+    {
+      "id": "ao-chan_1",
+      "path": "/gallery/image-page/ao-chan_1.html",
+      "image_path": "/img/original/ao-chan.jpg",
+      "date": "2018-07-25",
+      "series": "ao-chan",
+      "tags": [
+          "ao-chan",
+          "original",
+          "drawing",
+          "oc",
+          "1girl",
+          "fediverse"
+      ]
+    },
+    {
+      "id": "ao-chan_2",
+      "path": "/gallery/image-page/ao-chan_2.html",
+      "image_path": "/img/original/ao-chan-gif.gif",
+      "date": "2020-02-02",
+      "series": "ao-chan",
+      "tags": [
+          "ao-chan",
+          "original",
+          "1girl",
+          "oc",
+          "animation"
+      ]
+    },
+    {
+      "id": "oc1_1",
+      "path": "/gallery/image-page/oc1_1.html",
+      "image_path": "/img/original/oc1_1.gif",
+      "date": "2020-10-16",
+      "series": "oc1",
+      "tags": [
+          "oc1",
+          "oc",
+          "original",
+          "drawing",
+          "monochrome",
+          "1girl"
+      ]
+    },
+    {
+      "id": "oc1_2",
+      "path": "/gallery/image-page/oc1_2.html",
+      "image_path": "/img/original/oc1_2.gif",
+      "date": "2020-10-16",
+      "series": "oc1",
+      "tags": [
+          "oc1",
+          "oc",
+          "1girl",
+          "drawing",
+          "monochrome",
+          "original"
+      ]
+    },
+    {
+      "id": "oc1_3",
+      "path": "/gallery/image-page/oc1_3.html",
+      "image_path": "/img/original/oc1_3.gif",
+      "date": "2020-10-16",
+      "series": "oc1",
+      "tags": [
+          "oc1",
+          "oc",
+          "original",
+          "drawing",
+          "monochrome",
+          "1girl"
+      ]
+    },
+    {
+      "id": "oc2_1",
+      "path": "/gallery/image-page/oc2_1.html",
+      "image_path": "/img/original/oc2_6.png",
+      "date": "2020-06-01",
+      "series": "oc2",
+      "tags": [
+        "oc2",
+        "oc",
+        "original",
+        "drawing",
+        "monochrome",
+        "2girls"
+      ]
+    },
+    {
+      "id": "oc2_2",
+      "path": "/gallery/image-page/oc2_2.html",
+      "image_path": "/img/original/oc2_10.png",
+      "date": "2020-06-01",
+      "series": "oc2",
+      "tags": [
+        "oc2",
+        "oc",
+        "original",
+        "drawing",
+        "monochrome",
+        "1girl"
+      ]
+    },
+    {
+      "id": "oc2_3",
+      "path": "/gallery/image-page/oc2_3.html",
+      "image_path": "/img/original/oc2_1.jpg",
+      "date": "2020-01-29",
+      "series": "oc2",
+      "tags": [
+        "oc2",
+        "oc",
+        "original",
+        "drawing",
+        "monochrome"
+      ]
+    },
+    {
+      "id": "oc2_4",
+      "path": "/gallery/image-page/oc2_4.html",
+      "image_path": "/img/original/oc2_2.png",
+      "date": "2019-02-24",
+      "series": "oc2",
+      "tags": [
+        "oc2",
+        "oc",
+        "original",
+        "drawing",
+        "glasses",
+        "monochrome"
+      ]
+    },
+    {
+      "id": "oc2_5",
+      "path": "/gallery/image-page/oc2_5.html",
+      "image_path": "/img/original/oc2_4.png",
+      "date": "2020-02-09",
+      "series": "oc2",
+      "tags": [
+          "oc2",
+          "oc",
+          "original",
+          "drawing",
+          "monochrome",
+          "1girl",
+          "glasses",
+          "nsfw"
+      ]
+    },
+    {
+      "id": "oc2_6",
+      "path": "/gallery/image-page/oc2_6.html",
+      "image_path": "/img/original/oc2_5.png",
+      "date": "2020-02-13",
+      "series": "oc2",
+      "tags": [
+          "oc2",
+          "oc",
+          "original",
+          "drawing",
+          "monochrome",
+          "1girl"
+      ]
+    },
+    {
+      "id": "oc2_7",
+      "path": "/gallery/image-page/oc2_7.html",
+      "image_path": "/img/original/oc2_3.png",
+      "date": "2019-03-08",
+      "series": "oc2",
+      "tags": [
+          "oc2",
+          "oc",
+          "original",
+          "drawing",
+          "colored",
+          "monochrome",
+          "1girl",
+          "glasses"
+      ]
+    },
+    {
+      "id": "oc3_1",
+      "path": "/gallery/image-page/oc3_1.html",
+      "image_path": "/img/original/2022-05-13_min.webp",
+      "date": "2022-05-13",
+      "series": "oc3",
+      "tags": [
+          "oc3",
+          "oc",
+          "original",
+          "drawing",
+          "monochrome",
+          "1girl",
+          "nsfw"
+      ]
+    },
+    {
+      "id": "oc3_2",
+      "path": "/gallery/image-page/oc3_2.html",
+      "image_path": "/img/original/2022-05-13-3dcg.jpg",
+      "date": "2022-05-13",
+      "series": "oc3",
+      "tags": [
+          "oc3",
+          "oc",
+          "original",
+          "drawing",
+          "monochrome",
+          "1girl",
+          "nsfw"
+      ]
+    },
+    {
+      "id": "oc3_3",
+      "path": "/gallery/image-page/oc3_3.html",
+      "image_path": "/img/original/2023-10-09.png",
+      "date": "2023-10-09",
+      "series": "oc3",
+      "tags": [
+          "oc3",
+          "oc",
+          "original",
+          "drawing",
+          "monochrome",
+          "1girl",
+          "nsfw"
+      ]
+    },
+    {
+      "id": "oc3_4",
+      "path": "/gallery/image-page/oc3_4.html",
+      "image_path": "/img/original/2024-05-25-1.webp",
+      "date": "2024-05-25",
+      "series": "oc3",
+      "tags": [
+          "oc3",
+          "oc1",
+          "oc",
+          "original",
+          "drawing",
+          "monochrome",
+          "2girls"
+      ]
+    },
+    {
+      "id": "oc_misc_1",
+      "path": "/gallery/image-page/oc_misc_1.html",
+      "image_path": "/img/original/oc3_1.png",
+      "date": "2020-06-18",
+      "series": "oc_misc",
+      "tags": [
+        "oc_misc",
+        "oc",
+        "original",
+        "drawing",
+        "monochrome",
+        "1girl"
+      ]
+    },
+    {
+      "id": "oc_misc_2",
+      "path": "/gallery/image-page/oc_misc_2.html",
+      "image_path": "/img/original/oc3_21.gif",
+      "date": "2019-08-10",
+      "series": "oc_misc",
+      "tags": [
+          "oc_misc",
+          "oc",
+          "original",
+          "drawing",
+          "1girl",
+          "glasses"
+      ]
+    },
+    {
+      "id": "oc_misc_3",
+      "path": "/gallery/image-page/oc_misc_3.html",
+      "image_path": "/img/original/oc3_3.png",
+      "date": "2020-12-25",
+      "series": "oc_misc",
+      "tags": [
+        "oc_misc",
+        "oc",
+        "original",
+        "monochrome",
+        "3girls"
+      ]
+    },
+    {
+      "id": "oc_misc_4",
+      "path": "/gallery/image-page/oc_misc_4.html",
+      "image_path": "/img/original/2022-01-13.jpg",
+      "date": "2022-01-13",
+      "series": "oc_misc",
+      "tags": [
+        "oc_misc",
+        "oc",
+        "original",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "glasses"
+      ]
+    },
+    {
+      "id": "oc_misc_5",
+      "path": "/gallery/image-page/oc_misc_5.html",
+      "image_path": "/img/original/2022-03-17.jpg",
+      "date": "2022-03-17",
+      "series": "oc_misc",
+      "tags": [
+        "oc_misc",
+        "oc",
+        "original",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "nsfw"
+      ]
+    },
+    {
+      "id": "oc_misc_6",
+      "path": "/gallery/image-page/oc_misc_6.html",
+      "image_path": "/img/original/2022-11-05_min.webp",
+      "date": "2022-11-05",
+      "series": "oc_misc",
+      "tags": [
+        "oc_misc",
+        "oc",
+        "original",
+        "drawing",
+        "colored",
+        "1girl"
+      ]
+    },
+    {
+      "id": "idoko_taningoto1",
+      "path": "/gallery/image-page/idoko_taningoto1.html",
+      "image_path": "/img/original/other1.gif",
+      "date": "2024-11-18",
+      "series": "idoko",
+      "tags": [
+        "idoko",
+        "techno-san",
+        "oc",
+        "original",
+        "drawing",
+        "monochrome",
+        "2girls",
+        "glasses"
+      ]
+    }
+  ]
+}

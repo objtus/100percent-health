@@ -1,6 +1,6 @@
 (function () {
 	var colour = ["#000", "#000"];
-	var sparkles = 50;
+	var sparkles = 40;
 
 	var cNum = 0;
 	var x = (ox = 300);
@@ -23,13 +23,27 @@
 	var isPaused = false;
 	// アニメーションタイマーID
 	var animationTimer = null;
+	// キラキラ要素用のコンテナ
+	var sparkleContainer = null;
 	
 	window.onload = function () {
+		// キラキラ要素用のコンテナを作成
+		sparkleContainer = document.createElement("div");
+		sparkleContainer.id = "sparkle-container";
+		sparkleContainer.style.position = "fixed";
+		sparkleContainer.style.top = "0";
+		sparkleContainer.style.left = "0";
+		sparkleContainer.style.width = "100%";
+		sparkleContainer.style.height = "100%";
+		sparkleContainer.style.pointerEvents = "none";
+		sparkleContainer.style.zIndex = "10000";
+		document.body.appendChild(sparkleContainer);
+		
 		var i, rats, rlef, rdow;
 		for (var i = 0; i < sparkles; i++) {
 			var rats = createDiv(3, 3);
 			rats.style.visibility = "hidden";
-			document.body.appendChild((tiny[i] = rats));
+			sparkleContainer.appendChild((tiny[i] = rats));
 			starv[i] = 0;
 			tinyv[i] = 0;
 			var rats = createDiv(5, 5);
@@ -43,20 +57,23 @@
 			rlef.style.left = 0;
 			rdow.style.top = 0;
 			rdow.style.left = "2px";
-			document.body.appendChild((star[i] = rats));
+			sparkleContainer.appendChild((star[i] = rats));
 		}
 		
-		// アニメーション開始
-		startAnimation();
-		
-		// コントロール要素との干渉を検出するイベントリスナーを追加
-		setupControlInteractionDetection();
+			// アニメーション開始
+	startAnimation();
+	
+	// コントロール要素との干渉を検出するイベントリスナーを追加
+	setupControlInteractionDetection();
+	
+	// タブ非アクティブ時の停止機能を設定
+	setupVisibilityChangeHandler();
 	};
 	
 	// アニメーション開始関数
 	function startAnimation() {
 		if (!animationTimer) {
-			animationTimer = setInterval(sparkle, 40);
+			animationTimer = setInterval(sparkle, 50);
 		}
 	}
 	
@@ -135,6 +152,31 @@
 			   element.classList.contains('relevance-btn') ||
 			   element.classList.contains('tag-sort-btn') ||
 			   element.closest('.tag-controls') !== null;
+	}
+	
+	// タブ非アクティブ時の停止機能を設定する関数
+	function setupVisibilityChangeHandler() {
+		// ページ可視性APIがサポートされているかチェック
+		if (typeof document.hidden !== "undefined" || typeof document.msHidden !== "undefined" || typeof document.webkitHidden !== "undefined") {
+			// 可視性変更イベントを監視
+			document.addEventListener('visibilitychange', handleVisibilityChange);
+		}
+	}
+	
+	// 可視性変更を処理する関数
+	function handleVisibilityChange() {
+		if (document.hidden || document.msHidden || document.webkitHidden) {
+			// タブが非アクティブになった場合
+			console.log('タブが非アクティブになりました。アニメーションを停止します。');
+			stopAnimation();
+			hideAllEffects();
+		} else {
+			// タブがアクティブになった場合
+			console.log('タブがアクティブになりました。アニメーションを再開します。');
+			if (!isPaused && !isInteractingWithControls) {
+				startAnimation();
+			}
+		}
 	}
 	
 	function sparkle() {
@@ -236,6 +278,7 @@
 		div.style.width = width + "px";
 		div.style.overflow = "hidden";
 		div.style.pointerEvents = "none";
+		div.style.zIndex = "10000";
 		return div;
 	}
 })();

@@ -1,0 +1,162 @@
+{
+  "mainSeries": "works",
+  "works_series": [
+    {
+      "id": "nofederation",
+      "path": "/gallery/image-page/nofederation.html",
+      "image_path": "../../img/original/albumart_original-min.webp",
+      "date": "2020-07-23",
+      "series": "works",
+      "tags": [
+        "nofederation",
+        "works",
+        "collaboration",
+        "music",
+        "ex_happyender_girl",
+        "colored",
+        "fediverse",
+        "3girls"
+      ]
+    },
+    {
+      "id": "stilldreaminghour0",
+      "path": "/gallery/image-page/stilldreaminghour0.html",
+      "image_path": "../../img/original/21.04.11.jpg",
+      "date": "2021-05-07",
+      "series": "works",
+      "tags": [
+        "stilldreaminghour0",
+        "works",
+        "music",
+        "ex_happyender_girl",
+        "live_album",
+        "1girl"
+      ]
+    },
+    {
+      "id": "littlegirlisdead",
+      "path": "/gallery/image-page/littlegirlisdead.html",
+      "image_path": "../../img/original/littlegirlisdead_min.webp",
+      "date": "2022-01-30",
+      "series": "works",
+      "tags": [
+        "littlegirlisdead",
+        "works",
+        "music",
+        "ex_happyender_girl",
+        "hatsune_miku",
+        "colored",
+        "1girl"
+      ]
+    },
+    {
+      "id": "remain_in",
+      "path": "/gallery/image-page/remain_in.html",
+      "image_path": "../../img/original/44trim2000.gif",
+      "date": "2022-04-26",
+      "series": "works",
+      "tags": [
+        "remain_in",
+        "works",
+        "music",
+        "ex_happyender_girl",
+        "music_video",
+        "animated",
+        "2girls"
+      ]
+    },
+    {
+      "id": "elastic_cubes",
+      "path": "/gallery/image-page/elastic_cubes.html",
+      "image_path": "../../img/original/elastic_cubes.gif",
+      "date": "2022-12-05",
+      "series": "works",
+      "tags": [
+        "elastic_cubes",
+        "works",
+        "music",
+        "monochrome",
+        "elastic_cubes",
+        "1girl"
+      ]
+    },
+    {
+      "id": "a_perfect_day_to_eat_pancakes",
+      "path": "/gallery/image-page/a_perfect_day_to_eat_pancakes.html",
+      "image_path": "../../img/original/a_perfect_day_to_eat_pancakes_ep.webp",
+      "date": "2023-01-14",
+      "series": "works",
+      "tags": [
+        "a_perfect_day_to_eat_pancakes",
+        "works",
+        "music",
+        "ex_happyender_girl",
+        "hatsune_miku",
+        "colored",
+        "1girl"
+      ]
+    },
+    {
+      "id": "23.11.18",
+      "path": "/gallery/image-page/23.11.18.html",
+      "image_path": "../../img/original/23.11.18_min.webp",
+      "date": "2023-12-24",
+      "series": "works",
+      "tags": [
+        "23.11.18",
+        "works",
+        "music",
+        "ex_happyender_girl",
+        "hatsune_miku",
+        "live_album",
+        "colored",
+        "1girl"
+      ]
+    },
+    {
+      "id": "tiny-lo",
+      "path": "/gallery/image-page/tiny-lo.html",
+      "image_path": "../../img/original/tiny-lo_albumart.jpg",
+      "date": "2024-07-21",
+      "series": "works",
+      "tags": [
+        "tiny-lo",
+        "works",
+        "music",
+        "ex_happyender_girl",
+        "colored",
+        "1girl"
+      ]
+    },
+    {
+      "id": "this-years-loid",
+      "path": "/gallery/image-page/this-years-loid.html",
+      "image_path": "../../img/original/this-years-loid_min.webp",
+      "date": "2024-08-30",
+      "series": "works",
+      "tags": [
+        "this-years-loid",
+        "works",
+        "music",
+        "ex_happyender_girl",
+        "hatsune_miku",
+        "colored",
+        "1girl"
+      ]
+    },
+    {
+      "id": "re-summer(never)ends",
+      "path": "/gallery/image-page/re-summer(never)ends.html",
+      "image_path": "../../img/original/re-summer(never)ends.webp",
+      "date": "2025-01-27",
+      "series": "works",
+      "tags": [
+        "re-summer(never)ends",
+        "works",
+        "music",
+        "ex_happyender_girl",
+        "1girl"
+      ]
+    }
+  ]
+}

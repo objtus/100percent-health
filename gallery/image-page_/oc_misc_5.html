@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>oc_misc_5 - 100%health</title>
+		<link rel="stylesheet" href="../../1column.css" />
+		<script src="../../js/jquery-3.6.0.min.js"></script>
+		<script src="../../js/main.js"></script>
+		<script src="/js/mouse.js" defer></script>
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<p id="parentFile" style="display: none">oc_misc /</p>
+			<script type="text/javascript">
+				header();
+			</script>
+			<main id="main">
+				<div id="galleryspace">
+					<div class="card">
+						<div class="piccard nsfw">
+							<a href="../../img/original/2022-03-17.jpg"><img src="../../img/original/2022-03-17.jpg" alt="original character illust" /></a>
+							<p class="title"></p>
+							<div class="caption">
+								<details>
+									<summary></summary>
+									sns上でお題を募集し、それを元に描いた絵です。
+								</details>
+							</div>
+							<p class="date">>2022-03-17</p>
+						</div>
+						<nav class="arrow">
+							<nav class="rowarrow">
+								<a class="leftarrow" href="oc_misc_4.html" style="">&lt;</a>
+								<a class="uparrow" href="oc_misc.html#oc_misc_5"><<</a>
+								<a class="rightarrow" href="oc_misc_6.html" style="">&gt;</a>
+							</nav>
+						</nav>
+					</div>
+				</div>
+
+			</main>
+			<footer id="main-footer">
+				<!-- main.jsから#galleryhtmlへgallery.htmlの挿入 -->
+				<div id="galleryhtml"></div>
+				<!-- main.jsから#footerへfooter.htmlの挿入 -->
+				<div id="footerhtml"></div>
+			</footer>
+		</div>
+		<div id="lightbox">
+			<link rel="stylesheet" href="../../luminous-basic.min.css" />
+			<script src="../../Luminous.min.js"></script>
+			<script>
+				new LuminousGallery(document.querySelectorAll("a[href$=jpg],a[href$=png],a[href$=gif]"));
+			</script>
+		</div>
+	</body>
+</html>

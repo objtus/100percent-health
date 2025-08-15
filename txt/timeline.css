@@ -35,6 +35,7 @@
 }
 
 #timeline_layout {
+  position: relative;
   line-height: 1.5em;
   background-color: #fff;
   z-index: 15;
@@ -63,6 +64,9 @@ h2 {
 
 em{
   text-decoration: underline;
+  text-decoration-color: #808080;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0px;
 }
 
 .str {
@@ -88,6 +92,26 @@ em{
   font-size: 8pt;
   line-height: 1em;
 }
+
+#intro-notes {
+  margin-top: 1em;
+  p {
+    margin-bottom: 1.5em;
+  }
+}
+
+.year {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: -4px;
+  padding: 10px 10px 10px 0px;
+  position: sticky;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(4px);
+  z-index: 20;
+}
+
 
 /*===================
   liのclassごとに色を変えるやつ
@@ -466,11 +490,15 @@ em{
 @media screen and (max-width: 1024px) {
 
   /* 1024pxまでの幅の場合に適応される */
-
 }
 
 @media screen and (max-width: 768px) {
-
+  #main, #main-footer{
+    width: 90%;
+  }
+  .year{
+    padding: 3px 5px 0px 0px;
+  }
   /* 768pxまでの幅の場合に適応される */
 
 }
@@ -479,16 +507,20 @@ em{
 
   /* 480pxまでの幅の場合に適応される */
   #main{
-    margin-left: 5%;
+    margin-left: 3%;
+    width: 92%;
   }
 
   #timeline_layout {
     line-height: 1.6em;
+    h2 {
+      font-size: 1.2em;
+    }
   }
 
   #sidebar-toggle {
     position: fixed;
-    top: 20vh;
+    top: 80vh;
     left: 0px;
     width: 80px;
     height: 55px;

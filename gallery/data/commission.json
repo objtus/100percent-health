@@ -1,0 +1,19 @@
+{
+  "mainSeries": "commission",
+  "commission_series": [
+    {
+      "id": "commission_2025-04-14",
+      "path": "/gallery/image-page/commission_2025-04-14.html",
+      "image_path": "../../img/commission/2025-04-14.png",
+      "date": "2025-04-14",
+      "series": "commission",
+      "tags": [
+        "commission",
+        "colored",
+        "1girl",
+        "glasses",
+        "request"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "mainSeries": "groundpolis_paint",
+  "groundpolis_paint_series": [
+    {
+      "id": "gpp_allthistime13",
+      "path": "/gallery/image-page/gpp_allthistime13.html",
+      "image_path": "/img/original/allthistime13_min.webp",
+      "date": "2020-06-08",
+      "series": "groundpolis_paint_1",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_1",
+        "original",
+        "drawing",
+        "colored",
+        "1girl",
+        "glasses",
+        "fediverse"
+      ]
+    },
+    {
+      "id": "gpp_airpocket2001",
+      "path": "/gallery/image-page/gpp_airpocket2001.html",
+      "image_path": "/img/original/airpocket2001_min.webp",
+      "date": "2020-06-14",
+      "series": "groundpolis_paint_1",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_1",
+        "original",
+        "drawing",
+        "colored",
+        "1girl",
+        "fediverse"
+      ]
+    },
+    {
+      "id": "gpbakaaho",
+      "path": "/gallery/image-page/gpbakaaho.html",
+      "image_path": "/img/original/Bakaaho.png",
+      "date": "2020-05-27",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "original",
+        "drawing",
+        "monochrome",
+        "2girls",
+        "fediverse"
+      ]
+    },
+    {
+      "id": "gpyukiko",
+      "path": "/gallery/image-page/gpyukiko.html",
+      "image_path": "/img/original/ゆきこ.png",
+      "date": "2020-06-04",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "original",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "fediverse"
+      ]
+    },
+    {
+      "id": "gpforyoureyesonly",
+      "path": "/gallery/image-page/gpforyoureyesonly.html",
+      "image_path": "/img/fanart/gpforyoureyesonly.png",
+      "date": "2020-06-05",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "fanart",
+        "music",
+        "drawing",
+        "colored",
+        "1girl",
+        "fediverse",
+        "furry"
+      ]
+    },
+    {
+      "id": "gpASFPC",
+      "path": "/gallery/image-page/gpASFPC.html",
+      "image_path": "/img/fanart/gpASFPC.png",
+      "date": "2020-06-05",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "fanart",
+        "music",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "fediverse"
+      ]
+    },
+    {
+      "id": "gpmutant",
+      "path": "/gallery/image-page/gpmutant.html",
+      "image_path": "/img/fanart/gpmutant.png",
+      "date": "2020-06-25",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "fanart",
+        "music",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "fediverse"
+      ]
+    },
+    {
+      "id": "gpstarz",
+      "path": "/gallery/image-page/gpstarz.html",
+      "image_path": "/img/fanart/gpstarz.png",
+      "date": "2020-06-25",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "fanart",
+        "music",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "fediverse"
+      ]
+    },
+    {
+      "id": "gpug",
+      "path": "/gallery/image-page/gpug.html",
+      "image_path": "/img/fanart/gpug.png",
+      "date": "2020-06-25",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "fanart",
+        "music",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "glasses",
+        "fediverse"
+      ]
+    },
+    {
+      "id": "gpsyuua",
+      "path": "/gallery/image-page/gpsyuua.html",
+      "image_path": "/img/fanart/gpsyuua.png",
+      "date": "2021-11-04",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "fanart",
+        "torotsub-san",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "fediverse",
+        "request"
+      ]
+    },
+    {
+      "id": "gpmerimi",
+      "path": "/gallery/image-page/gpmerimi.html",
+      "image_path": "/img/fanart/gpmerimi.png",
+      "date": "2021-11-04",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "fanart",
+        "muuque-san",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "fediverse",
+        "request"
+      ]
+    },
+    {
+      "id": "gphelve",
+      "path": "/gallery/image-page/gphelve.html",
+      "image_path": "/img/fanart/gphelve.png",
+      "date": "2021-11-04",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "fanart",
+        "semikura_helve",
+        "sesese-san",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "fediverse",
+        "request"
+      ]
+    },
+    {
+      "id": "gptaniguchi",
+      "path": "/gallery/image-page/gptaniguchi.html",
+      "image_path": "/img/fanart/gptaniguchi.png",
+      "date": "2021-11-10",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "fanart",
+        "techno-san",
+        "taniguchi-chan",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "fediverse",
+        "request"
+      ]
+    },
+    {
+      "id": "gp1",
+      "path": "/gallery/image-page/gp1.html",
+      "image_path": "/img/original/gp1.png",
+      "date": "2021-11-10",
+      "series": "groundpolis_paint_2",
+      "tags": [
+        "groundpolis_paint",
+        "groundpolis_paint_2",
+        "original",
+        "drawing",
+        "monochrome",
+        "1girl",
+        "fediverse"
+      ]
+    }
+  ]
+}

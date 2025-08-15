@@ -1,0 +1,62 @@
+{
+  "system": {
+    "version": "1.0.0",
+    "debug": false,
+    "basePath": "/"
+  },
+  "series": {
+    "fanart": {
+      "dataPath": "data/fanart.json",
+      "displayName": "fanart",
+      "galleryPath": "gallery/image-page/fanart.html",
+      "tagPath": "gallery/tag-page/"
+    },
+    "original": {
+      "dataPath": "data/original.json",
+      "displayName": "original",
+      "galleryPath": "gallery/image-page/original.html",
+      "tagPath": "gallery/tag-page/"
+    },
+    "works": {
+      "dataPath": "data/works.json",
+      "displayName": "works",
+      "galleryPath": "gallery/image-page/works.html",
+      "tagPath": "gallery/tag-page/"
+    },
+    "commission": {
+      "dataPath": "data/commission.json",
+      "displayName": "commission",
+      "galleryPath": "gallery/image-page/commission.html",
+      "tagPath": "gallery/tag-page/"
+    },
+    "groundpolis_paint": {
+      "dataPath": "data/groundpolis_paint.json",
+      "displayName": "groundpolis_paint",
+      "galleryPath": "gallery/image-page/groundpolis_paint.html",
+      "tagPath": "gallery/tag-page/"
+    }
+  },
+  "ui": {
+    "itemsPerCategory": 4,
+    "defaultView": "text",
+    "enableImageView": true,
+    "enableTextView": true,
+    "showDebugInfo": false,
+    "animationDuration": 300
+  },
+  "diversity": {
+  "randomize": false,
+  "seriesBalance": true, 
+  "maxSameSeriesRatio": 0.6
+  },
+  "tags": {
+    "excludeFromDisplay": [],
+    "priorityTags": ["1girl", "2girl", "original_character"],
+    "seriesTags": ["fanart", "original", "works", "commission"] 
+  },
+  "paths": {
+    "imageBase": "/img/",
+    "galleryBase": "/gallery/",
+    "dataBase": "/gallery/data/"
+  }
+}

@@ -1,158 +1,262 @@
-/*---------------------------------------------------------
-
-.desc{
-  font-size: 0.8em;
-}
-div.favlinks > p{
-  margin-bottom: 0.4rem;
-}
-.banner88-31, .banner200-40, .desc{
-  padding-left: 6px;
-  border-left: 2px dashed;
-  margin-left: 4.5px;
-}
-
----------------------------------------------------------*/
-
-
 /*===================
   linksBlock
 ===================*/
-div#galleryspace{
-  .banner88-31 > img{
-    max-width: fit-content;
-    min-width: fit-content;
-  }
 
-  .banner200-40 > img{
-    max-width: fit-content;
-    min-width: fit-content;
-  }
-}
-
-/*----文字装飾----*/
-
-.highlight{
-  display: inline-block;
-  color: #fff;
-  background-color: #000;
-  font-size: 1.3em;
-  clip-path: inset(0 0 4px 0);
-}
-
-.site_name{
-  font-size: 16pt;
-}
-
-.url{
-  font-size: 10pt;
-  color: #aaa;
-}
-
-/*----インデント&レイアウト----*/
-
-#galleryspace > div{
-  margin-top: 40px;
-  .highlight{
-    margin-bottom: 20px;
-  }
-}
-
-.links_contents{
-  padding-left: 10px;
-  margin-left: 5px;
-}
-
-.favs{
-  padding-left: 10px;
-  background-image: linear-gradient(to bottom, #000 4px, transparent 4px);
-  background-size: 2px 8px;
-  background-repeat: repeat-y;
-  background-position: left bottom;
-  margin-bottom: 32px;
-  margin-left: 5px;
-}
-
-.link_title_box{
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding-bottom: 5px;
-  border-left: solid #444 5px;
-  border-bottom: dotted #444 2px;
-  margin-bottom: 10px;
-  div:nth-child(1){
-    width: 220px;
-    min-width: 220px;
-    margin-right: 0px;
-  }
-  div:nth-child(2){
-    flex-grow: 1;
-    word-break: break-all;
-  }
-}
-
-.link_caption {
-  font-size: 10pt;
-  text-indent: -2em;
-  padding-left: 3em;
-
-  p::before{
-  content: '♥ ';
-  display: inline;
-  padding-right: 1em;
-  }
-}
-
-/*リンクカードのヘッダー*/
-.title_and_url{
-  display: flex;
-  flex-direction: column;
-}
-
-
-
-
-
-/*===================
-  @media
-===================*/
-@media screen and (max-width: 1024px) {
-  /* 1024pxまでの幅の場合に適応される */
-}
-
-@media screen and (max-width: 768px) {
-  /* 768pxまでの幅の場合に適応される */
-  #main{
-    width: 80%;
-  }
-  .link_title_box{
-    div:nth-child(1){
-      width: 200px;
-      min-width: 200px;
+/* バナー画像の基本設定 */
+div#galleryspace {
+    .banner88-31 > img,
+    .banner200-40 > img {
+      max-width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+      object-fit: contain;
+    }
+    
+    .banner88-31 > img {
+      max-height: 31px;
+    }
+    
+    .banner200-40 > img {
+      max-height: 40px;
     }
   }
-}
-
-@media screen and (max-width: 480px) {
-  /* 480pxまでの幅の場合に適応される */
-  #main{
-    width: fit-content;
-    margin-right: 10%;
+  
+  /*----文字装飾----*/
+  h2 {
+    display: inline-block;
+    font-size: 1.2em;
+    border-bottom: dotted 3px #000;
+    margin-bottom: 15px;
+    line-height: 16px;
   }
-  .link_title_box{
-    flex-direction: column;
+  
+  .site_name {
+    font-size: 14pt;
+    font-weight: bold;
+    display: block;
+    margin-bottom: -0.3em;
   }
-  .link_caption{
-    text-indent: -2em;
+  
+  .url {
+    font-size: 10pt;
+    color: #666;
+    text-decoration: none;
+    word-break: break-all;
+  }
+  
+  /*----セクション全体のレイアウト----*/
+  #galleryspace > div {
+    margin: 2.5em 0;
+  }
+  
+  .links_contents {
+    padding-left: 0;
+    margin-left: 0;
+  }
+  
+  /*----個別リンクカードのスタイル----*/
+  .favs {
+    padding-left: 10px;
+    background-image: linear-gradient(to bottom, #000 4px, transparent 4px);
+    background-size: 2px 8px;
+    background-repeat: repeat-y;
+    background-position: left bottom;
+    margin-bottom: 25px;
+    margin-left: 5px;
+    position: relative;
+    transition: all 0.1s ease;
+  }
+  
+  /* リンクカードのヘッダー部分 */
+  .link_title_box {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+    border-bottom: 2px dotted #ccc;
+  }
+  
+  .title_and_url {
+    flex: 1;
+    min-width: 0; /* flexboxでの縮小を許可 */
+    margin-left: 5px;
+  }
+  
+  .banner88-31,
+  .banner200-40 {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 31px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    padding: 0.3em;
+    a:hover{
+      background-color: #00000000 !important;
+    }
+  }
+  
+  .banner200-40 {
+    width: 120px;
+    height: 24px;
+  }
+  
+  .banner88-31 {
+    width: 60px;
+    height: 20px;
+  }
+  
+  /* バナー画像がない場合のプレースホルダー */
+  .banner88-31 img[src="./empty.png"],
+  .banner200-40 img[src="./empty.png"],
+  .banner88-31 img[src="empty.png"],
+  .banner200-40 img[src="empty.png"] {
+    display: none;
+  }
+  
+  .banner88-31:has(img[src*="empty.png"])::after,
+  .banner200-40:has(img[src*="empty.png"])::after {
+    content: "[NO_BANNER]";
+    font-size: 0.6em;
+    color: #999;
+  }
+  
+  /* キャプション部分 */
+  .link_caption {
+    font-size: 10pt;
+    line-height: 1.3;
+    color: #333;
+  }
+  
+  .link_caption p {
+    font-size: 10pt;
+    text-indent: -1.5em;
     padding-left: 2em;
   }
-}
+  
+  .link_caption p::before {
+    content: '♥ ';
+    color: black;
+    margin-right: 0.5em;
+  }
+  
+  /* detailsタグのスタイル */
+  .link_caption details {
+    margin-top: 0.8em;
+    border-left: 3px solid #ddd;
+    padding-left: 1em;
+  }
+  
+  .link_caption summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 0.5em;
+  }
 
-@media screen and (max-width: 320px) {
-  /* 320pxまでの幅の場合に適応される */
-}
+  /* rel属性による記号表示 */
+  .favs:has(a[rel="friend"]) .site_name::after {
+    content: " [FRIEND]";
+    font-size: 6pt;
+    color: #666;
+  }
+  
+  .favs:has(a[rel="acquaintance"]) .site_name::after {
+    content: " [ACQUAINTANCE]";
+    font-size: 6pt;
+    color: #666;
+  }
+  
+  .favs:has(a[rel="muse"]) .site_name::after {
+    content: " [INSPIRATION]";
+    font-size: 6pt;
+    color: #666;
+  }
+  
+  .favs:has(a[rel="contact"]) .site_name::after {
+    content: " [CONTACT]";
+    font-size: 6pt;
+    color: #666;
+  }
 
-@media screen and (min-width: 768px) {
-  /* 1024pxより広い幅の場合に適応される */
-}
+  /* ウェブリングセクション */
+  #webrings{
+    margin-top: 1.5em;
+    padding: 1em;
+    text-align: left;
+    .webrings_contents{
+      margin-top: 1.5em;
+      padding: 1em;
+      background: #fbfbfb;
+      border: 1px solid #ddd;
+    }
+    p{
+      font-size: 10pt;
+    }
+  }
+  
+  
+  /* このページについてセクション */
+  #my_banner .links_contents {
+    p{
+      font-size: 10pt;
+    }
+    .banner_assets{
+      font-weight: bold;
+      margin-bottom: 0.5em;
+    }
+  }
+  
+  #mybuttons {
+    margin-top: 1.5em;
+    padding: 1em;
+    background: #fbfbfb;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  #mybuttons div {
+    margin: 1em 0;
+    display: flex;
+    gap: 1em;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  
+  /*===================
+    レスポンシブ対応
+  ===================*/
+  @media screen and (max-width: 768px) {
+    .link_title_box {
+    }
+    
+    
+    .site_name {
+      font-size: 14pt;
+    }
+    
+  }
+  
+  @media screen and (max-width: 480px) {
+    #galleryspace > div {
+      margin: 1.5em 0;
+    }
+    
+    .highlight {
+      font-size: 1.1em;
+      padding: 0.3em 0.4em;
+    }
+    
+    .favs {
+      margin-bottom: 2em;
+    }
+    
+    .link_caption {
+      font-size: 10pt;
+    }
+    
+    #mybanner p {
+      flex-direction: column;
+      align-items: center;
+    }
+  }

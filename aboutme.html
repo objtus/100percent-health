@@ -37,6 +37,11 @@
     #biocard {
       border: solid 0px;
       margin-bottom: 20px;
+
+      .photo{
+        position: relative;
+        z-index: 1000;
+      }
     }
   
     div#bio, div#social_links {
@@ -111,7 +116,7 @@
     <main id="main">
       <section id="galleryspace">
         <article id="bio" class="vcard" itemscope itemtype="http://schema.org/Person">
-          <h1 class="heading">about me</h1>
+          <h1 class="title">about_me</h1>
           <div id="biocard">
             <div style="background-color: black;height: 100%;">
               <img class="photo" src="/img/idoko4.png" alt="idoko illust" style="opacity: 0.5;" itemprop="image">

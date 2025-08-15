@@ -56,26 +56,6 @@
     });
 
   </script>
-  <style>
-    #timeline_layout {
-      position: relative;
-    }
-
-    .year {
-      font-size: 24px;
-      font-weight: bold;
-      margin-left: -4px;
-      padding: 10px 10px 10px 0px;
-      position: sticky;
-      top: 0;
-      background-color: rgba(255, 255, 255, 1);
-      z-index: 20;
-    }
-
-    #search-button {
-      display: none;
-    }
-  </style>
 </head>
 
 <body>
@@ -101,25 +81,28 @@
     <main id="main">
       <div id="textblock">
         <h1>分散SNS関連年表</h1>
-        <p><em>分散SNSに関連すると思われるできごとをまとめた年表</em>です。敬称略です。<br>
-          このページは独自研究の可能性があります。このページは中立的で釣り合いのとれた観点を持っていない可能性があります。<br>
-        </p>
-        <p>時差計算は適当です。基本的には日本時間で表記していまが、日付は多少ずれる可能性があります。</p>
-        <p>この年表は主にアーカイブを目的としているため、更新速度を重視しておらず、速報性に期待はしないでください。</p>
-        <p><em>分散SNSに関する項目のみ</em>見たい場合は<a href="my_dsns_timeline.html?class=d&checkboxes=d">こちら</a>へ</p>
+        <p><em>分散SNSに関連すると思われるできごとをまとめた年表</em>です。敬称略です。</p>
 
-        <div id="howtoview">
-          <ul>
-            <li>左のサイドメニューから、<em>できごとの種類別でフィルタリング</em>ができます。</li>
-            <br>
-            <li>ラジオボタンを押すと、そのカテゴリに属するできごとのみ表示させることができます。</li>
-            <li>チェックボックスはカテゴリを複数選択し表示させることができます。</li>
-            <li>「検索」入力フォームから、入力した文字列を含んだできごとのみを表示することができます。</li>
-            <li>文字列を選択すると「検索」ボタンが表示され、「検索」ボタンを押すことで選択した文字列をフォームに入力することができます。</li>
-            <li>「今日はなんの日？」コーナーにはbotがあります！ぜひフォローしてね！ <a href="https://tanoshii.site/@dsns_today_bot" target="_blank">@dsns_today_event@tanoshii.site</a></li>
-          </ul>
-        </div>
-        
+        <details id="intro-notes">
+          <summary>説明等</summary>
+          <div id="intro-notes-content">
+            <p>このページは独自研究の可能性があります。このページは中立的で釣り合いのとれた観点を持っていない可能性があります。</p>
+            <p>時差計算は適当です。基本的には日本時間で表記していまが、日付は多少ずれる可能性があります。</p>
+            <p>この年表は主にアーカイブを目的としているため、更新速度を重視しておらず、速報性に期待はしないでください。</p> 
+            <p>分散SNSに関する項目のみ見たい場合は<a href="my_dsns_timeline.html?checkboxes=d">こちら</a>へ</p>
+            <div id="howtoview">
+              <ul>
+                <li>左のサイドメニューから、<em>できごとの種類別でフィルタリング</em>ができます。</li>
+                <br>
+                <li>ラジオボタンを押すと、<strong>そのカテゴリに属するできごとのみ表示</strong>させることができます。</li>
+                <li>チェックボックスは<strong>カテゴリを複数選択し表示</strong>させることができます。</li>
+                <li>「検索」入力フォームから、<strong>入力した文字列を含んだできごとのみを表示</strong>することができます。</li>
+                <li>文字列を選択すると「検索」ボタンが表示され、「検索」ボタンを押すことで選択した文字列をフォームに入力することができます。</li>
+                <li>「今日はなんの日？」コーナーにはbotがあります！ぜひフォローしてね！ <a href="https://tanoshii.site/@dsns_today_bot" target="_blank">@dsns_today_event@tanoshii.site</a></li>
+              </ul>
+            </div>  
+          </div>
+        </details>        
         <br>
 
         <h2>今日はなんの日？</h2>
@@ -137,6 +120,35 @@
         </div>
         <br>
         <div id="timeline_layout">
+          <div id="1890">
+            <h2 class="year">1890年</h2>
+            <ul>
+              <li class="tech hard draft">??月??日　Herman Hollerithの開発したタビュレーティングマシンがアメリカ合衆国国税調査局の国税調査に使用される。データ処理にパンチカードと加算器を使用し、カードをソートする機械を連動させるパンチカードシステムが使用された。</li>
+            </ul>
+          </div>
+
+          <div id="1896">
+            <h2 class="year">1896年</h2>
+            <ul>
+              <li class="tech hard draft company">??月??日　Herman HollerithがTabulating Machine Companyを設立する。</li>
+            </ul>
+          </div>
+
+          <div id="1901">
+            <h2 class="year">1901年</h2>
+            <ul>
+              <li class="science book thought culture draft">??月??日　H.G.Wellsが"Anticipation"を出版する。未来についてのノンフィクション作品であり、H.G.Wellsはこの作品で未来についての科学啓蒙書のスタイルを開拓したとされる。</li>
+            </ul>
+          </div>
+
+          <div id="1911">
+            <h2 class="year">1911年</h2>
+            <ul>
+              <li class="company draft">??月??日　Bundy Manufacturing Company、International Time Recording Company、Tabulating Machine Company、Computing Scale Company of Americaの4社が合併し、Computing-Tabulating-Recording Company（CTR）社が設立される。<br>
+                のち、<span class="str">1924年にCTR社は"International Business Machines (IBM)"へと社名を変更</span>する。</li>
+            </ul>
+          </div>
+          
           <div id="1925">
             <h2 class="year">1925年</h2>
             <ul>
@@ -164,6 +176,13 @@
             </ul>
           </div>
 
+          <div id="1935">
+            <h2 class="year">1935年</h2>
+            <ul>
+              <li class="math science logic draft">04月19日　アロンゾ・チャーチによって"An unsolvable problem of elementary number theory"が発表される。1936年04月15日にアメリカ数学会の"The Journal of Symbolic Logic"に収録され出版された。</li>
+            </ul>
+          </div>
+
           <div id="1936">
             <h2 class="year">1936年</h2>
             <ul>
@@ -184,29 +203,35 @@
                 この論文でブール代数による2進法の論理回路をスイッチで設計できることを示した。Vannevar Bushは送電網シミュレータをつかって安全性の問題を計算しようとしたが繰り返し計算に忙殺され、そのことが微分解析機の開発プロジェクトのきっかけとなった。</li>
               <li class="thought culture">??月??日　Vladimir Vernadskyが書籍『地球とその周囲の生命圏の化学的な構造』の序文として"Scientific Thought as a Planetary Phenomenon (『惑星的現象としての科学思想』)"を執筆する。Vladimir Vernadskyは1930年代において「精神圏」の考察を深め、この時期の仕事がロシアの知識人に「精神圏」概念を広めることとなったとされる。
               </li>
+              <li class="war crypto logic pol draft">
+                10月頃　ドイツの暗号生成装置Enigmaの暗号を解析していたポーランド参謀本部第二部暗号局のMarian Adam Rejewski、Henryk Zygalski、Jerzy Różyckiらが、Enigmaを解読することができる解読機（ボンバBomba）を作ることに成功する。フランスの諜報部が得たEnigmaの設定情報を用いたことがこの成功に関わっているとされる。<br>
+                1938年12月にドイツが2つのローターを追加することでBombaでの作業量が増加し、暗号鍵を見つけるコストが増大した。<br>
+                当時のポーランドはこれを解読する予算や人員が足りず、1939年07月26日にポーランド側はイギリスとフランスの情報機関と情報を共有し、Enigmaの解読法を伝えたとされる。<br>
+                この情報が連合国内で共有されると、1939年にイギリスのブレッチリー・パークにある政府暗号解析研究所（Government Code and Cypher School）で暗号解読部責任者をしていたAlan Turingにも届けられ、これによってより効率的な電気機械式暗号解読機bombeが開発されることになった。
+              </li>
             </ul>
           </div>
 
           <div id="1939">
             <h2 class="year">1939年</h2>
             <ul>
-              <li class="event war etc">09月01日　ナチスドイツがポーランドへ侵攻、<span class="str">第二次世界大戦が始まる</span>。</li>
+              <li class="event war pol etc">09月01日　ナチスドイツがポーランドへ侵攻、<span class="str">第二次世界大戦が始まる</span>。</li>
             </ul>
           </div>
           
           <div id="1940">
             <h2 class="year">1940年</h2>
             <ul>
-              <li class="war etc">06月27日　第32代アメリカ合衆国大統領Franklin Roosevelt (フランクリン・ルーズベルト)により<span class="str2">NDRC (国防研究委員会)が設立</span>される。ドイツがフランスへ侵攻したことをきっかけとして、NACA（国家航空諮問委員会）メンバーのFrederic Delano (フランクリン・デラノ)を通じ同委員会メンバーでカーネギー研究所所長であったVannevar BushがFranklin Rooseveltへ直訴、結果としてNDRCが設立された。<span class="str2">アインシュタイン＝シラードの手紙を受け計画された原子爆弾の開発プロジェクト「S-1ウラン委員会」</span>はNDRCの監督となり、後に<span class="str">マンハッタン計画</span>となった。</li>
+              <li class="war pol etc">06月27日　第32代アメリカ合衆国大統領Franklin Roosevelt (フランクリン・ルーズベルト)により<span class="str2">NDRC (国防研究委員会)が設立</span>される。ドイツがフランスへ侵攻したことをきっかけとして、NACA（国家航空諮問委員会）メンバーのFrederic Delano (フランクリン・デラノ)を通じ同委員会メンバーでカーネギー研究所所長であったVannevar BushがFranklin Rooseveltへ直訴、結果としてNDRCが設立された。<span class="str2">アインシュタイン＝シラードの手紙を受け計画された原子爆弾の開発プロジェクト「S-1ウラン委員会」</span>はNDRCの監督となり、後に<span class="str">マンハッタン計画</span>となった。</li>
             </ul>
           </div>
           
           <div id="1941">
             <h2 class="year">1941年</h2>
             <ul>
-              <li class="war etc">06月28日　Franklin Rooseveltによる大統領令8807によりOSRD (科学研究開発局)が正式に設立される。<br>連邦政府内の国防研究を統括するため、大統領府の緊急事態管理局 (OEM)内にOSRDが設立され、Vannevar Bushは局長に就任した。これによりBushは議会により承認された予算を配分できる立場として、アメリカ合衆国の国防研究の頂点となった。その後、OSRDはNDRCよりS-1ウラン委員会を引き継いでいる。<br>OSRDは新型爆弾やレーダーおよび早期警戒システム、誘導ミサイル、ペニシリンの開発など多岐にわたる研究の統括を行っていたが、その中にはミネソタ飢餓実験といった人体実験が含まれていた。
+              <li class="war pol etc">06月28日　Franklin Rooseveltによる大統領令8807によりOSRD (科学研究開発局)が正式に設立される。<br>連邦政府内の国防研究を統括するため、大統領府の緊急事態管理局 (OEM)内にOSRDが設立され、Vannevar Bushは局長に就任した。これによりBushは議会により承認された予算を配分できる立場として、アメリカ合衆国の国防研究の頂点となった。その後、OSRDはNDRCよりS-1ウラン委員会を引き継いでいる。<br>OSRDは新型爆弾やレーダーおよび早期警戒システム、誘導ミサイル、ペニシリンの開発など多岐にわたる研究の統括を行っていたが、その中にはミネソタ飢餓実験といった人体実験が含まれていた。
               </li>
-              <li class="war etc event">12月07日　日本軍によりハワイのパールハーバーの奇襲攻撃<span class="str">「真珠湾攻撃」が起こる</span>。<br>
+              <li class="war pol etc event draft">12月07日　日本軍によりハワイのパールハーバーの奇襲攻撃<span class="str">「真珠湾攻撃」が起こる</span>。<br>
                 翌12月08日、アメリカは対日宣戦布告を行い、太平洋戦争が勃発する。12月11日にはドイツとイタリアがアメリカへ宣戦布告を行った。</li>
             </ul>
           </div>
@@ -214,7 +239,7 @@
           <div id="1942">
             <h2 class="year">1942年</h2>
             <ul>
-              <li class="war etc">12月02日　シカゴ大学においてEnrico Fermi主導で世界初の原子炉「シカゴ・パイル1号」が建設され、行われた実験で<span class="str2">原子炉が歴史上はじめて臨界に達する</span>。その後、Enrico Fermiはマンハッタン計画に参加、ロスアラモス国立研究所で研究を行った。</li>
+              <li class="war tech etc">12月02日　シカゴ大学においてEnrico Fermi主導で世界初の原子炉「シカゴ・パイル1号」が建設され、行われた実験で<span class="str2">原子炉が歴史上はじめて臨界に達する</span>。その後、Enrico Fermiはマンハッタン計画に参加、ロスアラモス国立研究所で研究を行った。</li>
             </ul>
           </div>
           <div id="1943">
@@ -226,6 +251,10 @@
                 対空高射砲の射撃制御装置を開発するという戦時研究から、自動追随装置のある挙動について、人体でも同様の現象が起こるという事実を知ったことで1942年の会議の構想が生まれた。この学際研究の提案で1943年にJohn von Neumannが参加し、計算機科学の流れが加わったとされる。<br>
                 1920年代にNorbert WienerはMITの同僚であったVannevar Bushから計算機に関する相談を受けている。
               </li>
+              <li class="war pol tech draft">秋頃　　　　アメリカ航空局の特殊機器部が、<span class="str">汎用飛行訓練装置を開発する"Project Whirlwind"を設置</span>し、1941年に軍用研究目的で設立されたMITのサーボ機構研究所と実現可能性検討契約を結ぶ。<br>
+                このプロジェクトの責任者には当時26歳だった研究所の副所長Jay W. Forresterが任命され、1945年05月にはJay W. Forresterの調査結果をもとに予算87万5000ドル18ヶ月の開発期間でサーボ機構研究所が開発を行うことになった。こうして、当時MITの大学院生だったRobert E. Everettを含むプロジェクトチームが編成された。<br>
+                当初アナログコンピュータでの操縦シミュレータを構想していたが、アナログコンピュータではリアルタイム処理に速度が追いつかず、1945年夏、MITの大学院生Perry O. Crawford Jr.の話を聞いたJay W. Forresterは<span class="str2">汎用型デジタルコンピュータでプロジェクトを進めることを決めた</span>とされる。Perry O. Crawford Jr.は、1942年からリアルタイムデジタル制御システムの可能性を予見していた。<br>
+                1946年頃、Project Whirlwindは航空局特殊装置部門を引き取った海軍調査課（ONR）のもとに移される。その一方で目に見えた成果は出せず、肥大化する予算の一方で防衛予算は縮小され、1949年の終わり頃には出資の停止まで検討される状態になっていたとされる。</li>
             </ul>
           </div>
           <div id="1945">
@@ -233,8 +262,15 @@
             <ul>
               <li class="web culture hacker book">06月27日　Vannevar Bushがエッセイ "<a href="https://cruel.org/other/aswemaythink/aswemaythink.pdf" target="_blank" class="str">As We May Think</a>" を寄稿したアトランティック・マンスリー7月号が発売される。<br>
                 マイクロフィルムを用い情報を連想的に相互にリンクさせることができるディスプレイとキーボードがついたデスクサイズの機械 "<span class="str">Memex</span>" についてのアイデアが書かれていた。レーダー技術者として徴兵され船上で対日戦勝記念日を迎えたDouglas Engelbart (ダグラス・エンゲルバート) は、フィリピン・ライチ島の赤十字図書館で As We May Think が紹介されたLIFE誌を読み、「<span class="str2">人間の心の力を拡大する装置</span>」というビジョンに感銘を受けたとされる。</li>
-              <li class="war event">07月16日 アメリカのニューメキシコ州ソコロで <span class="str">人類最初の核実験であるトリニティ実験が行われる</span>。<br>
+              <li class="tech book draft">06月30日　John von Neumannによって書かれた文書"First Draft of a Report on the EDVAC (「EDVACに関する報告書の第一草稿」)"が、ENIACプロジェクトのセキュリティ担当者であるHerman Goldstineによって配布される。<br>
+                この報告書にはコンピュータの論理設計に関してプログラム内蔵方式の概念が表現されており、この報告書がJohn von Neumannによって書かれたことから、<span class="str">プログラム内蔵方式がいわゆる「ノイマン型コンピュータ」と呼ばれるようになるきっかけ</span>となった。<br>
+                一方でこの報告書を出版物として発表することはEDVAC設計チーム内で議論があり、プログラム内蔵方式もまたペンシルベニア大学ムーア・スクールでの会議の場で発展したものとされる。</li>
+              <li class="war pol event">07月16日 アメリカのニューメキシコ州ソコロで <span class="str">人類最初の核実験であるトリニティ実験が行われる</span>。<br>
                 マンハッタン計画の元で創設されたロスアラモス国立研究所で原子爆弾の開発が進められており、インプロージョン方式の人類最初の原子爆弾「ガジェット」がトリニティ実験で使用された。ロスアラモス国立研究所の初代所長でマンハッタン計画を主導したRobert Oppenheimerが実験のコード名「トリニティ」を命名したとされる。</li>
+              <li class="war etc pol draft">10月19日　ロンドンの新聞"Tribune"に、George Orwellがコラム"<a href="https://orwell.ru/library/articles/ABomb/english/e_abomb" target="_blank">You and the Atomic Bomb</a> (『<a href="https://open-shelf.appspot.com/YouAndTheAtomicBomb/chapter1.html" target="_blank">あなたと原子爆弾</a>』)"を寄稿する。<br>
+                George Orwellはこの中で、兵器開発と文明の歴史を振り返りつつ、ごく一部の原子爆弾を保有する国家が世界を分割し、軍事的な均衡が安定化することを予見した。また、James Burnhamの経営者革命論を引きながら、<span class="str">恒久的に引き伸ばされる"peace that is no peace (「平和なき平和」)"状態を"cold war"という言葉で形容した</span>。<br>
+                Walter Lippmannは1947年09月02日から"Cold War"と名のついた計14本の連載コラムシリーズを新聞に掲載しており、秋に書籍化した<span class="str3">"The Cold War: A Study In U.S. Foreign Policy"によって、"cold war"という言葉が今日言われる意味での政治・歴史用語として定着した</span>とされる。<br>
+                "cold war"という言葉の初出はGeorge Orwellによるものではなく、遡れば14世紀スペインに、また、第一次世界大戦前夜の軍拡競争を指して1983年にEduard Bernsteinが使用し、<a href="https://www.alliiertenmuseum.de/en/thema/cold-war-history-of-a-term/" target="_blank">1930年代にはしばしば使用されていた言葉だったとされる</a>。</li>
             </ul>
           </div>
 
@@ -242,6 +278,22 @@
             <h2 class="year">1946年</h2>
               <ul>
                 <li class="culture thought">11月04日　国際連合教育科学文化機関（UNESCO）が発足する。<br>Julian Huxleyが設立に関わり、初代事務局長を努めた。Julian HuxleyはTeilhard de Chardinの信奉者でもあったとされ、このためにTeilhard de Chardinの思想はUNESCOに影響を与えたといわれることとなった。1965年のTeilhard de Chardinの英訳版"The Phenomenon of Man (『現象としての人間』)"はJulian Huxleyが序文を寄せている。</li>
+            </ul>
+          </div>
+
+          <div id="1949">
+            <h2 class="year">1949年</h2>
+              <ul>
+                <li class="culture thought draft">08月29日　<span class="str">ソビエト連邦がセミパラチンスク核実験場で初めての核実験РДС-1（RDS-1）を行い成功させる</span>。ソ連の核実験成功は西側諸国の予測よりも早く、<span class="str">冷戦の緊張が一挙に高まった</span>。<br>
+                  09月23日にアメリカのトルーマン大統領はソ連の核実験を確認したと発表した。<br>
+                  当時、少数の大型レーダー基地からなるアメリカの防空ネットワークは貧弱であり、レーダーのカバー範囲には隙間がある一方で情報処理能力と通信能力に限度があった。<br>
+                  このため、アメリカ合衆国の国家国防システムを再検討する動きが空軍科学諮問会議によってなされた。会議の主要メンバーであるMITの物理学教授George E. Valley Jr.は、1949年11月08日に最善の解決策を検討し答申するため「防空システム工学委員会ADSEC」を作るよう会議に提案し、委員会は1949年12月に実際に設置された。<br>
+                  委員会は1950年に最初の報告書をまとめ、全防空システムを最新鋭のものに作りなおすことを推奨していた。<br>
+                  George E. Valley Jr.は新しいシステムの指揮命令センターのコンピュータ技術を探していたところ、Project Whirlwindを知り、初めてのテストプログラムが実行されるところに訪問したとされる。<br>
+                  Jay F. ForesterらとONRとの打ち合わせ会議に参加したGeorge E. Valley Jr.は、プロジェクトに空軍の予算が付くだろうと述べ、これがONRのプロジェクトへの評価を改めるきっかけとなった。こうしてプロジェクトが継続したことで、MITに新たに設置されたデジタル化国家防衛システムの開発推進プロジェクト<span class="str">"Project Lincoln"の中心的な部門としてProject Whirlwindが組み入れられる</span>こととなった。<br>
+                  従来の紙テープリーダーやタイプライター端末の他、新しく開発した陰極線管の表示面に文字や画像を写すことができる入出力装置を完成させ、1951年の春にはWhirlwindコンピュータが稼働するシステムとして完成したとされる。<br>
+                  Jay W. Forresterは当初、コアメモリには水銀遅延線メモリを利用しようとしていた。しかし要求されるリアルタイム処理には読み書き速度が遅く、静電蓄積管メモリの研究開発が目指されていた。<br>
+                  信頼性の高い静電蓄積管メモリの開発は時間が経っても進まず、1951年春の段階では信頼性の低い状態の静電蓄積管メモリを搭載していた。2年の間に新たな技術として目をつけていた磁気コアメモリの研究開発が進んだことで、1953年の夏には磁気コアメモリーを初めて搭載し、Whirlwindは磁気コアメモリを実用搭載した初めてのコンピュータとなった。</li>
             </ul>
           </div>
 
@@ -335,6 +387,9 @@
                 ??月??日　Myron Stolaroff が Ampex を退社し自己資金で「国際高等研究所」を設立する。<br>
                 国際高等研究所では後シリコンバレーの技術者 350 人以上に幻覚剤実験を行うこととなった。また、Myron Stolaroff は「国際高度研究財団」も設立、取締役として Al Hubbard が就任している。
               </li>
+              <li class="pol war culture etc draft">01月17日　アメリカ大統領Dwight D. Eisenhowerの退任演説が行われる。退任演説はテレビやラジオで放送された。<br>
+                このなかで「軍産複合体（Military‐industrial complex）」という概念に言及し、「軍産複合体」が政府委員会に影響力を持ちはじめ、大学が補助金のために政府の意図する研究を行うようになっており、政策そのものが科学・技術エリートによって掌握されてしまう、という危惧を指摘した。<br>
+                この演説は<span class="str">「軍産複合体」という言葉が一般に知られるきっかけとなった</span>とされる。「軍産（学）複合体」という言葉はその後のベトナム反戦運動のなかで激しく批判されることとなった。</li>
               <li class="acid culture">
                 03月21日　<a href="http://mezala.la.coocan.jp/radiodrama/rd1961.html" target="_blank">23:15から30分間、東京ラジオのラジオ番組『LSDの幻想...ある詩人のモノローグ』が放送</a>される。<br>
                 精神科医の島崎敏樹立ち会いのもと詩人の谷川俊太郎が <a href="https://web.archive.org/web/20211109130335/https://twitter.com/taqueshix/status/641699062576648192" target="_blank">LSD を 0.008mg 筋肉注射</a>され、<a href="https://web.archive.org/web/20211002190210/https://twitter.com/chocoramastudio/status/1124282979662983168" target="_blank">その様子を 3 時間録音した後 30 分に編集したものが放送</a>された。<br>
@@ -363,7 +418,7 @@
                 スプートニクショックによるソ連の大陸間弾道ミサイルへの懸念が、先制攻撃に耐えうる通信網の実現について考えるきっかけを与えた。Paul Baran は Warren McCulloch を訪ね、脳の神経回路網を参考にして、神経回路に近いネットワークモデルを「<span class="str">分散型ネットワーク（distributed Network）</span>」と名付けたとされる。Paul Baran は 1964 年 03 月の IEEE Transactions on Communications Systems で論文 "<a href="https://ieeexplore.ieee.org/document/1088883" target="_blank">On Distributed Communications Networks</a>" を発表し、この論文で研究が知られるようになったとされる。<span class="str2"><a href="https://www.historyofinformation.com/image.php?id=6420" target="_blank">centralized network、decentralized network、distributed network を比較したモデル図</a>は分散型SNS を含め様々な分野で引用されることとなった。</span>
               </li>
               <li class="hacker culture book">
-                10月頃　　 Douglas Engelbart が空軍の科学研究所の報告書 "<span class="str"><a href="https://www.dougengelbart.org/pubs/augment-3906.html" target="_blank">Augmenting Human Intellect: A Conceptual Framework</a> (『人間の知性の拡大――概念的構想』)</span>" を発表する。関連する研究として Vannevar Bush の Memex、J. C. R. Licklider (J. C. R. リックライダー) の「ヒトとコンピュータの共生」という言葉、Stanisław Ulam (スラニスラフ・ウラム) の「シナジェンス」、 I. J. Good、Simon Ramo の推測、Louis Fein の「シノエティックス」という言葉を挙げている。翌年それを凝縮した論文 "A conceptual Framework for the Augmentation of Man's Intellect" を論文集『情報処理展望』へ加えた。
+                10月頃　　 Douglas Engelbart が空軍の科学研究所の報告書 "<span class="str"><a href="https://www.dougengelbart.org/pubs/augment-3906.html" target="_blank">Augmenting Human Intellect: A Conceptual Framework</a> (『人間の知性の拡大――概念的構想』)</span>" を発表する。関連する研究として Vannevar Bush の Memex、J. C. R. Licklider (J. C. R. リックライダー) の「ヒトとコンピュータの共生」という言葉、Stanisław Ulam (スラニスラフ・ウラム) の「シナジェンス」、 I. J. Good、Simon Ramo の推測、Louis Fein の「シノエティックス」という言葉を挙げている。翌年それを凝縮した論文 "A conceptual Framework for the Augmentation of Man's Intellect (『人間の知性の増幅のための概念的枠組み』)" を論文集『情報処理展望』へ加えた。
               </li>
               <li class="acid culture">
                 10月10日　Stewart Brandが国立高度研究財団のLSD実験に参加、カーボゲンの接種の後、James Fadimanの手により初めてLSDを接種する。<br>
@@ -377,6 +432,9 @@
           <div id="1963">
             <h2 class="year">1963年</h2>
             <ul>
+              <li class="hacker culture book draft">??月??日　<span class="str">Douglas Engelbartが論文集『情報処理展望』で論文 "A conceptual Framework for the Augmentation of Man's Intellect (『人間の知性の増幅のための概念的枠組み』)" を公表</span>する。<br>
+                1962年のAugmenting Human Intellect: A Conceptual Framework（人類の知性の増強: 概念的フレームワーク）と題したレポートが元になっている。<br>
+                この提案はARPAのIPTOから予算がつき、SRI内にオーグメンテーション研究センター（ARC）を設立するきっかけとなった。ARCではDouglas Engelbart主導によるマルチユーザー連携システムoN-Line Systemの開発がすすめられ、マウスやハイパーテキストインターフェイス、現代的なGUIといった機能はこのなかで開発された。</li>
               <li class="tech">
                 01月07日　Claude Shannonを指導教官として、<span class="str">Ivan SutherlandがMITに博士論文"Sketchpad: A man-machine graphical communication system"を提出</span>する。この論文の一貫で<span class="str">図形描画プログラム"Sketchpad"を開発</span>した。<br>
                 Sketchpadはベクタースキャンディスプレイとライトペンで図形を描いたり、図形を自動で描画したり、マスター図形からインスタンス図形を生成しマスター図形を変形させインスタンス図形にそれが適用できる、といった機能をもったプログラム。<span class="str">Sketchpadは世界で初めて完全なGUIを実現しており、いわゆるオブジェクト指向の先駆けともいわれている</span>。<br>
@@ -431,8 +489,13 @@
           <div id="1969">
             <h2 class="year">1969年</h2>
             <ul>
-              <li class="culture book meme">Theodore Roszakによる書籍"The Making of a Counter Culture"が出版される。<br>
-                60年代の学生運動やヒッピーとの間にテクノクラシーへの拒絶という共通点があり、その思想的系譜を辿っているとされる。<span class="str">Theodore Roszakによってはじめて”counterculture"という言葉が使われた</span>とされる。</li>
+              <li class="culture book meme">??月??日　Theodore Roszakによる書籍"The Making of a Counter Culture"が出版される。<br>
+                60年代の学生運動やヒッピーとの間にテクノクラシーへの拒絶という共通点があり、その思想的系譜を辿っているとされる。<span class="str">Theodore Roszakによってはじめて"counterculture"という言葉が使われた</span>とされる。
+              </li>
+              <li class="tech hacker protcol net draft">04月07日　RFCの最初の文章である<span class="str">RFC1がSteve Crockerによって公開される</span>。ARPANETのホスト間通信ソフトウェアの仕様等に関する提案書。<br>
+                当時、ARPAnetに関わるコミュニティは小さく、初期のネットワークを構成する4つの場所から集まった大学院生とスタッフが1968年08月に会合を初め、1969年春にネットワークプロトコルについて一時的な非公式メモをまとめる必要があると気付いたことがRFC誕生のきっかけとされる。<br>
+                こうした文章の整理は人々の参加を促すためにする必要があると考えていたが、Stephen Crockerはこれが「公式な決定」や「権威を主張」する思い上がったもののように見られ、怒られるかもしれないと危惧していた。こうした危惧から、<span class="str">非公式であることを強調する意味で「Request for Comments（コメント募集）」とメモを名付けた</span>とされる。<br>
+                国防に関する研究は国防上の懸念から非公開であることが一般的であった。国防総省によるARPAnetもまたこうした性質があった一方で、Steve Crockerらはネットワーク間接続に関する技術は広く公開する必要があると考え、広く意見を求めるためにRFCとして公開するようARPAと交渉したとされる。</li>
             </ul>
           </div>
           
@@ -449,6 +512,11 @@
           <div id="1972">
             <h2 class="year">1972年</h2>
             <ul>
+                <li class="tech hacker draft">
+                  ??月??日　ゼロックス社、パロアルト研究所（PARC）で「Alto」が稼働を開始する。<br>
+                  Alan Kayによる理想の個人向けコンピュータ「Dynabook」の機能の一部を暫定ハードウェアとして実装したもの。Dynabookの暫定ハードウェアは「Smalltalk」として実装され、AltoとSmalltalkの組み合わせによる暫定Dynabookは今日のGUIの直接的な起源となった。<br>
+                  今日のGUIの特徴は、Window、Icon、Menu、Pointing deviceという<a href="https://www.idd.tamabi.ac.jp/~kubotaa/research/post-window-final.pdf#page=0.94" target="_blank">基本要素の頭文字を取って「WIMPインターフェイス」と呼ばれる</a>。<br>
+                  1979年末にPARCを見学したSteve JobsとBill GatesはAltoのGUIに影響を受け、AppleはApple LisaとMacintoshを、MicrosoftはWindowsを開発することとなった。</li>
               <li class="book culture hacker">10月頃　　 タブロイド雑誌"People’s Computer Company (『ピープルズコンピュータカンパニー』)"の創刊号が発行される。<br>
                 BASIC指導テキストシリーズを発刊する出版社ダイマックス社の共同創立者であり、巡回コンピュータ教室を行っていたBob Albrechtがコンピュータの普及と運動の記録を目的に開始したもの。<br>
                 The Whole Earth Catalogで紹介されるなど、出版物として成功しハッカーのハブになると、ショッピングセンターのテナントの一つを借りコンピュータセンターとしてPCCを分離独立させた。Lee Felsenstein (リー・フェルゼンシュタイン)は雑誌PCCにコラムを寄稿、テナントにはTed Nelson (テッド・ネルソン)が出入りし、西和彦が来訪した。Fred MooreはPCCでコンピュータゲームの作成法の授業を行い、持ち寄りパーティの常連へ、雑誌の副編集長になった。</li>
@@ -458,6 +526,9 @@
           <div id="1974">
             <h2 class="year">1974年</h2>
             <ul>
+              <li class="net book protcol draft">05月31日　Vint CerfとBob KahnがTCPの詳細について共同研究した結果を共著論文"A Protocol for Packet Network Internetworking"としてIEEE Transactions on Communicationsで発表する。<span class="str">この論文でTCPが知られるようになった</span>。</li>
+              <li class="net book protcol draft">11月頃　　　 Vinton Cerf、Yogen Dalal、Carl SunshineによるTCP/IPの最初の仕様が"Specification of Internet Transmission Control Program"のタイトルでRFC675として公開される。<br>
+                RFC604やRFC606で"Internetworking Protocol"という単語がつかれていたが、それを略し、<a href="https://www.geekpage.jp/blog/?id=2016-12-22-1" target="_blank" class="str">"internet"という言葉として使ったRFCはこれが初めて</a>とされる。</li>
               <li class="magazine book">11月29日　雑誌"Popular Electronics"1月号にMITS社から<span class="str2">Altair 8800が発売されるという記事が掲載</span>される。マイコンキットの開発を構想していたPaul Allenはこの記事を見て、友人であるBill GatesとともにAltair 8800用のBASICインタプリタ"Altair BASIC"を開発した。</li>
             </ul>
           </div>
@@ -872,6 +943,9 @@
                 target="_blank">小泉内閣メールマガジン</a>』を発行すると表明する。06月09日に読者登録が開始され、06月14日に創刊号が発行された。森内閣時代に竹中平蔵らが提言した「首相官邸の情報発信力を高める」施策の一環として、竹中平蔵のゼミ生であった井庭崇の発案によりメールマガジン発行のアイデアが生まれたとされる。初代編集長は当時内閣官房副長官だった安倍晋三が務めた。「小泉内閣メールマガジン」は小泉内閣後名前を変え、「首相官邸メールマガジン」として継承され2021年までつづいた。
               </li>
               <li class="p2p tool">07月02日　P2P用通信プロトコル「<span class="str">BitTorrent</span>」の最初の利用可能なバージョンをプログラマーのBram Cohenがリリースする。Napsterクローンとして当初はNapster互換プロトコルを利用しOpenNapサーバーへ接続することができた。また、チャット機能を持ち、有志によりチャットサーバーを立てるツールやチャットクライアントなどが配布されていた。</li>
+              <li class="blog site draft">07月09日　yapeus project.によるフォト日記サービス「ヤプース！ ─ メールでフォト日記！」がサービスを開始する。<a href="https://note.com/matsuyou/n/n896b8aeb94f1" target="_blank">携帯電話から写真を添付したメールを専用メールアドレスへ送信することで、日記を更新できるというサービス</a>であった。<br>
+                <a href="https://web.archive.org/web/20011203135434/http://yapeus.com/about/" target="_blank">yapeus project.のメンバー</a>だった<a href="https://note.com/matsuyou/n/nd5e4170a73b5" target="_blank">まつゆう*はアートディレクターを務めた</a>。<br>
+                「ヤプース!」は2003年09月01日に<a href="https://www.atpress.ne.jp/news/1134" target="_blank">有限会社paperboy&co.と業務提携</a>し、2004年01月にはGMOが買収してブログサービス「ヤプログ!」が開始された。「ヤプース!」自体は並行して運営が続けられ、<a href="https://web.archive.org/web/20070129084841/http://yapeus.com/new/" target="_blank">2007年03月30日にサービスを終了</a>した。</li>
               <li class="site company">07月15日　設立に向け手続き中であった有限会社はてなが<a href="https://hatena.co.jp/press/release/entry/2001/07/15/174203"
                 target="_blank">「人力検索サイトはてな」のサービスを開始</a>する。「電話番号案内型の検索サイト」「人が人のために回答する『入力の検索サイト』」とプレスリリースで説明された。07月19日には近藤淳也を代表取締役として有限会社はてなが設立された。</li>
               <li class="p2p bbs">08月12日　ほげ隊長 ◆cG6Ia.BUにより<a href="https://web.archive.org/web/20020607114121/http://www5.ocn.ne.jp:80/~zigumo/" target="_blank">Pure P2Pによる匿名掲示板システム「zigumo」のプロジェクトが発動</a>する。</li>
@@ -930,6 +1004,7 @@
                 出演していたビデオ『BABYLON STAGE 34 <span class="str2">真夏の夜の淫夢</span> ～the IMP～』から「真夏の夜の淫夢」が、立教大学野球部監督の発言「なんだこれは……たまげたなあ」がのちミーム化する。</li>  
               <li class="culture meme">10月31日　ぷるにえの運営するウェブサイト「ぷるにえブックマーク」内の掲示板に「セカイ系って結局何なのよ」スレッドが立てられる。<br>
                 このスレッドはぷるにえが10月頃から実生活で使っていた<span class="str2">言葉「セカイ系」のネットへの初出</span>であり、ここから「セカイ系」がオタク、批評タームとして定着していった。当初は「エヴァっぽい」作品を形容、分類する言葉遊びのように使われていたとされる。</li>
+              <li class="game draft">12月02日　任天堂が携帯ゲーム機<span class="str">「ニンテンドーDS」を日本で発売</span>する。北米ではそれに先立って11月21日に発売されていた。</li>
               <li class="culture">12月15日　非営利団体Creative CommonsによりCreative Commons License version 1.0がリリースされる。</li>
               <li class="p2p">12月30日　<span class="str">Winnyの正式版が公開</span>される。</li>
             </ul>
@@ -992,6 +1067,10 @@
                 「セックスをテーマにしたオンラインゲームが発表」「サイバーセックスオンラインゲーム」と紹介されたように3DCGで描画されたキャラクターを操作しオンライン上で互いにセックスをするという内容とされる。韓国では審査を通過することができず、中国で2008年04月17日にサービスを開始したもののすぐに廃れたとされる。<br>
                 3DCGを用いたセックスをテーマにしたオンラインゲームとしては世界初とも言われる。
               </li>
+              <li class="blog site draft">6月15日　ブログサービス<span class="str2">「ヤプログ!」のベータ版がサービスを開始</span>する。<br>
+                2001年09月15日にyapeus project.により開始されたフォト日記サービス<a href="https://internet.watch.impress.co.jp/cda/news/2004/06/15/3497.html" target="_blank">「ヤプース!」を2004年01月にGMOが買収し、ブログサービスとして提供しはじめた</a>もの。<br>
+                yapeus project.のメンバーでヤプースのアートディレクターだった<a href="https://note.com/matsuyou/n/n896b8aeb94f1" target="_blank">まつゆう*はプロデューサーを務めた</a>。08月26日から<a href="https://www.itmedia.co.jp/enterprise/articles/0408/27/news029.html" target="_blank">携帯電話からの投稿機能を開始</a>した。<br>
+                フォト日記サービス「ヤプース」自体は並行して提供続けられていたが、<a href="https://web.archive.org/web/20070202015044/https://yapeus.com/" target="_blank">2007年03月30日にサービスを終了</a>した。</li>
               <li class="sns">06月25日　<span class="str2">株式会社paperboy&co.がSNS「キヌガサ」を開始</span>する。もともとは05月18日に社長の家入一真が個人のブログにニセの申し込みページを貼ってみたところから、「<a href="https://www.itmedia.co.jp/news/articles/0408/10/news021.html" target="_blank">本当に作ってしまったらもっとウケるかも</a>」と考え、<a href="https://internet.watch.impress.co.jp/cda/event/2004/12/03/5652.html" target="_blank">06月10日に正式にプロジェクトが立ち上がって2週間程度で作った</a>とされる。</li>
               <li class="sns">07月29日　FacebookがFacebook, Inc.として法人化し、社長にNapsterのSean Parkerが就任する。</li>
               <li class="d sns">08月頃　　 オープンソースで開発されるSNS実装である<apan class="str">「WaWaWa」プロジェクトの<a href="https://web.archive.org/web/20050404191222/http://www.w-project.org/pukiwiki/?%B3%AB%C8%AF%C6%FC%B5%AD#content_4_0" target="_blank">存在が一般に公開</a></apan>される。<br>
@@ -1000,6 +1079,8 @@
               <li class="book culture bbs">10月22日　中野独人による<span class="str2">書籍『電車男』が新潮社から出版</span>される。<br>
                 2004年03月14日に2ちゃんねる独身男性板に書き込まれたレスからはじまる一連のストーリーの、特にまとめサイトによるまとめが書籍のもとになっている。映画化、テレビドラマ化され、テレビドラマの劇中作がスピンオフとしてテレビアニメ化された。電車男が話題になったことで2005年05月07日に２ちゃんねるのもてない男板からもてたい男板と独身貴族板が分離された。</li>
               <li class="sns company site">12月07日　田中良和を代表取締役としてグリー株式会社が設立される。SNS"GREE"の運営を目的に設立された。半年後の2005年06月には携帯電話向けモバイルサービスを開始する。</li>
+              <li class="game web">12月12日　ソニー・コンピュータエンタテインメントが<span class="str">携帯ゲーム機「PSP」を発売</span>する。<br>
+                2005年07月27日にファームウェアバージョン2.00が配信され、<span class="str2">ウェブブラウザが追加</span>された。</li>
             </ul>
           </div>
           
@@ -1070,6 +1151,8 @@
                 「ニコニコ動画」の名称は12月01日に戀塚昭彦が作成した「ニワンゴビデオ」の仮のサービス名として、当時ドワンゴ会長であった川上量生の「明らかにブラックぽいのに、表面だけ取り繕ったようなふざけた名前があるじゃん。ニコニコローンとかニコニコ金融とか。だからニコニコ動画とかさ」という言葉からひろゆきが命名したとされる。
               </li>
               <li class="site video bbs">12月13日　ひろゆきがニュース速報板に『<a href="https://web.archive.org/web/20110916033752/http://amatanoyo.blog16.fc2.com/blog-entry-1390.html#top0" target="_blank">「もしもアシモが『8時だよ』に出たとしたら」</a>』スレッドを立て、>>1でニコニコ動画へのリンクを投稿する。この出来事で<a href="https://blog.nicovideo.jp/developers_diary/2006/12/post_61.html" target="_blank" class="str2">初めてインターネット上でニコニコ動画の存在が公開</a>されたとされる。</li>
+              <li class="web sns fire meme draft">12月25日　<span class="str">雑誌"Time"が発売され、<a href="https://content.time.com/time/magazine/0,9263,7601061225,00.html" target="_blank">パーソン・オブ・ザ・イヤーに「You」が選ばれる</a></span>。<br>
+                ユーザー生成コンテンツ (UGC)がwebプラットフォーム上で流通するという、<span class="str2">web2.0の特徴を象徴して選ばれた</span>。表紙はYouTubeのUI上に"You."と書かれたイラストであった。</li>
               <li class="sns">12月31日　田口元のブログ「百式」に記事「<a href="https://web.archive.org/web/20070603115528/http://arena.nikkeibp.co.jp:80/col/20070417/121645/?" target="_blank">『今、何をしているの？』でつながる『twitter』</a>」が掲載される。日本のブロガーにtwitterを意識されるきっかけの一つとなったとされる。</li>
             </ul>
           </div>
@@ -1094,8 +1177,12 @@
               <li class="sns tool">04月08日　ブログ「caramel*vanilla」で記事「<a href="https://web.archive.org/web/20070430225642/http://caramel-tea.com/2007/04/twitter-2/" target="_blank">Twitterが激しく面白すぎる件と日本語のTwitterツールいろいろ</a>」が掲載される。<br>2007年4月23日の時点ではてなブックマークが500を超えていると紹介されている。日本語圏にtwitterを広めるきっかけの一つとなった。</li>
               <li class="sns">04月11日　<a href="https://internet.watch.impress.co.jp/static/yajiuma/2007/04/11/index.htm" target="_blank">やじうまWatchでtwitterが紹介される</a>。「日本では9日頃から「Twitter」なるWebサービスが急速に普及中だ」と紹介されている。</li>
               <li class="sns">04月23日　日経BPのウェブサイト「デジタルARENA」にコラム「<a href="https://web.archive.org/web/20070603115528/http://arena.nikkeibp.co.jp:80/col/20070417/121645/?" target="_blank">いつでも友だちとつながっていたい、だからTwitter（トゥイッター）</a>」が掲載される。<br>コラム内で、2006年11月15日の「Hit Okano's Blog」の記事「<a href="https://web.archive.org/web/20070603115528/http://www.okanomail.com/2006/11/six-more-twitter-updates.html" target="_blank">Six More Twitter Updates</a>」から、百式での紹介、ブログ合宿2007、「caramel*vanilla」の04月08日の記事、はてなグループ「ついったー部」まで、日本でブレイクした経緯が紹介された。<br>翌24日、コラムで取り上げられていた「ネタフル」は<a href="https://netafull.net/media/019780.html" target="_blank">この記事に掲載されたことを紹介</a>し、自身も参加したブログ合宿2007を思い返したのちに、ツイッターのブレイクを「『caramel*vanilla』の4月8日付けエントリー(…)が大きく影響しているのではないでしょうか」とコメントした。</li>
+              <li class="sns draft">05月21日　音楽ポータルサイト「ナタリー」がブログパーツとtwitterへのニュースヘッドライン配信を開始する。</li>
               <li class="sns">06月06日　株式会社モバイルファクトリーが、SNSでミニブログサービス「Wassr」をベータ版として開始する。<br>Twitterライクな日本人向けSNSとして開発され、SecondLifeからの更新や、全キャリアの絵文字、bot作成機能などに対応していた。<a href="https://wassr.jp/" target="_blank">2012年10月01日にサービスを終了</a>した。</li>
               <li class="sns">06月21日　SNS"Jaiku"にグループによって共有される個人フィード機能"Channels"が追加される。<a href="https://www.cnet.com/tech/services-and-software/jaiku-launching-group-nanoblogs/" target="_blank">Channel名を表示するUIに#記号が使われていた</a>。</li>
+              <li class="blog fire bbs game draft">06月22日　当時高校生だった清水鉄平が<a href="https://web.archive.org/web/20071223012802/http://hatimaki.blog110.fc2.com/blog-date-200706.html" target="_blank" class="str2">ゲーム関連ブログ「鉢巻起稿＼(^o^)／」を開始</a>する。07月20日に<a href="https://web.archive.org/web/20110609102127/http://hatimaki.blog110.fc2.com/blog-entry-62.html" target="_blank">「はちま起稿＼(^o^)／」にブログ名を変更</a>した。<br>
+                当初は日記を載せていたが、11月頃から<a href="https://web.archive.org/web/20080225045528/http://hatimaki.blog110.fc2.com/blog-date-200711.html" target="_blank">2ちゃんねるまとめ形式の記事が度々投稿</a>され、また複数のトピックについて引用するようにして取り上げる形式の記事が増えていった。<br>
+                ２ちゃんねるの「ゲーム業界・ハードウェア板」の書き込みからトピックを取り上げ、たびたび書き込みを転載していくスタイルは<span class="str2">「オレ的ゲーム速報＠刃」などとともに後に「ゲハブログ」と呼ばれるように</span>なった。</li>
               <li class="fire meme mentalhealth">06月30日　革命的非モテ同盟、革命的オタク主義者同盟、革命的萌え主義者同盟の3派合同主催で「<a href="http://akiba630.moemoe.gr.jp/i/" target="_blank" class="str2">6・30アキハバラ解放デモ</a>」が開催され、練成公園から和泉公園までデモ行進を行う。<br>
                 同日、個人ブログ<a href="https://web.archive.org/web/20070702164008/http://multi.nadenade.com/shinichi/0164" target="_blank">「神聖マルチ王国」の進壱が革非同書記長furukatsuのブログで中核派と接触したとの記述を指摘</a>、ノンセクト系の<a href="https://web.archive.org/web/20081120115649/http://www.minimal-global.net/united_ob/2007/06/630.html" target="_blank">法政大学統一OB会がサイトで連帯をしたとの投稿</a>を行った。この投稿に関連し、革非同が行った<a href="https://web.archive.org/web/20081120120338/https://minimal-global.net/united_ob/2007/03/post_36.html" target="_blank">ホワイトデー爆砕デモに法政大学統一OB会が合流したとの投稿</a>も発見された。勝手にオタクの代表ヅラをするなとの反発もあり主催側のmixiのコミュニティに批判が相次いだが、管理者が批判を封じるなど強権的な対応を行った。<br>
                 furukatsuが以前軍事板周辺で「81氏」のコテハンで活動していたこともあり、軍事オタクの「週刊オブイェクト」JSFやplummet、名無し整備兵らが批判派を形成、活動の影響で革非同においてfurukatsuが書記長を解任された。批判側であった進壱はコミケにサークル参加する予定であったが、主催側の非公開mixiコミュニティ上でなされたサークルへ突撃する計画や「シメちゃえ」などの過激な発言が外部へリークしたことで騒動が拡大した。事前に深川署へ通報されていたため、ブースを撮影しようとした不審者が現行犯で捕縛されたとされる。<br>
@@ -1159,7 +1246,17 @@
               <li class="bbs art">05月13日　ニコニコ大百科の「ニワンゴ」の項に<a href="https://dic.nicovideo.jp/b/a/%E3%83%8B%E3%83%AF%E3%83%B3%E3%82%B4/1-#4" target="_blank">最初のお絵カキコが投稿</a>される。描いたのはニコニコ大百科の開発者であったグニャラくんであった。ニコニコ大百科は前日である05月12日にオープンしていたが、アクセス集中によりサービス停止され、翌13日に改めてオープンしていた。</li>
               <li class="d">05月18日　<span class="str">Identi.caにEvan Prodromouによる最初の投稿「<a href="https://web.archive.org/web/20080618164355/http://identi.ca/notice/1" target="_blank">This is my first post.</a>」がなされる</span>。Evan Prodromouはこれをもって<a href="https://cosocial.ca/@evan/112457047627977316" target="_blank" class="str">05月18日をFediverseの誕生日</a>としている。</li>
               <li class="sns">05月30日　ああとあいてぃ株式会社により、ガチオタ専用SNS「アマテラス」がサービスを開始する。ガチオタ専用の名の通り、アカウントの登録は招待制で、かつオタク知識を試す検定「対一般人ブロッキング機能 (OTフィールド)」を受けなければならなかったとされる。アマテラス運営チーム「高天原学園生徒会」が運営を行った。コスプレイヤーのアカウント登録が多かったとされる。2009年09月末にシステム運営上の都合でサービスを終了した。</li>
-              <li class="sns site meme">06月30日　ひろゆきがasks.jp上の自身のブログに記事「<a href="http://hiro.asks.jp/46756.html" target="_blank" class="str2">無敵の人の増加。</a>」を投稿する。インターネットスラングとしての「無敵の人」の初出とされる。</li>
+              <li class="incident fire media culture site draft">06月08日　12時半頃、東京・秋葉原の歩行者天国に2tトラックが突っ込み、通行人を跳ねたうえで降車した犯人がナイフで通行人や警察官を次々と殺傷した、<span class="str">いわゆる「秋葉原通り魔事件」が発生</span>する。<br>
+                一連の犯行で死亡者7人、負傷者10人の被害となった。<br>
+                犯人の加藤智大は当日05時21分から事件直前の12時10分まで、携帯電話向けレンタル掲示板サイトMEGAVIEWを利用した<a href="https://coldcup.hatenablog.com/entry/20080609/p1" target="_blank">BBS「究極交流掲示板（改）」でスレッドを立て、断続的に反抗までの行動を実況</a>していた。<br>
+                事件現場では<a href="https://web.archive.org/web/20080608232717/http://recently.sakura.ne.jp/wp/?p=41" target="_blank">居合わせた人がUstreamで動画配信を行った</a>ほか、<a href="https://gigazine.net/news/20080608_akihabara/" target="_blank">犯人逮捕時の写真や映像がweb上でアップロード</a>された。<br>
+                この逮捕時の写真は携帯電話で撮影され、その場に居合わせた人々がコピーを求めて撮影者の周りに集まり、撮影者が赤外線送受信機能を使って流布させたとされる。<br>
+                犯人が派遣社員であったこと、秋葉原で事件を起こしたこと、また過去の掲示板での書き込みが分析されたことなどから、ワーキングプア等の労働問題や、当時流行していた「勝ち組・負け組」という言葉を象徴とする格差問題、匿名掲示板での書き込みから承認を巡るコミュニケーションと「非モテ」の問題などの論点と結びつけられ、社会的な事件として語られることとなった。<br>
+                また、犯人の世代が「酒鬼薔薇事件」や「ネオ麦茶事件」と同世代だったため「キレる17歳」、「理由なき犯罪世代」と結びつけられ<a href="https://web.archive.org/web/20080614003621/http://sankei.jp.msn.com/affairs/crime/080611/crm0806111720026-n1.htm" target="_blank">世代論として語られることもあった</a>とされる。<br>
+                一方、加藤智大は直接の動機を、掲示板に現れたなりすましに対する抗議の手段として事件を起こしたと説明した。<br>
+                2015年02月02日、加藤智大の死刑が確定、2022年07月26日に死刑が執行された。<br>
+                06月11日に総務大臣である増田寛也が、<a href="https://japan.cnet.com/article/20375172/" target="_blank">掲示板での犯罪予告検知ソフトの開発を総務省が行い、そのために数億円規模の予算要求を盛り込む方針</a>だと発言した。これについて報道記事をみた矢野さとるは、犯罪予告共有サイトである<a href="https://satoru-net.hateblo.jp/entry/20080611/1213194828した" target="_blank">「予告.in」を作成し、06月11日に公開</a>。ITmedia NEWSによれば、<a href="https://www.itmedia.co.jp/news/articles/0806/12/news036.html" target="_blank">報道を見て「0億円で数時間でできる」と考えて作った</a>とされる。</li>
+              <li class="sns site meme">06月30日　ひろゆきがasks.jp上の自身のブログに記事「<a href="http://hiro.asks.jp/46756.html" target="_blank" class="str2">無敵の人の増加。</a>」を投稿する。インターネットスラングとしての「無敵の人」の初出とされる。本文では具体的な事件名を挙げていないが、時期から察するに「秋葉原通り魔事件」を主に念頭に置いていると思われる。</li>
               <li class="d">07月02日　Evan Prodromouの立ち上げた会社、Control Yourself Incにより<span class="str">分散SNS「identi.ca」が公開</span>される。 <br>
                 オープンな標準プロトコルである<span class="str">OpenMicroBlogging</span>をサポートする初めてのサービスであり、<a href="https://ross.typepad.com/blog/2008/07/identica-launch.html" target="_blank">初期の基幹ソフトウェアはLaconicaと呼ばれていた</a>。identi.caおよびOpenMicroBlogging、OpenMicroBloggingの後継プロトコルであるOStatus、OStatusの後継プロトコルであるActivityPubの主要開発者はEvan Prodromouであり、Evan Prodromouによる<span class="str">identi.caはActivityPub系分散SNSの系譜における出発点</span>となっている。</li>
               <li class="sns">08月04日　mixiがTwitterライクな新しい機能「エコー」を期間限定で公開する。<br>
@@ -1368,9 +1465,8 @@
               <li class="d">06月08日　<a href="https://www.gnu.org/software/social/merge.html" target="_blank">Free SocialプロジェクトとStatusNetプロジェクトが合併、<span class="str">GNU social</span>プロジェクトへ統合することがGNU Socialの創設者Matt LeeとFree Socialの開発者Mikael
                 Nordfeldthにより発表される。</a></li>
               <li class="sns incident">06月13日　公民権運動家のAlicia Garzaが、トレイボン・マーティン射殺事件の犯人George Zimmermanに無罪判決が出たことを受けfacebookに「<br>
-                <a href="https://elinswebpage.home.blog/2018/12/06/protest-media/" target="_blank">stop saying we are not surprised. that's a damn shame in itself. I continue to be surprised at how little Black lives matter. And I will continue that. stop giving up on black life. Black people. I love you. I love us. Our lives matter.</a><br>
-                」と投稿を行う。<br>
-                この投稿からAlicia Garzaの友人Patrisse Cullorsが#blacklivesmatterをつけたのが<span class="str">ハッシュタグとしてのblack lives matterの初出</span>とされる。当初は注目されていなかったが、2014年のエリックガーナー窒息死事件以降<a
+                <a href="https://elinswebpage.home.blog/2018/12/06/protest-media/" target="_blank">stop saying we are not surprised. that's a damn shame in itself. I continue to be surprised at how little Black lives matter. And I will continue that. stop giving up on black life. Black people. I love you. I love us. Our lives matter.</a><br>」と投稿を行う。<br>
+                この投稿からAlicia Garzaの友人Patrisse Cullorsが#blacklivesmatterをつけたのが<span class="str">ハッシュタグとしてのblack lives matterの初出</span>とされる。当初は注目されていなかったが、2014年のEric Garner窒息死事件以降<a
                 href="https://www.pewresearch.org/internet/2016/08/15/the-hashtag-blacklivesmatter-emerges-social-activism-on-twitter/" target="_blank">ハッシュタグblacklivesmatter</a>が注目されたとされる。</li>
               <li class="sns fire incident">07月27日　東京都港区の秩父宮ラグビー場で開催予定だったNEWSの屋外コンサートが激しい雷雨により中止へ、翌日に順延となる。これに関連して、体調不良や虚偽情報のSNS上での拡散などが起こった騒動、<span class="str2">いわゆる「パーナさん事件」が発生</span>する。<br>
                 来場者の一部が、コンサートの中止による過呼吸や、雷雨の影響による低体温症など、体調不良を訴えた。また、宿泊先を確保していなかった一部の来場者がtwitterで宿泊先を募集し、実際に宿泊した来場者と宿泊先との間のトラブルがSNS上で取り沙汰された。<br>
@@ -2059,9 +2155,9 @@
               <li class="sns">06月08日　ナイジェリア政府が、国内におけるtwitterの利用を無期限に停止すると発表する。<br>
                 <a href="https://www.bbc.com/news/world-africa-57336571" target="_blank">2日にはtwitterでMuhammadu Buhari大統領が「今日悪さをしている人たちの多くは、ナイジェリア内戦で起きた破壊と人命の損失を知らないほど若い。30ヶ月間戦場にいた戦争を経験した私たちは、彼らが理解できる言葉で接するだろう」とツイートを行い、また「システムの破壊を望む者は誰でも、まもなく人生最大のショックを受けるだろう。我々は彼らに十分な時間を与えた。我々は彼らが理解できる言語で彼らを治療する」と引用ツイートを行っていた。その後twitterはtwitterルールに違反しているとツイートを削除、アカウントを一時停止処置していた。ナイジェリアの情報省はこのtwitterの動きを「ダブルスタンダード」で不公正だと批判した。</a>
               </li>
+              <li class="bbs meme sns">06月13日　匿名掲示板「ふたば☆ちゃんねる」に一般的には「大判焼き」と呼ばれる和菓子の画像を提示したスレッドが立てられる。<br>
+                提示された和菓子には正式な名称が決まっておらず、「大判焼き」をはじめ「御座候」や「今川焼」、「回転焼き」といった名称が乱立していることで有名だった。そのことを話題にするスレッドのなかで、それぞれの名称の正当性を主張するなか、4番目に「ベイクドモチョチョな」とコメントがなされた。<a href="https://x.com/search?q=%22%E3%83%99%E3%82%A4%E3%82%AF%E3%83%89%E3%83%A2%E3%83%81%E3%83%A7%E3%83%81%E3%83%A7%22%E3%80%80until%3A2021-06-20%20-from%3A%40obihiro_bonga%20-from%3A%40tomonamoto%20-from%3A%40jbskamt004%20-from%3A%40_IWSP%20-from%3A%40now38digda%20-from%3A%40ghostric_%20-from%3A%40garuoji114514%20-from%3A%40rosariahayome%20-from%3A%40baked_motyotyo%20-from%3A%40PEjjbqdwLhSptbY%20-from%3A%40nekolove_rider&src=typed_query&f=live" target="_blank">「ベイクドモチョチョ」は直後から話題</a>となり、このやり取りがtwitter上で話題となったことで<span class="str2">「ベイクドモチョチョ」をはじめとしたいわゆる「例の焼き菓子」名称論争が話題</span>となることとなった。</li>
               <li class="sns">06月16日　Sudoにより<a href="https://scrapbox.io/yuta25/Sudo_Haiku" target="_blank">「はてなハイク」ライクなミニブログ型SNSサービス「Sudo Haiku」を公開</a>する。</li>
-              <li class="bbs meme sns">06月21日　匿名掲示板「ふたば☆ちゃんねる」に一般的には「大判焼き」と呼ばれる和菓子の画像を提示したスレッドが立てられる。<br>
-                提示された和菓子には正式な名称が決まっておらず、「大判焼き」をはじめ「御座候」や「今川焼」、「回転焼き」といった名称が乱立していることで有名だった。そのことを話題にするスレッドのなかで、それぞれの名称の正当性を主張するなか、4番目に「ベイクドモチョチョな」とコメントがなされた。このやり取りがtwitter上で話題となったことで<span class="str2">「ベイクドモチョチョ」をはじめとしたいわゆる「例の焼き菓子」名称論争が話題</span>となることとなった。</li>
               <li class="sns">07月04日　<span class="str">Jason MillerがSNS「Gettr」のサービスを正式に開始</span>する。<br>
                 Jason MillerはDonald Trumpの元広報担当者でコミュニケーションストラテジストであった。Donald Trump支持者によるアメリカ合衆国議会議事堂襲撃事件によりDonald Trumpやその支持者たちのSNSアカウントが停止されたことを受けて、言論の自由を謳っているとされる。<br>
                 Donald TrumpやStephen Bannon、QAnonとも関わりのある、中国からアメリカへ亡命した実業家の郭文貴が出資、アカウントを開設している。</li>
@@ -3115,7 +3211,7 @@
               <li class="d">01月13日　joinmastodon.orgのブログ上に、<a href="https://mastodon.social/@Mastodon/113820521450833408" target="_blank" class="str">mastodonが組織の法的・運営構造を非営利団体に移管する</a>という記事"<a href="https://blog.joinmastodon.org/2025/01/the-people-should-own-the-town-square/" target="_blank">The people should own the town square</a>"が公開される。<br>
                 これまで、創設者で現CEOであるEugen Rochkoが最終的な意思決定者である、Mastodon GmbHという営利法人が運営を担っていた。コミュニティが成長するにつれてmastodonの組織構造を変えて、これまでの一人所有で営利法人という運営構造を変える必要性が強くなってきた。<br>
                 このため、<span class="str3">新しく設立される欧州の非営利法人がMastodon GmbHを全面的に所有する形態へ、段階的に移行</span>するとした。<br>
-                これは、mastodonの分権的理念を組織構造に実現して制度的に保証し、持続可能性とコミュニティの成長に対応するものであり、また、実務的には、Eugen Rochkoがプロダクト戦略にできるようになるとした。</li>
+                これは、mastodonの分権的理念を組織構造に実現して制度的に保証し、持続可能性とコミュニティの成長に対応するものであり、また、実務的には、Eugen Rochkoがプロダクト戦略に集中できるようになるとした。</li>
               <li class="pol company">01月13日　Appleの取締役会が株主に対して、来月末に開かれる株主総会で<a href="https://media.dglab.com/2025/01/14-afp-01-2/" target="_blank">「多様性・公平性・包括性（DEI）」プログラムを打ち切る提案に反対票を投じるよう推奨</a>する。<br>
                 大統領、副大統領の当選者が正式決定した前後あたりから、<a href="https://www.forbes.com/sites/conormurray/2025/04/02/european-countries-push-back-against-trumps-anti-dei-crusade-here-are-all-the-companies-rolling-back-dei-programs/" target="_blank" class="str">MacDonaldやFord、Walmart、Metaなど大手企業がDEIプログラムを終了すると発表</a>しており、01月20日には<a href="https://www.jetro.go.jp/biznews/2025/01/35e2c07c6fef9cad.html" target="_blank">Donald Trump大統領が連邦政府のDEIを終了する大統領令に署名</a>していた。</li>
               <li class="d">01月13日　もちもちずきん主宰の分散型SNSユーザー有志による<a href="https://mstdn.y-zu.org/@Yohei_Zuho/113818881138874144" target="_blank">ウェブサイト「分散型SNSユーザー有志 のホームページ」が更新</a>され、主な分散型SNSの欄に新たにHolloとgotosocialが追加される。</li>
@@ -3125,8 +3221,8 @@
                 Elon MuskやMark Zuckerzergなどの億万長者を念頭に置き、こうした人々がデジタル公共広場を支配しようとすることに抵抗するため、BlueskyとAT Protocolに独立した資金調達とガバナンスを通じてオープンで健全なソーシャルメディアエコシステムを作ることを目指すとした。<br>
                 ソーシャルメディアを億万長者の支配から開放するためには「コミュニティ」、「資本」、「コントロール」の3つが必要であり、Blueskyは個人のコントロールとカスタマイズによる健全なソーシャルメディアの構築を成し遂げた。<br>
                 善意あるビジョンの一方、blueskyは依然として営利企業であり、資本家へのリターンを最大化するというプレッシャーに直面することになる。ベンチャーキャピタルや億万長者の支配から自由なソーシャルネットワークエコシステムの構築のためには年月と資本が必要になる。このため、このキャンペーンではオープンテクノロジーの専門家グループを支援し、3年間で3000万ドルの資金を調達するための大規模な取り組みを開始し、そのための財団を設立した。また、Blueskyの基盤技術であるAT Protocolを支援するための公益財団を立ち上げ、独立したホスティングインフラ（第2のリレー）の構築を目指し、開発者に資金を提供してオープンプロトコルの上に豊富なソーシャルアプリケーションを構築できるようにするとした。<br>
-                管理者はMozilla Foundationのエグゼクティブディレクター2名、Social Web Foundationディレクター1名、『The Filter Bubble』著者のEli Pariserを含む9名であり、賛同者にはwikipedia創設者のJimmy Wales、『監視資本主義』著者のShoshana Zuboff、俳優のMark Ruffalo、台湾の元デジタル大臣Audrey Tang、ミュージシャンのBrian Eno、SF作家でブロガーのCory Doctorow、英国貴族院議員Rosie Boycott、欧州議会議員Alexandra Geesenなど著名人が名を連ねた。<br>
-                公式サイトの「よくある質問」欄ではAT ProtcolとActivityPubは二者択一の選択肢ではなくブリッジングと相互運用性を向上するテストを支援するとした。</li>
+                プロジェクトの管理者はMozilla Foundationのエグゼクティブディレクター2名、Social Web Foundationディレクター1名、『The Filter Bubble』著者のEli Pariserを含む9名であり、賛同者にはwikipedia創設者のJimmy Wales、『監視資本主義』著者のShoshana Zuboff、俳優のMark Ruffalo、台湾の元デジタル大臣Audrey Tang、ミュージシャンのBrian Eno、SF作家でブロガーのCory Doctorow、英国貴族院議員Rosie Boycott、欧州議会議員Alexandra Geesenなど著名人が名を連ねた。<br>
+                公式サイトの「よくある質問」欄では、AT ProtcolとActivityPubは二者択一の選択肢ではなく、ブリッジングと相互運用性を向上するテストを支援するとした。</li>
               <li class="d video meme">01月17日　misskeyサーバーKind World元管理人のPYU224が、自身の運営する短縮URLサービスの運用ブログ上で、<a href="https://33-4.me/blog/archives/562" target="_blank">淫夢系動画保管のため「野獣動画2nd」を作りたいとする記事を公開</a>する。<br>
                 動機を、ニコニコ春画サービス終了をきっかけとして「ネットの歴史の一部」である「淫夢とかその辺」の保管のためとした。2024年12月13日にも<a href="https://33-4.me/blog/archives/531" target="_blank">同様な記事を公開</a>していた。<br>
                 01月20日に<a href="https://33-4.me/blog/archives/568" target="_blank">PeerTubeサーバー「野獣動画2nd」を開設したとする記事を公開</a>した。</li>
@@ -3256,7 +3352,7 @@
           <li>2024年11月29日項目の追加</li>
           <li>2025年04月13日一部修正、項目の追加</li>
         </ul>
-      </details>
+        </details>
       </div>
 
       <button id="sidebar-toggle">menu</button>
@@ -3310,6 +3406,7 @@
                 <input type="radio" name="class" value="fire">flame<br>
                 <input type="radio" name="class" value="tool">tool<br>
                 <input type="radio" name="class" value="etc">etc<br>
+                <input type="radio" name="class" value="draft">draft<br>
               </div>
               <div id="flex_checkbox">
                 <input type="checkbox" name="class" value="d" checked><br>
@@ -3335,6 +3432,7 @@
                 <input type="checkbox" name="class" value="fire" checked><br>
                 <input type="checkbox" name="class" value="tool" checked><br>
                 <input type="checkbox" name="class" value="etc" checked><br>
+                <input type="checkbox" name="class" value="draft" checked><br>                
               </div>
             </div>
           </details>
