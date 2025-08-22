@@ -1,0 +1,34 @@
+# dashboard.htmlを除外
+dashboard.html
+
+# 一般的な除外ファイル
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.temp
+
+# Python関連
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# エディタ関連
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS関連
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
