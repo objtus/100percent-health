@@ -23,73 +23,6 @@
         var yearDiv = $('#y2025');
         const year = '2025';
 
-        // 短縮版記事を作成する関数
-        function createTruncatedArticle(articleElement) {
-          const truncatedArticle = document.createElement('article');
-          truncatedArticle.id = articleElement.id;
-          truncatedArticle.className = articleElement.className;
-          
-          // 見出しを保持
-          const h3 = articleElement.querySelector('h3');
-          if (h3) {
-            const accessibleH3 = h3.cloneNode(true);
-            accessibleH3.setAttribute('aria-expanded', 'false');
-            truncatedArticle.appendChild(accessibleH3);
-          }
-          
-          // 短縮版テキスト（最初の7行程度）
-          const textContent = articleElement.textContent;
-          const lines = textContent.split('\n').filter(line => line.trim());
-          const truncatedText = lines.slice(0, 7).join('\n');
-          
-          const preview = document.createElement('div');
-          preview.className = 'article-preview';
-          preview.innerHTML = `<p>${truncatedText}...</p>`;
-          truncatedArticle.appendChild(preview);
-          
-          // 続きを読むボタン
-          const readMoreBtn = document.createElement('button');
-          readMoreBtn.textContent = '続きを読む';
-          readMoreBtn.className = 'read-more-btn';
-          readMoreBtn.setAttribute('aria-expanded', 'false');
-          readMoreBtn.setAttribute('data-article-id', articleElement.id);
-          truncatedArticle.appendChild(readMoreBtn);
-          
-          return truncatedArticle;
-        }
-
-        // 全文記事を読み込む関数
-        async function loadFullArticle(articleId, button) {
-          try {
-            const response = await fetch(`/txt/zakki/${year}/days/${articleId}.html`);
-            if (!response.ok) return;
-            
-            const text = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(text, 'text/html');
-            const fullArticle = doc.querySelector('article');
-            
-            if (fullArticle) {
-              const articleContainer = button.closest('article');
-              articleContainer.innerHTML = fullArticle.innerHTML;
-              articleContainer.setAttribute('aria-expanded', 'true');
-            }
-          } catch (error) {
-            console.error(`Error loading full article:`, error);
-          }
-        }
-
-        // 続きを読むボタンのイベント設定
-        function setupReadMoreButtons(monthId) {
-          const readMoreBtns = document.querySelectorAll(`#${monthId} .read-more-btn`);
-          readMoreBtns.forEach(btn => {
-            btn.addEventListener('click', async function() {
-              const articleId = this.getAttribute('data-article-id');
-              await loadFullArticle(articleId, this);
-            });
-          });
-        }
-
         // 月別スクリプトを動的にロードする関数
         function loadMonthScript(month) {
           return new Promise((resolve, reject) => {
@@ -129,18 +62,10 @@
               // 2. 月別スクリプトの読み込み
               await loadMonthScript(paddedMonth);
 
-              // 3. 記事読み込み関数の実行（最適化版）
+              // 3. 記事読み込み関数の実行
               const funcName = `loadDailyArticles${paddedMonth}`;
               if (typeof window[funcName] === 'function') {
                 await window[funcName]();
-                
-                // 4. 短縮版の作成と続きを読むボタンの設定
-                const articles = document.querySelectorAll(`#${monthId} article`);
-                articles.forEach(article => {
-                  const truncatedArticle = createTruncatedArticle(article);
-                  article.parentNode.replaceChild(truncatedArticle, article);
-                });
-                setupReadMoreButtons(monthId);
               }
             }
           } catch (error) {

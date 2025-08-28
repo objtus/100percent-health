@@ -53,73 +53,10 @@ async function loadDailyArticles01() {
 			const article = doc.querySelector("article");
 
 			if (article) {
-				// 短縮版記事を作成
-				const truncatedArticle = createTruncatedArticle(article);
-				articleContainer.appendChild(truncatedArticle);
+				articleContainer.appendChild(article);
 			}
 		} catch (error) {
 			console.error(`Error loading article for ${date}:`, error);
 		}
-	}
-}
-
-// 短縮版記事を作成する関数（月別ファイル用）
-function createTruncatedArticle(articleElement) {
-	const truncatedArticle = document.createElement('article');
-	truncatedArticle.id = articleElement.id;
-	truncatedArticle.className = articleElement.className;
-	
-	// 見出しを保持
-	const h3 = articleElement.querySelector('h3');
-	if (h3) {
-		const accessibleH3 = h3.cloneNode(true);
-		accessibleH3.setAttribute('aria-expanded', 'false');
-		truncatedArticle.appendChild(accessibleH3);
-	}
-	
-	// 短縮版テキスト（最初の7行程度）
-	const textContent = articleElement.textContent;
-	const lines = textContent.split('\n').filter(line => line.trim());
-	const truncatedText = lines.slice(0, 7).join('\n');
-	
-	const preview = document.createElement('div');
-	preview.className = 'article-preview';
-	preview.innerHTML = `<p>${truncatedText}...</p>`;
-	truncatedArticle.appendChild(preview);
-	
-	// 続きを読むボタン
-	const readMoreBtn = document.createElement('button');
-	readMoreBtn.textContent = '続きを読む';
-	readMoreBtn.className = 'read-more-btn';
-	readMoreBtn.setAttribute('aria-expanded', 'false');
-	readMoreBtn.setAttribute('data-article-id', articleElement.id);
-	readMoreBtn.addEventListener('click', async function() {
-		await loadFullArticle(articleElement.id, this);
-	});
-	truncatedArticle.appendChild(readMoreBtn);
-	
-	return truncatedArticle;
-}
-
-// 全文記事を読み込む関数（月別ファイル用）
-async function loadFullArticle(articleId, button) {
-	try {
-		const year = "2025";
-		const month = "01";
-		const response = await fetch(`/txt/zakki/${year}/${month}/days/${year}-${month}-${articleId.slice(-2)}.html`);
-		if (!response.ok) return;
-		
-		const text = await response.text();
-		const parser = new DOMParser();
-		const doc = parser.parseFromString(text, 'text/html');
-		const fullArticle = doc.querySelector('article');
-		
-		if (fullArticle) {
-			const articleContainer = button.closest('article');
-			articleContainer.innerHTML = fullArticle.innerHTML;
-			articleContainer.setAttribute('aria-expanded', 'true');
-		}
-	} catch (error) {
-		console.error(`Error loading full article:`, error);
 	}
 }
