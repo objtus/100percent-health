@@ -10,6 +10,7 @@ $(function() {
   $("#changeloghtml").load("/include/changelog.html");
   $("#changelogmodalhtml").load("/include/changelog.html");
   $("#texthtml").load("/include/text.html");
+  $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
 
   $(document).on('click', '#back_to_top', function() {
     // スクロール可能な要素を探す
@@ -42,38 +43,6 @@ $(function() {
     console.log('Scroll attempted on iOS');
   });
 });
-
-function header() {
-  const getPageTitle = document.title;
-  var head = "";
-  head += '<header id="header">';
-  head += '<div id="header-flex">';
-  head += '<nav id="back">';
-  head += '<a id="backicon" href="../../index.html">';
-  head += '&lt;';
-  head += '</a>';
-  head += '</nav>';
-  head += '<nav id="address" class="addressbar">';
-  head += '<a class="addressbar" href="../../index.html">';
-  head += '100%health ';
-  head += '</a>/ ';
-  head += '<a class="addressbar" href="../gallery_main.html">';
-  head += 'gallery ';
-  head += '</a>/ ';
-  let str = document.getElementById("parentFile");
-  if (str === null) {} else {
-    const parentText = str.textContent.trim();
-    const parentLink = parentText.replace(/ \/$/, ''); // 末尾の " /" のみを削除
-    head += '<a class="addressbar" href="' + parentLink + '.html">' + parentText + '</a>';
-  }
-  head += '<a class="addressbar" href="' + getPageTitle.replace(' - 100%health', '') + '.html">';
-  head += getPageTitle.replace(' - 100%health', '');
-  head += '</a>';
-  head += '</nav>';
-  head += '</div>';
-  head += '</header>';
-  document.write(head);
-}
 
 // NSFWフィルター
 document.addEventListener('DOMContentLoaded', function() {

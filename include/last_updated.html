@@ -1,4 +1,4 @@
->last updated: <span id="lastupdate"></span>
+>&thinsp;updated: <span id="lastupdate" aria-live="polite" aria-label="サイトの最終更新日時"></span>
 
 <script>
   var xhttp = new XMLHttpRequest();
@@ -8,7 +8,17 @@
 
       var date_str = site_data.info.last_updated;
       var date_obj = new Date(site_data.info.last_updated);
-      document.getElementById("lastupdate").innerHTML = date_obj.toLocaleString();
+      
+      // 月と日を2桁で表示するようにフォーマット
+      var year = date_obj.getFullYear();
+      var month = String(date_obj.getMonth() + 1).padStart(2, '0');
+      var day = String(date_obj.getDate()).padStart(2, '0');
+      var hours = String(date_obj.getHours()).padStart(2, '0');
+      var minutes = String(date_obj.getMinutes()).padStart(2, '0');
+      var seconds = String(date_obj.getSeconds()).padStart(2, '0');
+      
+      var formatted_date = year + '/' + month + '/' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+      document.getElementById("lastupdate").innerHTML = formatted_date;
     }
   };
   xhttp.open("GET", "https://weirdscifi.ratiosemper.com/neocities.php?sitename=yuinoid", true);

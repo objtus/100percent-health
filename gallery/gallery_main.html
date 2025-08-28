@@ -36,12 +36,12 @@
   <div id="wrapper">
     <header id="header">
       <div id="header-flex">
-        <nav id="back">
+        <nav id="back" aria-label="戻るナビゲーション">
           <a id="backicon" href="../index.html">
             &lt;
           </a>
         </nav>
-        <nav id="address" class="addressbar">
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
           <a class="addressbar" href="../index.html">
             100%health
           </a>/
@@ -53,15 +53,15 @@
     </header>
     <main id="main">
       <div id="galleryspace">
-        <h1 class="title">main_gallery</h1>
+        <h1 class="title">メインギャラリー / <small title="main gallery" lang="en">main_gallery</small></h1>
         <section class="gallery-map-section">
-          <h2>ギャラリーマップ</h2>
+          <h2>ギャラリーマップ / <small title="gallery map" lang="en">gallery_map</small></h2>
           <div id="gallerymaphtml"></div>
         </section>
         <section class="tag-map-section">
-          <h2>タグ一覧<span style="font-size: 1rem;font-weight: normal;">[上位30項目]</span></h2>
+          <h2>タグ<ruby>一覧<rt>いちらん</rt></ruby> / <small title="tag list" lang="en">tag_list</small><span style="font-size: 1rem;font-weight: normal;">[上位30項目]</span></h2>
           <div class="tag-list-section">
-            <a href="tag-page/tags.html">♥tag一覧ページへ</a>
+            <a href="tag-page/tags.html"><span aria-hidden="true">♥</span>tag一覧ページへ</a>
             <div id="popular-tags" data-tag-list
               data-sort-by="count"
               data-limit="30"

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dashboard</title>
+  <script src="../js/jquery-3.6.0.min.js" defer></script>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+  <div id="wrapper">
+    <div class="flex-column">
+      <div id="clock">
+        <div class="time" id="time">00:00:00</div>
+        <div class="date" id="date">2024年1月1日</div>
+        <div class="day-of-week" id="day">月曜日</div>
+      </div>
+      <div class="flex-row">
+        <div id="misskey">
+          <div class="misskey-header" id="misskey-header">
+            <div class="misskey-title">Misskey TL</div>
+            <div class="misskey-header-controls">
+              <div class="misskey-controls">
+                <select id="timeline-type" onchange="changeMisskeyTimeline()">
+                  <option value="home" selected>🏠 ホーム</option>
+                  <option value="local">🏘️ ローカル</option>
+                  <option value="global">🌍 グローバル</option>
+                  <option value="list">📋 リスト</option>
+                </select>
+                <select id="list-selector" onchange="changeList()" style="display: none;">
+                  <option value="">リストを選択...</option>
+                </select>
+                <button onclick="loadMisskeyTimeline()" class="refresh-btn">手動更新</button>
+                <button onclick="toggleAutoRefresh()" class="auto-refresh-btn" id="auto-refresh-btn">ストリーミング開始</button>
+                <button onclick="showTokenSettings()" class="settings-btn">設定</button>
+              </div>
+              <button class="header-toggle-btn expanded" id="header-toggle-btn" onclick="toggleHeader()"
+                title="ヘッダーを縮小/展開"></button>
+            </div>
+            <div class="update-indicator" id="update-indicator"></div>
+          </div>
+          
+          <!-- 投稿フォーム -->
+          <div class="post-form" id="post-form">
+            <div class="post-form-header">
+              <div class="post-form-title-section">
+                <span class="post-form-title">投稿</span>
+                <span class="post-form-shortcuts">n キーで開く | Shift+Enter で投稿</span>
+              </div>
+              <div class="post-form-header-controls">
+                <span class="post-form-status" id="post-form-status"></span>
+                <button class="post-form-toggle-btn" id="post-form-toggle-btn" onclick="togglePostForm()" title="投稿フォームを折りたたむ">
+                  <span class="toggle-icon">▼</span>
+                </button>
+              </div>
+            </div>
+            <div class="post-form-content" id="post-form-content">
+              <textarea 
+                id="post-text" 
+                placeholder="いまどうしてる？" 
+                maxlength="3000"
+                rows="3"
+              ></textarea>
+              <div class="post-form-footer">
+                <div class="post-form-counter">
+                  <span id="post-char-count">0</span>/3000
+                </div>
+                <div class="post-form-controls">
+                  <select id="post-visibility" class="post-visibility-select">
+                    <option value="public">🌍 パブリック</option>
+                    <option value="home">🏠 ホーム</option>
+                    <option value="followers">👥 フォロワー</option>
+                  </select>
+                  <button 
+                    id="post-submit-btn" 
+                    onclick="submitPost()" 
+                    class="post-submit-btn"
+                    disabled
+                  >
+                    投稿
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="misskey-content">
+            <div class="misskey-timeline" id="misskey-timeline">
+              <div class="misskey-loading">読み込み中...</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="rss">
+          <div class="rss-header">
+            <div class="rss-title">RSS フィード</div>
+            <div class="rss-header-right">
+              <span class="last-update" id="last-update"></span>
+              <button class="rss-refresh" onclick="loadRSSFeeds()">更新</button>
+            </div>
+          </div>
+          <div class="rss-content-wrapper">
+            <div id="rss-content">
+              <div class="rss-loading">読み込み中...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Misskey設定モーダル -->
+  <div id="misskey-settings-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Misskey設定</h3>
+        <span class="close" onclick="closeTokenSettings()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="setting-group">
+          <label for="misskey-instance">インスタンス:</label>
+          <input type="text" id="misskey-instance" value="tanoshii.site" placeholder="インスタンスURL" />
+        </div>
+        <div class="setting-group">
+          <label for="misskey-token">API トークン:</label>
+          <input type="password" id="misskey-token" placeholder="トークンを入力" />
+          <small>リスト表示にはトークンが必要です</small>
+        </div>
+        <div class="setting-actions">
+          <button onclick="saveMisskeySettings()" class="save-btn">保存</button>
+          <button onclick="closeTokenSettings()" class="cancel-btn">キャンセル</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- 画像表示モーダル -->
+  <div id="image-modal" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+    <img id="image-modal-content" class="image-modal-content" src="" alt="拡大画像" />
+  </div>
+
+  <script src="clock.js"></script>
+  <script src="misskey.js"></script>
+  <script src="rss.js"></script>
+  <script src="main.js"></script>
+
+</body>
+
+</html>

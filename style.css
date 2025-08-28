@@ -32,6 +32,7 @@ html {
   overflow-x: hidden;
   overflow-y: auto;
   box-sizing: border-box;
+  scrollbar-width: thin;
 }
 
 body {
@@ -76,13 +77,57 @@ img {
   image-rendering: pixelated;
 }
 
-h2{
+h1{
   line-height: 1;
-  font-size: 0;
+  margin-block-start: 0;
+  margin-block-end: -2px;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
 }
 
 summary {
   cursor: pointer;
+}
+
+/*===================
+  スキップリンク
+===================*/
+.skip-link {
+  position: fixed;
+  top: -40px;
+  left: 6px;
+  background: #000000;
+  color: #ffffff;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 9999;
+  transition: top 0.3s;
+  margin-bottom: 4px;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+.skip-link:hover {
+  background: #333333;
+}
+
+/* 複数のスキップリンクの配置調整 */
+#skip-about:focus {
+  top: 6px;
+}
+
+#skip-gallery:focus {
+  top: 50px;
+}
+
+#skip-works:focus {
+  top: 94px;
+}
+
+#skip-links:focus {
+  top: 138px;
 }
 
 /*===================
@@ -114,6 +159,7 @@ summary {
   align-self: flex-start;
   flex: 0 1 800px;
   margin-right: 100%;
+  position: relative;
 }
 
 #item2 {
@@ -264,8 +310,12 @@ summary {
 /*===================
   各セクション間の幅
 ===================*/
-.section {
+.section, nav.section {
   padding: 0 0 0px 0;
+}
+
+.section, nav.section{
+  display: block;
 }
 
 /*===================
@@ -303,10 +353,10 @@ summary {
   各セクションのタイトルに対する装飾
 ===================*/
 .highlight {
-  display: inline;
+  display: inline-block;
   background-color: #000000;
   color: #ffffff;
-  padding: 0 10px 0 13px;
+  padding: 1px 3px 0 7px;
   margin-left: 0;
   font-size: 1rem;
   font-weight: normal;
@@ -317,8 +367,7 @@ a.highlight_anchor {
   padding: 0 0 0 0px;
 }
 
-h3 {
-  /*transform: scale(1.15, 0.75);*/
+h2 {
   display: inline-block;
   font-size: 1em;
   font-weight: normal;
@@ -346,10 +395,6 @@ h3 {
   padding-left: 0.4rem;
 }
 
-.section{
-  display: block;
-}
-
 /*===================
   item1
 ===================*/
@@ -367,14 +412,22 @@ h3 {
   links
 ===================*/
 #social_links{
-  text-decoration: underline;
   margin-bottom: 30px;
+
+  h4{
+    font-weight: normal;
+    margin-bottom: 1rem;
+  }
+
+  a{
+    text-decoration: underline;
+  }
 }
 
 /*===================
   changelog and text
 ===================*/
-#changelogcontainer, #textcontainer{
+#changelogcontainer, #texthtml{
   width: 235px;
   line-height: 1.2rem;
   padding-left: 5.6em;
@@ -385,7 +438,7 @@ h3 {
     display: flex;
     flex-direction: column-reverse;
     list-style: none;
-    li:nth-last-child(n+11){
+    li:nth-last-child(n+6){
       display: none;
     }
   }
@@ -417,6 +470,26 @@ h3 {
   }
 }
 
+#zakkihtml{
+  .monthlist{
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 20px;
+    .month{
+      margin-right: 10px;
+    }
+    .month:last-child{
+      margin-right: 0;
+    }
+  }
+  ol{
+    list-style: none;
+  }
+  a{
+    text-decoration: underline;
+  }
+}
+
 /*===================
   galleryセクション
 ===================*/
@@ -427,6 +500,16 @@ summary {
 
 #galleryhtml{
   padding-left: 20px;
+}
+
+#gallerymaphtml {
+  summary {
+    list-style: none;
+  }
+  h3 {
+    font-weight: normal;
+    font-size: 1rem;
+  }
 }
 
 .gallery_summary{
@@ -580,12 +663,13 @@ button:hover {
 @media screen and (max-width: 576px) {
   /* 576pxまでの幅の場合に適応される */
   body{
+    font-size: 0.9rem;
     letter-spacing: 0em;
-    line-height: 20px;
+    line-height: 17px;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
-  .section{
+  .section, nav.section{
     padding: 0 0 5px 0;
   }
 

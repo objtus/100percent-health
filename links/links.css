@@ -2,25 +2,6 @@
   linksBlock
 ===================*/
 
-/* バナー画像の基本設定 */
-div#galleryspace {
-    .banner88-31 > img,
-    .banner200-40 > img {
-      max-width: 100%;
-      height: auto;
-      image-rendering: pixelated;
-      object-fit: contain;
-    }
-    
-    .banner88-31 > img {
-      max-height: 31px;
-    }
-    
-    .banner200-40 > img {
-      max-height: 40px;
-    }
-  }
-  
   /*----文字装飾----*/
   h2 {
     display: inline-block;
@@ -28,6 +9,10 @@ div#galleryspace {
     border-bottom: dotted 3px #000;
     margin-bottom: 15px;
     line-height: 16px;
+  }
+
+  #crosslinks_header, #favlinks_header{
+    margin-top: 1.5em;
   }
   
   .site_name {
@@ -46,7 +31,7 @@ div#galleryspace {
   
   /*----セクション全体のレイアウト----*/
   #galleryspace > div {
-    margin: 2.5em 0;
+    margin: 0.5em 0;
   }
   
   .links_contents {
@@ -81,45 +66,37 @@ div#galleryspace {
     margin-left: 5px;
   }
   
-  .banner88-31,
-  .banner200-40 {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 31px;
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    padding: 0.3em;
-    a:hover{
-      background-color: #00000000 !important;
+  #crosslinks,#favlinks,#my_banner {
+    .banner_img {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 31px;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 0.3em;
+      max-width: 120px;
+      a:hover{
+        background-color: #00000000 !important;
+      }
+    }
+
+    /* バナー画像がない場合のプレースホルダー */
+    .banner_img img[src="./empty.png"],
+    .banner_img img[src="empty.png"] {
+      display: none;
+    }
+    
+    .banner_img:has(img[src*="empty.png"])::after {
+      content: "[NO_BANNER]";
+      font-size: 0.6em;
+      color: #999;
+      width: 120px;
+      margin-left: -30%;
     }
   }
-  
-  .banner200-40 {
-    width: 120px;
-    height: 24px;
-  }
-  
-  .banner88-31 {
-    width: 60px;
-    height: 20px;
-  }
-  
-  /* バナー画像がない場合のプレースホルダー */
-  .banner88-31 img[src="./empty.png"],
-  .banner200-40 img[src="./empty.png"],
-  .banner88-31 img[src="empty.png"],
-  .banner200-40 img[src="empty.png"] {
-    display: none;
-  }
-  
-  .banner88-31:has(img[src*="empty.png"])::after,
-  .banner200-40:has(img[src*="empty.png"])::after {
-    content: "[NO_BANNER]";
-    font-size: 0.6em;
-    color: #999;
-  }
+
   
   /* キャプション部分 */
   .link_caption {
@@ -179,12 +156,14 @@ div#galleryspace {
     color: #666;
   }
 
-  /* ウェブリングセクション */
-  #webrings{
+  /* 登録サービスセクション */
+  #registered_services{
     margin-top: 1.5em;
-    padding: 1em;
     text-align: left;
-    .webrings_contents{
+    .links_contents{
+      padding: 1em;
+    }
+    .registered_services_contents{
       margin-top: 1.5em;
       padding: 1em;
       background: #fbfbfb;
@@ -193,17 +172,50 @@ div#galleryspace {
     p{
       font-size: 10pt;
     }
+    .search_site{
+      max-width: 200px;
+      max-height: 40px;
+      margin-top: 0.5rem;
+    }
+    .banner_img{
+      background-color: transparent;
+      border: none;
+      justify-content: left;
+      width: 100%;
+      max-width: 200px;
+      max-height: 40px;
+      a:hover{
+        background-color: transparent !important;
+      }
+    }
+    
+    .banner_img a.registered_services_no_banner {
+      width: 200px;
+      height: 40px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #999;
+      font-size: 0.8em;
+    }
   }
   
   
   /* このページについてセクション */
-  #my_banner .links_contents {
+  #my_banner {
     p{
       font-size: 10pt;
     }
     .banner_assets{
       font-weight: bold;
       margin-bottom: 0.5em;
+    }
+
+    .links_contents{
+      padding: 1em;
     }
   }
   

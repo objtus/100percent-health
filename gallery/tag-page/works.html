@@ -9,18 +9,45 @@
     <script src="/js/mouse.js" defer></script>  
     <title>#works - 100%health</title>
     <link rel="stylesheet" href="tag-system.css">
+    <style>
+        #workshtml{
+            ol{
+                list-style: none;
+            }
+            a{
+                text-decoration: none;
+            }
+        }
+        #works_main_nav{
+                text-align: right;
+        }
+        
+        /* ソート順に応じたリストの順序制御 */
+        /* デフォルト（古い順）: 通常の順序 */
+        #workshtml ol {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 新しい順またはシリーズ別ソート時: 逆順 */
+        #workshtml ol[data-sort="date-desc"],
+        #workshtml ol[data-sort="series"] {
+            flex-direction: column-reverse;
+        }
+
+    </style>
 </head>
 
 <body>
     <div id="wrapper">
         <header id="header">
             <div id="header-flex">
-                <nav id="back">
+                <nav id="back" aria-label="戻るナビゲーション">
                     <a id="backicon" href="/index.html">
                         &lt;
                     </a>
                 </nav>
-                <nav id="address" class="addressbar">
+                <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
                     <a class="addressbar" href="/index.html">
                         100%health
                     </a>/
@@ -41,20 +68,23 @@
                 <div class="tag-header">
                     <h1 class="title">#works の作品一覧</h1>
                     <div id="workshtml"></div>
+                    <nav id="works_main_nav">
+                        <p>works_mainは<a href="/works/works_main.html"><span aria-hidden="true">♥</span>こちら</a></p>
+                    </nav>
                     <div class="tag-controls">
                         <div class="filter-row">
-                            <select id="sort-select">
+                            <select id="sort-select" aria-label="並び替え">
                                 <option value="date-desc">新しい順</option>
                                 <option value="date-asc">古い順</option>
                                 <option value="series">シリーズ別</option>
                             </select>
                             
-                            <select id="series-filter">
+                            <select id="series-filter" aria-label="シリーズ別">
                                 <option value="">全シリーズ</option>
                                 <!-- 動的生成 -->
                             </select>
                             
-                            <select id="tag-filter">
+                            <select id="tag-filter" aria-label="追加タグ">
                                 <option value="">追加タグなし</option>
                                 <!-- 動的生成 -->
                             </select>
@@ -94,6 +124,30 @@
                 targetTag: 'works',
                 debug: false
             };
+            
+            // ソート順に応じたリストの順序制御
+            document.addEventListener('DOMContentLoaded', function() {
+                const sortSelect = document.getElementById('sort-select');
+                const worksHtml = document.getElementById('workshtml');
+                
+                // インデックスリストの表示順を更新
+                function updateIndexListOrder(sortType) {
+                    const olElements = worksHtml?.querySelectorAll('ol');
+                    olElements?.forEach(ol => ol.setAttribute('data-sort', sortType));
+                }
+                
+                // ソートセレクトの変更を監視
+                sortSelect?.addEventListener('change', e => updateIndexListOrder(e.target.value));
+                
+                // 初期状態を適用
+                updateIndexListOrder(sortSelect?.value);
+                
+                // 動的要素の追加を監視
+                worksHtml && new MutationObserver(() => {
+                    const olElements = worksHtml.querySelectorAll('ol');
+                    olElements.length > 0 && updateIndexListOrder(sortSelect?.value);
+                }).observe(worksHtml, { childList: true, subtree: true });
+            });
         </script>    
     </div>
 </body>

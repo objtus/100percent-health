@@ -16,12 +16,12 @@
   <div id="wrapper">
     <header id="header">
       <div id="header-flex">
-        <nav id="back">
+        <nav id="back" aria-label="戻るナビゲーション">
           <a id="backicon" href="/index.html">
             &lt;
           </a>
         </nav>
-        <nav id="address" class="addressbar">
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
           <a class="addressbar" href="/index.html">100%health</a>&nbsp;/
           <a class="addressbar" href="../gallery_main.html">gallery</a>&nbsp;/
           <a class="addressbar" href="/gallery/tag-page/fanart.html">fanart</a>&nbsp;/
@@ -33,16 +33,20 @@
     </header>
     <main id="main">
       <div id="galleryspace">
+        <h1 class="title" style="display: none;">fanart_taniguchi-chan</h1>
         <div class="card">
           <div class="piccard">
+            <h2 style="display: none;">作品"fanart_taniguchi-chan"について</h2>
+            <h3 style="display: none;">アートワーク</h3>
             <a href="../../img/fanart/2022-06-11_taniguchi-chan.png"><img
                 src="../../img/fanart/2022-06-11_taniguchi-chan.png" alt="fan taniguchi-chan art (c)てく野."
                 class="border_img">
             </a>
+            <h3 style="display: none;">キャプション</h3>
             <p class="title"></p>
             <div class="caption">
-              <details open="">
-                <summary></summary>
+              <details>
+                <summary aria-label="谷口ちゃんのファンアートについて"></summary>
                 fanart for
                 <a href="https://misskey.io/@t3/pages/1604659962996" target="_blank">谷口ちゃん</a>
                 (c)
@@ -51,6 +55,7 @@
               </details>
             </div>
             <p class="date">&gt;2022-06-11</p>
+            <h3 style="display: none;">タグ</h3>
             <nav class="tags-section" aria-label="作品タグ">
               <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
               <div class="tags-list" data-tags-container="">

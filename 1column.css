@@ -57,6 +57,7 @@ body {
   border-top: none;
   border-right: none;
   border-bottom: none;
+  scrollbar-width: thin;
 }
 
 img {
@@ -429,6 +430,16 @@ nav {
   }
 }
 
+#gallerymaphtml {
+  summary {
+    list-style: none;
+  }
+  h3 {
+    font-weight: normal;
+    font-size: 1rem;
+  }
+}
+
 .gallery_summary {
   color: #fff;
   background-color: #000;
@@ -589,9 +600,10 @@ nav {
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 576px) {
   body {
-    font-size: 12pt;
+    font-size: 0.9rem;
+    line-height: 25px;
   }
 
   #back{
@@ -625,6 +637,7 @@ nav {
     }
   }
 }
+
 
 @media screen and (max-width: 435px) {
   #gallerymaphtml {

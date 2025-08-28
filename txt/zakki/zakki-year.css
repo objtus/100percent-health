@@ -58,10 +58,49 @@ article {
 		padding-left: 2em;
 	}
 }
-#zakkizone {
+
+/* 短縮版表示用スタイル */
+.article-preview {
+	margin: 10px 0;
+	padding: 0 40px;
+}
+
+.article-preview p {
+	font-size: 10pt;
+	line-height: 1.6;
+	margin: 0;
+}
+
+.read-more-btn {
+	display: inline-block;
+	margin: 10px 40px;
+	padding: 8px 16px;
+	background-color: #f0f0f0;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 10pt;
+	transition: background-color 0.2s;
+}
+
+.read-more-btn:hover {
+	background-color: #e0e0e0;
+}
+
+.read-more-btn:focus {
+	outline: 2px solid #007acc;
+	outline-offset: 2px;
+}
+
+/* 全文表示時のスタイル */
+article[aria-expanded="true"] .read-more-btn {
+	display: none;
+}
+
+#zakkizone,.monthlist,#taglist {
 	list-style-type: none;
 }
-#monthlist {
+.monthlist {
 	display: flex;
 	flex-wrap: wrap;
 	margin-left: 20px;

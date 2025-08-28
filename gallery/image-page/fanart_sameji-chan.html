@@ -15,12 +15,12 @@
   <div id="wrapper">
       <header id="header">
         <div id="header-flex">
-          <nav id="back">
+          <nav id="back" aria-label="戻るナビゲーション">
             <a id="backicon" href="/index.html">
               &lt;
             </a>
           </nav>
-          <nav id="address" class="addressbar">
+          <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
             <a class="addressbar" href="/index.html">100%health</a>&nbsp;/
             <a class="addressbar" href="../gallery_main.html">gallery</a>&nbsp;/
             <a class="addressbar" href="/gallery/tag-page/fanart.html">fanart</a>&nbsp;/
@@ -33,21 +33,25 @@
       <!-- 既存のメインコンテンツ -->
       <main id="main">
         <div id="galleryspace">
+          <h1 class="title" style="display: none;">fanart_sameji-chan</h1>
           <div class="card">
             <div class="piccard">
+              <h2 style="display: none;">作品"fanart_sameji-chan"について</h2>
+              <h3 style="display: none;">アートワーク</h3>
               <a href="/img/fanart/sameji-chan.png"><img src="/img/fanart/sameji-chan.png"
                   alt="fanart sameji-chan yoki youni siteiru darouka"></a>
+              <h3 style="display: none;">キャプション</h3>
               <p class="title"></p>
               <div class="caption">
                 <details>
-                  <summary></summary>
+                  <summary aria-label="さめじまさめじさんのファンアートについて"></summary>
                   fediverseユーザー、さめじまさめじさんのファンアートです。<br>
                   タイムライン上でお題を募集していたところ、氏の診断メーカー「あなたを女子高生化してみたー」の結果が流れてきたことがきっかけで描きました。<br>
                   さめじまさめじさんはfediverseを引退しましたが、今でも時々氏はよきようにしているだろうか、と思い出します。
                 </details>
               </div>
-              <p class="date">>2018-12-22</p>
-              <!-- タグ一覧コーナー（動的生成） -->
+              <p class="date">&gt;2018-12-22</p>
+              <h3 style="display: none;">タグ</h3>
               <nav class="tags-section" aria-label="作品タグ">
                 <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
                 <div class="tags-list" data-tags-container>

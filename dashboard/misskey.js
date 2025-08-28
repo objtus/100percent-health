@@ -362,6 +362,49 @@ let reconnectTimer = null;
 let reconnectAttempts = 0;
 const MAX_RECONNECT_ATTEMPTS = 5;
 
+// WebSocketメッセージの受信状況を監視
+let messageStats = {
+  total: 0,
+  byType: {},
+  reactionRelated: 0,
+  lastReactionMessage: null,
+  lastMessageTime: null
+};
+
+// メッセージ統計を更新
+function updateMessageStats(data) {
+  messageStats.total++;
+  messageStats.lastMessageTime = new Date();
+  
+  const messageType = data.type || 'unknown';
+  messageStats.byType[messageType] = (messageStats.byType[messageType] || 0) + 1;
+  
+  // リアクション関連のメッセージかチェック
+  const dataString = JSON.stringify(data);
+  if (dataString.includes('reaction') || dataString.includes('noteId') || dataString.includes('emoji')) {
+    messageStats.reactionRelated++;
+    messageStats.lastReactionMessage = {
+      time: new Date(),
+      data: data
+    };
+    console.log('📊 リアクション関連メッセージ統計更新:', messageStats.reactionRelated);
+  }
+}
+
+// メッセージ統計を表示
+function showMessageStats() {
+  console.log('=== WebSocketメッセージ統計 ===');
+  console.log('総受信メッセージ数:', messageStats.total);
+  console.log('リアクション関連メッセージ数:', messageStats.reactionRelated);
+  console.log('最後のメッセージ受信時刻:', messageStats.lastMessageTime);
+  console.log('最後のリアクション関連メッセージ:', messageStats.lastReactionMessage);
+  console.log('メッセージタイプ別統計:', messageStats.byType);
+  console.log('==============================');
+}
+
+// グローバル関数として公開
+window.showMessageStats = showMessageStats;
+
 // Misskeyタイムラインを読み込む
 async function loadMisskeyTimeline() {
   const timeline = document.getElementById('misskey-timeline');
@@ -458,6 +501,11 @@ function renderMisskeyTimeline(notes, isUpdate = false) {
     }
   });
   
+  // 絵文字辞書を即座に更新（既存の絵文字を優先）
+  if (window.globalEmojiDict && Object.keys(window.globalEmojiDict).length > 0) {
+    updateEmojiPlaceholders();
+  }
+  
   if (isUpdate && notes.length > 0) {
     // 更新時は新しい投稿のみを追加
     const existingNotes = timeline.querySelectorAll('.misskey-note');
@@ -504,6 +552,9 @@ function renderMisskeyTimeline(notes, isUpdate = false) {
         updateReactions(note.id, note.reactions);
       }
     });
+    
+    // 絵文字プレースホルダーを更新
+    updateEmojiPlaceholders();
   }, 100);
   
   // 表示された投稿をキャプチャ（ストリーミングが有効な場合）
@@ -669,7 +720,9 @@ function createFilesHtml(files) {
     }
   }).join('');
   
-  return `<div class="files-container">${filesHtml}</div>`;
+  const imageCount = files.filter(file => file.type.startsWith('image/')).length;
+  const containerClass = imageCount === 1 ? 'files-container single-image' : 'files-container multiple-images';
+  return `<div class="${containerClass}">${filesHtml}</div>`;
 }
 
 // ファイルサイズをフォーマット
@@ -883,10 +936,25 @@ async function startStreaming() {
     return;
   }
   
+  console.log('ストリーミングを開始中...');
+  
   try {
     await connectWebSocket();
+    console.log('ストリーミング開始完了');
   } catch (error) {
     console.error('ストリーミング開始エラー:', error);
+    
+    // エラーが発生した場合、ボタンの状態をリセット
+    const button = document.getElementById('auto-refresh-btn');
+    if (button) {
+      button.textContent = 'ストリーミング開始';
+      button.classList.remove('active');
+    }
+    
+    const indicator = document.getElementById('update-indicator');
+    if (indicator) {
+      indicator.style.display = 'none';
+    }
   }
 }
 
@@ -916,10 +984,18 @@ function connectWebSocket() {
   return new Promise((resolve, reject) => {
     try {
       const wsUrl = `wss://${MISSKEY_CONFIG.instance}/streaming?i=${MISSKEY_CONFIG.token}`;
+      console.log(`WebSocket接続を試行中: ${wsUrl}`);
+      
       websocket = new WebSocket(wsUrl);
       
       websocket.onopen = function(event) {
         console.log('WebSocket接続が確立されました');
+        console.log('WebSocket接続詳細:', {
+          url: websocket.url,
+          protocol: websocket.protocol,
+          readyState: websocket.readyState,
+          extensions: websocket.extensions
+        });
         reconnectAttempts = 0;
         
         // 現在のチャンネルに購読
@@ -930,13 +1006,76 @@ function connectWebSocket() {
       
       websocket.onmessage = function(event) {
         try {
+          console.log('=== WebSocketメッセージ受信 ===');
+          console.log('生データ:', event.data);
+          
           const data = JSON.parse(event.data);
+          console.log('パースされたデータ:', data);
+          console.log('データタイプ:', data.type);
+          console.log('データ構造:', JSON.stringify(data, null, 2));
+          
+          // メッセージ統計を更新
+          updateMessageStats(data);
+          
+          // リアクション関連のキーワードを検索
+          const dataString = JSON.stringify(data);
+          const hasReactionKeywords = dataString.includes('reaction') || 
+                                    dataString.includes('noteId') || 
+                                    dataString.includes('emoji') ||
+                                    dataString.includes('reactions') ||
+                                    dataString.includes('unreaction');
+          
+          if (hasReactionKeywords) {
+            console.log('🔍 リアクション関連のキーワードが検出されました！');
+            console.log('詳細分析:', {
+              hasReaction: dataString.includes('reaction'),
+              hasNoteId: dataString.includes('noteId'),
+              hasEmoji: dataString.includes('emoji'),
+              hasReactions: dataString.includes('reactions'),
+              hasUnreaction: dataString.includes('unreaction')
+            });
+          }
           
           if (data.type === 'channel') {
-            handleChannelMessage(data.body);
+            console.log('チャンネルメッセージを処理中:', data);
+            handleChannelMessage(data);
+          } else if (data.type === 'connected') {
+            console.log('WebSocket接続確認メッセージを受信:', data);
+          } else if (data.type === 'reaction' || data.type === 'unreaction') {
+            console.log('リアクション関連メッセージを受信:', data);
+            handleReactionMessage(data);
+          } else if (data.type === 'note') {
+            console.log('投稿メッセージを受信:', data);
+            // 投稿メッセージにリアクション情報が含まれている可能性
+            if (data.body && data.body.reactions) {
+              console.log('投稿メッセージにリアクション情報が含まれています:', data.body.reactions);
+            }
+          } else if (data.type === 'update') {
+            console.log('更新メッセージを受信:', data);
+            // 更新メッセージにリアクション情報が含まれている可能性
+            if (data.body) {
+              console.log('更新メッセージの詳細:', data.body);
+              if (JSON.stringify(data.body).includes('reaction')) {
+                console.log('🔍 更新メッセージにリアクション情報が含まれている可能性があります');
+              }
+            }
+          } else {
+            console.log('その他のWebSocketメッセージ:', data);
+            console.log('メッセージタイプ:', data.type);
+            
+            // リアクション関連の情報が含まれているかチェック
+            if (hasReactionKeywords) {
+              console.log('🔍 このメッセージにリアクション関連の情報が含まれている可能性があります');
+              
+              // メッセージの構造を深く分析
+              analyzeMessageForReactions(data);
+            }
           }
+          
+          console.log('=== メッセージ処理完了 ===');
         } catch (error) {
           console.error('WebSocketメッセージ処理エラー:', error);
+          console.error('エラーが発生したデータ:', event.data);
         }
       };
       
@@ -951,6 +1090,7 @@ function connectWebSocket() {
       };
       
     } catch (error) {
+      console.error('WebSocket接続作成エラー:', error);
       reject(error);
     }
   });
@@ -958,31 +1098,109 @@ function connectWebSocket() {
 
 // チャンネルメッセージを処理
 function handleChannelMessage(body) {
-  if (body.type === 'channel') {
-    const channelId = body.id;
+  console.log('チャンネルメッセージ処理開始:', body);
+  
+  // メッセージの構造を確認
+  if (body.type === 'channel' && body.body) {
+    const channelId = body.body.id;
     const channelInfo = streamChannels.get(channelId);
+    
+    console.log(`チャンネルID: ${channelId}, チャンネル情報:`, channelInfo);
     
     if (!channelInfo) {
       console.warn(`不明なチャンネルIDが受信: ${channelId}`);
+      console.log('現在のチャンネル一覧:', Array.from(streamChannels.entries()));
       return;
     }
 
-    if (body.body.type === 'note') {
-      const note = body.body.note;
-      if (note.id) {
+    const messageType = body.body.type;
+    console.log(`チャンネル ${channelId} から ${messageType} メッセージを受信`);
+
+    if (messageType === 'note') {
+      const note = body.body.body; // ネストしたbodyから投稿データを取得
+      console.log('新しい投稿を受信:', note);
+      
+      if (note && note.id) {
         // キャプチャされていない投稿の場合のみ更新
         if (!capturedNotes.has(note.id)) {
+          console.log(`投稿 ${note.id} をリアルタイム更新に追加`);
+          capturedNotes.add(note.id);
           updateReactions(note.id, note.reactions);
           renderMisskeyTimeline([note], true); // リアルタイム更新として扱う
+        } else {
+          console.log(`投稿 ${note.id} は既にキャプチャ済み`);
         }
       }
-    } else if (body.body.type === 'reaction') {
-      const noteId = body.body.noteId;
-      const reaction = body.body.reaction;
+    } else if (messageType === 'reaction') {
+      const reactionData = body.body.body;
+      const noteId = reactionData.noteId;
+      const emoji = reactionData.reaction;
+      const userId = reactionData.userId;
+      console.log('リアクション更新を受信:', { noteId, emoji, userId });
+      console.log('リアクション更新の詳細データ:', reactionData);
+      
       if (noteId) {
-        updateReactions(noteId, reaction);
+        // 既存のリアクション情報を取得
+        const currentReactions = window.currentReactions[noteId] || {};
+        console.log(`投稿 ${noteId} の現在のリアクション:`, currentReactions);
+        
+        // 新しいリアクション情報を作成（既存のリアクションをコピー）
+        const updatedReactions = { ...currentReactions };
+        
+        // リアクションのカウントを更新
+        if (updatedReactions[emoji]) {
+          updatedReactions[emoji]++;
+          console.log(`絵文字 ${emoji} のカウントを増加: ${updatedReactions[emoji]}`);
+        } else {
+          updatedReactions[emoji] = 1;
+          console.log(`新しい絵文字 ${emoji} を追加: カウント 1`);
+        }
+        
+        console.log(`更新後のリアクション情報:`, updatedReactions);
+        
+        // 更新されたリアクション情報で更新
+        updateReactions(noteId, updatedReactions);
+      } else {
+        console.warn('リアクション更新でnoteIdが取得できませんでした');
       }
+    } else if (messageType === 'unreaction') {
+      const reactionData = body.body.body;
+      const noteId = reactionData.noteId;
+      const emoji = reactionData.reaction;
+      const userId = reactionData.userId;
+      console.log('リアクション削除を受信:', { noteId, emoji, userId });
+      console.log('リアクション削除の詳細データ:', reactionData);
+      
+      if (noteId) {
+        // 既存のリアクション情報を取得
+        const currentReactions = window.currentReactions[noteId] || {};
+        console.log(`投稿 ${noteId} の現在のリアクション:`, currentReactions);
+        
+        // 新しいリアクション情報を作成（既存のリアクションをコピー）
+        const updatedReactions = { ...currentReactions };
+        
+        // リアクションのカウントを更新
+        if (updatedReactions[emoji] && updatedReactions[emoji] > 1) {
+          updatedReactions[emoji]--;
+          console.log(`絵文字 ${emoji} のカウントを減少: ${updatedReactions[emoji]}`);
+        } else if (updatedReactions[emoji] === 1) {
+          // カウントが1の場合は削除
+          delete updatedReactions[emoji];
+          console.log(`絵文字 ${emoji} を削除 (カウントが0になったため)`);
+        }
+        
+        console.log(`更新後のリアクション情報:`, updatedReactions);
+        
+        // 更新されたリアクション情報で更新
+        updateReactions(noteId, updatedReactions);
+      } else {
+        console.warn('リアクション削除でnoteIdが取得できませんでした');
+      }
+    } else {
+      console.log('その他のチャンネルメッセージタイプ:', messageType);
     }
+  } else {
+    console.log('チャンネルメッセージ以外のメッセージ:', body);
   }
 }
 
@@ -990,6 +1208,7 @@ function handleChannelMessage(body) {
 function subscribeToChannel(channelName, params) {
   if (!websocket || websocket.readyState !== WebSocket.OPEN) {
     console.warn('WebSocket接続が確立されていません');
+    console.log('WebSocket状態:', websocket ? websocket.readyState : 'null');
     return;
   }
   
@@ -1004,6 +1223,7 @@ function subscribeToChannel(channelName, params) {
   };
   
   try {
+    console.log(`チャンネル ${channelName} に購読中:`, message);
     websocket.send(JSON.stringify(message));
     
     // チャンネル情報を保存
@@ -1013,6 +1233,7 @@ function subscribeToChannel(channelName, params) {
     });
     
     console.log(`チャンネル ${channelName} に購読しました (ID: ${channelId})`);
+    console.log('現在のアクティブチャンネル:', Array.from(streamChannels.entries()));
   } catch (error) {
     console.error(`チャンネル ${channelName} の購読エラー:`, error);
   }
@@ -1074,6 +1295,170 @@ function handleConnectionError() {
   }
 }
 
+// ストリーミングの状態を確認
+function checkStreamingStatus() {
+  console.log('=== ストリーミング状態確認 ===');
+  console.log('WebSocket接続状態:', websocket ? websocket.readyState : 'null');
+  console.log('自動更新設定:', MISSKEY_CONFIG.autoRefresh);
+  console.log('再接続試行回数:', reconnectAttempts);
+  console.log('アクティブなチャンネル数:', streamChannels.size);
+  console.log('キャプチャ中の投稿数:', capturedNotes.size);
+  
+  if (websocket) {
+    console.log('WebSocket URL:', websocket.url);
+    console.log('WebSocket プロトコル:', websocket.protocol);
+    console.log('WebSocket 拡張:', websocket.extensions);
+    console.log('WebSocket 準備状態:', websocket.readyState);
+    
+    // WebSocketの状態を数値から文字列に変換
+    const readyStateText = {
+      0: 'CONNECTING (接続中)',
+      1: 'OPEN (接続済み)',
+      2: 'CLOSING (切断中)',
+      3: 'CLOSED (切断済み)'
+    };
+    console.log('WebSocket 状態詳細:', readyStateText[websocket.readyState] || `不明 (${websocket.readyState})`);
+  }
+  
+  console.log('チャンネル一覧:', Array.from(streamChannels.entries()));
+  
+  // 現在のリアクション情報も表示
+  if (window.currentReactions) {
+    console.log('現在のリアクション情報:', window.currentReactions);
+    console.log('リアクション対象投稿数:', Object.keys(window.currentReactions).length);
+  }
+  
+  // 表示中の投稿の情報も表示
+  const displayedNotes = document.querySelectorAll('.misskey-note');
+  console.log('表示中の投稿数:', displayedNotes.length);
+  if (displayedNotes.length > 0) {
+    const firstNote = displayedNotes[0];
+    const noteId = firstNote.dataset.noteId;
+    console.log('最初の投稿ID:', noteId);
+    if (noteId && window.currentReactions[noteId]) {
+      console.log('最初の投稿のリアクション:', window.currentReactions[noteId]);
+    }
+  }
+  
+  // メッセージ統計を表示
+  console.log('=== メッセージ統計 ===');
+  console.log('総受信メッセージ数:', messageStats.total);
+  console.log('リアクション関連メッセージ数:', messageStats.reactionRelated);
+  console.log('最後のメッセージ受信時刻:', messageStats.lastMessageTime);
+  if (messageStats.lastReactionMessage) {
+    console.log('最後のリアクション関連メッセージ時刻:', messageStats.lastReactionMessage.time);
+    console.log('最後のリアクション関連メッセージタイプ:', messageStats.lastReactionMessage.data.type);
+  }
+  console.log('メッセージタイプ別統計:', messageStats.byType);
+  
+  console.log('==============================');
+}
+
+// リアクション更新のテスト関数
+function testReactionUpdate() {
+  console.log('=== リアクション更新テスト開始 ===');
+  
+  // 表示中の投稿を取得
+  const displayedNotes = document.querySelectorAll('.misskey-note');
+  if (displayedNotes.length === 0) {
+    console.log('表示中の投稿が見つかりません');
+    return;
+  }
+  
+  // 最初の投稿を使用
+  const firstNote = displayedNotes[0];
+  const noteId = firstNote.dataset.noteId;
+  
+  if (!noteId) {
+    console.log('投稿IDが取得できません');
+    return;
+  }
+  
+  console.log('テスト対象投稿ID:', noteId);
+  
+  // 現在のリアクション情報を取得
+  const currentReactions = window.currentReactions[noteId] || {};
+  console.log('現在のリアクション:', currentReactions);
+  
+  // テスト用のリアクションを追加
+  const testEmoji = '👍';
+  const testReactions = { ...currentReactions };
+  
+  if (testReactions[testEmoji]) {
+    testReactions[testEmoji]++;
+  } else {
+    testReactions[testEmoji] = 1;
+  }
+  
+  console.log('テスト用リアクション更新:', testEmoji, '->', testReactions[testEmoji]);
+  
+  // リアクション更新を実行
+  updateReactions(noteId, testReactions);
+  
+  console.log('=== リアクション更新テスト完了 ===');
+}
+
+// リアクション更新の詳細テスト関数
+function testReactionUpdateDetailed() {
+  console.log('=== リアクション更新詳細テスト開始 ===');
+  
+  // 表示中の投稿を取得
+  const displayedNotes = document.querySelectorAll('.misskey-note');
+  if (displayedNotes.length === 0) {
+    console.log('表示中の投稿が見つかりません');
+    return;
+  }
+  
+  // 最初の投稿を使用
+  const firstNote = displayedNotes[0];
+  const noteId = firstNote.dataset.noteId;
+  
+  if (!noteId) {
+    console.log('投稿IDが取得できません');
+    return;
+  }
+  
+  console.log('テスト対象投稿ID:', noteId);
+  
+  // 現在のリアクション情報を取得
+  const currentReactions = window.currentReactions[noteId] || {};
+  console.log('現在のリアクション:', currentReactions);
+  
+  // 複数のテスト用リアクションを追加
+  const testEmojis = ['👍', '❤️', '😊', '🎉'];
+  const testReactions = { ...currentReactions };
+  
+  testEmojis.forEach(emoji => {
+    if (testReactions[emoji]) {
+      testReactions[emoji]++;
+    } else {
+      testReactions[emoji] = 1;
+    }
+    console.log(`テスト用リアクション追加: ${emoji} -> ${testReactions[emoji]}`);
+  });
+  
+  // リアクション更新を実行
+  updateReactions(noteId, testReactions);
+  
+  // 更新後の状態を確認
+  setTimeout(() => {
+    const updatedReactions = window.currentReactions[noteId] || {};
+    console.log('更新後のリアクション:', updatedReactions);
+    
+    // UIの更新を確認
+    const reactionContainer = firstNote.querySelector('.reactions-container');
+    if (reactionContainer) {
+      console.log('リアクションコンテナの内容:', reactionContainer.innerHTML);
+    }
+    
+    console.log('=== リアクション更新詳細テスト完了 ===');
+  }, 100);
+}
+
+// グローバル関数として公開
+window.testReactionUpdate = testReactionUpdate;
+window.testReactionUpdateDetailed = testReactionUpdateDetailed;
+
 // ヘッダーの折りたたみ/展開を切り替え
 function toggleHeader() {
   const header = document.getElementById('misskey-header');
@@ -1100,15 +1485,44 @@ function toggleHeader() {
 function renderCustomEmojis(text) {
   if (!text) return '';
   
+  console.log(`renderCustomEmojis 呼び出し: テキスト = "${text}"`);
+  
   // カスタム絵文字のパターンを検出（:emoji_name:形式）
   const emojiPattern = /:([a-zA-Z0-9_]+):/g;
   
   return text.replace(emojiPattern, (match, emojiName) => {
-    const emoji = findCustomEmoji(emojiName);
-    if (emoji) {
-      return `<img src="${emoji.url}" alt="${emojiName}" class="custom-emoji" title="${emojiName}" />`;
+    console.log(`絵文字パターン検出: ${match} -> ${emojiName}`);
+    
+    // まず、元の名前で検索
+    let emoji = findCustomEmoji(emojiName);
+    console.log(`元の名前 ${emojiName} での検索結果:`, emoji);
+    
+    // 見つからない場合、正規化された名前で検索
+    if (!emoji) {
+      // ローカル絵文字の場合（@.で終わる）を正しい名前に変換
+      if (!emojiName.includes('@')) {
+        const normalizedName = emojiName + '@.';
+        emoji = findCustomEmoji(normalizedName);
+        console.log(`正規化された名前 ${normalizedName} での検索結果:`, emoji);
+      }
+      // リモート絵文字の場合、ドメイン部分を除去して検索を試行
+      else if (emojiName.includes('@') && !emojiName.endsWith('@.')) {
+        const baseEmojiName = emojiName.split('@')[0];
+        emoji = findCustomEmoji(baseEmojiName);
+        console.log(`ベース名 ${baseEmojiName} での検索結果:`, emoji);
+      }
     }
-    return match; // 見つからない場合は元のテキストを返す
+    
+    if (emoji) {
+      console.log(`絵文字 ${emojiName} が見つかりました:`, emoji);
+      return `<img src="${emoji.url}" alt="${emojiName}" class="custom-emoji" title="${emojiName}" onerror="handleEmojiLoadError(this, '${emojiName}')" />`;
+    } else {
+      console.log(`絵文字 ${emojiName} が見つからないため、プレースホルダーを表示`);
+      // 絵文字が見つからない場合、非同期で取得を試行
+      fetchEmojiFromServer(emojiName);
+      // 一時的に絵文字名を表示（後で更新される）
+      return `<span class="custom-emoji-placeholder" data-emoji-name="${emojiName}">:${emojiName}:</span>`;
+    }
   });
 }
 
@@ -1118,27 +1532,119 @@ function findCustomEmoji(emojiName) {
     window.globalEmojiDict = {};
   }
   
-  return window.globalEmojiDict[emojiName];
+  console.log(`findCustomEmoji 呼び出し: ${emojiName}`);
+  console.log(`現在の絵文字辞書のキー:`, Object.keys(window.globalEmojiDict));
+  
+  // まず、元の名前で検索
+  let emoji = window.globalEmojiDict[emojiName];
+  console.log(`元の名前 ${emojiName} での検索結果:`, emoji);
+  
+  // 見つからない場合、正規化された名前で検索
+  if (!emoji) {
+    // ローカル絵文字の場合（@.で終わる）を正しい名前に変換
+    if (!emojiName.includes('@')) {
+      const normalizedName = emojiName + '@.';
+      emoji = window.globalEmojiDict[normalizedName];
+      console.log(`正規化された名前 ${normalizedName} での検索結果:`, emoji);
+    }
+    // リモート絵文字の場合、ドメイン部分を除去して検索を試行
+    else if (emojiName.includes('@') && !emojiName.endsWith('@.')) {
+      const baseEmojiName = emojiName.split('@')[0];
+      emoji = window.globalEmojiDict[baseEmojiName];
+      console.log(`ベース名 ${baseEmojiName} での検索結果:`, emoji);
+    }
+  }
+  
+  console.log(`最終的な検索結果:`, emoji);
+  return emoji;
 }
 
 // 投稿から絵文字情報を抽出
 function extractEmojisFromNote(note) {
-  if (!note || !note.text) return;
+  if (!note) return;
   
-  // カスタム絵文字のパターンを検出
-  const emojiPattern = /:([a-zA-Z0-9_]+):/g;
-  const matches = note.text.match(emojiPattern);
+  // デバッグ: 投稿全体の構造を確認
+  console.log(`投稿 ${note.id} の全体構造:`, note);
   
-  if (matches) {
-    matches.forEach(match => {
-      const emojiName = match.slice(1, -1); // :emoji_name: から emoji_name を抽出
+  // 1. まず、APIレスポンスに含まれている絵文字情報を確認
+  if (note.emojis) { // Check if note.emojis exists at all
+    if (Array.isArray(note.emojis)) {
+      console.log(`投稿 ${note.id} の絵文字情報 (配列形式):`, note.emojis);
       
-      // 既に取得済みでない場合のみ取得
-      if (!window.globalEmojiDict[emojiName]) {
-        fetchEmojiFromServer(emojiName);
+      note.emojis.forEach(emoji => {
+        if (emoji && emoji.name && emoji.url) {
+          // 絵文字名を正規化（@domain.comを含む場合はそのまま、ローカルの場合は@.を追加）
+          let normalizedName = emoji.name;
+          if (!emoji.name.includes('@')) {
+            normalizedName = emoji.name + '@.';
+          }
+          
+          // グローバル辞書に追加
+          if (!window.globalEmojiDict[normalizedName]) {
+            window.globalEmojiDict[normalizedName] = {
+              name: normalizedName,
+              url: emoji.url,
+              host: emoji.host || MISSKEY_CONFIG.instance,
+              category: emoji.category,
+              aliases: emoji.aliases || []
+            };
+            console.log(`APIレスポンスから絵文字を追加 (配列形式): ${normalizedName} -> ${emoji.url}`);
+          }
+        }
+      });
+    } else if (typeof note.emojis === 'object') { // Handle object form
+      console.log(`投稿 ${note.id} の絵文字情報 (オブジェクト形式):`, note.emojis);
+      for (const emojiNameFromNote in note.emojis) {
+        if (Object.prototype.hasOwnProperty.call(note.emojis, emojiNameFromNote)) {
+          const emojiUrl = note.emojis[emojiNameFromNote];
+          const emojiKey = emojiNameFromNote; // Use the name as key directly
+          
+          if (!window.globalEmojiDict[emojiKey]) {
+            window.globalEmojiDict[emojiKey] = {
+              name: emojiNameFromNote,
+              url: emojiUrl,
+              host: MISSKEY_CONFIG.instance // Default host, might need refinement for true remote
+            };
+            console.log(`APIレスポンスから絵文字を追加 (オブジェクト形式): ${emojiKey} -> ${emojiUrl}`);
+          }
+        }
       }
-    });
+    } else {
+      console.log(`投稿 ${note.id} には絵文字情報が含まれていません (不明な形式)。note.emojis:`, note.emojis);
+    }
+  } else {
+    console.log(`投稿 ${note.id} には絵文字情報が含まれていません (null/undefined)。note.emojis:`, note.emojis);
   }
+  
+  // 2. 投稿本文から絵文字名を抽出して、辞書にない場合は取得を試行
+  if (note.text) {
+    const emojiPattern = /:([a-zA-Z0-9_]+):/g;
+    const matches = note.text.match(emojiPattern);
+    
+    if (matches) {
+      console.log(`投稿 ${note.id} の本文から検出された絵文字:`, matches);
+      matches.forEach(match => {
+        const emojiName = match.slice(1, -1); // :emoji_name: から emoji_name を抽出
+        console.log(`絵文字名を抽出: ${match} -> ${emojiName}`);
+        
+        // 既に取得済みでない場合のみ取得
+        if (!window.globalEmojiDict[emojiName]) {
+          console.log(`絵文字 ${emojiName} は辞書にないため、サーバーから取得を試行`);
+          fetchEmojiFromServer(emojiName);
+        } else {
+          console.log(`絵文字 ${emojiName} は既に辞書に存在:`, window.globalEmojiDict[emojiName]);
+        }
+      });
+    } else {
+      console.log(`投稿 ${note.id} の本文には絵文字パターンが検出されませんでした`);
+    }
+  }
+  
+  // 3. 現在の絵文字辞書の状態を確認
+  console.log(`現在の絵文字辞書の状態:`, {
+    totalEmojis: Object.keys(window.globalEmojiDict).length,
+    emojiNames: Object.keys(window.globalEmojiDict)
+  });
 }
 
 // サーバーから絵文字を取得
@@ -1173,7 +1679,44 @@ async function fetchEmojiFromServer(emojiName) {
     if (emojiName.includes('@')) {
       const remoteInstance = emojiName.split('@')[1];
       if (remoteInstance && remoteInstance !== currentInstance) {
+        console.log(`リモートインスタンス ${remoteInstance} から絵文字 ${emojiName} を取得中...`);
         await fetchEmojisFromInstance(remoteInstance);
+        
+        // リモート取得後に再度チェック
+        if (window.globalEmojiDict[emojiName]) {
+          console.log(`リモートインスタンス ${remoteInstance} から絵文字 ${emojiName} を取得しました`);
+          // プレースホルダーを更新
+          updateEmojiPlaceholders();
+          return;
+        }
+      }
+    }
+    
+    // リモート絵文字の場合は、直接URLを構築して辞書に追加
+    if (emojiName.includes('@') && !window.globalEmojiDict[emojiName]) {
+      const remoteInstance = emojiName.split('@')[1];
+      const baseEmojiName = emojiName.split('@')[0];
+      
+      // 複数の拡張子を試す
+      const extensions = ['.webp', '.png', '.gif', '.jpg', '.jpeg'];
+      let emojiUrl = null;
+      
+      // 最初に.webpを試す（最も一般的）
+      emojiUrl = `https://${remoteInstance}/emoji/${baseEmojiName}.webp`;
+      
+      // リモート絵文字を辞書に追加
+      if (!window.globalEmojiDict[emojiName]) {
+        window.globalEmojiDict[emojiName] = {
+          name: emojiName,
+          url: emojiUrl,
+          host: remoteInstance,
+          fallbackExtensions: extensions
+        };
+        
+        console.log(`リモート絵文字 ${emojiName} を辞書に追加: ${emojiUrl}`);
+        
+        // 辞書を保存してプレースホルダーを更新
+        saveEmojiDict();
       }
     }
     
@@ -1191,7 +1734,36 @@ async function fetchEmojisFromInstance(instance) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    const emojis = await response.json();
+    const data = await response.json();
+    
+    // レスポンスの構造をデバッグ出力
+    console.log(`インスタンス ${instance} からの絵文字APIレスポンス:`, data);
+    
+    // レスポンスの構造を確認してemojis配列を取得
+    let emojis = [];
+    if (Array.isArray(data)) {
+      // 直接配列が返される場合
+      emojis = data;
+    } else if (data && Array.isArray(data.emojis)) {
+      // {emojis: [...]} の形式で返される場合
+      emojis = data.emojis;
+    } else if (data && typeof data === 'object') {
+      // その他のオブジェクト形式の場合、キーを確認
+      console.log(`インスタンス ${instance} の絵文字APIレスポンスキー:`, Object.keys(data));
+      // 配列のような値を持つプロパティを探す
+      for (const [key, value] of Object.entries(data)) {
+        if (Array.isArray(value)) {
+          emojis = value;
+          console.log(`絵文字配列として使用するプロパティ: ${key}`);
+          break;
+        }
+      }
+    }
+    
+    // emojisが配列でない場合はエラー
+    if (!Array.isArray(emojis)) {
+      throw new Error(`絵文字データが配列ではありません: ${typeof emojis} - ${JSON.stringify(emojis).substring(0, 200)}`);
+    }
     
     // グローバル辞書に追加
     if (!window.globalEmojiDict) {
@@ -1199,7 +1771,9 @@ async function fetchEmojisFromInstance(instance) {
     }
     
     emojis.forEach(emoji => {
-      window.globalEmojiDict[emoji.name] = emoji;
+      if (emoji && emoji.name) {
+        window.globalEmojiDict[emoji.name] = emoji;
+      }
     });
     
     // ローカルストレージに保存
@@ -1217,9 +1791,76 @@ function saveEmojiDict() {
   try {
     if (window.globalEmojiDict) {
       localStorage.setItem('misskey_emoji_dict', JSON.stringify(window.globalEmojiDict));
+      
+      // 絵文字辞書が更新されたら、プレースホルダーを実際の絵文字に置き換え
+      updateEmojiPlaceholders();
     }
   } catch (error) {
     console.error('絵文字辞書の保存エラー:', error);
+  }
+}
+
+// 絵文字プレースホルダーを実際の絵文字画像に置き換え
+function updateEmojiPlaceholders() {
+  const placeholders = document.querySelectorAll('.custom-emoji-placeholder');
+  
+  placeholders.forEach(placeholder => {
+    const emojiName = placeholder.dataset.emojiName;
+    const emoji = findCustomEmoji(emojiName);
+    
+    if (emoji) {
+      // プレースホルダーを実際の絵文字画像に置き換え
+      const img = document.createElement('img');
+      img.src = emoji.url;
+      img.alt = emojiName;
+      img.className = 'custom-emoji';
+      img.title = emojiName;
+      
+      // エラーハンドリングを追加
+      if (emoji.fallbackExtensions) {
+        img.onerror = function() {
+          handleEmojiLoadError(this, emojiName);
+        };
+      }
+      
+      placeholder.parentNode.replaceChild(img, placeholder);
+    } else {
+      // 絵文字が見つからない場合、デバッグ情報を表示
+      console.log(`プレースホルダー更新: 絵文字 ${emojiName} が見つかりません`);
+      console.log('現在の絵文字辞書:', Object.keys(window.globalEmojiDict));
+    }
+  });
+}
+
+// 絵文字の読み込みエラーを処理
+function handleEmojiLoadError(imgElement, emojiName) {
+  const emoji = findCustomEmoji(emojiName);
+  if (!emoji || !emoji.fallbackExtensions) {
+    console.log(`絵文字 ${emojiName} のフォールバック拡張子がありません`);
+    return;
+  }
+  
+  // 現在のURLから拡張子を取得
+  const currentUrl = imgElement.src;
+  const currentExtension = currentUrl.substring(currentUrl.lastIndexOf('.'));
+  
+  // 次の拡張子を試す
+  const currentIndex = emoji.fallbackExtensions.indexOf(currentExtension);
+  if (currentIndex >= 0 && currentIndex < emoji.fallbackExtensions.length - 1) {
+    const nextExtension = emoji.fallbackExtensions[currentIndex + 1];
+    const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('.'));
+    const newUrl = baseUrl + nextExtension;
+    
+    console.log(`絵文字 ${emojiName} の拡張子を ${currentExtension} から ${nextExtension} に変更: ${newUrl}`);
+    imgElement.src = newUrl;
+  } else {
+    console.log(`絵文字 ${emojiName} のすべての拡張子を試しましたが、読み込みに失敗しました`);
+    // プレースホルダーに戻す
+    const placeholder = document.createElement('span');
+    placeholder.className = 'custom-emoji-placeholder';
+    placeholder.textContent = `:${emojiName}:`;
+    placeholder.dataset.emojiName = emojiName;
+    imgElement.parentNode.replaceChild(placeholder, imgElement);
   }
 }
 
@@ -1310,6 +1951,8 @@ function createReactionsHtml(reactions) {
 
 // リアクションを更新
 function updateReactions(noteId, reactions) {
+  console.log(`リアクション更新処理開始: 投稿ID ${noteId}`, reactions);
+  
   // リアクション情報をグローバルに保存
   if (!window.currentReactions) {
     window.currentReactions = {};
@@ -1345,6 +1988,8 @@ function updateReactions(noteId, reactions) {
   
   // リアクションのマウスオーバー処理を再設定
   setupReactionHoverEvents();
+  
+  console.log(`リアクション更新完了: 投稿ID ${noteId}`);
 }
 
 // 日付をフォーマット
@@ -1664,29 +2309,108 @@ function captureNote(noteId) {
 // 現在のチャンネルに購読
 function subscribeToCurrentChannel() {
   const timelineType = document.getElementById('timeline-type').value;
+  console.log(`現在のタイムラインタイプ: ${timelineType}`);
   
   // 既存のチャンネルから切断
   streamChannels.forEach((channelInfo, channelId) => {
+    console.log(`既存チャンネルを切断中: ${channelId} (${channelInfo.name})`);
     disconnectChannel(channelId);
   });
   
+  // チャンネルマップをクリア
+  streamChannels.clear();
+  
+  let channelName = '';
+  let params = {};
+  
   switch (timelineType) {
     case 'home':
-      subscribeToChannel('homeTimeline', {});
+      console.log('ホームタイムラインチャンネルに購読中...');
+      channelName = 'homeTimeline';
       break;
     case 'local':
-      subscribeToChannel('localTimeline', {});
+      console.log('ローカルタイムラインチャンネルに購読中...');
+      channelName = 'localTimeline';
       break;
     case 'global':
-      subscribeToChannel('globalTimeline', {});
+      console.log('グローバルタイムラインチャンネルに購読中...');
+      channelName = 'globalTimeline';
       break;
     case 'list':
       const selectedListId = document.getElementById('list-selector').value;
       if (selectedListId) {
-        subscribeToChannel('userList', { listId: selectedListId });
+        console.log(`リストチャンネルに購読中... (リストID: ${selectedListId})`);
+        channelName = 'userList';
+        params = { listId: selectedListId };
       }
       break;
+    default:
+      console.log('デフォルトでローカルタイムラインチャンネルに購読中...');
+      channelName = 'localTimeline';
   }
+  
+  if (channelName) {
+    console.log(`チャンネル ${channelName} に購読開始 (パラメータ:`, params, ')');
+    subscribeToChannel(channelName, params);
+  }
+  
+  // リアクション更新のための複数のチャンネルに購読
+  console.log('リアクション更新用のチャンネルに購読中...');
+  
+  // メインチャンネル（ユーザー関連の更新）
+  subscribeToChannel('main', {});
+  
+  // 投稿チャンネル（投稿関連の更新）
+  subscribeToChannel('notes', {});
+  
+  // リアクションチャンネル（リアクション専用）
+  subscribeToChannel('reactions', {});
+  
+  // 投稿の詳細更新チャンネル
+  subscribeToChannel('noteUpdates', {});
+  
+  // ユーザーのアクティビティチャンネル
+  subscribeToChannel('userActivity', {});
+  
+  // 投稿のリアクション更新チャンネル（別名）
+  subscribeToChannel('noteReactions', {});
+  
+  // リアクションの詳細チャンネル
+  subscribeToChannel('reactionDetails', {});
+  
+  // 現在のユーザーの投稿チャンネル（自分の投稿のリアクション更新）
+  if (MISSKEY_CONFIG.token) {
+    console.log('ユーザー投稿チャンネルに購読中...');
+    subscribeToChannel('user', {});
+    
+    // ユーザーのリアクション更新チャンネル
+    subscribeToChannel('userReactions', {});
+    
+    // ユーザーの投稿更新チャンネル
+    subscribeToChannel('userNotes', {});
+    
+    // ユーザーのリアクション履歴チャンネル
+    subscribeToChannel('userReactionHistory', {});
+  }
+  
+  // 現在表示されている投稿のリアクション更新を受信するために、各投稿のチャンネルにも購読
+  console.log('表示中の投稿のリアクション更新チャンネルに購読中...');
+  const displayedNotes = document.querySelectorAll('.misskey-note');
+  displayedNotes.forEach(noteElement => {
+    const noteId = noteElement.dataset.noteId;
+    if (noteId) {
+      console.log(`投稿 ${noteId} のリアクション更新チャンネルに購読中...`);
+      subscribeToChannel('note', { noteId: noteId });
+      
+      // 投稿のリアクション専用チャンネル
+      subscribeToChannel('noteReactions', { noteId: noteId });
+      
+      // 投稿の更新専用チャンネル
+      subscribeToChannel('noteUpdate', { noteId: noteId });
+    }
+  });
+  
+  console.log('チャンネル購読完了。現在のアクティブチャンネル数:', streamChannels.size);
 }
 
 // 初期化時に投稿フォームを初期化
@@ -1740,6 +2464,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (savedEmojiDict) {
       window.globalEmojiDict = JSON.parse(savedEmojiDict);
       console.log('絵文字辞書を復元しました');
+      
+      // 復元後にプレースホルダーを更新
+      setTimeout(() => {
+        updateEmojiPlaceholders();
+      }, 100);
     }
   } catch (error) {
     console.error('絵文字辞書の復元エラー:', error);
@@ -1750,4 +2479,149 @@ document.addEventListener('DOMContentLoaded', function() {
   if (typeof loadMisskeyTimeline === 'function') {
     loadMisskeyTimeline();
   }
+  
+  // デバッグ用のグローバル関数を公開
+  window.checkMisskeyStreaming = checkStreamingStatus;
+  window.startMisskeyStreaming = startStreaming;
+  window.stopMisskeyStreaming = stopStreaming;
+  window.testReactionUpdate = testReactionUpdate;
+  window.testReactionUpdateDetailed = testReactionUpdateDetailed;
+  window.showMessageStats = showMessageStats;
+  
+  console.log('Misskeyダッシュボード初期化完了');
+  console.log('デバッグ用コマンド:');
+  console.log('- checkMisskeyStreaming() : ストリーミング状態を確認');
+  console.log('- startMisskeyStreaming() : ストリーミングを開始');
+  console.log('- stopMisskeyStreaming() : ストリーミングを停止');
+  console.log('- testReactionUpdate() : リアクション更新のテスト');
+  console.log('- testReactionUpdateDetailed() : リアクション更新の詳細テスト');
+  console.log('- showMessageStats() : WebSocketメッセージ統計を表示');
 });
+
+// リアクションメッセージを直接処理
+function handleReactionMessage(data) {
+  console.log('リアクションメッセージ直接処理開始:', data);
+  
+  try {
+    let reactionData = null;
+    let messageType = data.type;
+    
+    // メッセージの構造を確認してリアクションデータを抽出
+    if (data.body) {
+      reactionData = data.body;
+    } else if (data.reaction) {
+      reactionData = data;
+    } else {
+      console.log('リアクションデータの構造が不明:', data);
+      return;
+    }
+    
+    const noteId = reactionData.noteId || reactionData.note?.id;
+    const emoji = reactionData.reaction;
+    const userId = reactionData.userId || reactionData.user?.id;
+    
+    console.log('抽出されたリアクション情報:', { noteId, emoji, userId, messageType });
+    
+    if (!noteId) {
+      console.warn('リアクションメッセージでnoteIdが取得できませんでした');
+      return;
+    }
+    
+    if (messageType === 'reaction') {
+      // リアクション追加
+      handleReactionAdd(noteId, emoji, userId);
+    } else if (messageType === 'unreaction') {
+      // リアクション削除
+      handleReactionRemove(noteId, emoji, userId);
+    }
+    
+  } catch (error) {
+    console.error('リアクションメッセージ処理エラー:', error);
+  }
+}
+
+// リアクション追加を処理
+function handleReactionAdd(noteId, emoji, userId) {
+  console.log(`リアクション追加処理: 投稿ID ${noteId}, 絵文字 ${emoji}, ユーザーID ${userId}`);
+  
+  // 既存のリアクション情報を取得
+  const currentReactions = window.currentReactions[noteId] || {};
+  console.log(`投稿 ${noteId} の現在のリアクション:`, currentReactions);
+  
+  // 新しいリアクション情報を作成（既存のリアクションをコピー）
+  const updatedReactions = { ...currentReactions };
+  
+  // リアクションのカウントを更新
+  if (updatedReactions[emoji]) {
+    updatedReactions[emoji]++;
+    console.log(`絵文字 ${emoji} のカウントを増加: ${updatedReactions[emoji]}`);
+  } else {
+    updatedReactions[emoji] = 1;
+    console.log(`新しい絵文字 ${emoji} を追加: カウント 1`);
+  }
+  
+  console.log(`更新後のリアクション情報:`, updatedReactions);
+  
+  // 更新されたリアクション情報で更新
+  updateReactions(noteId, updatedReactions);
+}
+
+// リアクション削除を処理
+function handleReactionRemove(noteId, emoji, userId) {
+  console.log(`リアクション削除処理: 投稿ID ${noteId}, 絵文字 ${emoji}, ユーザーID ${userId}`);
+  
+  // 既存のリアクション情報を取得
+  const currentReactions = window.currentReactions[noteId] || {};
+  console.log(`投稿 ${noteId} の現在のリアクション:`, currentReactions);
+  
+  // 新しいリアクション情報を作成（既存のリアクションをコピー）
+  const updatedReactions = { ...currentReactions };
+  
+  // リアクションのカウントを更新
+  if (updatedReactions[emoji] && updatedReactions[emoji] > 1) {
+    updatedReactions[emoji]--;
+    console.log(`絵文字 ${emoji} のカウントを減少: ${updatedReactions[emoji]}`);
+  } else if (updatedReactions[emoji] === 1) {
+    // カウントが1の場合は削除
+    delete updatedReactions[emoji];
+    console.log(`絵文字 ${emoji} を削除 (カウントが0になったため)`);
+  }
+  
+  console.log(`更新後のリアクション情報:`, updatedReactions);
+  
+  // 更新されたリアクション情報で更新
+  updateReactions(noteId, updatedReactions);
+}
+
+// メッセージの構造を深く分析してリアクション情報を探す
+function analyzeMessageForReactions(data, depth = 0, path = '') {
+  const maxDepth = 3; // 最大深さを制限
+  
+  if (depth > maxDepth) return;
+  
+  if (typeof data === 'object' && data !== null) {
+    for (const [key, value] of Object.entries(data)) {
+      const currentPath = path ? `${path}.${key}` : key;
+      
+      // リアクション関連のキーをチェック
+      if (key === 'reaction' || key === 'reactions' || key === 'noteId' || key === 'emoji') {
+        console.log(`🔍 リアクション関連のキー "${key}" を発見:`, value);
+        console.log(`   パス: ${currentPath}`);
+        
+        // リアクション情報が見つかった場合の処理
+        if (key === 'reaction' && typeof value === 'string') {
+          console.log(`   絵文字 "${value}" が検出されました`);
+        } else if (key === 'noteId' && typeof value === 'string') {
+          console.log(`   投稿ID "${value}" が検出されました`);
+        } else if (key === 'reactions' && typeof value === 'object') {
+          console.log(`   リアクションオブジェクトが検出されました:`, value);
+        }
+      }
+      
+      // ネストしたオブジェクトを再帰的に分析
+      if (typeof value === 'object' && value !== null) {
+        analyzeMessageForReactions(value, depth + 1, currentPath);
+      }
+    }
+  }
+}

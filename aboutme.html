@@ -98,12 +98,12 @@
   <div id="wrapper">
     <header id="header">
       <div id="header-flex">
-        <nav id="back">
+        <nav id="back" aria-label="戻るナビゲーション">
           <a id="backicon" href="../index.html">
             &lt;
           </a>
         </nav>
-        <nav id="address" class="addressbar">
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
           <a class="addressbar" href="../index.html">
             100%health
           </a>/
@@ -115,13 +115,13 @@
     </header>
     <main id="main">
       <section id="galleryspace">
+        <h1 class="title"><ruby>自己紹介<rt>わたしについての</rt></ruby>ページ / <small title="about myself" lang="en">about_me</small></h1>
         <article id="bio" class="vcard" itemscope itemtype="http://schema.org/Person">
-          <h1 class="title">about_me</h1>
           <div id="biocard">
             <div style="background-color: black;height: 100%;">
               <img class="photo" src="/img/idoko4.png" alt="idoko illust" style="opacity: 0.5;" itemprop="image">
             </div>
-            <table class="profile-table">
+            <table class="profile-table" aria-label="プロフィール情報">
               <tbody>
                 <tr>
                   <th>名前</th>
@@ -139,7 +139,7 @@
                 </tr>
                 <tr>
                   <th>趣味</th>
-                  <td class="hobby" itemprop="description">ネットサーフィン, お絵描き, 年表作り, 音楽鑑賞, Webラジオ制作, 配信</td>
+                  <td class="hobby" itemprop="description">ネットサーフィン, お絵かき, 年表作り, 音楽鑑賞, Webラジオ制作, 配信</td>
                 </tr>
                 <tr>
                   <th>ウェブサイト</th>
@@ -160,12 +160,13 @@
           </div>
         </article>
         <section id="site_introduction">
+          <h2 style="display: none;">サイトについて</h2>
           <p style="text-align: right;">このサイトについては<a href="/txt/100phealth_introduction.html">こちら</a>をご覧ください。</p>
         </section>
 
         <section id="social_links">
-          <h1 class="heading">my links</h1>
-          <table class="profile-table">
+          <h2 class="heading"><ruby>各種<rt>いろんな</rt></ruby>リンク / <small title="my links" lang="en">my links</small></h2>
+          <table class="profile-table" aria-label="各種リンク一覧">
             <tbody>
               <tr>
                 <th><small>イラスト保管庫</small></th>

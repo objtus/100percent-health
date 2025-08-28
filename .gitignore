@@ -1,6 +1,3 @@
-# dashboard.htmlを除外
-dashboard.html
-
 # 一般的な除外ファイル
 .DS_Store
 Thumbs.db

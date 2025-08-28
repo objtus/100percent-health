@@ -15,12 +15,12 @@
     <div id="wrapper">
         <header id="header">
             <div id="header-flex">
-                <nav id="back">
+                <nav id="back" aria-label="戻るナビゲーション">
                     <a id="backicon" href="/index.html">
                         &lt;
                     </a>
                 </nav>
-                <nav id="address" class="addressbar">
+                <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
                     <a class="addressbar" href="/index.html">
                         100%health
                     </a>/
@@ -42,18 +42,18 @@
                     <h1 class="title">#misuzu-chan の作品一覧</h1>
                     <div class="tag-controls">
                         <div class="filter-row">
-                            <select id="sort-select">
+                            <select id="sort-select" aria-label="並び替え">
                                 <option value="date-desc">新しい順</option>
                                 <option value="date-asc">古い順</option>
                                 <option value="series">シリーズ別</option>
                             </select>
                             
-                            <select id="series-filter">
+                            <select id="series-filter" aria-label="シリーズ別">
                                 <option value="">全シリーズ</option>
                                 <!-- 動的生成 -->
                             </select>
                             
-                            <select id="tag-filter">
+                            <select id="tag-filter" aria-label="追加タグ">
                                 <option value="">追加タグなし</option>
                                 <!-- 動的生成 -->
                             </select>
