@@ -7,11 +7,16 @@
     <title>2024 - 100%health</title>
     <link rel="stylesheet" href="/1column.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <script src="/js/jquery-3.6.0.min.js" async></script>
-    <script src="/js/main.js" defer></script>
-    <script src="/js/mouse.js" defer></script>
+    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/mouse.js"></script>
     <link rel="stylesheet" href="/txt/zakki/tag-style.css">
     <link rel="stylesheet" href="/txt/zakki/zakki-year.css">
+    <style>
+      article {
+        -webkit-line-clamp: 7;
+      }
+    </style>
     <script>
       $(function () {
         $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
@@ -89,12 +94,12 @@
     <div id="wrapper">
       <header id="header">
         <div id="header-flex">
-          <nav id="back" aria-label="戻るナビゲーション">
+          <nav id="back">
             <a id="backicon" href="/index.html">
               &lt;
             </a>
           </nav>
-          <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <nav id="address" class="addressbar">
             <a class="addressbar" href="/index.html">
               100%health
             </a>/
@@ -103,6 +108,7 @@
             </a>/
             <a class="addressbar" href="/txt/zakki/2024.html">
               2024
+            </a>
             </a>
           </nav>
         </div>
@@ -124,7 +130,7 @@
     </div>
     <div id="lightbox">
       <link rel="stylesheet" href="/luminous-basic.min.css">
-      <script src="/Luminous.min.js" defer></script>
+      <script src="/Luminous.min.js"></script>
       <script>
         new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
       </script>

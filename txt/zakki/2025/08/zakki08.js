@@ -1,7 +1,7 @@
 async function loadDailyArticles08() {
 	const month = "08";
 	const year = "2025";
-	const dates = ["26"];
+	const dates = ["26", "29"];
 
 	let monthContainer = document.querySelector("#zakki08");
 	if (!monthContainer) {

@@ -23,7 +23,6 @@ article {
 	display: -webkit-box;
 	text-overflow: ellipsis;
 	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 7;
 
 	h3 {
 		font-size: 14pt;
@@ -58,6 +57,33 @@ article {
 		padding-left: 2em;
 	}
 }
+
+/* 短縮版表示用スタイル */
+.article-preview {
+	margin: 10px 0;
+	padding: 0 40px;
+	p{
+		font-size: 10pt;
+		line-height: 1.6;
+		margin: 0;
+	}
+	.article-ellipsis {
+		font-size: 12pt;
+		text-align: center;
+		margin: 10px 0;
+	}
+	.ellipsis {
+		font-style: italic;
+		color: #666;
+	}
+	.list-ellipsis {
+		font-style: italic;
+		color: #666;
+		text-align: right;
+	}
+}
+
+
 #zakkizone,.monthlist,#taglist {
 	list-style-type: none;
 }
