@@ -27,9 +27,15 @@ function getConfigValueLocal(key, defaultValue = null) {
 
 /**
  * 設定値を取得（数値型）
+ * 設定プロバイダーパターンを使用して統一された設定管理を実現
  */
 function getConfigNumberLocal(key, defaultValue = 0) {
-    // 設定管理システムが利用可能な場合はそれを使用
+    // 新しい設定プロバイダーシステムが利用可能な場合はそれを使用
+    if (typeof window !== 'undefined' && window.configManager) {
+        return window.configManager.getNumber(key, defaultValue);
+    }
+    
+    // 後方互換性のため、従来の設定管理システムもサポート
     if (typeof window !== 'undefined' && typeof window.getConfigNumber === 'function') {
         return window.getConfigNumber(key, defaultValue);
     }
@@ -41,9 +47,15 @@ function getConfigNumberLocal(key, defaultValue = 0) {
 
 /**
  * 設定値を取得（文字列型）
+ * 設定プロバイダーパターンを使用して統一された設定管理を実現
  */
 function getConfigStringLocal(key, defaultValue = '') {
-    // 設定管理システムが利用可能な場合はそれを使用
+    // 新しい設定プロバイダーシステムが利用可能な場合はそれを使用
+    if (typeof window !== 'undefined' && window.configManager) {
+        return window.configManager.getString(key, defaultValue);
+    }
+    
+    // 後方互換性のため、従来の設定管理システムもサポート
     if (typeof window !== 'undefined' && typeof window.getConfigString === 'function') {
         return window.getConfigString(key, defaultValue);
     }
@@ -55,9 +67,15 @@ function getConfigStringLocal(key, defaultValue = '') {
 
 /**
  * 設定値を取得（ブール型）
+ * 設定プロバイダーパターンを使用して統一された設定管理を実現
  */
 function getConfigBooleanLocal(key, defaultValue = false) {
-    // 設定管理システムが利用可能な場合はそれを使用
+    // 新しい設定プロバイダーシステムが利用可能な場合はそれを使用
+    if (typeof window !== 'undefined' && window.configManager) {
+        return window.configManager.getBoolean(key, defaultValue);
+    }
+    
+    // 後方互換性のため、従来の設定管理システムもサポート
     if (typeof window !== 'undefined' && typeof window.getConfigBoolean === 'function') {
         return window.getConfigBoolean(key, defaultValue);
     }
@@ -69,9 +87,15 @@ function getConfigBooleanLocal(key, defaultValue = false) {
 
 /**
  * 設定値を取得（オブジェクト型）
+ * 設定プロバイダーパターンを使用して統一された設定管理を実現
  */
 function getConfigObjectLocal(key, defaultValue = {}) {
-    // 設定管理システムが利用可能な場合はそれを使用
+    // 新しい設定プロバイダーシステムが利用可能な場合はそれを使用
+    if (typeof window !== 'undefined' && window.configManager) {
+        return window.configManager.getObject(key, defaultValue);
+    }
+    
+    // 後方互換性のため、従来の設定管理システムもサポート
     if (typeof window !== 'undefined' && typeof window.getConfigObject === 'function') {
         return window.getConfigObject(key, defaultValue);
     }
@@ -83,12 +107,19 @@ function getConfigObjectLocal(key, defaultValue = {}) {
 
 /**
  * 設定値の存在チェック
+ * 設定プロバイダーパターンを使用して統一された設定管理を実現
  */
 function hasConfigValueLocal(key) {
-    // 設定管理システムが利用可能な場合はそれを使用
+    // 新しい設定プロバイダーシステムが利用可能な場合はそれを使用
+    if (typeof window !== 'undefined' && window.configManager) {
+        return window.configManager.has(key);
+    }
+    
+    // 後方互換性のため、従来の設定管理システムもサポート
     if (typeof window !== 'undefined' && typeof window.hasConfigValue === 'function') {
         return window.hasConfigValue(key);
     }
+    
     return false;
 }
 
@@ -1497,189 +1528,7 @@ class APIClient {
 // 設定管理改善
 // ========================================
 
-/**
- * 設定バリデータークラス
- */
-class ConfigValidator {
-    constructor() {
-        this.rules = {
-            // 数値設定のルール
-            numeric: {
-                maxPosts: { min: 1, max: 1000, default: 20 },
-                daysBack: { min: 1, max: 365, default: 7 },
-                maxImages: { min: 1, max: 20, default: 6 },
-                rateLimit: { min: 1000, max: 300000, default: 15000 },
-                timeout: { min: 1000, max: 30000, default: 10000 },
-                retryAttempts: { min: 1, max: 10, default: 3 }
-            },
-            
-            // 文字列設定のルール
-            string: {
-                displayName: { maxLength: 100, default: '' },
-                sourceIcon: { maxLength: 50, default: '[API]' },
-                description: { maxLength: 500, default: '' }
-            },
-            
-            // URL設定のルール
-            url: {
-                instanceUrl: { required: true, pattern: /^https?:\/\/.+/ },
-                feedUrl: { required: true, pattern: /^(https?:\/\/|\/|\.\/|\.\.\/).+/ }
-            },
-            
-            // ブール設定のルール
-            boolean: {
-                enabled: { default: true },
-                useProxy: { default: true },
-                timeBasedFetch: { default: false },
-                includeReplies: { default: false },
-                includeReblogs: { default: false }
-            }
-        };
-    }
-    
-    /**
-     * 設定値を検証
-     * @param {string} key - 設定キー
-     * @param {any} value - 設定値
-     * @param {string} type - 設定タイプ
-     * @returns {Object} 検証結果
-     */
-    validate(key, value, type) {
-        const rule = this.rules[type]?.[key];
-        if (!rule) {
-            return { valid: true, value, message: 'No validation rule' };
-        }
-        
-        // 数値検証
-        if (type === 'numeric') {
-            const num = Number(value);
-            if (isNaN(num)) {
-                return { valid: false, value: rule.default, message: `Invalid number: ${value}` };
-            }
-            if (num < rule.min || num > rule.max) {
-                return { valid: false, value: rule.default, message: `Value out of range: ${num} (${rule.min}-${rule.max})` };
-            }
-            return { valid: true, value: num, message: 'Valid' };
-        }
-        
-        // 文字列検証
-        if (type === 'string') {
-            const str = String(value || '');
-            if (str.length > rule.maxLength) {
-                return { valid: false, value: str.substring(0, rule.maxLength), message: `String too long: ${str.length} > ${rule.maxLength}` };
-            }
-            return { valid: true, value: str, message: 'Valid' };
-        }
-        
-        // URL検証
-        if (type === 'url') {
-            if (rule.required && !value) {
-                return { valid: false, value: '', message: `Required field missing: ${key}` };
-            }
-            if (value && !rule.pattern.test(value)) {
-                return { valid: false, value: '', message: `Invalid URL format: ${value}` };
-            }
-            return { valid: true, value: value || '', message: 'Valid' };
-        }
-        
-        // ブール検証
-        if (type === 'boolean') {
-            const bool = Boolean(value);
-            return { valid: true, value: bool, message: 'Valid' };
-        }
-        
-        return { valid: true, value, message: 'No specific validation' };
-    }
-    
-    /**
-     * 設定オブジェクト全体を検証
-     * @param {Object} config - 設定オブジェクト
-     * @param {string} configType - 設定タイプ（misskey, mastodon, rss等）
-     * @returns {Object} 検証結果
-     */
-    validateConfig(config, configType = 'general') {
-        const results = {
-            valid: true,
-            errors: [],
-            warnings: [],
-            validatedConfig: {}
-        };
-        
-        // 設定タイプ別の検証ルール
-        const typeRules = this.getTypeRules(configType);
-        
-        for (const [key, value] of Object.entries(config)) {
-            const rule = typeRules[key];
-            if (!rule) {
-                results.warnings.push(`Unknown setting: ${key}`);
-                results.validatedConfig[key] = value;
-                continue;
-            }
-            
-            const validation = this.validate(key, value, rule.type);
-            results.validatedConfig[key] = validation.value;
-            
-            if (!validation.valid) {
-                results.valid = false;
-                results.errors.push(`${key}: ${validation.message}`);
-            }
-        }
-        
-        // 必須フィールドのチェック
-        const requiredFields = typeRules.required || [];
-        for (const field of requiredFields) {
-            if (!config[field]) {
-                results.valid = false;
-                results.errors.push(`Required field missing: ${field}`);
-            }
-        }
-        
-        return results;
-    }
-    
-    /**
-     * 設定タイプ別のルールを取得
-     * @param {string} configType - 設定タイプ
-     * @returns {Object} ルールオブジェクト
-     */
-    getTypeRules(configType) {
-        const baseRules = {
-            displayName: { type: 'string' },
-            sourceIcon: { type: 'string' },
-            description: { type: 'string' },
-            maxPosts: { type: 'numeric' },
-            rateLimit: { type: 'numeric' },
-            useProxy: { type: 'boolean' },
-            timeBasedFetch: { type: 'boolean' },
-            daysBack: { type: 'numeric' },
-            maxImages: { type: 'numeric' },
-            includeReplies: { type: 'boolean' },
-            includeReblogs: { type: 'boolean' }
-        };
-        
-        switch (configType.toLowerCase()) {
-            case 'misskey':
-            case 'mastodon':
-                return {
-                    ...baseRules,
-                    required: ['instanceUrl', 'username'],
-                    instanceUrl: { type: 'url' },
-                    username: { type: 'string', maxLength: 50 }
-                };
-            case 'rss':
-                return {
-                    ...baseRules,
-                    required: ['feedUrl'],
-                    feedUrl: { type: 'url' }
-                };
-            default:
-                return baseRules;
-        }
-    }
-}
-
-// グローバル設定バリデーターインスタンス
-const configValidator = new ConfigValidator();
+// ConfigValidatorクラスはconfig-validator.jsに移動しました
 
 // ========================================
 // エラーハンドリング統一
@@ -1941,20 +1790,38 @@ class AdapterFactory {
      * @returns {APIAdapter} 作成されたアダプター
      */
     create(type, config) {
-        // 設定を検証
-        const validation = configValidator.validateConfig(config, type);
+        let validation = null;
+        let validatedConfig = config;
         
-        if (!validation.valid) {
-            console.error(`設定検証エラー (${type}):`, validation.errors);
-            throw new Error(`Invalid configuration: ${validation.errors.join(', ')}`);
+        // 設定を検証（configValidatorが利用可能な場合のみ）
+        if (typeof window !== 'undefined' && window.configValidator) {
+            validation = window.configValidator.validateAdapterConfig(config, type);
+            
+            if (!validation.valid) {
+                console.error(`設定検証エラー (${type}):`, validation.errors);
+                throw new Error(`Invalid configuration: ${validation.errors.join(', ')}`);
+            }
+            
+            if (validation.warnings.length > 0) {
+                console.warn(`設定警告 (${type}):`, validation.warnings);
+            }
+            
+            validatedConfig = validation.validatedConfig;
+        } else {
+            // 設定検証システムが利用できない場合は基本的な検証のみ実行
+            console.warn('設定検証システムが利用できません。基本的な検証のみ実行します。');
+            
+            // 必須フィールドの基本的なチェック
+            if (type === 'misskey' || type === 'mastodon') {
+                if (!config.instanceUrl || !config.username) {
+                    throw new Error(`Invalid configuration: Missing required fields for ${type}`);
+                }
+            } else if (type === 'rss') {
+                if (!config.feedUrl) {
+                    throw new Error(`Invalid configuration: Missing required field feedUrl for ${type}`);
+                }
+            }
         }
-        
-        if (validation.warnings.length > 0) {
-            console.warn(`設定警告 (${type}):`, validation.warnings);
-        }
-        
-        // 検証済み設定を使用
-        const validatedConfig = validation.validatedConfig;
         const adapterId = this.generateAdapterId(type, validatedConfig);
         
         // 既存のアダプターをチェック
@@ -3407,6 +3274,28 @@ function loadMorePosts() {
     }
 }
 
+// グローバル関数を公開（ブラウザ環境用）
+if (typeof window !== 'undefined') {
+    window.initializePlanetV2 = initializePlanetV2;
+    window.loadMorePosts = loadMorePosts;
+    window.getCacheStatus = getCacheStatus;
+    window.forceClearCache = forceClearCache;
+    window.PlanetAggregator = PlanetAggregator;
+    window.AdapterFactory = AdapterFactory;
+    window.APIClient = APIClient;
+    window.ErrorHandler = ErrorHandler;
+    window.MisskeyAdapter = MisskeyAdapter;
+    window.MastodonAdapter = MastodonAdapter;
+    window.RSSAdapter = RSSAdapter;
+    window.BaseSNSAdapter = BaseSNSAdapter;
+    window.APIAdapter = APIAdapter;
+    window.Post = Post;
+    window.UserInfo = UserInfo;
+    window.ProxyManager = ProxyManager;
+    window.errorHandler = errorHandler;
+    // configValidatorはconfig-validator.jsで定義される
+}
+
 // モジュールエクスポート（Node.js環境用）
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -3415,7 +3304,6 @@ if (typeof module !== 'undefined' && module.exports) {
         AdapterFactory,
         APIClient,
         ErrorHandler,
-        ConfigValidator,
         
         // アダプタークラス
         MisskeyAdapter,
@@ -3438,7 +3326,6 @@ if (typeof module !== 'undefined' && module.exports) {
         forceClearCache,
         
         // インスタンス
-        errorHandler,
-        configValidator
+        errorHandler
     };
 }
