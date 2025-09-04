@@ -351,7 +351,7 @@ function sanitizeImageUrl(url) {
 
 class PlanetAggregator {
     constructor() {
-        this.adapters = new Map();
+        this.adapterFactory = new AdapterFactory();
         this.posts = [];
         this.cache = new Map();
         this.cachedPosts = []; // 取得した投稿をキャッシュ
@@ -535,27 +535,22 @@ class PlanetAggregator {
     }
     
     addAdapter(type, instanceUrl, username, config = {}) {
-        let adapterId;
-        let adapter;
+        // 設定オブジェクトを構築
+        const adapterConfig = {
+            instanceUrl,
+            username,
+            ...config
+        };
         
-        switch (type.toLowerCase()) {
-            case 'misskey':
-                adapterId = `${type}:${instanceUrl}:${username}`;
-                adapter = new MisskeyAdapter(instanceUrl, username, config);
-                break;
-            case 'mastodon':
-                adapterId = `${type}:${instanceUrl}:${username}`;
-                adapter = new MastodonAdapter(instanceUrl, username, config);
-                break;
-            case 'rss':
-                adapterId = `${type}:${instanceUrl}`;
-                adapter = new RSSAdapter(instanceUrl, config);
-                break;
-            default:
-                throw new Error(`未対応のSNSタイプ: ${type}`);
+        // RSSの場合は特別な処理
+        if (type.toLowerCase() === 'rss') {
+            adapterConfig.feedUrl = instanceUrl;
         }
         
-        this.adapters.set(adapterId, adapter);
+        // ファクトリーを使用してアダプターを作成
+        const adapter = this.adapterFactory.create(type, adapterConfig);
+        const adapterId = this.adapterFactory.generateAdapterId(type, adapterConfig);
+        
         console.log(`アダプター追加: ${adapter.displayName} (${type})`);
         return adapterId;
     }
@@ -582,9 +577,9 @@ class PlanetAggregator {
             return;
         }
         
-        console.log(`Planet Aggregator: ${this.adapters.size}件のアダプターから取得開始`);
+        console.log(`Planet Aggregator: ${this.adapterFactory.size()}件のアダプターから取得開始`);
         
-        const promises = Array.from(this.adapters.values()).map(adapter => 
+        const promises = Array.from(this.adapterFactory.getAll().values()).map(adapter => 
             this.fetchFromAdapter(adapter)
         );
         
@@ -654,7 +649,7 @@ class PlanetAggregator {
             console.log(`既存投稿数: ${existingIds.size}件`);
             
             // 各アダプターから追加の投稿を取得（生データ）
-            const promises = Array.from(this.adapters.values()).map(adapter => 
+            const promises = Array.from(this.adapterFactory.getAll().values()).map(adapter => 
                 this.fetchMoreFromAdapterRaw(adapter, existingIds)
             );
             
@@ -663,7 +658,7 @@ class PlanetAggregator {
             
             const newPosts = [];
             results.forEach((result, index) => {
-                const adapterName = Array.from(this.adapters.values())[index].displayName;
+                const adapterName = Array.from(this.adapterFactory.getAll().values())[index].displayName;
                 if (result.status === 'fulfilled' && result.value) {
                     console.log(`${adapterName}: ${result.value.length}件取得`);
                     newPosts.push(...result.value);
@@ -1308,11 +1303,894 @@ class ProxyManager {
 const proxyManager = new ProxyManager();
 
 // ========================================
+// 共通APIクライアント
+// ========================================
+
+/**
+ * 統一されたAPIリクエスト処理クラス
+ */
+class APIClient {
+    constructor(config = {}) {
+        this.config = {
+            timeout: config.timeout || getConfigNumberLocal('REQUEST_TIMEOUT', 10000),
+            retryAttempts: config.retryAttempts || getConfigNumberLocal('RETRY_ATTEMPTS', 3),
+            retryDelay: config.retryDelay || getConfigNumberLocal('BACKOFF.BASE_DELAY', 1000),
+            maxRetryDelay: config.maxRetryDelay || getConfigNumberLocal('BACKOFF.MAX_DELAY', 10000),
+            retryMultiplier: config.retryMultiplier || getConfigNumberLocal('BACKOFF.MULTIPLIER', 2),
+            useProxy: config.useProxy !== false, // デフォルトはtrue
+            ...config
+        };
+    }
+    
+    /**
+     * リトライ設定付きでAPIリクエストを実行
+     * @param {string} url - リクエストURL
+     * @param {Object} options - fetchオプション
+     * @param {string} displayName - 表示名（ログ用）
+     * @returns {Promise<any>} レスポンスデータ
+     */
+    async request(url, options = {}, displayName = 'API') {
+        const { useProxy } = this.config;
+        const proxies = useProxy ? proxyManager.getAvailableProxies() : [];
+        
+        for (let attempt = 1; attempt <= this.config.retryAttempts; attempt++) {
+            try {
+                if (useProxy) {
+                    // プロキシを使用してリクエストを試行
+                    for (const proxy of proxies) {
+                        try {
+                            return await this.makeProxyRequest(proxy, url, options, displayName);
+                        } catch (error) {
+                            const errorResult = errorHandler.handleError(error, `${displayName} (プロキシ: ${proxyManager.getProxyName(proxy)})`, {
+                                attempt,
+                                maxAttempts: this.config.retryAttempts,
+                                metadata: { proxy, url }
+                            });
+                            
+                            if (errorResult.retryInfo.canRetry && attempt < this.config.retryAttempts) {
+                                await this.delay(errorResult.retryInfo.delay);
+                                break; // プロキシループを抜けて次の試行へ
+                            } else {
+                                proxyManager.recordFailure(proxy);
+                                continue; // 次のプロキシを試行
+                            }
+                        }
+                    }
+                } else {
+                    // 直接アクセス
+                    return await this.makeDirectRequest(url, options, displayName);
+                }
+            } catch (error) {
+                const errorResult = errorHandler.handleError(error, displayName, {
+                    attempt,
+                    maxAttempts: this.config.retryAttempts,
+                    retryConfig: {
+                        strategy: 'exponential_backoff',
+                        baseDelay: this.config.retryDelay,
+                        maxDelay: this.config.maxRetryDelay,
+                        multiplier: this.config.retryMultiplier
+                    },
+                    metadata: { url }
+                });
+                
+                if (errorResult.retryInfo.canRetry && attempt < this.config.retryAttempts) {
+                    await this.delay(errorResult.retryInfo.delay);
+                }
+            }
+        }
+        
+        // 全ての試行が失敗した場合
+        const finalError = new Error(`${useProxy ? '全てのプロキシ' : '直接アクセス'}でAPI取得に失敗しました`);
+        errorHandler.handleError(finalError, displayName, {
+            attempt: this.config.retryAttempts,
+            maxAttempts: this.config.retryAttempts,
+            metadata: { url, useProxy }
+        });
+        
+        throw finalError;
+    }
+    
+    /**
+     * プロキシ経由でリクエストを実行
+     * @param {string} proxy - プロキシURL
+     * @param {string} url - リクエストURL
+     * @param {Object} options - fetchオプション
+     * @param {string} displayName - 表示名
+     * @returns {Promise<any>} レスポンスデータ
+     */
+    async makeProxyRequest(proxy, url, options, displayName) {
+        let proxyUrl;
+        let requestOptions = { ...options };
+        
+        if (proxy.includes('allorigins.win')) {
+            // allorigins.win の場合
+            proxyUrl = `${proxy}${encodeURIComponent(url)}`;
+            requestOptions = {
+                method: 'GET',
+                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+            };
+        } else {
+            // その他のプロキシの場合
+            proxyUrl = `${proxy}${url}`;
+        }
+        
+        console.log(`${displayName}: プロキシ ${proxyManager.getProxyName(proxy)} 経由でAPI取得中...`);
+        
+        const response = await fetch(proxyUrl, {
+            ...requestOptions,
+            signal: AbortSignal.timeout(this.config.timeout)
+        });
+        
+        if (response.ok) {
+            let result;
+            if (proxy.includes('allorigins.win')) {
+                const data = await response.json();
+                result = options.returnText ? data.contents : JSON.parse(data.contents);
+            } else {
+                result = options.returnText ? await response.text() : await response.json();
+            }
+            return result;
+        }
+        
+        // エラーレスポンスの詳細をログに出力
+        const errorText = await response.text();
+        console.error(`${displayName}: HTTP ${response.status} エラー:`, errorText);
+        
+        if (response.status === 429) {
+            const retryAfter = response.headers.get('Retry-After') || 60;
+            console.warn(`${displayName}: レート制限 ${retryAfter}秒待機`);
+            throw new Error(`RATE_LIMIT:${retryAfter}`);
+        }
+        
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    /**
+     * 直接アクセスでリクエストを実行
+     * @param {string} url - リクエストURL
+     * @param {Object} options - fetchオプション
+     * @param {string} displayName - 表示名
+     * @returns {Promise<any>} レスポンスデータ
+     */
+    async makeDirectRequest(url, options, displayName) {
+        console.log(`${displayName}: 直接API取得中...`);
+        const response = await fetch(url, {
+            ...options,
+            signal: AbortSignal.timeout(this.config.timeout)
+        });
+        
+        if (response.ok) {
+            return options.returnText ? await response.text() : await response.json();
+        }
+        
+        const errorText = await response.text();
+        console.error(`${displayName}: HTTP ${response.status} エラー:`, errorText);
+        
+        if (response.status === 429) {
+            const retryAfter = response.headers.get('Retry-After') || 60;
+            console.warn(`${displayName}: レート制限 ${retryAfter}秒待機`);
+            throw new Error(`RATE_LIMIT:${retryAfter}`);
+        }
+        
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    /**
+     * 指定時間待機
+     * @param {number} ms - 待機時間（ミリ秒）
+     * @returns {Promise<void>}
+     */
+    async delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    /**
+     * 設定を更新
+     * @param {Object} newConfig - 新しい設定
+     */
+    updateConfig(newConfig) {
+        this.config = { ...this.config, ...newConfig };
+    }
+}
+
+// ========================================
+// 設定管理改善
+// ========================================
+
+/**
+ * 設定バリデータークラス
+ */
+class ConfigValidator {
+    constructor() {
+        this.rules = {
+            // 数値設定のルール
+            numeric: {
+                maxPosts: { min: 1, max: 1000, default: 20 },
+                daysBack: { min: 1, max: 365, default: 7 },
+                maxImages: { min: 1, max: 20, default: 6 },
+                rateLimit: { min: 1000, max: 300000, default: 15000 },
+                timeout: { min: 1000, max: 30000, default: 10000 },
+                retryAttempts: { min: 1, max: 10, default: 3 }
+            },
+            
+            // 文字列設定のルール
+            string: {
+                displayName: { maxLength: 100, default: '' },
+                sourceIcon: { maxLength: 50, default: '[API]' },
+                description: { maxLength: 500, default: '' }
+            },
+            
+            // URL設定のルール
+            url: {
+                instanceUrl: { required: true, pattern: /^https?:\/\/.+/ },
+                feedUrl: { required: true, pattern: /^(https?:\/\/|\/|\.\/|\.\.\/).+/ }
+            },
+            
+            // ブール設定のルール
+            boolean: {
+                enabled: { default: true },
+                useProxy: { default: true },
+                timeBasedFetch: { default: false },
+                includeReplies: { default: false },
+                includeReblogs: { default: false }
+            }
+        };
+    }
+    
+    /**
+     * 設定値を検証
+     * @param {string} key - 設定キー
+     * @param {any} value - 設定値
+     * @param {string} type - 設定タイプ
+     * @returns {Object} 検証結果
+     */
+    validate(key, value, type) {
+        const rule = this.rules[type]?.[key];
+        if (!rule) {
+            return { valid: true, value, message: 'No validation rule' };
+        }
+        
+        // 数値検証
+        if (type === 'numeric') {
+            const num = Number(value);
+            if (isNaN(num)) {
+                return { valid: false, value: rule.default, message: `Invalid number: ${value}` };
+            }
+            if (num < rule.min || num > rule.max) {
+                return { valid: false, value: rule.default, message: `Value out of range: ${num} (${rule.min}-${rule.max})` };
+            }
+            return { valid: true, value: num, message: 'Valid' };
+        }
+        
+        // 文字列検証
+        if (type === 'string') {
+            const str = String(value || '');
+            if (str.length > rule.maxLength) {
+                return { valid: false, value: str.substring(0, rule.maxLength), message: `String too long: ${str.length} > ${rule.maxLength}` };
+            }
+            return { valid: true, value: str, message: 'Valid' };
+        }
+        
+        // URL検証
+        if (type === 'url') {
+            if (rule.required && !value) {
+                return { valid: false, value: '', message: `Required field missing: ${key}` };
+            }
+            if (value && !rule.pattern.test(value)) {
+                return { valid: false, value: '', message: `Invalid URL format: ${value}` };
+            }
+            return { valid: true, value: value || '', message: 'Valid' };
+        }
+        
+        // ブール検証
+        if (type === 'boolean') {
+            const bool = Boolean(value);
+            return { valid: true, value: bool, message: 'Valid' };
+        }
+        
+        return { valid: true, value, message: 'No specific validation' };
+    }
+    
+    /**
+     * 設定オブジェクト全体を検証
+     * @param {Object} config - 設定オブジェクト
+     * @param {string} configType - 設定タイプ（misskey, mastodon, rss等）
+     * @returns {Object} 検証結果
+     */
+    validateConfig(config, configType = 'general') {
+        const results = {
+            valid: true,
+            errors: [],
+            warnings: [],
+            validatedConfig: {}
+        };
+        
+        // 設定タイプ別の検証ルール
+        const typeRules = this.getTypeRules(configType);
+        
+        for (const [key, value] of Object.entries(config)) {
+            const rule = typeRules[key];
+            if (!rule) {
+                results.warnings.push(`Unknown setting: ${key}`);
+                results.validatedConfig[key] = value;
+                continue;
+            }
+            
+            const validation = this.validate(key, value, rule.type);
+            results.validatedConfig[key] = validation.value;
+            
+            if (!validation.valid) {
+                results.valid = false;
+                results.errors.push(`${key}: ${validation.message}`);
+            }
+        }
+        
+        // 必須フィールドのチェック
+        const requiredFields = typeRules.required || [];
+        for (const field of requiredFields) {
+            if (!config[field]) {
+                results.valid = false;
+                results.errors.push(`Required field missing: ${field}`);
+            }
+        }
+        
+        return results;
+    }
+    
+    /**
+     * 設定タイプ別のルールを取得
+     * @param {string} configType - 設定タイプ
+     * @returns {Object} ルールオブジェクト
+     */
+    getTypeRules(configType) {
+        const baseRules = {
+            displayName: { type: 'string' },
+            sourceIcon: { type: 'string' },
+            description: { type: 'string' },
+            maxPosts: { type: 'numeric' },
+            rateLimit: { type: 'numeric' },
+            useProxy: { type: 'boolean' },
+            timeBasedFetch: { type: 'boolean' },
+            daysBack: { type: 'numeric' },
+            maxImages: { type: 'numeric' },
+            includeReplies: { type: 'boolean' },
+            includeReblogs: { type: 'boolean' }
+        };
+        
+        switch (configType.toLowerCase()) {
+            case 'misskey':
+            case 'mastodon':
+                return {
+                    ...baseRules,
+                    required: ['instanceUrl', 'username'],
+                    instanceUrl: { type: 'url' },
+                    username: { type: 'string', maxLength: 50 }
+                };
+            case 'rss':
+                return {
+                    ...baseRules,
+                    required: ['feedUrl'],
+                    feedUrl: { type: 'url' }
+                };
+            default:
+                return baseRules;
+        }
+    }
+}
+
+// グローバル設定バリデーターインスタンス
+const configValidator = new ConfigValidator();
+
+// ========================================
+// エラーハンドリング統一
+// ========================================
+
+/**
+ * 統一されたエラーハンドリングクラス
+ */
+class ErrorHandler {
+    constructor() {
+        this.errorTypes = {
+            NETWORK_ERROR: 'NETWORK_ERROR',
+            RATE_LIMIT_ERROR: 'RATE_LIMIT_ERROR',
+            AUTHENTICATION_ERROR: 'AUTHENTICATION_ERROR',
+            VALIDATION_ERROR: 'VALIDATION_ERROR',
+            API_ERROR: 'API_ERROR',
+            TIMEOUT_ERROR: 'TIMEOUT_ERROR',
+            UNKNOWN_ERROR: 'UNKNOWN_ERROR'
+        };
+        
+        this.retryStrategies = {
+            IMMEDIATE: 'immediate',
+            EXPONENTIAL_BACKOFF: 'exponential_backoff',
+            LINEAR_BACKOFF: 'linear_backoff',
+            FIXED_DELAY: 'fixed_delay'
+        };
+    }
+    
+    /**
+     * エラーの種類を判定
+     * @param {Error} error - エラーオブジェクト
+     * @returns {string} エラーの種類
+     */
+    classifyError(error) {
+        if (!error) return this.errorTypes.UNKNOWN_ERROR;
+        
+        const message = error.message || '';
+        const name = error.name || '';
+        
+        // レート制限エラー
+        if (message.includes('RATE_LIMIT') || message.includes('429')) {
+            return this.errorTypes.RATE_LIMIT_ERROR;
+        }
+        
+        // ネットワークエラー
+        if (name === 'TypeError' && message.includes('fetch')) {
+            return this.errorTypes.NETWORK_ERROR;
+        }
+        
+        // タイムアウトエラー
+        if (message.includes('timeout') || name === 'TimeoutError') {
+            return this.errorTypes.TIMEOUT_ERROR;
+        }
+        
+        // 認証エラー
+        if (message.includes('401') || message.includes('Unauthorized')) {
+            return this.errorTypes.AUTHENTICATION_ERROR;
+        }
+        
+        // バリデーションエラー
+        if (message.includes('400') || message.includes('Bad Request')) {
+            return this.errorTypes.VALIDATION_ERROR;
+        }
+        
+        // APIエラー
+        if (message.includes('HTTP') && /[4-5]\d\d/.test(message)) {
+            return this.errorTypes.API_ERROR;
+        }
+        
+        return this.errorTypes.UNKNOWN_ERROR;
+    }
+    
+    /**
+     * エラーがリトライ可能かどうかを判定
+     * @param {Error} error - エラーオブジェクト
+     * @returns {boolean} リトライ可能フラグ
+     */
+    isRetryable(error) {
+        const errorType = this.classifyError(error);
+        
+        const retryableTypes = [
+            this.errorTypes.NETWORK_ERROR,
+            this.errorTypes.RATE_LIMIT_ERROR,
+            this.errorTypes.TIMEOUT_ERROR,
+            this.errorTypes.API_ERROR
+        ];
+        
+        return retryableTypes.includes(errorType);
+    }
+    
+    /**
+     * リトライ戦略に基づいて待機時間を計算
+     * @param {Error} error - エラーオブジェクト
+     * @param {number} attempt - 現在の試行回数
+     * @param {Object} config - 設定オブジェクト
+     * @returns {number} 待機時間（ミリ秒）
+     */
+    calculateRetryDelay(error, attempt, config = {}) {
+        const errorType = this.classifyError(error);
+        const strategy = config.strategy || this.retryStrategies.EXPONENTIAL_BACKOFF;
+        const baseDelay = config.baseDelay || 1000;
+        const maxDelay = config.maxDelay || 10000;
+        const multiplier = config.multiplier || 2;
+        
+        let delay;
+        
+        switch (strategy) {
+            case this.retryStrategies.IMMEDIATE:
+                delay = 0;
+                break;
+                
+            case this.retryStrategies.EXPONENTIAL_BACKOFF:
+                delay = Math.min(baseDelay * Math.pow(multiplier, attempt - 1), maxDelay);
+                break;
+                
+            case this.retryStrategies.LINEAR_BACKOFF:
+                delay = Math.min(baseDelay * attempt, maxDelay);
+                break;
+                
+            case this.retryStrategies.FIXED_DELAY:
+                delay = baseDelay;
+                break;
+                
+            default:
+                delay = baseDelay;
+        }
+        
+        // レート制限エラーの場合は特別な処理
+        if (errorType === this.errorTypes.RATE_LIMIT_ERROR) {
+            const retryAfter = this.extractRetryAfter(error);
+            if (retryAfter > 0) {
+                delay = Math.max(delay, retryAfter * 1000);
+            }
+        }
+        
+        return Math.max(0, delay);
+    }
+    
+    /**
+     * エラーメッセージからRetry-After値を抽出
+     * @param {Error} error - エラーオブジェクト
+     * @returns {number} Retry-After値（秒）
+     */
+    extractRetryAfter(error) {
+        const message = error.message || '';
+        const match = message.match(/RATE_LIMIT:(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+    }
+    
+    /**
+     * エラーログを出力
+     * @param {Error} error - エラーオブジェクト
+     * @param {string} context - エラーのコンテキスト
+     * @param {Object} metadata - 追加のメタデータ
+     */
+    logError(error, context = '', metadata = {}) {
+        const errorType = this.classifyError(error);
+        const isRetryable = this.isRetryable(error);
+        
+        const logData = {
+            type: errorType,
+            message: error.message,
+            context,
+            isRetryable,
+            timestamp: new Date().toISOString(),
+            ...metadata
+        };
+        
+        if (isRetryable) {
+            console.warn(`[${errorType}] ${context}:`, logData);
+        } else {
+            console.error(`[${errorType}] ${context}:`, logData);
+        }
+    }
+    
+    /**
+     * エラーをユーザーフレンドリーなメッセージに変換
+     * @param {Error} error - エラーオブジェクト
+     * @param {string} context - エラーのコンテキスト
+     * @returns {string} ユーザーフレンドリーなメッセージ
+     */
+    getUserFriendlyMessage(error, context = '') {
+        const errorType = this.classifyError(error);
+        
+        const messages = {
+            [this.errorTypes.NETWORK_ERROR]: 'ネットワーク接続に問題があります。インターネット接続を確認してください。',
+            [this.errorTypes.RATE_LIMIT_ERROR]: 'APIの利用制限に達しました。しばらく待ってから再試行してください。',
+            [this.errorTypes.AUTHENTICATION_ERROR]: '認証に失敗しました。設定を確認してください。',
+            [this.errorTypes.VALIDATION_ERROR]: 'リクエストの形式が正しくありません。',
+            [this.errorTypes.API_ERROR]: 'APIサーバーでエラーが発生しました。',
+            [this.errorTypes.TIMEOUT_ERROR]: 'リクエストがタイムアウトしました。',
+            [this.errorTypes.UNKNOWN_ERROR]: '予期しないエラーが発生しました。'
+        };
+        
+        const baseMessage = messages[errorType] || messages[this.errorTypes.UNKNOWN_ERROR];
+        return context ? `${context}: ${baseMessage}` : baseMessage;
+    }
+    
+    /**
+     * エラーを処理して適切なアクションを実行
+     * @param {Error} error - エラーオブジェクト
+     * @param {string} context - エラーのコンテキスト
+     * @param {Object} options - 処理オプション
+     * @returns {Object} 処理結果
+     */
+    handleError(error, context = '', options = {}) {
+        const errorType = this.classifyError(error);
+        const isRetryable = this.isRetryable(error);
+        
+        // エラーログを出力
+        this.logError(error, context, options.metadata);
+        
+        // ユーザーフレンドリーなメッセージを生成
+        const userMessage = this.getUserFriendlyMessage(error, context);
+        
+        // リトライ情報を計算
+        const retryInfo = isRetryable ? {
+            canRetry: true,
+            delay: this.calculateRetryDelay(error, options.attempt || 1, options.retryConfig || {}),
+            strategy: options.retryConfig?.strategy || this.retryStrategies.EXPONENTIAL_BACKOFF
+        } : {
+            canRetry: false,
+            delay: 0,
+            strategy: null
+        };
+        
+        return {
+            errorType,
+            isRetryable,
+            userMessage,
+            retryInfo,
+            originalError: error,
+            timestamp: new Date().toISOString()
+        };
+    }
+}
+
+// グローバルエラーハンドラーインスタンス
+const errorHandler = new ErrorHandler();
+
+// ========================================
+// ファクトリーパターン
+// ========================================
+
+/**
+ * アダプターファクトリークラス
+ * 統一された方法でアダプターを生成・管理
+ */
+class AdapterFactory {
+    constructor() {
+        this.adapters = new Map();
+        this.apiClient = new APIClient();
+    }
+    
+    /**
+     * アダプターを作成
+     * @param {string} type - アダプタータイプ
+     * @param {Object} config - 設定オブジェクト
+     * @returns {APIAdapter} 作成されたアダプター
+     */
+    create(type, config) {
+        // 設定を検証
+        const validation = configValidator.validateConfig(config, type);
+        
+        if (!validation.valid) {
+            console.error(`設定検証エラー (${type}):`, validation.errors);
+            throw new Error(`Invalid configuration: ${validation.errors.join(', ')}`);
+        }
+        
+        if (validation.warnings.length > 0) {
+            console.warn(`設定警告 (${type}):`, validation.warnings);
+        }
+        
+        // 検証済み設定を使用
+        const validatedConfig = validation.validatedConfig;
+        const adapterId = this.generateAdapterId(type, validatedConfig);
+        
+        // 既存のアダプターをチェック
+        if (this.adapters.has(adapterId)) {
+            console.log(`既存のアダプターを再利用: ${adapterId}`);
+            return this.adapters.get(adapterId);
+        }
+        
+        let adapter;
+        
+        switch (type.toLowerCase()) {
+            case 'misskey':
+                adapter = new MisskeyAdapter(validatedConfig.instanceUrl, validatedConfig.username, validatedConfig);
+                break;
+            case 'mastodon':
+                adapter = new MastodonAdapter(validatedConfig.instanceUrl, validatedConfig.username, validatedConfig);
+                break;
+            case 'rss':
+                adapter = new RSSAdapter(validatedConfig.feedUrl, validatedConfig);
+                break;
+            default:
+                throw new Error(`未対応のアダプタータイプ: ${type}`);
+        }
+        
+        // アダプターを登録
+        this.adapters.set(adapterId, adapter);
+        console.log(`アダプターを作成: ${adapterId} (${type})`);
+        
+        return adapter;
+    }
+    
+    /**
+     * アダプターIDを生成
+     * @param {string} type - アダプタータイプ
+     * @param {Object} config - 設定オブジェクト
+     * @returns {string} アダプターID
+     */
+    generateAdapterId(type, config) {
+        switch (type.toLowerCase()) {
+            case 'misskey':
+            case 'mastodon':
+                return `${type}:${config.instanceUrl}:${config.username}`;
+            case 'rss':
+                return `${type}:${config.feedUrl}`;
+            default:
+                return `${type}:${JSON.stringify(config)}`;
+        }
+    }
+    
+    /**
+     * アダプターを取得
+     * @param {string} adapterId - アダプターID
+     * @returns {APIAdapter|null} アダプターまたはnull
+     */
+    get(adapterId) {
+        return this.adapters.get(adapterId) || null;
+    }
+    
+    /**
+     * アダプターを削除
+     * @param {string} adapterId - アダプターID
+     * @returns {boolean} 削除成功フラグ
+     */
+    remove(adapterId) {
+        return this.adapters.delete(adapterId);
+    }
+    
+    /**
+     * 全てのアダプターを取得
+     * @returns {Map<string, APIAdapter>} アダプターマップ
+     */
+    getAll() {
+        return new Map(this.adapters);
+    }
+    
+    /**
+     * アダプター数を取得
+     * @returns {number} アダプター数
+     */
+    size() {
+        return this.adapters.size;
+    }
+    
+    /**
+     * 全てのアダプターをクリア
+     */
+    clear() {
+        this.adapters.clear();
+        console.log('全てのアダプターをクリアしました');
+    }
+    
+    /**
+     * アダプターの設定を更新
+     * @param {string} adapterId - アダプターID
+     * @param {Object} newConfig - 新しい設定
+     * @returns {boolean} 更新成功フラグ
+     */
+    updateConfig(adapterId, newConfig) {
+        const adapter = this.adapters.get(adapterId);
+        if (!adapter) {
+            console.warn(`アダプターが見つかりません: ${adapterId}`);
+            return false;
+        }
+        
+        // アダプターの設定を更新
+        if (adapter.config) {
+            adapter.config = { ...adapter.config, ...newConfig };
+        }
+        
+        // APIクライアントの設定も更新
+        if (adapter.apiClient) {
+            adapter.apiClient.updateConfig(newConfig);
+        }
+        
+        console.log(`アダプター設定を更新: ${adapterId}`);
+        return true;
+    }
+    
+    /**
+     * アダプターの状態を取得
+     * @param {string} adapterId - アダプターID
+     * @returns {Object|null} アダプター状態またはnull
+     */
+    getStatus(adapterId) {
+        const adapter = this.adapters.get(adapterId);
+        if (!adapter) {
+            return null;
+        }
+        
+        return {
+            id: adapterId,
+            type: adapter.constructor.name,
+            displayName: adapter.displayName,
+            instanceUrl: adapter.instanceUrl,
+            username: adapter.username,
+            lastFetchTime: adapter.lastFetchTime,
+            config: adapter.config
+        };
+    }
+    
+    /**
+     * 全てのアダプターの状態を取得
+     * @returns {Array<Object>} アダプター状態の配列
+     */
+    getAllStatus() {
+        const statuses = [];
+        for (const [id, adapter] of this.adapters) {
+            statuses.push(this.getStatus(id));
+        }
+        return statuses;
+    }
+}
+
+// ========================================
+// インターフェース定義
+// ========================================
+
+/**
+ * 統一されたAPIアダプターインターフェース
+ */
+class APIAdapter {
+    /**
+     * 投稿を取得する
+     * @returns {Promise<Post[]>} 投稿の配列
+     */
+    async fetchPosts() {
+        throw new Error('fetchPosts must be implemented by subclass');
+    }
+    
+    /**
+     * 追加の投稿を取得する
+     * @param {number} limit - 取得する投稿数
+     * @returns {Promise<Post[]>} 投稿の配列
+     */
+    async fetchMorePosts(limit) {
+        throw new Error('fetchMorePosts must be implemented by subclass');
+    }
+    
+    /**
+     * ユーザー情報を取得する
+     * @returns {Promise<UserInfo>} ユーザー情報
+     */
+    async getUserInfo() {
+        throw new Error('getUserInfo must be implemented by subclass');
+    }
+    
+    /**
+     * 生の投稿データを取得する（時間フィルタリングなし）
+     * @param {Set<string>} existingIds - 既存の投稿IDセット
+     * @returns {Promise<Post[]>} 生の投稿データ
+     */
+    async fetchMorePostsRaw(existingIds) {
+        throw new Error('fetchMorePostsRaw must be implemented by subclass');
+    }
+}
+
+/**
+ * 投稿データの型定義
+ */
+class Post {
+    constructor(data = {}) {
+        this.id = data.id || '';
+        this.content = data.content || '';
+        this.images = data.images || [];
+        this.timestamp = data.timestamp || new Date();
+        this.timeText = data.timeText || '';
+        this.reactions = data.reactions || { favorites: 0, reblogs: 0, replies: 0 };
+        this.source = data.source || '';
+        this.sourceIcon = data.sourceIcon || '';
+        this.sourceInstance = data.sourceInstance || '';
+        this.sourceDisplayName = data.sourceDisplayName || '';
+        this.sourceIconImage = data.sourceIconImage || null;
+        this.originalUrl = data.originalUrl || null;
+    }
+}
+
+/**
+ * ユーザー情報の型定義
+ */
+class UserInfo {
+    constructor(data = {}) {
+        this.id = data.id || '';
+        this.username = data.username || '';
+        this.displayName = data.displayName || '';
+        this.avatar = data.avatar || null;
+        this.description = data.description || '';
+    }
+}
+
+// ========================================
 // 基底アダプタークラス
 // ========================================
 
-class BaseSNSAdapter {
+class BaseSNSAdapter extends APIAdapter {
     constructor(instanceUrl, username, config = {}) {
+        super();
         this.instanceUrl = instanceUrl;
         this.username = username;
         // グローバル設定とローカル設定をマージ
@@ -1322,6 +2200,13 @@ class BaseSNSAdapter {
         this.config = globalSettings ? globalSettings.mergeSettings({ ...this.getDefaultConfig(), ...config }) : { ...this.getDefaultConfig(), ...config };
         this.lastFetchTime = 0;
         this.displayName = config.displayName || username;
+        
+        // 共通APIクライアントを初期化
+        this.apiClient = new APIClient({
+            useProxy: this.getUseProxy(),
+            timeout: getConfigNumberLocal('REQUEST_TIMEOUT', 10000),
+            retryAttempts: getConfigNumberLocal('RETRY_ATTEMPTS', 3)
+        });
     }
     
     getDefaultConfig() {
@@ -1455,63 +2340,9 @@ class BaseSNSAdapter {
         return await this.fetchMorePostsFromAPI(new Date(0), existingIds); // 1970年以降 = 実質制限なし
     }
     
-    // 共通のAPI取得ロジック
+    // 共通のAPI取得ロジック（APIClientを使用）
     async fetchWithRetry(url, options = {}) {
-        const useProxy = this.getUseProxy();
-        const proxies = useProxy ? proxyManager.getAvailableProxies() : [];
-        
-        for (let attempt = 1; attempt <= getConfigNumberLocal('RETRY_ATTEMPTS', 3); attempt++) {
-            try {
-                if (useProxy) {
-                    // プロキシを使用してリクエストを試行
-                    for (const proxy of proxies) {
-                        try {
-                            return await makeProxyRequest(proxy, url, options, this.displayName);
-                        } catch (error) {
-                            if (error.message.startsWith('RATE_LIMIT:')) {
-                                const retryAfter = parseInt(error.message.split(':')[1]);
-                                console.warn(`${this.displayName}: レート制限 ${retryAfter}秒待機 (試行 ${attempt}/${getConfigNumberLocal('RETRY_ATTEMPTS', 3)})`);
-                                
-                                if (attempt < getConfigNumberLocal('RETRY_ATTEMPTS', 3)) {
-                                    await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-                                    break; // プロキシループを抜けて次の試行へ
-                                }
-                            } else {
-                                proxyManager.recordFailure(proxy);
-                                console.warn(`${this.displayName}: プロキシ ${proxyManager.getProxyName(proxy)} 失敗:`, error.message);
-                                continue; // 次のプロキシを試行
-                            }
-                        }
-                    }
-                } else {
-                    // 直接アクセス
-                    return await makeDirectRequest(url, options, this.displayName);
-                }
-            } catch (error) {
-                if (error.message.startsWith('RATE_LIMIT:')) {
-                    const retryAfter = parseInt(error.message.split(':')[1]);
-                    console.warn(`${this.displayName}: レート制限 ${retryAfter}秒待機 (試行 ${attempt}/${getConfigNumberLocal('RETRY_ATTEMPTS', 3)})`);
-                    
-                    if (attempt < getConfigNumberLocal('RETRY_ATTEMPTS', 3)) {
-                        await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-                    }
-                } else {
-                    console.warn(`${this.displayName}: 取得失敗:`, error.message);
-                }
-            }
-            
-            // 失敗した場合、バックオフしてリトライ
-            if (attempt < getConfigNumberLocal('RETRY_ATTEMPTS', 3)) {
-                const backoffMs = Math.min(
-                    getConfigNumberLocal('BACKOFF.BASE_DELAY', 1000) * Math.pow(getConfigNumberLocal('BACKOFF.MULTIPLIER', 2), attempt - 1),
-                    getConfigNumberLocal('BACKOFF.MAX_DELAY', 10000)
-                );
-                console.warn(`${this.displayName}: 投稿取得試行 ${attempt}/${getConfigNumberLocal('RETRY_ATTEMPTS', 3)} 失敗、${backoffMs}ms後にリトライ`);
-                await new Promise(resolve => setTimeout(resolve, backoffMs));
-            }
-        }
-        
-        throw new Error(`${useProxy ? '全てのプロキシ' : '直接アクセス'}でAPI取得に失敗しました`);
+        return await this.apiClient.request(url, options, this.displayName);
     }
     
     // 共通のAPI制限値計算ロジック
@@ -1565,7 +2396,7 @@ class BaseSNSAdapter {
     }
     
     createPost(data) {
-        return {
+        return new Post({
             id: data.id || generateId(data.content, data.timestamp),
             content: processPostContent(data.content || ''),
             images: data.images || [],
@@ -1578,7 +2409,7 @@ class BaseSNSAdapter {
             sourceDisplayName: data.sourceDisplayName || this.displayName,
             sourceIconImage: data.sourceIconImage || null,
             originalUrl: data.originalUrl || null
-        };
+        });
     }
     
     createErrorPost(message) {
@@ -2579,15 +3410,35 @@ function loadMorePosts() {
 // モジュールエクスポート（Node.js環境用）
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
+        // メインクラス
         PlanetAggregator,
+        AdapterFactory,
+        APIClient,
+        ErrorHandler,
+        ConfigValidator,
+        
+        // アダプタークラス
         MisskeyAdapter,
         MastodonAdapter,
         RSSAdapter,
         BaseSNSAdapter,
+        APIAdapter,
+        
+        // データクラス
+        Post,
+        UserInfo,
+        
+        // ユーティリティクラス
         ProxyManager,
+        
+        // 関数
         initializePlanetV2,
         loadMorePosts,
         getCacheStatus,
-        forceClearCache
+        forceClearCache,
+        
+        // インスタンス
+        errorHandler,
+        configValidator
     };
 }
