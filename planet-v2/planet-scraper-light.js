@@ -3,75 +3,135 @@
  * 1つのファイルに全ての機能を統合
  */
 
-// ========================================
-// 設定・定数
-// ========================================
+// CONFIG定数はconfig-manager.jsに移動しました
 
-const CONFIG = {
-    CACHE_DURATION: 30 * 60 * 1000,           // 30分キャッシュ
-    USER_CACHE_DURATION: 24 * 60 * 60 * 1000, // ユーザー情報24時間
-    MISSKEY_INTERVAL: 30 * 1000,              // 30秒間隔
-    REQUEST_TIMEOUT: 10000,                   // 10秒タイムアウト
-    RETRY_ATTEMPTS: 3,                        // リトライ回数
-    MAX_POSTS: 20,                           // 最大投稿数
-    MAX_IMAGES: 6,                           // 最大画像数
-    AUTO_REFRESH_INTERVAL: 30 * 60 * 1000    // 30分自動更新
-};
+// GlobalSettingsManagerクラスはconfig-manager.jsに移動しました
 
 // ========================================
-// グローバル設定管理
+// 動的設定読み込みシステム
 // ========================================
 
-class GlobalSettingsManager {
-    constructor() {
-        this.globalSettings = null;
-        this.loadGlobalSettings();
+/**
+ * 設定値を取得する関数（動的読み込み）
+ */
+function getConfigValueLocal(key, defaultValue = null) {
+    // グローバル設定ローダー関数が利用可能かチェック
+    if (typeof window !== 'undefined' && window.getConfigValue) {
+        return window.getConfigValue(key, defaultValue);
     }
     
-    loadGlobalSettings() {
-        try {
-            // dataSourceManagerが存在し、nullでないことを確認
-            if (typeof dataSourceManager !== 'undefined' && 
-                dataSourceManager !== null && 
-                typeof dataSourceManager.getGlobalSettings === 'function') {
-                this.globalSettings = dataSourceManager.getGlobalSettings();
-                console.log('グローバル設定を読み込み:', this.globalSettings);
-            } else {
-                this.globalSettings = {};
-                console.log('グローバル設定が見つからないため、デフォルト設定を使用');
-            }
-        } catch (error) {
-            console.warn('グローバル設定の読み込みに失敗:', error);
-            this.globalSettings = {};
-        }
+    // フォールバック: デフォルト値を返す
+    console.warn(`設定値 ${key} を取得できません。デフォルト値 ${defaultValue} を使用します。`);
+    return defaultValue;
+}
+
+/**
+ * 設定値を取得（数値型）
+ */
+function getConfigNumberLocal(key, defaultValue = 0) {
+    // 設定管理システムが利用可能な場合はそれを使用
+    if (typeof window !== 'undefined' && typeof window.getConfigNumber === 'function') {
+        return window.getConfigNumber(key, defaultValue);
     }
     
-    getGlobalSettings() {
-        return this.globalSettings || {};
+    // フォールバック: 直接デフォルト値を返す
+    console.warn(`設定値 ${key} を取得できません。デフォルト値 ${defaultValue} を使用します。`);
+    return defaultValue;
+}
+
+/**
+ * 設定値を取得（文字列型）
+ */
+function getConfigStringLocal(key, defaultValue = '') {
+    // 設定管理システムが利用可能な場合はそれを使用
+    if (typeof window !== 'undefined' && typeof window.getConfigString === 'function') {
+        return window.getConfigString(key, defaultValue);
     }
     
-    // グローバル設定とローカル設定をマージ
-    mergeSettings(localConfig) {
-        const global = this.getGlobalSettings();
-        return {
-            ...localConfig,
-            // グローバル設定で上書き可能な項目
-            timeBasedFetch: localConfig.timeBasedFetch !== false && global.timeBasedFetch !== false,
-            daysBack: global.daysBack || localConfig.daysBack || 5,
-            useProxy: global.useProxy !== false && localConfig.useProxy !== false,
-            autoRefreshInterval: global.autoRefreshInterval || localConfig.autoRefreshInterval || CONFIG.AUTO_REFRESH_INTERVAL
-        };
+    // フォールバック: 直接デフォルト値を返す
+    console.warn(`設定値 ${key} を取得できません。デフォルト値 ${defaultValue} を使用します。`);
+    return String(defaultValue);
+}
+
+/**
+ * 設定値を取得（ブール型）
+ */
+function getConfigBooleanLocal(key, defaultValue = false) {
+    // 設定管理システムが利用可能な場合はそれを使用
+    if (typeof window !== 'undefined' && typeof window.getConfigBoolean === 'function') {
+        return window.getConfigBoolean(key, defaultValue);
     }
     
-    // グローバル設定の更新
-    updateGlobalSettings(newSettings) {
-        this.globalSettings = { ...this.globalSettings, ...newSettings };
-        console.log('グローバル設定を更新:', this.globalSettings);
+    // フォールバック: 直接デフォルト値を返す
+    console.warn(`設定値 ${key} を取得できません。デフォルト値 ${defaultValue} を使用します。`);
+    return Boolean(defaultValue);
+}
+
+/**
+ * 設定値を取得（オブジェクト型）
+ */
+function getConfigObjectLocal(key, defaultValue = {}) {
+    // 設定管理システムが利用可能な場合はそれを使用
+    if (typeof window !== 'undefined' && typeof window.getConfigObject === 'function') {
+        return window.getConfigObject(key, defaultValue);
+    }
+    
+    // フォールバック: 直接デフォルト値を返す
+    console.warn(`設定値 ${key} を取得できません。デフォルト値 ${defaultValue} を使用します。`);
+    return defaultValue && typeof defaultValue === 'object' && !Array.isArray(defaultValue) ? defaultValue : {};
+}
+
+/**
+ * 設定値の存在チェック
+ */
+function hasConfigValueLocal(key) {
+    // 設定管理システムが利用可能な場合はそれを使用
+    if (typeof window !== 'undefined' && typeof window.hasConfigValue === 'function') {
+        return window.hasConfigValue(key);
+    }
+    return false;
+}
+
+/**
+ * 設定の初期化（config-manager.jsから設定を読み込み）
+ */
+function initializeConfig() {
+    // config-manager.jsが読み込まれているかチェック
+    if (typeof window !== 'undefined' && window.getConfigValue) {
+        console.log('動的設定読み込み: 有効');
+        
+        // 設定の検証を実行
+        validateConfigLocal();
+        
+        return true;
+    } else {
+        console.warn('動的設定読み込み: 無効（config-manager.jsが読み込まれていません）');
+        console.log('デフォルト値を使用して動作を継続します');
+        return false;
     }
 }
 
-// グローバル設定マネージャーのインスタンス
-const globalSettingsManager = new GlobalSettingsManager();
+/**
+ * 設定値の更新
+ */
+function updateConfigValueLocalLocal(key, newValue) {
+    if (typeof window !== 'undefined' && window.updateConfigValueLocal) {
+        return window.updateConfigValueLocal(key, newValue);
+    }
+    console.warn(`設定値 ${key} を更新できません。`);
+    return false;
+}
+
+/**
+ * 設定の検証
+ */
+function validateConfigLocal() {
+    if (typeof window !== 'undefined' && window.validateConfig) {
+        return window.validateConfig();
+    }
+    console.warn('設定の検証ができません。');
+    return false;
+}
 
 // 正規表現パターン（コンパイル済み）
 const REGEX_PATTERNS = {
@@ -84,7 +144,6 @@ const REGEX_PATTERNS = {
 
 // コンテンツ処理キャッシュ（メモリ効率のため制限付き）
 const contentCache = new Map();
-const MAX_CACHE_SIZE = 100;
 
 // ========================================
 // ユーティリティ関数
@@ -116,7 +175,7 @@ async function makeProxyRequest(proxy, url, options, displayName) {
     
     const response = await fetch(proxyUrl, {
         ...requestOptions,
-        signal: AbortSignal.timeout(CONFIG.REQUEST_TIMEOUT)
+        signal: AbortSignal.timeout(getConfigNumberLocal('REQUEST_TIMEOUT', 10000))
     });
     
     if (response.ok) {
@@ -148,7 +207,7 @@ async function makeDirectRequest(url, options, displayName) {
     console.log(`${displayName}: 直接API取得中...`);
     const response = await fetch(url, {
         ...options,
-        signal: AbortSignal.timeout(CONFIG.REQUEST_TIMEOUT)
+        signal: AbortSignal.timeout(getConfigNumberLocal('REQUEST_TIMEOUT', 10000))
     });
     
     if (response.ok) {
@@ -211,7 +270,7 @@ function processPostContent(content) {
     }
     
     // キャッシュに保存（サイズ制限付き）
-    if (contentCache.size >= MAX_CACHE_SIZE) {
+    if (contentCache.size >= getConfigNumberLocal('MAX_CACHE_SIZE', 100)) {
         const firstKey = contentCache.keys().next().value;
         contentCache.delete(firstKey);
     }
@@ -287,1123 +346,6 @@ function sanitizeImageUrl(url) {
 }
 
 // ========================================
-// プロキシ管理クラス
-// ========================================
-
-class ProxyManager {
-    constructor() {
-        this.failedProxies = new Map();
-        this.FAILURE_THRESHOLD = 3;
-        this.RECOVERY_TIME = 5 * 60 * 1000;
-    }
-    
-    getAvailableProxies() {
-        const services = [
-            'https://corsproxy.io/?',
-            'https://cors-anywhere.herokuapp.com/'
-        ];
-        
-        if (!isLocalhost()) {
-            services.unshift('https://api.allorigins.win/get?url=');
-        }
-        
-        return services.filter(proxy => !this.isProxyFailed(proxy));
-    }
-    
-    isProxyFailed(proxy) {
-        const proxyName = this.getProxyName(proxy);
-        const failedData = this.failedProxies.get(proxyName);
-        
-        if (!failedData) return false;
-        
-        if (Date.now() - failedData.timestamp > this.RECOVERY_TIME) {
-            this.failedProxies.delete(proxyName);
-            return false;
-        }
-        
-        return failedData.count >= this.FAILURE_THRESHOLD;
-    }
-    
-    recordFailure(proxy) {
-        const proxyName = this.getProxyName(proxy);
-        const current = this.failedProxies.get(proxyName) || { count: 0, timestamp: Date.now() };
-        current.count++;
-        current.timestamp = Date.now();
-        this.failedProxies.set(proxyName, current);
-        
-        console.warn(`プロキシ ${proxyName} 失敗記録: ${current.count}/${this.FAILURE_THRESHOLD}`);
-    }
-    
-    getProxyName(proxyUrl) {
-        return proxyUrl.split('://')[1].split('/')[0];
-    }
-}
-
-const proxyManager = new ProxyManager();
-
-// ========================================
-// 基底アダプタークラス
-// ========================================
-
-class BaseSNSAdapter {
-    constructor(instanceUrl, username, config = {}) {
-        this.instanceUrl = instanceUrl;
-        this.username = username;
-        // グローバル設定とローカル設定をマージ
-        this.config = globalSettingsManager.mergeSettings({ ...this.getDefaultConfig(), ...config });
-        this.lastFetchTime = 0;
-        this.displayName = config.displayName || username;
-    }
-    
-    getDefaultConfig() {
-        return {
-            rateLimit: 15000,
-            maxPosts: 20,
-            includeReplies: false,
-            includeReblogs: false,
-            timeBasedFetch: false,
-            daysBack: 5,
-            useProxy: true,
-            maxImages: CONFIG.MAX_IMAGES
-        };
-    }
-    
-    // 共通の設定アクセスメソッド
-    getTimeBasedFetch() {
-        return this.config.timeBasedFetch || false;
-    }
-    
-    getDaysBack() {
-        return this.config.daysBack || 5;
-    }
-    
-    getMaxPosts() {
-        return this.config.maxPosts || 20;
-    }
-    
-    getMaxImages() {
-        return this.config.maxImages || CONFIG.MAX_IMAGES;
-    }
-    
-    getUseProxy() {
-        return this.config.useProxy !== false; // デフォルトはtrue
-    }
-    
-    // 時間ベース取得の共通ロジック
-    getCutoffDate() {
-        const cutoffDate = new Date();
-        cutoffDate.setDate(cutoffDate.getDate() - this.getDaysBack());
-        return cutoffDate;
-    }
-    
-    // 時間フィルタリングの共通ロジック
-    filterByTime(posts, cutoffDate) {
-        return posts.filter(post => {
-            const postDate = new Date(post.timestamp || post.createdAt || post.created_at);
-            return postDate >= cutoffDate;
-        });
-    }
-    
-    // 重複チェックの共通ロジック
-    filterUniquePosts(posts, existingIds) {
-        return posts.filter(post => !existingIds.has(post.id));
-    }
-    
-    async checkRateLimit() {
-        const now = Date.now();
-        const timeSinceLastFetch = now - this.lastFetchTime;
-        
-        if (timeSinceLastFetch < this.config.rateLimit) {
-            const waitTime = this.config.rateLimit - timeSinceLastFetch;
-            console.log(`${this.displayName}: レート制限 ${Math.ceil(waitTime/1000)}秒待機`);
-            await new Promise(resolve => setTimeout(resolve, waitTime));
-        }
-        
-        this.lastFetchTime = Date.now();
-    }
-    
-    async fetchPosts() {
-        throw new Error('fetchPosts must be implemented by subclass');
-    }
-    
-    async fetchMorePosts(cutoffDate, existingIds) {
-        console.log(`${this.displayName}: 追加投稿取得中... (${cutoffDate.toISOString()} 以降)`);
-        
-        try {
-            // 各アダプターで実装する必要があるメソッド
-            const rawPosts = await this.fetchMorePostsFromAPI(cutoffDate, existingIds);
-            
-            // 共通の後処理
-            const posts = rawPosts.map(post => this.createPost(post));
-            
-            console.log(`${this.displayName}: 追加読み込み - ${posts.length}件の投稿を取得`);
-            return posts;
-            
-        } catch (error) {
-            console.error(`${this.displayName}: 追加投稿取得エラー:`, error);
-            return [];
-        }
-    }
-    
-    async fetchMorePostsFromAPI(cutoffDate, existingIds) {
-        throw new Error('fetchMorePostsFromAPI must be implemented by subclass');
-    }
-    
-    /**
-     * 新しいメソッド: 時間フィルタリングなしで生の投稿データを取得
-     */
-    async fetchMorePostsRaw(existingIds) {
-        console.log(`${this.displayName}: 生データ取得中...`);
-        
-        try {
-            // 各アダプターで実装する必要があるメソッド
-            const rawPosts = await this.fetchMorePostsFromAPIRaw(existingIds);
-            
-            // 時間フィルタリングは行わず、重複チェックのみ
-            const uniquePosts = this.filterUniquePosts(rawPosts, existingIds);
-            
-            // 投稿オブジェクトを作成
-            const posts = uniquePosts.map(post => this.createPost(post));
-            
-            console.log(`${this.displayName}: 生データ取得完了 - ${posts.length}件`);
-            return posts;
-            
-        } catch (error) {
-            console.error(`${this.displayName}: 生データ取得エラー:`, error);
-            return [];
-        }
-    }
-    
-    /**
-     * 新しいメソッド: APIから生の投稿データを取得（時間制限なし）
-     */
-    async fetchMorePostsFromAPIRaw(existingIds) {
-        // デフォルト実装: より多くの投稿を取得
-        const maxPosts = Math.max(this.getMaxPosts() * 3, 100); // 通常の3倍または最低100件
-        console.log(`${this.displayName}: 生データAPI制限値: ${maxPosts}件で取得`);
-        
-        // 既存のAPI取得ロジックを使用（時間制限は各アダプターで実装）
-        return await this.fetchMorePostsFromAPI(new Date(0), existingIds); // 1970年以降 = 実質制限なし
-    }
-    
-    async fetchWithRetry(url, options = {}) {
-        const useProxy = this.getUseProxy();
-        const proxies = useProxy ? proxyManager.getAvailableProxies() : [];
-        
-        for (let attempt = 1; attempt <= CONFIG.RETRY_ATTEMPTS; attempt++) {
-            try {
-                if (useProxy) {
-                    // プロキシを使用してリクエストを試行
-                    for (const proxy of proxies) {
-                        try {
-                            return await makeProxyRequest(proxy, url, options, this.displayName);
-                        } catch (error) {
-                            if (error.message.startsWith('RATE_LIMIT:')) {
-                                const retryAfter = parseInt(error.message.split(':')[1]);
-                                console.warn(`${this.displayName}: レート制限 ${retryAfter}秒待機 (試行 ${attempt}/${CONFIG.RETRY_ATTEMPTS})`);
-                                
-                                if (attempt < CONFIG.RETRY_ATTEMPTS) {
-                                    await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-                                    break; // プロキシループを抜けて次の試行へ
-                                }
-                            } else {
-                                proxyManager.recordFailure(proxy);
-                                console.warn(`${this.displayName}: プロキシ ${proxyManager.getProxyName(proxy)} 失敗:`, error.message);
-                                continue; // 次のプロキシを試行
-                            }
-                        }
-                    }
-                } else {
-                    // 直接アクセス
-                    return await makeDirectRequest(url, options, this.displayName);
-                }
-            } catch (error) {
-                if (error.message.startsWith('RATE_LIMIT:')) {
-                    const retryAfter = parseInt(error.message.split(':')[1]);
-                    console.warn(`${this.displayName}: レート制限 ${retryAfter}秒待機 (試行 ${attempt}/${CONFIG.RETRY_ATTEMPTS})`);
-                    
-                    if (attempt < CONFIG.RETRY_ATTEMPTS) {
-                        await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-                    }
-                } else {
-                    console.warn(`${this.displayName}: 取得失敗:`, error.message);
-                }
-            }
-            
-            // 失敗した場合、バックオフしてリトライ
-            if (attempt < CONFIG.RETRY_ATTEMPTS) {
-                const backoffMs = Math.min(1000 * Math.pow(2, attempt - 1), 10000);
-                console.warn(`${this.displayName}: 投稿取得試行 ${attempt}/${CONFIG.RETRY_ATTEMPTS} 失敗、${backoffMs}ms後にリトライ`);
-                await new Promise(resolve => setTimeout(resolve, backoffMs));
-            }
-        }
-        
-        throw new Error(`${useProxy ? '全てのプロキシ' : '直接アクセス'}でAPI取得に失敗しました`);
-    }
-    
-    createPost(data) {
-        return {
-            id: data.id || generateId(data.content, data.timestamp),
-            content: processPostContent(data.content || ''),
-            images: data.images || [],
-            timestamp: data.timestamp || new Date(),
-            timeText: data.timeText || formatRelativeTime(data.timestamp),
-            reactions: data.reactions || { favorites: 0, reblogs: 0, replies: 0 },
-            source: this.username,
-            sourceIcon: data.sourceIcon || '[取得]',
-            sourceInstance: this.instanceUrl,
-            sourceDisplayName: data.sourceDisplayName || this.displayName,
-            sourceIconImage: data.sourceIconImage || null,
-            originalUrl: data.originalUrl || null
-        };
-    }
-    
-    createErrorPost(message) {
-        return this.createPost({
-            content: `${this.displayName} の取得に失敗しました: ${message}`,
-            sourceIcon: '[エラー]',
-            sourceDisplayName: this.config.sourceDisplayName || this.displayName,
-            sourceIconImage: this.config.sourceIconImage,
-            timeText: '今'
-        });
-    }
-}
-
-// ========================================
-// Misskeyアダプター
-// ========================================
-
-class MisskeyAdapter extends BaseSNSAdapter {
-    constructor(instanceUrl, username, config = {}) {
-        super(instanceUrl, username, config);
-        this.apiUrl = `${instanceUrl}/api`;
-        this.profileUrl = `${instanceUrl}/@${username}`;
-    }
-    
-    getDefaultConfig() {
-        return {
-            ...super.getDefaultConfig(),
-            rateLimit: 30000, // 30秒間隔（デフォルト）
-            sourceIcon: '[API]'
-        };
-    }
-    
-    async fetchPosts() {
-        await this.checkRateLimit();
-        
-        try {
-            const result = await this.fetchViaAPI();
-            console.log(`${this.displayName}: API取得結果 - ${result.posts.length}件の投稿`);
-            
-            // APIが正常に動作している場合は、投稿が0件でもフォールバックしない
-            if (result.success) {
-                return result.posts;
-            } else {
-                console.log(`${this.displayName}: API失敗のためフォールバック実行`);
-                return await this.fetchViaFallback();
-            }
-        } catch (error) {
-            console.error(`${this.displayName}: 取得エラー:`, error);
-            return [this.createErrorPost(error.message)];
-        }
-    }
-    
-    async fetchViaAPI() {
-        console.log(`${this.displayName}: Misskey API 取得中...`);
-        
-        const userInfo = await this.getCachedUserInfo();
-        
-        // 時間ベース取得の設定を確認
-        const timeBasedFetch = this.getTimeBasedFetch();
-        const daysBack = this.getDaysBack();
-        const maxPosts = this.getMaxPosts();
-        
-        console.log(`${this.displayName}: 設定確認 - maxPosts: ${maxPosts}, timeBasedFetch: ${timeBasedFetch}, daysBack: ${daysBack}`);
-        
-        // 統合された時間フィルタリングを使用するため、より多くの投稿を取得
-        // 時間フィルタリングはPlanetAggregatorで実行される
-        const apiLimit = Math.min(maxPosts * 2, 100); // 最大100件まで
-        console.log(`${this.displayName}: API制限値: ${apiLimit}件で取得`);
-        
-        const notes = await this.fetchWithRetry(`${this.apiUrl}/users/notes`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: userInfo.id,
-                limit: apiLimit,
-                includeReplies: this.config.includeReplies,
-                includeMyRenotes: this.config.includeReblogs
-            })
-        });
-        
-        console.log(`${this.displayName}: APIから取得した投稿数: ${notes ? notes.length : 0}`);
-        console.log(`${this.displayName}: ユーザーID: ${userInfo.id}`);
-        
-        const posts = notes.map(note => this.createPost({
-            id: note.id,
-            content: note.text || note.cw || '',
-            images: this.extractImages(note),
-            timestamp: new Date(note.createdAt),
-            reactions: {
-                favorites: note.reactionCount || 0,
-                reblogs: note.renoteCount || 0,
-                replies: note.repliesCount || 0
-            },
-            sourceIcon: this.config.sourceIcon,
-            sourceDisplayName: this.config.sourceDisplayName,
-            sourceIconImage: this.config.sourceIconImage,
-            originalUrl: `${this.instanceUrl}/notes/${note.id}`
-        }));
-        
-        // APIが正常に動作した場合は成功フラグを返す
-        return {
-            success: true,
-            posts: posts
-        };
-    }
-    
-    async getCachedUserInfo() {
-        const cacheKey = `user:${this.instanceUrl}:${this.username}`;
-        
-        try {
-            const cached = localStorage.getItem(cacheKey);
-            if (cached) {
-                const parsed = JSON.parse(cached);
-                if (Date.now() - parsed.timestamp < CONFIG.USER_CACHE_DURATION) {
-                    console.log(`${this.displayName}: ユーザー情報キャッシュから取得`);
-                    return parsed.data;
-                }
-                localStorage.removeItem(cacheKey);
-            }
-        } catch {}
-        
-        console.log(`${this.displayName}: ユーザー情報API取得中...`);
-        const userInfo = await this.fetchWithRetry(`${this.apiUrl}/users/show`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: this.username })
-        });
-        
-        try {
-            localStorage.setItem(cacheKey, JSON.stringify({
-                data: userInfo,
-                timestamp: Date.now()
-            }));
-        } catch {}
-        
-        return userInfo;
-    }
-    
-    
-    extractImages(note) {
-        if (!note.files || !Array.isArray(note.files)) return [];
-        
-        return note.files
-            .filter(file => file.type && file.type.startsWith('image/'))
-            .slice(0, this.config.maxImages || CONFIG.MAX_IMAGES)
-            .map(file => ({
-                url: file.url,
-                alt: file.name || '',
-                width: file.properties?.width,
-                height: file.properties?.height
-            }));
-    }
-    
-    async fetchMorePostsFromAPI(cutoffDate, existingIds) {
-        const userInfo = await this.getCachedUserInfo();
-        const maxPosts = this.getMaxPosts();
-        
-        // より多くの投稿を取得して時間フィルタリング
-        const apiLimit = Math.min(maxPosts * 2, 100);
-        console.log(`${this.displayName}: 追加読み込み用API制限値: ${apiLimit}件で取得`);
-        
-        const allNotes = await this.fetchWithRetry(`${this.apiUrl}/users/notes`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: userInfo.id,
-                limit: apiLimit,
-                includeReplies: this.config.includeReplies,
-                includeMyRenotes: this.config.includeReblogs
-            })
-        });
-        
-        // 重複チェック（時間フィルタリングはPlanetAggregatorで実行）
-        const uniqueNotes = this.filterUniquePosts(allNotes, existingIds);
-        
-        console.log(`${this.displayName}: 追加読み込み - 取得: ${allNotes.length}件, 重複除外後: ${uniqueNotes.length}件`);
-        
-        return uniqueNotes.map(note => ({
-            id: note.id,
-            content: note.text || note.cw || '',
-            images: this.extractImages(note),
-            timestamp: new Date(note.createdAt),
-            reactions: {
-                favorites: note.reactionCount || 0,
-                reblogs: note.renoteCount || 0,
-                replies: note.repliesCount || 0
-            },
-            sourceIcon: this.config.sourceIcon,
-            sourceDisplayName: this.config.sourceDisplayName,
-            sourceIconImage: this.config.sourceIconImage,
-            originalUrl: `${this.instanceUrl}/notes/${note.id}`
-        }));
-    }
-    
-    /**
-     * 時間制限なしで生の投稿データを取得
-     */
-    async fetchMorePostsRaw(existingIds) {
-        console.log(`${this.displayName}: 生データ取得開始（時間制限なし）`);
-        
-        try {
-            const userInfo = await this.getCachedUserInfo();
-            
-            // Misskeyの最大制限値は100なので、それを超えないように修正
-            const apiLimit = 100; // 固定値
-            console.log(`${this.displayName}: 生データAPI制限値: ${apiLimit}件で取得`);
-            
-            const allNotes = await this.fetchWithRetry(`${this.apiUrl}/users/notes`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: userInfo.id,
-                    limit: apiLimit,
-                    includeReplies: this.config.includeReplies,
-                    includeMyRenotes: this.config.includeReblogs
-                })
-            });
-            
-            // 重複チェックのみ（時間フィルタリングは後で実行）
-            const uniqueNotes = allNotes.filter(note => !existingIds.has(note.id));
-            
-            console.log(`${this.displayName}: 生データ取得完了 - 取得: ${allNotes.length}件, 重複除外後: ${uniqueNotes.length}件`);
-            
-            // 投稿データを作成（時間フィルタリングなし）
-            return uniqueNotes.map(note => ({
-                id: note.id,
-                content: note.text || note.cw || '',
-                images: this.extractImages(note),
-                timestamp: new Date(note.createdAt),
-                reactions: {
-                    favorites: note.reactionCount || 0,
-                    reblogs: note.renoteCount || 0,
-                    replies: note.repliesCount || 0
-                },
-                sourceIcon: this.config.sourceIcon,
-                sourceDisplayName: this.config.sourceDisplayName,
-                sourceIconImage: this.config.sourceIconImage,
-                originalUrl: `${this.instanceUrl}/notes/${note.id}`
-            }));
-            
-        } catch (error) {
-            console.error(`${this.displayName}: 生データ取得エラー:`, error);
-            return [];
-        }
-    }
-    
-    async fetchViaFallback() {
-        console.log(`${this.displayName}: フォールバック実行`);
-        return [this.createPost({
-            content: `${this.username} はJavaScript必須のSPAです。\n\nMisskey APIを使用して投稿を取得してください。`,
-            sourceIcon: '[SPA]',
-            sourceDisplayName: this.config.sourceDisplayName,
-            sourceIconImage: this.config.sourceIconImage,
-            timeText: 'SPA検出'
-        })];
-    }
-}
-
-// ========================================
-// Mastodonアダプター
-// ========================================
-
-class MastodonAdapter extends BaseSNSAdapter {
-    constructor(instanceUrl, username, config = {}) {
-        super(instanceUrl, username, config);
-        this.apiUrl = `${instanceUrl}/api/v1`;
-        this.profileUrl = `${instanceUrl}/@${username}`;
-    }
-    
-    getDefaultConfig() {
-        return {
-            ...super.getDefaultConfig(),
-            rateLimit: 20000, // 20秒間隔（デフォルト）
-            sourceIcon: '[API]'
-        };
-    }
-    
-    async fetchPosts() {
-        await this.checkRateLimit();
-        
-        try {
-            const apiPosts = await this.fetchViaAPI();
-            return apiPosts.length > 0 ? apiPosts : await this.fetchViaFallback();
-        } catch (error) {
-            console.error(`${this.displayName}: 取得エラー:`, error);
-            return [this.createErrorPost(error.message)];
-        }
-    }
-    
-    async fetchViaAPI() {
-        console.log(`${this.displayName}: Mastodon API 取得中...`);
-        
-        try {
-            // ユーザー名からアカウント情報を取得
-            const userInfo = await this.getAccountByUsername();
-            if (!userInfo) {
-                throw new Error('ユーザー情報の取得に失敗しました');
-            }
-            
-            // アカウントの公開投稿を取得
-            const statuses = await this.fetchAccountStatuses(userInfo.id);
-            return statuses;
-            
-        } catch (error) {
-            console.error(`${this.displayName}: API取得失敗:`, error.message);
-            throw error;
-        }
-    }
-    
-    async getAccountByUsername() {
-        const cacheKey = `mastodon-user:${this.instanceUrl}:${this.username}`;
-        
-        try {
-            const cached = localStorage.getItem(cacheKey);
-            if (cached) {
-                const parsed = JSON.parse(cached);
-                if (Date.now() - parsed.timestamp < CONFIG.USER_CACHE_DURATION) {
-                    console.log(`${this.displayName}: ユーザー情報キャッシュから取得`);
-                    return parsed.data;
-                }
-                localStorage.removeItem(cacheKey);
-            }
-        } catch {}
-        
-        console.log(`${this.displayName}: ユーザー情報API取得中...`);
-        
-        try {
-            // ユーザー名からアカウント情報を取得（認証なし）
-            const account = await this.fetchWithRetry(`${this.apiUrl}/accounts/lookup?acct=${this.username}`, {
-                method: 'GET',
-                headers: { 
-                    'Accept': 'application/json',
-                    'User-Agent': 'PlanetAggregator/1.0'
-                }
-            });
-            
-            // キャッシュに保存
-            try {
-                localStorage.setItem(cacheKey, JSON.stringify({
-                    data: account,
-                    timestamp: Date.now()
-                }));
-            } catch {}
-            
-            return account;
-            
-        } catch (error) {
-            console.error(`${this.displayName}: ユーザー情報取得エラー:`, error.message);
-            throw error;
-        }
-    }
-    
-    async fetchAccountStatuses(accountId) {
-        try {
-            // 時間ベース取得の設定を確認
-            const timeBasedFetch = this.getTimeBasedFetch();
-            const daysBack = this.getDaysBack();
-            const maxPosts = this.getMaxPosts();
-            
-            console.log(`${this.displayName}: 設定確認 - maxPosts: ${maxPosts}, timeBasedFetch: ${timeBasedFetch}, daysBack: ${daysBack}`);
-            
-            // 統合された時間フィルタリングを使用するため、より多くの投稿を取得
-            // 時間フィルタリングはPlanetAggregatorで実行される
-            const apiLimit = Math.min(maxPosts * 2, 100); // 最大100件まで
-            console.log(`${this.displayName}: API制限値: ${apiLimit}件で取得`);
-            
-            const statuses = await this.fetchWithRetry(`${this.apiUrl}/accounts/${accountId}/statuses?exclude_replies=true&exclude_reblogs=false&limit=${apiLimit}`, {
-                method: 'GET',
-                headers: { 
-                    'Accept': 'application/json',
-                    'User-Agent': 'PlanetAggregator/1.0'
-                }
-            });
-            
-            return statuses.map(status => this.createPost({
-                id: status.id,
-                content: this.stripHtmlContent(status.content),
-                images: this.extractImages(status),
-                timestamp: new Date(status.created_at),
-                reactions: {
-                    favorites: status.favourites_count || 0,
-                    reblogs: status.reblogs_count || 0,
-                    replies: status.replies_count || 0
-                },
-                sourceIcon: this.config.sourceIcon,
-                sourceDisplayName: this.config.sourceDisplayName,
-                sourceIconImage: this.config.sourceIconImage,
-                originalUrl: status.url || status.uri
-            }));
-            
-        } catch (error) {
-            console.error(`${this.displayName}: 投稿取得エラー:`, error.message);
-            throw error;
-        }
-    }
-    
-    
-    stripHtmlContent(htmlContent) {
-        if (!htmlContent) return '';
-        
-        // 簡易HTML除去（Mastodon投稿用）
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = htmlContent;
-        
-        // <br>タグを改行に変換
-        tempDiv.querySelectorAll('br').forEach(br => {
-            br.replaceWith('\n');
-        });
-        
-        // <p>タグの間に改行を追加
-        tempDiv.querySelectorAll('p').forEach(p => {
-            p.insertAdjacentText('afterend', '\n');
-        });
-        
-        return tempDiv.textContent || tempDiv.innerText || '';
-    }
-    
-    
-    extractImages(status) {
-        if (!status.media_attachments || !Array.isArray(status.media_attachments)) return [];
-        
-        return status.media_attachments
-            .filter(media => media.type === 'image')
-            .slice(0, this.config.maxImages || CONFIG.MAX_IMAGES)
-            .map(media => ({
-                url: media.url,
-                alt: media.description || '',
-                width: media.meta?.original?.width,
-                height: media.meta?.original?.height
-            }));
-    }
-    
-    async fetchMorePostsFromAPI(cutoffDate, existingIds) {
-        const userInfo = await this.getAccountByUsername();
-        if (!userInfo) {
-            throw new Error('ユーザー情報の取得に失敗しました');
-        }
-        
-        const maxPosts = this.getMaxPosts();
-        
-        // より多くの投稿を取得して時間フィルタリング
-        const apiLimit = Math.min(maxPosts * 2, 100);
-        console.log(`${this.displayName}: 追加読み込み用API制限値: ${apiLimit}件で取得`);
-        
-        const allStatuses = await this.fetchWithRetry(`${this.apiUrl}/accounts/${userInfo.id}/statuses?exclude_replies=true&exclude_reblogs=false&limit=${apiLimit}`, {
-            method: 'GET',
-            headers: { 
-                'Accept': 'application/json',
-                'User-Agent': 'PlanetAggregator/1.0'
-            }
-        });
-        
-        // 重複チェック（時間フィルタリングはPlanetAggregatorで実行）
-        const uniqueStatuses = this.filterUniquePosts(allStatuses, existingIds);
-        
-        console.log(`${this.displayName}: 追加読み込み - 取得: ${allStatuses.length}件, 重複除外後: ${uniqueStatuses.length}件`);
-        
-        return uniqueStatuses.map(status => ({
-            id: status.id,
-            content: this.stripHtmlContent(status.content),
-            images: this.extractImages(status),
-            timestamp: new Date(status.created_at),
-            reactions: {
-                favorites: status.favourites_count || 0,
-                reblogs: status.reblogs_count || 0,
-                replies: status.replies_count || 0
-            },
-            sourceIcon: this.config.sourceIcon,
-            sourceDisplayName: this.config.sourceDisplayName,
-            sourceIconImage: this.config.sourceIconImage,
-            originalUrl: status.url || status.uri
-        }));
-    }
-    
-    /**
-     * 時間制限なしで生の投稿データを取得
-     */
-    async fetchMorePostsRaw(existingIds) {
-        console.log(`${this.displayName}: 生データ取得開始（時間制限なし）`);
-        
-        try {
-            const userInfo = await this.getAccountByUsername();
-            if (!userInfo) {
-                throw new Error('ユーザー情報の取得に失敗しました');
-            }
-            
-            // Mastodonの制限も考慮して安全な値に設定
-            const apiLimit = 40; // 通常の2倍程度に抑制
-            console.log(`${this.displayName}: 生データAPI制限値: ${apiLimit}件で取得`);
-            
-            const allStatuses = await this.fetchWithRetry(`${this.apiUrl}/accounts/${userInfo.id}/statuses?exclude_replies=true&exclude_reblogs=false&limit=${apiLimit}`, {
-                method: 'GET',
-                headers: { 
-                    'Accept': 'application/json',
-                    'User-Agent': 'PlanetAggregator/1.0'
-                }
-            });
-            
-            // 重複チェックのみ（時間フィルタリングは後で実行）
-            const uniqueStatuses = allStatuses.filter(status => !existingIds.has(status.id));
-            
-            console.log(`${this.displayName}: 生データ取得完了 - 取得: ${allStatuses.length}件, 重複除外後: ${uniqueStatuses.length}件`);
-            
-            // 投稿データを作成（時間フィルタリングなし）
-            return uniqueStatuses.map(status => ({
-                id: status.id,
-                content: this.stripHtmlContent(status.content),
-                images: this.extractImages(status),
-                timestamp: new Date(status.created_at),
-                reactions: {
-                    favorites: status.favourites_count || 0,
-                    reblogs: status.reblogs_count || 0,
-                    replies: status.replies_count || 0
-                },
-                sourceIcon: this.config.sourceIcon,
-                sourceDisplayName: this.config.sourceDisplayName,
-                sourceIconImage: this.config.sourceIconImage,
-                originalUrl: status.url || status.uri
-            }));
-            
-        } catch (error) {
-            console.error(`${this.displayName}: 生データ取得エラー:`, error);
-            return [];
-        }
-    }
-    
-    async fetchViaFallback() {
-        console.log(`${this.displayName}: フォールバック実行`);
-        return [this.createPost({
-            content: `${this.username} の投稿取得に失敗しました。\n\nMastodon APIを使用しましたが、データを取得できませんでした。`,
-            sourceIcon: '[API失敗]',
-            sourceDisplayName: this.config.sourceDisplayName,
-            sourceIconImage: this.config.sourceIconImage,
-            timeText: 'API失敗'
-        })];
-    }
-}
-
-// ========================================
-// RSSアダプター
-// ========================================
-
-class RSSAdapter extends BaseSNSAdapter {
-    constructor(feedUrl, config = {}) {
-        super(feedUrl, 'rss', config);
-        this.feedUrl = feedUrl;
-        this.displayName = config.displayName || 'RSS Feed';
-    }
-    
-    getDefaultConfig() {
-        return {
-            ...super.getDefaultConfig(),
-            rateLimit: 60000, // 60秒間隔（RSSは更新頻度が低いため）
-            sourceIcon: '[RSS]'
-        };
-    }
-    
-    async fetchPosts() {
-        await this.checkRateLimit();
-        
-        try {
-            const result = await this.fetchViaAPI();
-            console.log(`${this.displayName}: RSS取得結果 - ${result.posts.length}件の投稿`);
-            
-            // RSSが正常に動作している場合は、投稿が0件でもフォールバックしない
-            if (result.success) {
-                return result.posts;
-            } else {
-                console.log(`${this.displayName}: RSS失敗のためフォールバック実行`);
-                return await this.fetchViaFallback();
-            }
-        } catch (error) {
-            console.error(`${this.displayName}: 取得エラー:`, error);
-            return [this.createErrorPost(error.message)];
-        }
-    }
-    
-    async fetchViaAPI() {
-        console.log(`${this.displayName}: RSS 取得中...`);
-        
-        // 時間ベース取得の設定を確認
-        const timeBasedFetch = this.getTimeBasedFetch();
-        const daysBack = this.getDaysBack();
-        const maxPosts = this.getMaxPosts();
-        
-        console.log(`${this.displayName}: 設定確認 - maxPosts: ${maxPosts}, timeBasedFetch: ${timeBasedFetch}, daysBack: ${daysBack}`);
-        
-        // RSSフィードを取得
-        const response = await this.fetchWithRetry(this.feedUrl, {
-            method: 'GET',
-            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-            returnText: true
-        });
-        
-        // XMLをパース
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(response, 'text/xml');
-        
-        // パースエラーをチェック
-        const parseError = xmlDoc.querySelector('parsererror');
-        if (parseError) {
-            throw new Error('RSS XMLのパースに失敗しました');
-        }
-        
-        // アイテムを取得
-        const items = xmlDoc.querySelectorAll('item');
-        console.log(`${this.displayName}: RSSから取得したアイテム数: ${items.length}`);
-        
-        let posts = [];
-        
-        // 統合された時間フィルタリングを使用するため、より多くのアイテムを処理
-        // 時間フィルタリングはPlanetAggregatorで実行される
-        const processLimit = Math.min(items.length, maxPosts * 2); // より多くのアイテムを処理
-        
-        for (let i = 0; i < processLimit; i++) {
-            const item = items[i];
-            
-            // 基本情報を取得
-            const title = this.getTextContent(item, 'title') || '';
-            const description = this.getTextContent(item, 'description') || '';
-            const link = this.getTextContent(item, 'link') || '';
-            const pubDate = this.getTextContent(item, 'pubDate') || '';
-            const guid = this.getTextContent(item, 'guid') || link;
-            
-            // 日付を解析
-            const itemDate = new Date(pubDate);
-            
-            // 投稿を作成（時間フィルタリングは後で実行）
-            const post = this.createPost({
-                id: guid,
-                content: title + (description ? '\n\n' + description : ''),
-                images: this.extractImagesFromRSS(item),
-                timestamp: itemDate,
-                reactions: {
-                    favorites: 0,
-                    reblogs: 0,
-                    replies: 0
-                },
-                sourceIcon: this.config.sourceIcon || '[RSS]',
-                sourceDisplayName: this.config.sourceDisplayName || this.displayName,
-                sourceIconImage: this.config.sourceIconImage,
-                originalUrl: link
-            });
-            
-            posts.push(post);
-        }
-        
-        console.log(`${this.displayName}: フィルタリング後 ${posts.length}件の投稿を取得`);
-        
-        return {
-            success: true,
-            posts: posts
-        };
-    }
-    
-    getTextContent(element, tagName) {
-        const tag = element.querySelector(tagName);
-        return tag ? tag.textContent.trim() : '';
-    }
-    
-    extractImagesFromRSS(item) {
-        const images = [];
-        
-        // description内の画像を抽出
-        const description = this.getTextContent(item, 'description');
-        if (description) {
-            const imgRegex = /<img[^>]+src="([^"]+)"/gi;
-            let match;
-            while ((match = imgRegex.exec(description)) !== null) {
-                const imageUrl = match[1];
-                if (isValidImageUrl(imageUrl)) {
-                    images.push(sanitizeImageUrl(imageUrl));
-                }
-            }
-        }
-        
-        // メディア要素をチェック（RSS 2.0の拡張）
-        const mediaContent = item.querySelector('media\\:content, content\\:encoded');
-        if (mediaContent) {
-            const mediaUrl = mediaContent.getAttribute('url');
-            if (mediaUrl && isValidImageUrl(mediaUrl)) {
-                images.push(sanitizeImageUrl(mediaUrl));
-            }
-        }
-        
-        return images.slice(0, this.getMaxImages());
-    }
-    
-    
-    async fetchMorePostsFromAPI(cutoffDate, existingIds) {
-        // RSSの場合は追加読み込みは通常の取得と同じ処理
-        // RSSフィードは通常、最新のエントリーのみを提供するため
-        const response = await this.fetchWithRetry(this.feedUrl, {
-            method: 'GET',
-            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-            returnText: true
-        });
-        
-        // XMLをパース
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(response, 'text/xml');
-        
-        // パースエラーをチェック
-        const parseError = xmlDoc.querySelector('parsererror');
-        if (parseError) {
-            throw new Error('RSS XMLのパースに失敗しました');
-        }
-        
-        // アイテムを取得
-        const items = xmlDoc.querySelectorAll('item');
-        console.log(`${this.displayName}: 追加読み込み用RSSから取得したアイテム数: ${items.length}`);
-        
-        let posts = [];
-        const maxPosts = this.getMaxPosts();
-        
-        for (let i = 0; i < items.length && posts.length < maxPosts; i++) {
-            const item = items[i];
-            
-            // 基本情報を取得
-            const title = this.getTextContent(item, 'title') || '';
-            const description = this.getTextContent(item, 'description') || '';
-            const link = this.getTextContent(item, 'link') || '';
-            const pubDate = this.getTextContent(item, 'pubDate') || '';
-            const guid = this.getTextContent(item, 'guid') || link;
-            
-            // 日付を解析
-            const itemDate = new Date(pubDate);
-            
-            // 重複チェック（時間フィルタリングはPlanetAggregatorで実行）
-            if (existingIds.has(guid)) {
-                continue; // 既存の投稿はスキップ
-            }
-            
-            // 投稿データを作成
-            const postData = {
-                id: guid,
-                content: title + (description ? '\n\n' + description : ''),
-                images: this.extractImagesFromRSS(item),
-                timestamp: itemDate,
-                reactions: {
-                    favorites: 0,
-                    reblogs: 0,
-                    replies: 0
-                },
-                sourceIcon: this.config.sourceIcon || '[RSS]',
-                sourceDisplayName: this.config.sourceDisplayName || this.displayName,
-                sourceIconImage: this.config.sourceIconImage,
-                originalUrl: link
-            };
-            
-            posts.push(postData);
-        }
-        
-        console.log(`${this.displayName}: 追加読み込み - ${posts.length}件の投稿を取得`);
-        return posts;
-    }
-    
-    /**
-     * 時間制限なしで生の投稿データを取得
-     */
-    async fetchMorePostsRaw(existingIds) {
-        console.log(`${this.displayName}: 生データ取得開始（時間制限なし）`);
-        
-        try {
-            // RSSフィードを再取得
-            const response = await this.fetchWithRetry(this.feedUrl, {
-                method: 'GET',
-                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-                returnText: true
-            });
-            
-            // XMLをパース
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(response, 'text/xml');
-            
-            // パースエラーをチェック
-            const parseError = xmlDoc.querySelector('parsererror');
-            if (parseError) {
-                throw new Error('RSS XMLのパースに失敗しました');
-            }
-            
-            // アイテムを取得
-            const items = xmlDoc.querySelectorAll('item');
-            console.log(`${this.displayName}: 生データRSSから取得したアイテム数: ${items.length}`);
-            
-            let posts = [];
-            
-            // 全てのアイテムを処理（時間制限なし）
-            for (let i = 0; i < items.length; i++) {
-                const item = items[i];
-                
-                // 基本情報を取得
-                const title = this.getTextContent(item, 'title') || '';
-                const description = this.getTextContent(item, 'description') || '';
-                const link = this.getTextContent(item, 'link') || '';
-                const pubDate = this.getTextContent(item, 'pubDate') || '';
-                const guid = this.getTextContent(item, 'guid') || link;
-                
-                // 重複チェック（時間フィルタリングは後で実行）
-                if (existingIds.has(guid)) {
-                    continue; // 既存の投稿はスキップ
-                }
-                
-                // 日付を解析
-                const itemDate = new Date(pubDate);
-                
-                // 投稿データを作成（時間フィルタリングなし）
-                const postData = {
-                    id: guid,
-                    content: title + (description ? '\n\n' + description : ''),
-                    images: this.extractImagesFromRSS(item),
-                    timestamp: itemDate,
-                    reactions: {
-                        favorites: 0,
-                        reblogs: 0,
-                        replies: 0
-                    },
-                    sourceIcon: this.config.sourceIcon || '[RSS]',
-                    sourceDisplayName: this.config.sourceDisplayName || this.displayName,
-                    sourceIconImage: this.config.sourceIconImage,
-                    originalUrl: link
-                };
-                
-                posts.push(postData);
-            }
-            
-            console.log(`${this.displayName}: 生データ取得完了 - ${posts.length}件`);
-            return posts;
-            
-        } catch (error) {
-            console.error(`${this.displayName}: 生データ取得エラー:`, error);
-            return [];
-        }
-    }
-    
-    async fetchViaFallback() {
-        console.log(`${this.displayName}: フォールバック実行`);
-        return [this.createPost({
-            content: `RSSフィードの取得に失敗しました。\n\nフィードURL: ${this.feedUrl}`,
-            sourceIcon: '[RSS失敗]',
-            sourceDisplayName: this.config.sourceDisplayName,
-            sourceIconImage: this.config.sourceIconImage,
-            timeText: 'RSS失敗'
-        })];
-    }
-}
-
-// ========================================
 // メインアグリゲータークラス
 // ========================================
 
@@ -1418,7 +360,7 @@ class PlanetAggregator {
         this.lastRenderHash = null;
         this.oldestPostDate = null;
         this.cacheTimestamp = 0;
-        this.CACHE_DURATION = CONFIG.CACHE_DURATION;
+        this.CACHE_DURATION = getConfigNumberLocal('CACHE_DURATION', 30 * 60 * 1000);
         
         // セッション開始時刻を固定（時間フィルタリングの一貫性を保つ）
         this.sessionStartTime = new Date();
@@ -1432,19 +374,33 @@ class PlanetAggregator {
      * 時間フィルタリング設定を更新
      */
     updateTimeFilterSettings() {
-        const globalSettings = globalSettingsManager.getGlobalSettings();
+        // グローバル設定マネージャーが利用可能かチェック
+        const globalSettings = (typeof window !== 'undefined' && window.globalSettingsManager) 
+            ? window.globalSettingsManager.getGlobalSettings() 
+            : {};
+        
         this.timeFilterSettings = {
             enabled: globalSettings.timeBasedFetch !== false,
             daysBack: globalSettings.daysBack || 7,
             baseTime: this.sessionStartTime  // セッション開始時刻で固定
         };
         
-        // カットオフ日時を事前計算
+        // カットオフ日時を事前計算（日付のみで比較するため、時刻を00:00:00に設定）
         if (this.timeFilterSettings.enabled) {
             this.cutoffDate = new Date(this.timeFilterSettings.baseTime);
+            
+            // 日付のみで計算（時刻は考慮しない）
             this.cutoffDate.setDate(this.cutoffDate.getDate() - this.timeFilterSettings.daysBack);
-            // 1時間のマージンを追加
-            this.cutoffDate.setHours(this.cutoffDate.getHours() - 1);
+            this.cutoffDate.setHours(0, 0, 0, 0); // 00:00:00.000 に設定
+            
+            // デバッグ用：詳細な日付計算ログ
+            console.log('=== 修正版時間フィルタリング設定 ===');
+            console.log('基準時刻:', this.timeFilterSettings.baseTime.toISOString());
+            console.log('遡る日数:', this.timeFilterSettings.daysBack);
+            console.log('計算されたカットオフ:', this.cutoffDate.toISOString());
+            console.log('基準日:', this.timeFilterSettings.baseTime.toDateString());
+            console.log('カットオフ日:', this.cutoffDate.toDateString());
+            console.log('====================================');
         }
         
         console.log('時間フィルタリング設定更新:', {
@@ -1456,7 +412,7 @@ class PlanetAggregator {
     }
     
     /**
-     * 修正版: より柔軟な時間フィルタリング処理
+     * 修正版: 日付ベースの時間フィルタリング処理
      */
     applyTimeFiltering(posts, useFlexibleMode = false) {
         if (!Array.isArray(posts) || posts.length === 0) {
@@ -1469,31 +425,54 @@ class PlanetAggregator {
             return posts;
         }
         
-        let cutoffDate = this.cutoffDate;
+        let cutoffDate = new Date(this.cutoffDate);
         
         // フレキシブルモード（追加読み込み時）はより緩い設定を使用
         if (useFlexibleMode) {
             cutoffDate = new Date(this.timeFilterSettings.baseTime);
             cutoffDate.setDate(cutoffDate.getDate() - (this.timeFilterSettings.daysBack * 2)); // 2倍の期間
-            cutoffDate.setHours(cutoffDate.getHours() - 12); // 12時間のマージン
-            console.log(`フレキシブル時間フィルタリング実行: カットオフ=${cutoffDate.toISOString()}`);
+            cutoffDate.setHours(0, 0, 0, 0); // 00:00:00.000 に設定
+            console.log(`=== フレキシブル時間フィルタリング ===`);
+            console.log(`元のカットオフ: ${this.cutoffDate.toISOString()}`);
+            console.log(`フレキシブルカットオフ: ${cutoffDate.toISOString()}`);
+            console.log(`期間: ${this.timeFilterSettings.daysBack * 2}日前まで`);
         } else {
-            console.log(`統合時間フィルタリング実行: カットオフ=${cutoffDate.toISOString()}`);
+            console.log(`=== 修正版通常時間フィルタリング ===`);
+            console.log(`カットオフ: ${cutoffDate.toISOString()}`);
+            console.log(`期間: ${this.timeFilterSettings.daysBack}日前まで`);
         }
         
-        // フィルタリング処理
-        const filteredPosts = posts.filter(post => {
+        // フィルタリング処理（日付ベースの比較）
+        const filteredPosts = posts.filter((post, index) => {
             if (!post.timestamp) {
                 console.warn('投稿にタイムスタンプがありません:', post.id);
                 return true; // タイムスタンプがない場合は含める
             }
             
             const postDate = new Date(post.timestamp);
-            const isWithinRange = postDate >= cutoffDate;
             
-            // デバッグ用: 最初の3件の除外ログのみ表示
-            if (!isWithinRange && posts.indexOf(post) < 3) {
-                console.log(`投稿除外: ${post.id} (投稿: ${postDate.toISOString()}, カットオフ: ${cutoffDate.toISOString()})`);
+            // 日付ベースの比較（時刻は無視）
+            const postDateOnly = new Date(postDate);
+            postDateOnly.setHours(0, 0, 0, 0);
+            
+            const isWithinRange = postDateOnly >= cutoffDate;
+            
+            // より正確な日数差計算
+            const daysDiff = Math.floor((cutoffDate - postDateOnly) / (1000 * 60 * 60 * 24));
+            
+                    // 詳細なデバッグログ（最初の10件）
+        if (index < getConfigNumberLocal('UI_LIMITS.MAX_DEBUG_POSTS', 5)) {
+                console.log(`投稿${index + 1}: ${post.id}`);
+                console.log(`  投稿日時: ${postDate.toISOString()}`);
+                console.log(`  投稿日付: ${postDateOnly.toISOString()}`);
+                console.log(`  カットオフ: ${cutoffDate.toISOString()}`);
+                console.log(`  日数差: ${daysDiff}日`);
+                console.log(`  判定: ${isWithinRange ? '含める' : '除外'}`);
+            }
+            
+            // 除外ログ（最初の5件のみ）
+            if (!isWithinRange && index < getConfigNumberLocal('UI_LIMITS.MAX_DEBUG_POSTS', 5)) {
+                console.warn(`投稿除外: ${post.id} (${daysDiff}日前の投稿)`);
             }
             
             return isWithinRange;
@@ -1501,8 +480,58 @@ class PlanetAggregator {
         
         const excludedCount = posts.length - filteredPosts.length;
         console.log(`時間フィルタリング結果: ${posts.length}件 → ${filteredPosts.length}件 (除外: ${excludedCount}件)`);
+        console.log('=================================');
         
         return filteredPosts;
+    }
+    
+    /**
+     * デバッグ用: 投稿の日付分布を表示
+     */
+    logPostDateDistribution(posts, label = '') {
+        if (!posts || posts.length === 0) return;
+        
+        console.log(`=== 投稿日付分布 ${label} ===`);
+        
+        // 日付別に投稿をグループ化
+        const dateGroups = {};
+        posts.forEach(post => {
+            if (post.timestamp) {
+                const dateStr = new Date(post.timestamp).toDateString();
+                if (!dateGroups[dateStr]) {
+                    dateGroups[dateStr] = [];
+                }
+                dateGroups[dateStr].push(post);
+            }
+        });
+        
+        // ソートして表示
+        const sortedDates = Object.keys(dateGroups).sort((a, b) => new Date(b) - new Date(a));
+        sortedDates.slice(0, getConfigNumberLocal('UI_LIMITS.MAX_DATE_GROUPS', 10)).forEach(date => {
+            console.log(`${date}: ${dateGroups[date].length}件`);
+        });
+        
+        console.log(`合計: ${posts.length}件`);
+        console.log('========================');
+    }
+    
+    /**
+     * 追加: 投稿の詳細情報を表示するヘルパー関数
+     */
+    logPostDetails(posts, label = '', maxCount = 5) {
+        if (!posts || posts.length === 0) return;
+        
+        console.log(`=== ${label} 投稿詳細 ===`);
+        posts.slice(0, maxCount).forEach((post, index) => {
+            if (post.timestamp) {
+                const postDate = new Date(post.timestamp);
+                console.log(`${index + 1}. ${post.id}`);
+                console.log(`   日時: ${postDate.toISOString()}`);
+                console.log(`   日付: ${postDate.toDateString()}`);
+                console.log(`   内容: ${(post.content || '').substring(0, 50)}...`);
+            }
+        });
+        console.log('========================');
     }
     
     addAdapter(type, instanceUrl, username, config = {}) {
@@ -1561,8 +590,14 @@ class PlanetAggregator {
         
         await Promise.allSettled(promises);
         
+        // フィルタリング前の投稿詳細をログ出力
+        this.logPostDetails(this.posts, 'フィルタリング前');
+        
         // 統合された時間フィルタリングを適用
         this.posts = this.applyTimeFiltering(this.posts);
+        
+        // フィルタリング後の投稿詳細をログ出力
+        this.logPostDetails(this.posts, 'フィルタリング後');
         
         this.posts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         this.isLoading = false;
@@ -1639,10 +674,15 @@ class PlanetAggregator {
             
             console.log(`全アダプターから合計 ${newPosts.length}件取得`);
             
+            // 取得した投稿の日付分布をログ出力
+            this.logPostDateDistribution(newPosts, '(取得直後)');
+            
             if (newPosts.length > 0) {
                 // 重複除外
                 const uniqueNewPosts = newPosts.filter(post => !existingIds.has(post.id));
                 console.log(`重複除外後: ${uniqueNewPosts.length}件`);
+                
+                this.logPostDateDistribution(uniqueNewPosts, '(重複除外後)');
                 
                 if (uniqueNewPosts.length > 0) {
                     // 時間フィルタリング前の件数
@@ -1652,6 +692,8 @@ class PlanetAggregator {
                     const filteredNewPosts = this.applyTimeFiltering(uniqueNewPosts, true);
                     
                     console.log(`時間フィルタリング後: ${filteredNewPosts.length}件`);
+                    
+                    this.logPostDateDistribution(filteredNewPosts, '(時間フィルタリング後)');
                     
                     if (filteredNewPosts.length > 0) {
                         // 投稿データを正しい形式に変換
@@ -1677,7 +719,7 @@ class PlanetAggregator {
                         // 最新の10件のみ追加（古すぎる投稿を避けるため）
                         const recentPosts = processedPosts
                             .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-                            .slice(0, 10);
+                            .slice(0, getConfigNumberLocal('UI_LIMITS.MAX_RECENT_POSTS', 10));
                         
                         if (recentPosts.length > 0) {
                             this.posts.push(...recentPosts);
@@ -1716,7 +758,9 @@ class PlanetAggregator {
         try {
             // 追加読み込み時は、現在時刻からdaysBack日数前の日時をカットオフ日時として使用
             // 時間フィルタリングは統合版で実行されるため、ここでは重複チェックのみ
-            const globalSettings = globalSettingsManager.getGlobalSettings();
+            const globalSettings = (typeof window !== 'undefined' && window.globalSettingsManager) 
+                ? window.globalSettingsManager.getGlobalSettings() 
+                : {};
             const daysBack = globalSettings.daysBack || 3;
             const cutoffDate = new Date();
             cutoffDate.setDate(cutoffDate.getDate() - daysBack);
@@ -1841,7 +885,7 @@ class PlanetAggregator {
     
     getFromCache(key) {
         const item = this.cache.get(key);
-        if (!item || Date.now() > item.timestamp + CONFIG.CACHE_DURATION) {
+        if (!item || Date.now() > item.timestamp + getConfigNumberLocal('CACHE_DURATION', 30 * 60 * 1000)) {
             this.cache.delete(key);
             return null;
         }
@@ -1851,7 +895,7 @@ class PlanetAggregator {
     saveToCache(key, data) {
         this.cache.set(key, { data, timestamp: Date.now() });
         
-        if (this.cache.size > 100) {
+        if (this.cache.size > CONFIG.MAX_CACHE_SIZE) {
             const firstKey = this.cache.keys().next().value;
             this.cache.delete(firstKey);
         }
@@ -2089,7 +1133,7 @@ class PlanetAggregator {
     }
     
     renderImages(images) {
-        const validImages = images.filter(img => isValidImageUrl(img.url)).slice(0, 4);
+        const validImages = images.filter(img => isValidImageUrl(img.url)).slice(0, CONFIG.UI_LIMITS.MAX_IMAGES_DISPLAY);
         if (validImages.length === 0) return '';
         
         const html = validImages.map(image => {
@@ -2149,9 +1193,8 @@ class PlanetAggregator {
         this.cacheTimestamp = Date.now();
         
         // キャッシュサイズを制限（メモリ効率のため）
-        const maxCachedPosts = 1000;
-        if (this.cachedPosts.length > maxCachedPosts) {
-            this.cachedPosts = this.cachedPosts.slice(0, maxCachedPosts);
+        if (this.cachedPosts.length > CONFIG.MAX_CACHED_POSTS) {
+            this.cachedPosts = this.cachedPosts.slice(0, CONFIG.MAX_CACHED_POSTS);
         }
         
         console.log(`キャッシュに ${newPosts.length}件の投稿を追加 (合計: ${this.cachedPosts.length}件)`);
@@ -2182,7 +1225,7 @@ class PlanetAggregator {
     }
     
     // 表示用投稿を取得（最大投稿数制限付き）
-    getCachedPostsForDisplay(maxPosts = 20) {
+    getCachedPostsForDisplay(maxPosts = getConfigNumberLocal('UI_LIMITS.MAX_POSTS', 20)) {
         const cachedPosts = this.getCachedPosts();
         return cachedPosts.slice(0, maxPosts);
     }
@@ -2210,6 +1253,1178 @@ class PlanetAggregator {
 }
 
 // ========================================
+// プロキシ管理クラス
+// ========================================
+
+class ProxyManager {
+    constructor() {
+        this.failedProxies = new Map();
+        this.FAILURE_THRESHOLD = getConfigNumberLocal('PROXY.FAILURE_THRESHOLD', 3);
+        this.RECOVERY_TIME = getConfigNumberLocal('PROXY.RECOVERY_TIME', 5 * 60 * 1000);
+    }
+    
+    getAvailableProxies() {
+        const services = [
+            'https://corsproxy.io/?',
+            'https://cors-anywhere.herokuapp.com/'
+        ];
+        
+        if (!isLocalhost()) {
+            services.unshift('https://api.allorigins.win/get?url=');
+        }
+        
+        return services.filter(proxy => !this.isProxyFailed(proxy));
+    }
+    
+    isProxyFailed(proxy) {
+        const proxyName = this.getProxyName(proxy);
+        const failedData = this.failedProxies.get(proxyName);
+        
+        if (!failedData) return false;
+        
+        if (Date.now() - failedData.timestamp > this.RECOVERY_TIME) {
+            this.failedProxies.delete(proxyName);
+            return false;
+        }
+        
+        return failedData.count >= this.FAILURE_THRESHOLD;
+    }
+    
+    recordFailure(proxy) {
+        const proxyName = this.getProxyName(proxy);
+        const current = this.failedProxies.get(proxyName) || { count: 0, timestamp: Date.now() };
+        current.count++;
+        current.timestamp = Date.now();
+        this.failedProxies.set(proxyName, current);
+        
+        console.warn(`プロキシ ${proxyName} 失敗記録: ${current.count}/${this.FAILURE_THRESHOLD}`);
+    }
+    
+    getProxyName(proxyUrl) {
+        return proxyUrl.split('://')[1].split('/')[0];
+    }
+}
+
+const proxyManager = new ProxyManager();
+
+// ========================================
+// 基底アダプタークラス
+// ========================================
+
+class BaseSNSAdapter {
+    constructor(instanceUrl, username, config = {}) {
+        this.instanceUrl = instanceUrl;
+        this.username = username;
+        // グローバル設定とローカル設定をマージ
+        const globalSettings = (typeof window !== 'undefined' && window.globalSettingsManager) 
+            ? window.globalSettingsManager 
+            : null;
+        this.config = globalSettings ? globalSettings.mergeSettings({ ...this.getDefaultConfig(), ...config }) : { ...this.getDefaultConfig(), ...config };
+        this.lastFetchTime = 0;
+        this.displayName = config.displayName || username;
+    }
+    
+    getDefaultConfig() {
+        return {
+            rateLimit: 15000, // デフォルト値（各アダプターでオーバーライド）
+            maxPosts: getConfigNumberLocal('UI_LIMITS.MAX_POSTS', 20),
+            includeReplies: false,
+            includeReblogs: false,
+            timeBasedFetch: false,
+            daysBack: 5,
+            useProxy: true,
+            maxImages: getConfigNumberLocal('UI_LIMITS.MAX_IMAGES_PER_POST', 6)
+        };
+    }
+    
+    // 共通の設定アクセスメソッド
+    getTimeBasedFetch() {
+        return this.config.timeBasedFetch || false;
+    }
+    
+    getDaysBack() {
+        return this.config.daysBack || 5;
+    }
+    
+    getMaxPosts() {
+        return this.config.maxPosts || getConfigNumberLocal('UI_LIMITS.MAX_POSTS', 20);
+    }
+    
+    getMaxImages() {
+        return this.config.maxImages || getConfigNumberLocal('UI_LIMITS.MAX_IMAGES_PER_POST', 6);
+    }
+    
+    getUseProxy() {
+        return this.config.useProxy !== false; // デフォルトはtrue
+    }
+    
+    // 時間ベース取得の共通ロジック
+    getCutoffDate() {
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - this.getDaysBack());
+        return cutoffDate;
+    }
+    
+    // 時間フィルタリングの共通ロジック
+    filterByTime(posts, cutoffDate) {
+        return posts.filter(post => {
+            const postDate = new Date(post.timestamp || post.createdAt || post.created_at);
+            return postDate >= cutoffDate;
+        });
+    }
+    
+    // 重複チェックの共通ロジック
+    filterUniquePosts(posts, existingIds) {
+        return posts.filter(post => !existingIds.has(post.id));
+    }
+    
+    async checkRateLimit() {
+        const now = Date.now();
+        const timeSinceLastFetch = now - this.lastFetchTime;
+        
+        if (timeSinceLastFetch < this.config.rateLimit) {
+            const waitTime = this.config.rateLimit - timeSinceLastFetch;
+            console.log(`${this.displayName}: レート制限 ${Math.ceil(waitTime/1000)}秒待機`);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+        }
+        
+        this.lastFetchTime = Date.now();
+    }
+    
+    async fetchPosts() {
+        throw new Error('fetchPosts must be implemented by subclass');
+    }
+    
+    async fetchMorePosts(cutoffDate, existingIds) {
+        console.log(`${this.displayName}: 追加投稿取得中... (${cutoffDate.toISOString()} 以降)`);
+        
+        try {
+            // 各アダプターで実装する必要があるメソッド
+            const rawPosts = await this.fetchMorePostsFromAPI(cutoffDate, existingIds);
+            
+            // 共通の後処理
+            const posts = rawPosts.map(post => this.createPost(post));
+            
+            console.log(`${this.displayName}: 追加読み込み - ${posts.length}件の投稿を取得`);
+            return posts;
+            
+        } catch (error) {
+            console.error(`${this.displayName}: 追加投稿取得エラー:`, error);
+            return [];
+        }
+    }
+    
+    async fetchMorePostsFromAPI(cutoffDate, existingIds) {
+        throw new Error('fetchMorePostsFromAPI must be implemented by subclass');
+    }
+    
+    /**
+     * 新しいメソッド: 時間フィルタリングなしで生の投稿データを取得
+     */
+    async fetchMorePostsRaw(existingIds) {
+        console.log(`${this.displayName}: 生データ取得中...`);
+        
+        try {
+            // 各アダプターで実装する必要があるメソッド
+            const rawPosts = await this.fetchMorePostsFromAPIRaw(existingIds);
+            
+            // 時間フィルタリングは行わず、重複チェックのみ
+            const uniquePosts = this.filterUniquePosts(rawPosts, existingIds);
+            
+            // 投稿オブジェクトを作成
+            const posts = uniquePosts.map(post => this.createPost(post));
+            
+            console.log(`${this.displayName}: 生データ取得完了 - ${posts.length}件`);
+            return posts;
+            
+        } catch (error) {
+            console.error(`${this.displayName}: 生データ取得エラー:`, error);
+            return [];
+        }
+    }
+    
+    /**
+     * 新しいメソッド: APIから生の投稿データを取得（時間制限なし）
+     */
+    async fetchMorePostsFromAPIRaw(existingIds) {
+        // デフォルト実装: より多くの投稿を取得
+        const maxPosts = Math.max(this.getMaxPosts() * 3, 100); // 通常の3倍または最低100件
+        console.log(`${this.displayName}: 生データAPI制限値: ${maxPosts}件で取得`);
+        
+        // 既存のAPI取得ロジックを使用（時間制限は各アダプターで実装）
+        return await this.fetchMorePostsFromAPI(new Date(0), existingIds); // 1970年以降 = 実質制限なし
+    }
+    
+    // 共通のAPI取得ロジック
+    async fetchWithRetry(url, options = {}) {
+        const useProxy = this.getUseProxy();
+        const proxies = useProxy ? proxyManager.getAvailableProxies() : [];
+        
+        for (let attempt = 1; attempt <= getConfigNumberLocal('RETRY_ATTEMPTS', 3); attempt++) {
+            try {
+                if (useProxy) {
+                    // プロキシを使用してリクエストを試行
+                    for (const proxy of proxies) {
+                        try {
+                            return await makeProxyRequest(proxy, url, options, this.displayName);
+                        } catch (error) {
+                            if (error.message.startsWith('RATE_LIMIT:')) {
+                                const retryAfter = parseInt(error.message.split(':')[1]);
+                                console.warn(`${this.displayName}: レート制限 ${retryAfter}秒待機 (試行 ${attempt}/${getConfigNumberLocal('RETRY_ATTEMPTS', 3)})`);
+                                
+                                if (attempt < getConfigNumberLocal('RETRY_ATTEMPTS', 3)) {
+                                    await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+                                    break; // プロキシループを抜けて次の試行へ
+                                }
+                            } else {
+                                proxyManager.recordFailure(proxy);
+                                console.warn(`${this.displayName}: プロキシ ${proxyManager.getProxyName(proxy)} 失敗:`, error.message);
+                                continue; // 次のプロキシを試行
+                            }
+                        }
+                    }
+                } else {
+                    // 直接アクセス
+                    return await makeDirectRequest(url, options, this.displayName);
+                }
+            } catch (error) {
+                if (error.message.startsWith('RATE_LIMIT:')) {
+                    const retryAfter = parseInt(error.message.split(':')[1]);
+                    console.warn(`${this.displayName}: レート制限 ${retryAfter}秒待機 (試行 ${attempt}/${getConfigNumberLocal('RETRY_ATTEMPTS', 3)})`);
+                    
+                    if (attempt < getConfigNumberLocal('RETRY_ATTEMPTS', 3)) {
+                        await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+                    }
+                } else {
+                    console.warn(`${this.displayName}: 取得失敗:`, error.message);
+                }
+            }
+            
+            // 失敗した場合、バックオフしてリトライ
+            if (attempt < getConfigNumberLocal('RETRY_ATTEMPTS', 3)) {
+                const backoffMs = Math.min(
+                    getConfigNumberLocal('BACKOFF.BASE_DELAY', 1000) * Math.pow(getConfigNumberLocal('BACKOFF.MULTIPLIER', 2), attempt - 1),
+                    getConfigNumberLocal('BACKOFF.MAX_DELAY', 10000)
+                );
+                console.warn(`${this.displayName}: 投稿取得試行 ${attempt}/${getConfigNumberLocal('RETRY_ATTEMPTS', 3)} 失敗、${backoffMs}ms後にリトライ`);
+                await new Promise(resolve => setTimeout(resolve, backoffMs));
+            }
+        }
+        
+        throw new Error(`${useProxy ? '全てのプロキシ' : '直接アクセス'}でAPI取得に失敗しました`);
+    }
+    
+    // 共通のAPI制限値計算ロジック
+    calculateApiLimit(maxPosts, multiplier = getConfigNumberLocal('API_LIMITS.MULTIPLIER', 2), maxLimit = getConfigNumberLocal('API_LIMITS.MISSKEY_MAX', 100)) {
+        const apiLimit = Math.min(maxPosts * multiplier, maxLimit);
+        console.log(`${this.displayName}: API制限値: ${apiLimit}件で取得`);
+        return apiLimit;
+    }
+    
+    // 共通のエラーハンドリング
+    handleFetchError(error, context = '取得') {
+        console.error(`${this.displayName}: ${context}エラー:`, error);
+        return [this.createErrorPost(error.message)];
+    }
+    
+    // 共通の投稿データ変換ロジック
+    createPostFromApiData(data, additionalFields = {}) {
+        return {
+            id: data.id || generateId(data.content, data.timestamp),
+            content: this.processContent(data.content || ''),
+            images: this.extractImages(data),
+            timestamp: new Date(data.timestamp || data.createdAt || data.created_at),
+            reactions: this.extractReactions(data),
+            sourceIcon: this.config.sourceIcon || '[API]',
+            sourceDisplayName: this.config.sourceDisplayName || this.displayName,
+            sourceIconImage: this.config.sourceIconImage,
+            originalUrl: this.generateOriginalUrl(data),
+            ...additionalFields
+        };
+    }
+    
+    // 共通のコンテンツ処理
+    processContent(content) {
+        if (!content) return '';
+        return processPostContent(content);
+    }
+    
+    // 共通の画像抽出（各アダプターでオーバーライド）
+    extractImages(data) {
+        return [];
+    }
+    
+    // 共通のリアクション抽出（各アダプターでオーバーライド）
+    extractReactions(data) {
+        return { favorites: 0, reblogs: 0, replies: 0 };
+    }
+    
+    // 共通のオリジナルURL生成（各アダプターでオーバーライド）
+    generateOriginalUrl(data) {
+        return null;
+    }
+    
+    createPost(data) {
+        return {
+            id: data.id || generateId(data.content, data.timestamp),
+            content: processPostContent(data.content || ''),
+            images: data.images || [],
+            timestamp: data.timestamp || new Date(),
+            timeText: data.timeText || formatRelativeTime(data.timestamp),
+            reactions: data.reactions || { favorites: 0, reblogs: 0, replies: 0 },
+            source: this.username,
+            sourceIcon: data.sourceIcon || '[取得]',
+            sourceInstance: this.instanceUrl,
+            sourceDisplayName: data.sourceDisplayName || this.displayName,
+            sourceIconImage: data.sourceIconImage || null,
+            originalUrl: data.originalUrl || null
+        };
+    }
+    
+    createErrorPost(message) {
+        return this.createPost({
+            content: `${this.displayName} の取得に失敗しました: ${message}`,
+            sourceIcon: '[エラー]',
+            sourceDisplayName: this.config.sourceDisplayName || this.displayName,
+            sourceIconImage: this.config.sourceIconImage,
+            timeText: '今'
+        });
+    }
+}
+
+// ========================================
+// Misskeyアダプター
+// ========================================
+
+class MisskeyAdapter extends BaseSNSAdapter {
+    constructor(instanceUrl, username, config = {}) {
+        super(instanceUrl, username, config);
+        this.apiUrl = `${instanceUrl}/api`;
+        this.profileUrl = `${instanceUrl}/@${username}`;
+    }
+    
+    getDefaultConfig() {
+        return {
+            ...super.getDefaultConfig(),
+            rateLimit: getConfigNumberLocal('RATE_LIMITS.MISSKEY', 30000),
+            sourceIcon: '[API]'
+        };
+    }
+    
+    async fetchPosts() {
+        await this.checkRateLimit();
+        
+        try {
+            const result = await this.fetchViaAPI();
+            console.log(`${this.displayName}: API取得結果 - ${result.posts.length}件の投稿`);
+            
+            // APIが正常に動作している場合は、投稿が0件でもフォールバックしない
+            if (result.success) {
+                return result.posts;
+            } else {
+                console.log(`${this.displayName}: API失敗のためフォールバック実行`);
+                return await this.fetchViaFallback();
+            }
+        } catch (error) {
+            return this.handleFetchError(error);
+        }
+    }
+    
+    async fetchViaAPI() {
+        console.log(`${this.displayName}: Misskey API 取得中...`);
+        
+        const userInfo = await this.getCachedUserInfo();
+        
+        // 時間ベース取得の設定を確認
+        const timeBasedFetch = this.getTimeBasedFetch();
+        const daysBack = this.getDaysBack();
+        const maxPosts = this.getMaxPosts();
+        
+        console.log(`${this.displayName}: 設定確認 - maxPosts: ${maxPosts}, timeBasedFetch: ${timeBasedFetch}, daysBack: ${daysBack}`);
+        
+        // 統合された時間フィルタリングを使用するため、より多くの投稿を取得
+        // 時間フィルタリングはPlanetAggregatorで実行される
+        const apiLimit = this.calculateApiLimit(maxPosts, getConfigNumberLocal('API_LIMITS.MULTIPLIER', 2), getConfigNumberLocal('API_LIMITS.MISSKEY_MAX', 100));
+        
+        const notes = await this.fetchWithRetry(`${this.apiUrl}/users/notes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: userInfo.id,
+                limit: apiLimit,
+                includeReplies: this.config.includeReplies,
+                includeMyRenotes: this.config.includeReblogs
+            })
+        });
+        
+        console.log(`${this.displayName}: APIから取得した投稿数: ${notes ? notes.length : 0}`);
+        console.log(`${this.displayName}: ユーザーID: ${userInfo.id}`);
+        
+        const posts = notes.map(note => this.createPostFromApiData(note, {
+            content: note.text || note.cw || '',
+            timestamp: new Date(note.createdAt),
+            originalUrl: `${this.instanceUrl}/notes/${note.id}`
+        }));
+        
+        // APIが正常に動作した場合は成功フラグを返す
+        return {
+            success: true,
+            posts: posts
+        };
+    }
+    
+    async getCachedUserInfo() {
+        const cacheKey = `user:${this.instanceUrl}:${this.username}`;
+        
+        try {
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                if (Date.now() - parsed.timestamp < getConfigNumberLocal('USER_CACHE_DURATION', 24 * 60 * 60 * 1000)) {
+                    console.log(`${this.displayName}: ユーザー情報キャッシュから取得`);
+                    return parsed.data;
+                }
+                localStorage.removeItem(cacheKey);
+            }
+        } catch {}
+        
+        console.log(`${this.displayName}: ユーザー情報API取得中...`);
+        const userInfo = await this.fetchWithRetry(`${this.apiUrl}/users/show`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: this.username })
+        });
+        
+        try {
+            localStorage.setItem(cacheKey, JSON.stringify({
+                data: userInfo,
+                timestamp: Date.now()
+            }));
+        } catch {}
+        
+        return userInfo;
+    }
+    
+    // Misskey固有の画像抽出
+    extractImages(note) {
+        if (!note.files || !Array.isArray(note.files)) return [];
+        
+        return note.files
+            .filter(file => file.type && file.type.startsWith('image/'))
+            .slice(0, this.getMaxImages())
+            .map(file => ({
+                url: file.url,
+                alt: file.name || '',
+                width: file.properties?.width,
+                height: file.properties?.height
+            }));
+    }
+    
+    // Misskey固有のリアクション抽出
+    extractReactions(note) {
+        return {
+            favorites: note.reactionCount || 0,
+            reblogs: note.renoteCount || 0,
+            replies: note.repliesCount || 0
+        };
+    }
+    
+    // Misskey固有のオリジナルURL生成
+    generateOriginalUrl(note) {
+        return `${this.instanceUrl}/notes/${note.id}`;
+    }
+    
+    async fetchMorePostsFromAPI(cutoffDate, existingIds) {
+        const userInfo = await this.getCachedUserInfo();
+        const maxPosts = this.getMaxPosts();
+        
+        // より多くの投稿を取得して時間フィルタリング
+        const apiLimit = this.calculateApiLimit(maxPosts, getConfigNumberLocal('API_LIMITS.MULTIPLIER', 2), getConfigNumberLocal('API_LIMITS.MISSKEY_MAX', 100));
+        
+        const allNotes = await this.fetchWithRetry(`${this.apiUrl}/users/notes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: userInfo.id,
+                limit: apiLimit,
+                includeReplies: this.config.includeReplies,
+                includeMyRenotes: this.config.includeReblogs
+            })
+        });
+        
+        // 重複チェック（時間フィルタリングはPlanetAggregatorで実行）
+        const uniqueNotes = this.filterUniquePosts(allNotes, existingIds);
+        
+        console.log(`${this.displayName}: 追加読み込み - 取得: ${allNotes.length}件, 重複除外後: ${uniqueNotes.length}件`);
+        
+        return uniqueNotes.map(note => this.createPostFromApiData(note, {
+            content: note.text || note.cw || '',
+            timestamp: new Date(note.createdAt),
+            originalUrl: `${this.instanceUrl}/notes/${note.id}`
+        }));
+    }
+    
+    /**
+     * 時間制限なしで生の投稿データを取得
+     */
+    async fetchMorePostsRaw(existingIds) {
+        console.log(`${this.displayName}: 生データ取得開始（時間制限なし）`);
+        
+        try {
+            const userInfo = await this.getCachedUserInfo();
+            
+            // Misskeyの最大制限値は100なので、それを超えないように修正
+            const apiLimit = this.calculateApiLimit(50, getConfigNumberLocal('API_LIMITS.MULTIPLIER', 2), getConfigNumberLocal('API_LIMITS.MISSKEY_MAX', 100));
+            
+            const allNotes = await this.fetchWithRetry(`${this.apiUrl}/users/notes`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: userInfo.id,
+                    limit: apiLimit,
+                    includeReplies: this.config.includeReplies,
+                    includeMyRenotes: this.config.includeReblogs
+                })
+            });
+            
+            // 重複チェックのみ（時間フィルタリングは後で実行）
+            const uniqueNotes = allNotes.filter(note => !existingIds.has(note.id));
+            
+            console.log(`${this.displayName}: 生データ取得完了 - 取得: ${allNotes.length}件, 重複除外後: ${uniqueNotes.length}件`);
+            
+            // 投稿データを作成（時間フィルタリングなし）
+            return uniqueNotes.map(note => this.createPostFromApiData(note, {
+                content: note.text || note.cw || '',
+                timestamp: new Date(note.createdAt),
+                originalUrl: `${this.instanceUrl}/notes/${note.id}`
+            }));
+            
+        } catch (error) {
+            console.error(`${this.displayName}: 生データ取得エラー:`, error);
+            return [];
+        }
+    }
+    
+    async fetchViaFallback() {
+        console.log(`${this.displayName}: フォールバック実行`);
+        return [this.createPost({
+            content: `${this.username} はJavaScript必須のSPAです。\n\nMisskey APIを使用して投稿を取得してください。`,
+            sourceIcon: '[SPA]',
+            sourceDisplayName: this.config.sourceDisplayName,
+            sourceIconImage: this.config.sourceIconImage,
+            timeText: 'SPA検出'
+        })];
+    }
+}
+
+// ========================================
+// Mastodonアダプター
+// ========================================
+
+class MastodonAdapter extends BaseSNSAdapter {
+    constructor(instanceUrl, username, config = {}) {
+        super(instanceUrl, username, config);
+        this.apiUrl = `${instanceUrl}/api/v1`;
+        this.profileUrl = `${instanceUrl}/@${username}`;
+    }
+    
+    getDefaultConfig() {
+        return {
+            ...super.getDefaultConfig(),
+            rateLimit: getConfigNumberLocal('RATE_LIMITS.MASTODON', 20000),
+            sourceIcon: '[API]'
+        };
+    }
+    
+    async fetchPosts() {
+        await this.checkRateLimit();
+        
+        try {
+            const apiPosts = await this.fetchViaAPI();
+            return apiPosts.length > 0 ? apiPosts : await this.fetchViaFallback();
+        } catch (error) {
+            return this.handleFetchError(error);
+        }
+    }
+    
+    async fetchViaAPI() {
+        console.log(`${this.displayName}: Mastodon API 取得中...`);
+        
+        try {
+            // ユーザー名からアカウント情報を取得
+            const userInfo = await this.getAccountByUsername();
+            if (!userInfo) {
+                throw new Error('ユーザー情報の取得に失敗しました');
+            }
+            
+            // アカウントの公開投稿を取得
+            const statuses = await this.fetchAccountStatuses(userInfo.id);
+            return statuses;
+            
+        } catch (error) {
+            console.error(`${this.displayName}: API取得失敗:`, error.message);
+            throw error;
+        }
+    }
+    
+    async getAccountByUsername() {
+        const cacheKey = `mastodon-user:${this.instanceUrl}:${this.username}`;
+        
+        try {
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                if (Date.now() - parsed.timestamp < getConfigNumberLocal('USER_CACHE_DURATION', 24 * 60 * 60 * 1000)) {
+                    console.log(`${this.displayName}: ユーザー情報キャッシュから取得`);
+                    return parsed.data;
+                }
+                localStorage.removeItem(cacheKey);
+            }
+        } catch {}
+        
+        console.log(`${this.displayName}: ユーザー情報API取得中...`);
+        
+        try {
+            // ユーザー名からアカウント情報を取得（認証なし）
+            const account = await this.fetchWithRetry(`${this.apiUrl}/accounts/lookup?acct=${this.username}`, {
+                method: 'GET',
+                headers: { 
+                    'Accept': 'application/json',
+                    'User-Agent': 'PlanetAggregator/1.0'
+                }
+            });
+            
+            // キャッシュに保存
+            try {
+                localStorage.setItem(cacheKey, JSON.stringify({
+                    data: account,
+                    timestamp: Date.now()
+                }));
+            } catch {}
+            
+            return account;
+            
+        } catch (error) {
+            console.error(`${this.displayName}: ユーザー情報取得エラー:`, error.message);
+            throw error;
+        }
+    }
+    
+    async fetchAccountStatuses(accountId) {
+        try {
+            // 時間ベース取得の設定を確認
+            const timeBasedFetch = this.getTimeBasedFetch();
+            const daysBack = this.getDaysBack();
+            const maxPosts = this.getMaxPosts();
+            
+            console.log(`${this.displayName}: 設定確認 - maxPosts: ${maxPosts}, timeBasedFetch: ${timeBasedFetch}, daysBack: ${daysBack}`);
+            
+            // 統合された時間フィルタリングを使用するため、より多くの投稿を取得
+            // 時間フィルタリングはPlanetAggregatorで実行される
+            const apiLimit = this.calculateApiLimit(maxPosts, getConfigNumberLocal('API_LIMITS.MULTIPLIER', 2), getConfigNumberLocal('API_LIMITS.MASTODON_MAX', 40));
+            
+            const statuses = await this.fetchWithRetry(`${this.apiUrl}/accounts/${accountId}/statuses?exclude_replies=true&exclude_reblogs=false&limit=${apiLimit}`, {
+                method: 'GET',
+                headers: { 
+                    'Accept': 'application/json',
+                    'User-Agent': 'PlanetAggregator/1.0'
+                }
+            });
+            
+            return statuses.map(status => this.createPostFromApiData(status, {
+                content: this.stripHtmlContent(status.content),
+                timestamp: new Date(status.created_at),
+                originalUrl: status.url || status.uri
+            }));
+            
+        } catch (error) {
+            console.error(`${this.displayName}: 投稿取得エラー:`, error.message);
+            throw error;
+        }
+    }
+    
+    // Mastodon固有のHTML処理
+    stripHtmlContent(htmlContent) {
+        if (!htmlContent) return '';
+        
+        // 簡易HTML除去（Mastodon投稿用）
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+        
+        // <br>タグを改行に変換
+        tempDiv.querySelectorAll('br').forEach(br => {
+            br.replaceWith('\n');
+        });
+        
+        // <p>タグの間に改行を追加
+        tempDiv.querySelectorAll('p').forEach(p => {
+            p.insertAdjacentText('afterend', '\n');
+        });
+        
+        return tempDiv.textContent || tempDiv.innerText || '';
+    }
+    
+    // Mastodon固有のコンテンツ処理
+    processContent(content) {
+        return this.stripHtmlContent(content);
+    }
+    
+    // Mastodon固有の画像抽出
+    extractImages(status) {
+        if (!status.media_attachments || !Array.isArray(status.media_attachments)) return [];
+        
+        return status.media_attachments
+            .filter(media => media.type === 'image')
+            .slice(0, this.getMaxImages())
+            .map(media => ({
+                url: media.url,
+                alt: media.description || '',
+                width: media.meta?.original?.width,
+                height: media.meta?.original?.height
+            }));
+    }
+    
+    // Mastodon固有のリアクション抽出
+    extractReactions(status) {
+        return {
+            favorites: status.favourites_count || 0,
+            reblogs: status.reblogs_count || 0,
+            replies: status.replies_count || 0
+        };
+    }
+    
+    // Mastodon固有のオリジナルURL生成
+    generateOriginalUrl(status) {
+        return status.url || status.uri;
+    }
+    
+    async fetchMorePostsFromAPI(cutoffDate, existingIds) {
+        const userInfo = await this.getAccountByUsername();
+        if (!userInfo) {
+            throw new Error('ユーザー情報の取得に失敗しました');
+        }
+        
+        const maxPosts = this.getMaxPosts();
+        
+        // より多くの投稿を取得して時間フィルタリング
+        const apiLimit = this.calculateApiLimit(maxPosts, 2, 40); // 取得倍率2、Mastodon最大40件
+        
+        const allStatuses = await this.fetchWithRetry(`${this.apiUrl}/accounts/${userInfo.id}/statuses?exclude_replies=true&exclude_reblogs=false&limit=${apiLimit}`, {
+            method: 'GET',
+            headers: { 
+                'Accept': 'application/json',
+                'User-Agent': 'PlanetAggregator/1.0'
+            }
+        });
+        
+        // 重複チェック（時間フィルタリングはPlanetAggregatorで実行）
+        const uniqueStatuses = this.filterUniquePosts(allStatuses, existingIds);
+        
+        console.log(`${this.displayName}: 追加読み込み - 取得: ${allStatuses.length}件, 重複除外後: ${uniqueStatuses.length}件`);
+        
+        return uniqueStatuses.map(status => this.createPostFromApiData(status, {
+            content: this.stripHtmlContent(status.content),
+            timestamp: new Date(status.created_at),
+            originalUrl: status.url || status.uri
+        }));
+    }
+    
+    /**
+     * 時間制限なしで生の投稿データを取得
+     */
+    async fetchMorePostsRaw(existingIds) {
+        console.log(`${this.displayName}: 生データ取得開始（時間制限なし）`);
+        
+        try {
+            const userInfo = await this.getAccountByUsername();
+            if (!userInfo) {
+                throw new Error('ユーザー情報の取得に失敗しました');
+            }
+            
+            // Mastodonの制限も考慮して安全な値に設定
+            const apiLimit = this.calculateApiLimit(20, getConfigNumberLocal('API_LIMITS.MULTIPLIER', 2), getConfigNumberLocal('API_LIMITS.MASTODON_MAX', 40));
+            
+            const allStatuses = await this.fetchWithRetry(`${this.apiUrl}/accounts/${userInfo.id}/statuses?exclude_replies=true&exclude_reblogs=false&limit=${apiLimit}`, {
+                method: 'GET',
+                headers: { 
+                    'Accept': 'application/json',
+                    'User-Agent': 'PlanetAggregator/1.0'
+                }
+            });
+            
+            // 重複チェックのみ（時間フィルタリングは後で実行）
+            const uniqueStatuses = allStatuses.filter(status => !existingIds.has(status.id));
+            
+            console.log(`${this.displayName}: 生データ取得完了 - 取得: ${allStatuses.length}件, 重複除外後: ${uniqueStatuses.length}件`);
+            
+            // 投稿データを作成（時間フィルタリングなし）
+            return uniqueStatuses.map(status => this.createPostFromApiData(status, {
+                content: this.stripHtmlContent(status.content),
+                timestamp: new Date(status.created_at),
+                originalUrl: status.url || status.uri
+            }));
+            
+        } catch (error) {
+            console.error(`${this.displayName}: 生データ取得エラー:`, error);
+            return [];
+        }
+    }
+    
+    async fetchViaFallback() {
+        console.log(`${this.displayName}: フォールバック実行`);
+        return [this.createPost({
+            content: `${this.username} の投稿取得に失敗しました。\n\nMastodon APIを使用しましたが、データを取得できませんでした。`,
+            sourceIcon: '[API失敗]',
+            sourceDisplayName: this.config.sourceDisplayName,
+            sourceIconImage: this.config.sourceIconImage,
+            timeText: 'API失敗'
+        })];
+    }
+}
+
+// ========================================
+// RSSアダプター
+// ========================================
+
+class RSSAdapter extends BaseSNSAdapter {
+    constructor(feedUrl, config = {}) {
+        super(feedUrl, 'rss', config);
+        this.feedUrl = feedUrl;
+        this.displayName = config.displayName || 'RSS Feed';
+    }
+    
+    getDefaultConfig() {
+        return {
+            ...super.getDefaultConfig(),
+            rateLimit: getConfigNumberLocal('RATE_LIMITS.RSS', 60000),
+            sourceIcon: '[RSS]'
+        };
+    }
+    
+    async fetchPosts() {
+        await this.checkRateLimit();
+        
+        try {
+            const result = await this.fetchViaAPI();
+            console.log(`${this.displayName}: RSS取得結果 - ${result.posts.length}件の投稿`);
+            
+            // RSSが正常に動作している場合は、投稿が0件でもフォールバックしない
+            if (result.success) {
+                return result.posts;
+            } else {
+                console.log(`${this.displayName}: RSS失敗のためフォールバック実行`);
+                return await this.fetchViaFallback();
+            }
+        } catch (error) {
+            return this.handleFetchError(error);
+        }
+    }
+    
+    async fetchViaAPI() {
+        console.log(`${this.displayName}: RSS 取得中...`);
+        
+        // 時間ベース取得の設定を確認
+        const timeBasedFetch = this.getTimeBasedFetch();
+        const daysBack = this.getDaysBack();
+        const maxPosts = this.getMaxPosts();
+        
+        console.log(`${this.displayName}: 設定確認 - maxPosts: ${maxPosts}, timeBasedFetch: ${timeBasedFetch}, daysBack: ${daysBack}`);
+        
+        // RSSフィードを取得
+        const response = await this.fetchWithRetry(this.feedUrl, {
+            method: 'GET',
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            returnText: true
+        });
+        
+        // XMLをパース
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(response, 'text/xml');
+        
+        // パースエラーをチェック
+        const parseError = xmlDoc.querySelector('parsererror');
+        if (parseError) {
+            throw new Error('RSS XMLのパースに失敗しました');
+        }
+        
+        // アイテムを取得
+        const items = xmlDoc.querySelectorAll('item');
+        console.log(`${this.displayName}: RSSから取得したアイテム数: ${items.length}`);
+        
+        let posts = [];
+        
+        // 統合された時間フィルタリングを使用するため、より多くのアイテムを処理
+        // 時間フィルタリングはPlanetAggregatorで実行される
+        const processLimit = Math.min(items.length, maxPosts * getConfigNumberLocal('API_LIMITS.MULTIPLIER', 2));
+        
+        for (let i = 0; i < processLimit; i++) {
+            const item = items[i];
+            
+            // 基本情報を取得
+            const title = this.getTextContent(item, 'title') || '';
+            const description = this.getTextContent(item, 'description') || '';
+            const link = this.getTextContent(item, 'link') || '';
+            const pubDate = this.getTextContent(item, 'pubDate') || '';
+            const guid = this.getTextContent(item, 'guid') || link;
+            
+            // 日付を解析
+            const itemDate = new Date(pubDate);
+            
+            // 投稿を作成（時間フィルタリングは後で実行）
+            const post = this.createPostFromApiData({
+                id: guid,
+                content: title + (description ? '\n\n' + description : ''),
+                timestamp: itemDate,
+                originalUrl: link,
+                images: this.extractImagesFromRSS(item)
+            }, {
+                reactions: {
+                    favorites: 0,
+                    reblogs: 0,
+                    replies: 0
+                },
+                sourceIcon: this.config.sourceIcon || '[RSS]',
+                sourceDisplayName: this.config.sourceDisplayName || this.displayName,
+                sourceIconImage: this.config.sourceIconImage
+            });
+            
+            posts.push(post);
+        }
+        
+        console.log(`${this.displayName}: フィルタリング後 ${posts.length}件の投稿を取得`);
+        
+        return {
+            success: true,
+            posts: posts
+        };
+    }
+    
+    getTextContent(element, tagName) {
+        const tag = element.querySelector(tagName);
+        return tag ? tag.textContent.trim() : '';
+    }
+    
+    // RSS固有の画像抽出
+    extractImagesFromRSS(item) {
+        const images = [];
+        
+        // description内の画像を抽出
+        const description = this.getTextContent(item, 'description');
+        if (description) {
+            const imgRegex = /<img[^>]+src="([^"]+)"/gi;
+            let match;
+            while ((match = imgRegex.exec(description)) !== null) {
+                const imageUrl = match[1];
+                if (isValidImageUrl(imageUrl)) {
+                    images.push(sanitizeImageUrl(imageUrl));
+                }
+            }
+        }
+        
+        // メディア要素をチェック（RSS 2.0の拡張）
+        const mediaContent = item.querySelector('media\\:content, content\\:encoded');
+        if (mediaContent) {
+            const mediaUrl = mediaContent.getAttribute('url');
+            if (mediaUrl && isValidImageUrl(mediaUrl)) {
+                images.push(sanitizeImageUrl(mediaUrl));
+            }
+        }
+        
+        return images.slice(0, this.getMaxImages());
+    }
+    
+    // RSS固有の画像抽出（共通メソッドのオーバーライド）
+    extractImages(data) {
+        // dataがDOM要素の場合はextractImagesFromRSSを使用
+        if (data && typeof data.querySelector === 'function') {
+            return this.extractImagesFromRSS(data);
+        }
+        
+        // dataがJavaScriptオブジェクトの場合は、既に処理済みの画像データを返す
+        if (data && Array.isArray(data.images)) {
+            return data.images;
+        }
+        
+        // その他の場合は空配列を返す
+        return [];
+    }
+    
+    // RSS固有のリアクション抽出（共通メソッドのオーバーライド）
+    extractReactions(data) {
+        return { favorites: 0, reblogs: 0, replies: 0 };
+    }
+    
+    // RSS固有のオリジナルURL生成（共通メソッドのオーバーライド）
+    generateOriginalUrl(data) {
+        return data.originalUrl || data.link;
+    }
+    
+    
+    async fetchMorePostsFromAPI(cutoffDate, existingIds) {
+        // RSSの場合は追加読み込みは通常の取得と同じ処理
+        // RSSフィードは通常、最新のエントリーのみを提供するため
+        const response = await this.fetchWithRetry(this.feedUrl, {
+            method: 'GET',
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            returnText: true
+        });
+        
+        // XMLをパース
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(response, 'text/xml');
+        
+        // パースエラーをチェック
+        const parseError = xmlDoc.querySelector('parsererror');
+        if (parseError) {
+            throw new Error('RSS XMLのパースに失敗しました');
+        }
+        
+        // アイテムを取得
+        const items = xmlDoc.querySelectorAll('item');
+        console.log(`${this.displayName}: 追加読み込み用RSSから取得したアイテム数: ${items.length}`);
+        
+        let posts = [];
+        const maxPosts = this.getMaxPosts();
+        
+        for (let i = 0; i < items.length && posts.length < maxPosts; i++) {
+            const item = items[i];
+            
+            // 基本情報を取得
+            const title = this.getTextContent(item, 'title') || '';
+            const description = this.getTextContent(item, 'description') || '';
+            const link = this.getTextContent(item, 'link') || '';
+            const pubDate = this.getTextContent(item, 'pubDate') || '';
+            const guid = this.getTextContent(item, 'guid') || link;
+            
+            // 日付を解析
+            const itemDate = new Date(pubDate);
+            
+            // 重複チェック（時間フィルタリングはPlanetAggregatorで実行）
+            if (existingIds.has(guid)) {
+                continue; // 既存の投稿はスキップ
+            }
+            
+            // 投稿データを作成
+            const postData = this.createPostFromApiData({
+                id: guid,
+                content: title + (description ? '\n\n' + description : ''),
+                timestamp: itemDate,
+                originalUrl: link,
+                images: this.extractImagesFromRSS(item)
+            }, {
+                reactions: {
+                    favorites: 0,
+                    reblogs: 0,
+                    replies: 0
+                },
+                sourceIcon: this.config.sourceIcon || '[RSS]',
+                sourceDisplayName: this.config.sourceDisplayName || this.displayName,
+                sourceIconImage: this.config.sourceIconImage
+            });
+            
+            posts.push(postData);
+        }
+        
+        console.log(`${this.displayName}: 追加読み込み - ${posts.length}件の投稿を取得`);
+        return posts;
+    }
+    
+    /**
+     * 時間制限なしで生の投稿データを取得
+     */
+    async fetchMorePostsRaw(existingIds) {
+        console.log(`${this.displayName}: 生データ取得開始（時間制限なし）`);
+        
+        try {
+            // RSSフィードを再取得
+            const response = await this.fetchWithRetry(this.feedUrl, {
+                method: 'GET',
+                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+                returnText: true
+            });
+            
+            // XMLをパース
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(response, 'text/xml');
+            
+            // パースエラーをチェック
+            const parseError = xmlDoc.querySelector('parsererror');
+            if (parseError) {
+                throw new Error('RSS XMLのパースに失敗しました');
+            }
+            
+            // アイテムを取得
+            const items = xmlDoc.querySelectorAll('item');
+            console.log(`${this.displayName}: 生データRSSから取得したアイテム数: ${items.length}`);
+            
+            let posts = [];
+            
+            // 全てのアイテムを処理（時間制限なし）
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                
+                // 基本情報を取得
+                const title = this.getTextContent(item, 'title') || '';
+                const description = this.getTextContent(item, 'description') || '';
+                const link = this.getTextContent(item, 'link') || '';
+                const pubDate = this.getTextContent(item, 'pubDate') || '';
+                const guid = this.getTextContent(item, 'guid') || link;
+                
+                // 重複チェック（時間フィルタリングは後で実行）
+                if (existingIds.has(guid)) {
+                    continue; // 既存の投稿はスキップ
+                }
+                
+                // 日付を解析
+                const itemDate = new Date(pubDate);
+                
+                // 投稿データを作成（時間フィルタリングなし）
+                const postData = this.createPostFromApiData({
+                    id: guid,
+                    content: title + (description ? '\n\n' + description : ''),
+                    timestamp: itemDate,
+                    originalUrl: link,
+                    images: this.extractImagesFromRSS(item)
+                }, {
+                    reactions: {
+                        favorites: 0,
+                        reblogs: 0,
+                        replies: 0
+                    },
+                    sourceIcon: this.config.sourceIcon || '[RSS]',
+                    sourceDisplayName: this.config.sourceDisplayName || this.displayName,
+                    sourceIconImage: this.config.sourceIconImage
+                });
+                
+                posts.push(postData);
+            }
+            
+            console.log(`${this.displayName}: 生データ取得完了 - ${posts.length}件`);
+            return posts;
+            
+        } catch (error) {
+            console.error(`${this.displayName}: 生データ取得エラー:`, error);
+            return [];
+        }
+    }
+    
+    async fetchViaFallback() {
+        console.log(`${this.displayName}: フォールバック実行`);
+        return [this.createPost({
+            content: `RSSフィードの取得に失敗しました。\n\nフィードURL: ${this.feedUrl}`,
+            sourceIcon: '[RSS失敗]',
+            sourceDisplayName: this.config.sourceDisplayName,
+            sourceIconImage: this.config.sourceIconImage,
+            timeText: 'RSS失敗'
+        })];
+    }
+}
+
+// ========================================
+// メインアグリゲータークラス
+// ========================================
+
+// ========================================
 // アプリケーション初期化
 // ========================================
 
@@ -2218,15 +2433,19 @@ let autoRefreshTimer = null;
 
 async function initializePlanetV2() {
     try {
+        // 設定の初期化
+        const configAvailable = initializeConfig();
+        
+        if (!configAvailable) {
+            console.warn('設定管理システムが利用できません。デフォルト値で動作します。');
+        }
+        
         planetAggregator = new PlanetAggregator();
         
         // 設定管理システムとの連携
-        if (typeof initializeDataSourceManager !== 'undefined') {
-            const manager = await initializeDataSourceManager();
+        if (typeof window !== 'undefined' && window.initializeDataSourceManager) {
+            const manager = await window.initializeDataSourceManager();
             const dataSources = manager.getEnabledDataSources();
-            
-            // グローバル設定を再読み込み（dataSourceManagerが初期化された後）
-            globalSettingsManager.loadGlobalSettings();
             
             console.log(`設定から ${dataSources.length}件のデータソースを読み込み`);
             
@@ -2280,6 +2499,9 @@ async function initializePlanetV2() {
     } catch (error) {
         console.error('Planet v2 初期化エラー:', error);
         // エラー時はフォールバック設定で続行
+        if (!planetAggregator) {
+            planetAggregator = new PlanetAggregator();
+        }
         if (planetAggregator) {
             planetAggregator.fetchAllPosts();
         }
@@ -2292,9 +2514,8 @@ function setupAutoRefresh() {
         autoRefreshTimer = null;
     }
     
-    // グローバル設定から自動更新間隔を取得
-    const globalSettings = globalSettingsManager.getGlobalSettings();
-    const interval = globalSettings.autoRefreshInterval || CONFIG.AUTO_REFRESH_INTERVAL;
+    // 動的設定から自動更新間隔を取得
+    const interval = getConfigNumberLocal('AUTO_REFRESH_INTERVAL', 30 * 60 * 1000);
     
     autoRefreshTimer = setInterval(() => {
         if (planetAggregator && !planetAggregator.isLoading) {
@@ -2328,28 +2549,7 @@ function clearCache() {
     }
 }
 
-// グローバル設定を更新する関数
-function updateGlobalSettings(newSettings) {
-    try {
-        globalSettingsManager.updateGlobalSettings(newSettings);
-        
-        // 既存のアダプターの設定を更新
-        if (planetAggregator && planetAggregator.adapters) {
-            planetAggregator.adapters.forEach(adapter => {
-                // アダプターの設定を再マージ
-                adapter.config = globalSettingsManager.mergeSettings(adapter.config);
-            });
-            console.log('全アダプターの設定を更新しました');
-        }
-    } catch (error) {
-        console.error('グローバル設定の更新に失敗:', error);
-    }
-}
-
-// グローバル設定を取得する関数
-function getGlobalSettings() {
-    return globalSettingsManager.getGlobalSettings();
-}
+// グローバル関数はconfig-manager.jsに移動しました
 
 // キャッシュ状態を取得する関数
 function getCacheStatus() {
@@ -2381,13 +2581,12 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         PlanetAggregator,
         MisskeyAdapter,
+        MastodonAdapter,
+        RSSAdapter,
         BaseSNSAdapter,
-        GlobalSettingsManager,
-        globalSettingsManager,
+        ProxyManager,
         initializePlanetV2,
         loadMorePosts,
-        updateGlobalSettings,
-        getGlobalSettings,
         getCacheStatus,
         forceClearCache
     };

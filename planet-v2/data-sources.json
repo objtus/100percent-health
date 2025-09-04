@@ -113,6 +113,40 @@
       }
     }
   },
+  "configPresets": {
+    "fast": {
+      "maxPosts": 10,
+      "daysBack": 3,
+      "autoRefreshInterval": 300000,
+      "timeBasedFetch": true,
+      "useProxy": true,
+      "description": "高速モード（少ない投稿数、短い間隔）"
+    },
+    "standard": {
+      "maxPosts": 20,
+      "daysBack": 5,
+      "autoRefreshInterval": 1800000,
+      "timeBasedFetch": true,
+      "useProxy": true,
+      "description": "標準モード（バランスの取れた設定）"
+    },
+    "detailed": {
+      "maxPosts": 50,
+      "daysBack": 7,
+      "autoRefreshInterval": 3600000,
+      "timeBasedFetch": true,
+      "useProxy": true,
+      "description": "詳細モード（多くの投稿数、長い間隔）"
+    },
+    "offline": {
+      "maxPosts": 20,
+      "daysBack": 30,
+      "autoRefreshInterval": 0,
+      "timeBasedFetch": false,
+      "useProxy": false,
+      "description": "オフラインモード（プロキシなし、時間フィルタリングなし）"
+    }
+  },
   "_settings_help": {
     "useProxy": "プロキシの使用設定。true: プロキシ経由でアクセス（CORS回避）、false: 直接アクセス（高速だがCORSエラーの可能性）",
     "timeBasedFetch": "時間ベース取得の有効/無効（グローバル設定）",
