@@ -2,28 +2,272 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>gallery</title>
-  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 page not found - 100%health</title>
+  <link rel="stylesheet" href="/1column.css">
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/mouse.js"></script>
   <script type="text/javascript">
     window.onload = function() {
         var height = document.getElementsByTagName("html")[0].scrollHeight;
         window.parent.postMessage(["setHeight_gallery", height], "*");
+        
+        // 初回APIを呼び出し
+        fetchRandomText();
+        
+        // ランダム動画を読み込み
+        loadRandomVideo();
+    }
+    
+    function fetchRandomText() {
+        fetch('https://api.thinaticsystem.com/v1/debobigego')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('random-text').textContent = data.generated;
+            })
+            .catch(error => {
+                document.getElementById('random-text').textContent = 'エラー';
+            });
+    }
+    
+    function speakText() {
+        const text = document.getElementById('random-text').textContent;
+        if (!text || text === 'エラー') {
+            return;
+        }
+        
+        // Web Speech APIを使用
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ja-JP'; // 日本語設定
+            utterance.rate = 0.5; // 読み上げ速度
+            speechSynthesis.speak(utterance);
+        } else {
+            alert('お使いのブラウザは音声読み上げに対応していません');
+        }
+    }
+    
+    function loadRandomVideo() {
+        // YouTube動画IDのリスト
+        const videoIds = [
+            '9MjAJSoaoSo', // 香水 / 瑛人 (Official Music Video)
+            'dwTaILXVtno', // トイレの神様
+            'tU6CpmbAAcE', // Lifetime Respect -女編-
+            '2qBIvh0ZaHY', // ウンチと言いながらウンチをするオウム
+            'iw_1zU2MSc8', // 西野カナ『トリセツ』MV Full
+            '6hDsI3EjVhk', // 【合唱】　マイ バラード（混声四部）
+            'jBzE8Sll_r4', // もののけ姫
+        ];
+        
+        // ランダムに動画を選択
+        const randomIndex = Math.floor(Math.random() * videoIds.length);
+        const selectedVideoId = videoIds[randomIndex];
+        
+        // iframe要素を作成・更新
+        const videoContainer = document.getElementById('video-container');
+        videoContainer.innerHTML = `
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/${selectedVideoId}?autoplay=0&rel=0" 
+                    title="Random YouTube video" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        `;
     }
   </script>
+  <style>
+    #main {
+      h2 {
+        font-size: 1.2rem;
+        margin-top: 2rem;
+      }
+    }
+  
+    .description {
+      text-align: right;
+      font-weight: bold;
+    }
+  
+    #gacha-container {
+      margin-top: 5rem;
+  
+      #powered-by {
+        text-align: right;
+        font-size: 0.8rem;
+        color: #aaa;
+        margin-top: 0;
+      }
+    }
+  
+    #gacha-container-inner {
+      display: flex;
+      align-items: baseline;
+      padding-left: 1rem;
+  
+      #random-text {
+        font-size: 1rem;
+        width: 80px;
+      }
+  
+      #gacha-button,
+      #speak-button {
+        padding: 0.5rem 0.5rem 0.3rem 0.5rem;
+        font-size: 1rem;
+        font-family: "saitamaar", 'PikoA', "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+        background-color: #000000;
+        color: #ffffff;
+        border: none;
+        border-radius: 0.3rem;
+        cursor: pointer;
+        margin-left: 0.5rem;
+        transition: all 0.2s ease;
+  
+        &:hover {
+          background-color: #ffffff;
+          color: #000000;
+        }
+      }
+  
+      #speak-button {
+        padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+      }
+    }
+  
+    #video-section {
+      margin-top: 3rem;
+      margin-bottom: 2rem;
+    }
+  
+    #video-container {
+      margin-top: 1rem;
+      text-align: center;
+      position: relative;
+      width: 100%;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+
+      iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  
+    #navigation-help {
+      margin-top: 3rem;
+      margin-bottom: 2rem;
+  
+      ul {
+        list-style: none;
+        padding-left: 1rem;
+      }
+  
+      li {
+        margin-bottom: 0.3rem;
+      }
+  
+      a {
+        text-decoration: none;
+  
+        &:hover {
+          text-decoration: none;
+          transition: all 0.2s ease;
+        }
+      }
+    }
+  </style>
 </head>
 <body>
-<p>template</p>
-<p>
-  <iframe
-    id="iframe_gallery"
-    class="iframe"
-    src="gallery/gallery.html"
-    height="auto">
-  </iframe>
-  <br>
-  iframeタグのidを変更し、子、親のscriptをコピー、適宜変数を変えよ。また、cssでiframeのボーダーを消すこと。
-  <a href="https://tomoosuzuki.blogspot.com/2016/08/iframe.html">これを参照のこと。</a>
+  <div id="wrapper">
 
-</p>
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="../index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <a class="addressbar" href="../index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="not_found.html">
+            404 page not found
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <h1 class="title">404 <small title="page not found" lang="en">page not found</small></h1>
+      <p class="description" lang="en">The requested web page was not found on this site.</p>
+      <p class="description" lang="ja">お探しのページは見つかりませんでした</p>
+      <p class="description" lang="zh">本网站未找到所请求的网页</p>
+      <p class="description" lang="eo">Ĉi tiu retejo ne trovis la petitan retpaĝon</p>
+      <p class="description" lang="ja" role="img" title="点字：お探しのページは見つかりませんでした" aria-label="点字：お探しのページは見つかりませんでした">⠊⠱⠐⠡⠳⠎⠠⠯⠒⠐⠳⠥⠷⠝⠡⠓⠵⠻⠴⠐⠟⠳⠕</p>
+    
+      <p style="margin-top: 2rem;"><small>URLに間違いがないか確認してください。リンク切れを発見した場合は、お知らせいただけると助かります。</small></p>
+
+      <div id="gacha-container">
+        <h2>デボビゲゴ</h2>
+        <div id="gacha-container-inner">
+          <p id="random-text"></p>
+          <button onclick="fetchRandomText()" id="gacha-button">ガチャ</button>
+          <button onclick="speakText()" id="speak-button">🔊</button>
+        </div>
+        <p id="powered-by"><small>Powered by <a href="https://api.thinaticsystem.com" target="_blank">Thinatic API Service - Debobigego API</a></small></p>
+             </div>
+     
+       <div id="video-section">
+         <h2>動画でも見て</h2>
+         <div id="video-container">
+           <!-- 動画がここに読み込まれます -->
+         </div>
+       </div>
+     
+       <div id="navigation-help">
+        <h2>サイト内を探す</h2>
+        <nav aria-label="主要ページへのナビゲーション">
+          <ul>
+            <li><a href="/index.html"><span aria-hidden="true">♥</span>トップ / <span lang="en">top page</span></a></li>
+            <li><a href="/aboutme.html"><span aria-hidden="true">♥</span>自己紹介 / <span lang="en">about_me</span></a></li>
+            <li><a href="/gallery/gallery_main.html"><span aria-hidden="true">♥</span>メインギャラリー / <span lang="en">main_gallery</span></a></li>
+            <li><a href="/works/works_main.html"><span aria-hidden="true">♥</span>仕事 / <span lang="en">works</span></a></li>
+            <li><a href="/txt/txt_main.html"><span aria-hidden="true">♥</span>テキストアーカイブ / <span lang="en">text_archive</span></a></li>
+            <li><a href="/links/links_main.html"><span aria-hidden="true">♥</span>リンク集 / <span lang="en">links</span></a></li>
+          </ul>
+        </nav>
+    
+        <h2>よくアクセスされるページ</h2>
+        <ul>
+          <li><a href="/txt/100phealth_introduction.html"><span aria-hidden="true">♥</span>このサイトについて / <span lang="en">about this site</span></a></li>
+          <li><a href="/txt/my_dsns_timeline.html"><span aria-hidden="true">♥</span>分散SNS関連年表 / <span lang="en">my_dsns_timeline</span></a></li>
+          <li><a href="/changelog_main.html"><span aria-hidden="true">♥</span>更新履歴 / <span lang="en">changelog</span></a></li>
+        </ul>
+      </div>
+    
+    </main>
+
+    <footer id="main-footer">
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+
+  </div>
 </body>
 </html>

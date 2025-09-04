@@ -1,19 +1,19 @@
-async function loadDailyArticles08() {
-	const month = "08";
+async function loadDailyArticles09() {
+	const month = "09";
 	const year = "2025";
-	const dates = ["26"];
+	const dates = ["02"];
 
-	let monthContainer = document.querySelector("#zakki08");
+	let monthContainer = document.querySelector("#zakki09");
 	if (!monthContainer) {
-		const m08 = document.querySelector("#m08");
-		if (!m08) {
-			console.error("No container found for month 08");
+		const m09 = document.querySelector("#m09");
+		if (!m09) {
+			console.error("No container found for month 09");
 			return;
 		}
 
 		// #zakki02を作成
 		monthContainer = document.createElement("div");
-		monthContainer.id = "zakki08";
+		monthContainer.id = "zakki09";
 
 		// h2を追加
 		const h2 = document.createElement("h2");
@@ -23,8 +23,8 @@ async function loadDailyArticles08() {
 		h2.appendChild(a);
 		monthContainer.appendChild(h2);
 
-		m08.innerHTML = ""; // 既存のコンテンツをクリア
-		m08.appendChild(monthContainer);
+		m09.innerHTML = ""; // 既存のコンテンツをクリア
+		m09.appendChild(monthContainer);
 	}
 
 	// month-articleコンテナを探すか作成

@@ -111,7 +111,7 @@
         color: #555;
       }
     }
-
+  
     section.controls {
       margin-bottom: 100px;
     }
@@ -270,7 +270,7 @@
     }
   
     .video-player-container {
-      margin-top: 15px;
+      margin-top: 0.5rem;
       border: 1px solid #ddd;
       border-radius: 8px;
       overflow: hidden;
@@ -313,6 +313,14 @@
       border-bottom: 1px solid #333;
       font-size: 1rem;
     }
+
+    .tracklist thead th:first-child {
+      padding: 0 8px 6px 6px;
+    }
+
+    .tracklist thead th:nth-child(2) {
+      padding: 0 0 6px 0;
+    }
   
     .tracklist tbody tr {
       border-bottom: 1px solid #eee;
@@ -328,24 +336,34 @@
     }
   
     .track-number {
-      width: 40px;
+      width: 5px;
       color: #000;
       font-size: 1rem;
+      text-align: left;
     }
   
     .track-time {
-      width: 10px;
+      width: 60px;
       color: #000;
       font-size: 1rem;
+      text-align: center;
     }
   
     .track-artist {
-      width: 30%;
+      width: 25%;
       font-weight: 500;
     }
   
     .track-title {
       color: #000;
+      width: auto;
+      /* 残りのスペースを使用 */
+    }
+  
+    /* 最後の楽曲時間列の幅調整 */
+    .tracklist td:last-child {
+      width: 60px;
+      text-align: center;
     }
   
     /* クリック可能なアーティスト名 */
@@ -396,6 +414,42 @@
     .genre-item.unavailable:hover {
       background-color: transparent;
       text-decoration: none;
+    }
+  
+    @media screen and (max-width: 576px) {
+      /* ページ説明のスタイル */
+      .page-description {
+        p {
+          font-size: 10pt;
+          line-height: 16px;
+        }
+      }
+  
+      .tracklist td {
+        padding: 2px;
+      }
+  
+      .tracklist thead th {
+        font-size: 0.8rem;
+      }
+  
+      .track-number {
+        width: 0px;
+      }
+  
+      .track-time {
+        width: 45px;
+        font-size: 0.85rem;
+      }
+  
+      .track-artist {
+        width: 28%;
+      }
+  
+      .tracklist td:last-child {
+        width: 45px;
+        font-size: 0.85rem;
+      }
     }
   </style>
 </head>
@@ -497,19 +551,6 @@
                   <option value="インディーダンス">インディーダンス</option>
                   <option value="ダブステップ">ダブステップ</option>
                   <option value="トラップ">トラップ</option>
-                  <option value="階段">階段</option>
-                  <option value="走馬灯">走馬灯</option>
-                  <option value="クリスマス">クリスマス</option>
-                  <option value="カウントダウン！カウントアップ！">カウントダウン！カウントアップ！</option>
-                  <option value="煙">煙</option>
-                  <option value="街路樹">街路樹</option>
-                  <option value="冬の終わり">冬の終わり</option>
-                  <option value="桜">桜</option>
-                  <option value="春雷">春雷</option>
-                  <option value="風のざわめき">風のざわめき</option>
-                  <option value="夕立">夕立</option>
-                  <option value="雷鳴">雷鳴</option>
-                  <option value="白昼夢">白昼夢</option>
                 </select>
 
                 <select id="sortOrder" aria-label="並び替えフィルター">
@@ -7163,9 +7204,9 @@
               </div>
               <div class="genre-list">
                 <span class="genre-item">エレクトロ</span>,&nbsp;
-                <span class="genre-item">エレクトロニカ</span>,&nbsp;
                 <span class="genre-item">インディーダンス</span>,&nbsp;
                 <span class="genre-item">シンセポップ</span>,&nbsp;
+                <span class="genre-item">ニューレイヴ</span>,&nbsp;
                 <span class="genre-item">カウントダウン！カウントアップ！</span>
               </div>
 
@@ -7363,8 +7404,8 @@
               </div>
               <div class="genre-list">
                 <span class="genre-item">エレクトロニカ</span>,&nbsp;
-                <span class="genre-item">アンビエント</span>,&nbsp;
-                <span class="genre-item">オルタナティブロック</span>,&nbsp;
+                <span class="genre-item">Glo-fi/chillwave</span>,&nbsp;
+                <span class="genre-item">ポストロック</span>,&nbsp;
                 <span class="genre-item">ヒップホップ</span>,&nbsp;
                 <span class="genre-item">煙</span>,&nbsp;
                 <span class="genre-item">街路樹</span>,&nbsp;
@@ -7858,8 +7899,7 @@
               </div>
               <div class="genre-list">
                 <span class="genre-item">エレクトロニカ</span>,&nbsp;
-                <span class="genre-item">エレクトロ</span>,&nbsp;
-                <span class="genre-item">ダブステップ</span>,&nbsp;
+                <span class="genre-item">Glo-fi/chillwave</span>,&nbsp;
                 <span class="genre-item">トラップ</span>,&nbsp;
                 <span class="genre-item">夕立</span>,&nbsp;
                 <span class="genre-item">雷鳴</span>,&nbsp;
@@ -8328,6 +8368,45 @@
               });
             }
 
+            // コンピレーションのvideo-idから該当のコンピレーションを見つける
+            function findCompilationByVideoId(videoId) {
+              const button = document.querySelector(`[data-video-id="${videoId}"]`);
+              return button ? button.closest('.compilation') : null;
+            }
+
+            // 指定時間から動画を再生
+            function playFromTime(videoId, seconds) {
+              const compilation = findCompilationByVideoId(videoId);
+              if (!compilation) return;
+
+              const container = compilation.querySelector('.video-player-container');
+              const button = compilation.querySelector('.video-toggle-btn');
+              
+              if (!container || !button) return;
+
+              // プレーヤーが既に表示されている場合は、iframeのsrcを更新
+              if (container.style.display !== 'none' && container.innerHTML.trim() !== '') {
+                const iframe = container.querySelector('iframe');
+                if (iframe) {
+                  const newSrc = `https://embed.nicovideo.jp/watch/${videoId}?from=${seconds}&autoplay=1`;
+                  iframe.src = newSrc;
+                  return;
+                }
+              }
+
+              // プレーヤーを表示してから時間指定付きで再生
+              showVideoPlayer(videoId, container, button);
+              
+              // プレーヤー作成後に時間指定付きでsrcを更新
+              setTimeout(() => {
+                const iframe = container.querySelector('iframe');
+                if (iframe) {
+                  const newSrc = `https://embed.nicovideo.jp/watch/${videoId}?from=${seconds}&autoplay=1`;
+                  iframe.src = newSrc;
+                }
+              }, 200); // プレーヤー作成後に少し待機
+            }
+
             // 開始時間クリック機能
             function setupTimeLinks() {
               const timeElements = document.querySelectorAll('.track-time');
@@ -8339,13 +8418,22 @@
                   timeEl.addEventListener('click', function () {
                     const timeText = this.textContent.trim();
                     const compilation = this.closest('.compilation');
-                    const videoLink = compilation.querySelector('.compilation-title a');
+                    const videoButton = compilation.querySelector('.video-toggle-btn');
 
-                    if (videoLink) {
-                      const baseUrl = videoLink.href;
+                    if (videoButton) {
+                      const videoId = videoButton.getAttribute('data-video-id');
                       const seconds = timeToSeconds(timeText);
-                      const urlWithTime = `${baseUrl}?from=${seconds}`;
-                      window.open(urlWithTime, '_blank');
+                      
+                      // 埋め込みプレーヤーで時間指定再生
+                      playFromTime(videoId, seconds);
+                      
+                      // プレーヤー位置にスムーズにスクロール
+                      setTimeout(() => {
+                        compilation.scrollIntoView({ 
+                          behavior: 'smooth', 
+                          block: 'start' 
+                        });
+                      }, 200);
                     }
                   });
                 }

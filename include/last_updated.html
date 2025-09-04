@@ -1,4 +1,4 @@
->&thinsp;updated: <span id="lastupdate" aria-live="polite" aria-label="サイトの最終更新日時"></span>
+<div aria-label="サイト最終更新日">>&thinsp;updated: <time id="lastupdate" aria-live="polite"></time></div>
 
 <script>
   var xhttp = new XMLHttpRequest();
@@ -18,7 +18,10 @@
       var seconds = String(date_obj.getSeconds()).padStart(2, '0');
       
       var formatted_date = year + '/' + month + '/' + day + ' ' + hours + ':' + minutes + ':' + seconds;
-      document.getElementById("lastupdate").innerHTML = formatted_date;
+      var iso_date = date_obj.toISOString();
+      var timeElement = document.getElementById("lastupdate");
+      timeElement.innerHTML = formatted_date;
+      timeElement.setAttribute("datetime", iso_date);
     }
   };
   xhttp.open("GET", "https://weirdscifi.ratiosemper.com/neocities.php?sitename=yuinoid", true);

@@ -1,0 +1,105 @@
+{
+  "version": "2.0",
+  "description": "Planet Aggregator v2 データソース設定",
+  "dataSources": [
+    {
+      "id": "tanoshii_health",
+      "type": "misskey",
+      "enabled": true,
+      "config": {
+        "instanceUrl": "https://tanoshii.site",
+        "username": "health",
+        "displayName": "tanoshii.site",
+        "sourceIconImage": "./tanoshiisite.jpg",
+        "description": "メインのMisskeyアカウント"
+      },
+      "fetchSettings": {
+        "maxPosts": 50,
+        "includeReplies": false,
+        "includeReblogs": false,
+        "rateLimit": 30000,
+        "timeBasedFetch": true,
+        "daysBack": 3,
+        "maxImages": 6,
+        "useProxy": false
+      }
+    },
+    {
+      "id": "misskey_io_yuinoid",
+      "type": "misskey",
+      "enabled": true,
+      "config": {
+        "instanceUrl": "https://misskey.io",
+        "username": "yuinoid",
+        "displayName": "misskey.io",
+        "sourceIconImage": "./misskeyio.webp",
+        "description": "misskey.ioの投稿"
+      },
+      "fetchSettings": {
+        "maxPosts": 20,
+        "includeReplies": false,
+        "includeReblogs": false,
+        "rateLimit": 30000,
+        "timeBasedFetch": true,
+        "daysBack": 3,
+        "maxImages": 6,
+        "useProxy": true
+      }
+    },
+    {
+      "id": "mistodon_healthcare",
+      "type": "mastodon",
+      "enabled": true,
+      "config": {
+        "instanceUrl": "https://mistodon.cloud",
+        "username": "healthcare",
+        "displayName": "mistodon.cloud",
+        "sourceIconImage": "./mistodon-cloud.jpg",
+        "description": "MastodonアカウントのHealthcare"
+      },
+      "fetchSettings": {
+        "maxPosts": 20,
+        "includeReplies": false,
+        "includeReblogs": false,
+        "rateLimit": 20000,
+        "timeBasedFetch": true,
+        "daysBack": 3,
+        "maxImages": 6,
+        "useProxy": false
+      }
+    },
+    {
+      "id": "site_rss",
+      "type": "rss",
+      "enabled": true,
+      "config": {
+        "feedUrl": "../rss.xml",
+        "displayName": "100%health RSS",
+        "sourceIconImage": "../icon.webp",
+        "description": "サイトの更新情報RSS"
+      },
+      "fetchSettings": {
+        "maxPosts": 20,
+        "includeReplies": false,
+        "includeReblogs": false,
+        "rateLimit": 60000,
+        "timeBasedFetch": true,
+        "daysBack": 3,
+        "maxImages": 6,
+        "useProxy": false
+      }
+    }
+  ],
+  "globalSettings": {
+    "autoRefreshInterval": 1800000,
+    "maxTotalPosts": 100,
+    "defaultCacheDuration": 600000
+  },
+  "_settings_help": {
+    "useProxy": "プロキシの使用設定。true: プロキシ経由でアクセス（CORS回避）、false: 直接アクセス（高速だがCORSエラーの可能性）",
+    "timeBasedFetch": "時間ベース取得の有効/無効",
+    "daysBack": "過去何日分の投稿を取得するか",
+    "maxPosts": "最大取得投稿数",
+    "rateLimit": "API呼び出し間隔（ミリ秒）"
+  }
+}

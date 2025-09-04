@@ -43,6 +43,15 @@
                 position: relative;
                 text-decoration: underline dotted;
             }
+            .description{
+                font-size: small;
+                display: inline;
+                text-indent: 0;
+            }
+            .description::before{
+                content: "\A";
+                white-space: pre;
+            }
         }
         #galleryspace{
             h2{
@@ -54,6 +63,33 @@
             position: absolute;
             bottom: 0%;
             left: 20%;
+        }
+        #rss-link{
+            margin-top: 50px;
+            margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            a{
+                color: #000;
+                &:hover{
+                    color: #fff;
+                }
+            }
+        }
+        @media screen and (max-width: 576px) {
+            #changeloghtml{
+                line-height: 20px;
+                ol{
+                    gap: 10px;
+                }
+            }
+            #idoko_sleep{
+                width: 150px;
+                position: absolute;
+                bottom: 10%;
+                left: 65%;
+            }
         }
     </style>
 </head>
@@ -80,6 +116,9 @@
         <main id="main">
             <div id="galleryspace">
                 <h1 class="title"><ruby>更新履歴<rt>このサイトの変わったところ</rt></ruby> / <small title="change log of this website" lang="en">change log</small></h1>
+                <p id="rss-link">
+                    changelogのRSSフィード（RSS2.0）は<a href="/rss.xml" target="_blank"><span class="rss-icon" aria-hidden="true">♥</span>&thinsp;こちら</a>から取得できます。
+                </p>
                 <div id="changeloghtml"></div>
                 <div id="idoko_sleep">
                     <img src="/img/idoko_sleep.gif" alt="idoko sleeping image">

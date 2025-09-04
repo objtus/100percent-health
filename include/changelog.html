@@ -68,4 +68,32 @@
     <li>>2025/08/23 "<a href="https://oiterudake.neocities.org/" target="_blank">さくしゃさん</a>、<a href="https://overpass.dokkoisho.com/" target="_blank">IamnotHayatoさん</a>のウェブサイトへのリンクを<a href="/links/links_main.html">リンクページ</a>に追加しました"</li>
     <li>>2025/08/23 "トップページや、一部コーナーのメインページの見出しを、「<a href="https://web.archive.org/web/20191027180317/http://human.cc.hirosaki-u.ac.jp/kokugo/EJ3mokuji.htm" target="_blank">やさしい日本語</a>」に対応してみました"</li>
     <li>>2025/08/27 "アクセシビリティ対応のため全ページ更新&いろいろ微調整&サーチサイトのリンクを追加&<a href="/txt/zakki/2025/08/days/2025-08-26.html">雑記ページを更新</a>しました"</li>
+    <li>>2025/08/30 "txtに<a href="/txt/redcompass_compilation_series.html">redcompass_compilation_series</a>を作成して追加"</li>
+    <li>>2025/09/02 "<a href="/txt/zakki/2025/09/days/2025-09-02.html">雑記ページを更新</a> "</li>
+    <li data-rss-category="system">>2025/09/04 "<a href="/changelog_main.html">半自動RSS生成機能を追加</a><span class="description">changelog.htmlから自動でrssフィードを生成するスクリプトを作成しました。changelogを更新するたびに管理者がスクリプトを実行し、rss.xmlをアップロードすればrss機能が果たせるという寸法です。管理者が工程を忘れなければ。</span>"</li>
 </ol>
+
+<!-- 
+RSS生成について:
+更新したらRSS生成スクリプトを実行してください
+Windows: .\update-rss.bat
+Linux/Mac: .\update-rss.sh
+
+【推奨カテゴリ一覧】
+- gallery : 作品・イラスト・ギャラリー関連
+- works : 制作物・委託作品・プロジェクト
+- zakki : 雑記
+- txt : テキストコンテンツ・記事・まとめ
+- links : リンク集・相互リンク・外部連携
+- system : サイト機能・システム更新・技術的変更
+- misc : その他・分類不明・一般的な更新
+
+【自動推定について】
+data-rss-categoryを省略した場合、リンクから自動推定されます:
+/gallery/ → gallery, /txt/zakki/ → zakki, /txt/→ txt, /links/ → links, /works/ → works
+その他 → misc
+
+【カスタムdescription】
+表示用の説明とは別に、RSS専用の詳細説明を設定できます:
+例: <li>>2025/09/04 "<a href="/gallery/">作品追加</a><span class="description">新しい作品3点を追加しました。</span>"</li>
+-->

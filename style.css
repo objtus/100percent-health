@@ -463,6 +463,9 @@ h2 {
       list-style-type: none;
       text-decoration: underline;
   }
+  .description{
+    display: none;
+  }
 }
 #changelogcontainer{
   a{

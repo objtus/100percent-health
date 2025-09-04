@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>planet yuinoid - 100%health</title>
+    <link rel="stylesheet" href="../1column.css">
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <script src="../js/main.js" defer></script>
+    <script src="/js/mouse.js" defer></script>
+
+    <style>
+        /* Planet v2 固有のスタイル（旧版準拠） */
+        #planetspace {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .planet-intro {
+            background: #f8f9fa;
+            font-size: 0.8rem;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .planet-intro p {
+            margin: 0 0 10px 0;
+            line-height: 1.6;
+        }
+        
+        .data-sources {
+            margin: 15px 0;
+        }
+        
+        .data-sources ul {
+            margin: 10px 0 0 20px;
+        }
+        
+        .control-panel {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-button, .config-button {
+            background: var(--accent-color, #000000);
+            color: white;
+            font-family: saitamaar;
+            border: none;
+            padding: 3px 10px 1px 10px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .config-button {
+            background: #6c757d;
+        }
+        
+        .refresh-button:hover, .config-button:hover {
+            opacity: 0.8;
+        }
+        
+        .refresh-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .config-panel {
+            background: #f8f9fa;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .config-panel h3 {
+            font-size: 1em;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .config-panel button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            font-family: saitamaar;
+            padding: 3px 10px 1px 10px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .config-panel button:hover {
+            opacity: 0.8;
+        }
+        
+        .date-section {
+            margin-bottom: 40px;
+        }
+        
+        .date-header {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #e0e0e0;
+            color: var(--text-color, #333);
+        }
+        
+        .post-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .post-item {
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            border-bottom: 1px solid transparent;
+        }
+        
+        .post-item:hover {
+            border-bottom-color: #e0e0e0;
+        }
+        
+        .post-time-link {
+            color: #666;
+            font-size: 0.85em;
+            min-width: 60px;
+            font-family: monospace;
+            align-self: flex-end;
+            margin-left: auto;
+            text-decoration: none;
+        }
+        
+        .post-time-link:hover {
+            color: #333;
+            text-decoration: underline;
+        }
+        
+        .post-content {
+            flex: 1;
+            line-height: 1.5;
+        }
+        
+        .post-text {
+            color: #333;
+            display: inline;
+            white-space: pre-line;
+            a:hover{
+                color: #fff!important;
+            }
+        }
+        
+        .post-source {
+            color: #888;
+            font-size: 0.85em;
+            margin-left: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-style: italic;
+        }
+        
+        .source-icon-image {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            object-fit: cover;
+            vertical-align: middle;
+        }
+        
+        .config-icon-image {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            object-fit: cover;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+        
+        /* 投稿画像スタイル */
+        .post-images {
+            margin-top: 8px;
+            display: grid;
+            gap: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .post-images.images-1 {
+            grid-template-columns: 1fr;
+        }
+        
+        .post-images.images-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .post-images.images-3 {
+            grid-template-columns: 1fr 1fr;
+        }
+        .post-images.images-3 .post-image-container:first-child {
+            grid-column: 1 / -1;
+        }
+        
+        .post-images.images-4 {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .post-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px;
+            background: #f5f5f5;
+        }
+        
+        .post-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+        
+        .post-image:hover {
+            transform: scale(1.02);
+        }
+        
+        /* 1枚の場合は大きく表示 */
+        .post-images.images-1 .post-image {
+            height: 200px;
+            max-height: 200px;
+        }
+        
+        /* リアクション表示 */
+        .post-reactions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 0.85em;
+        }
+        
+        .reaction {
+            color: #666;
+            margin-right: 10px;
+        }
+        
+        .last-update {
+            text-align: right;
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* 新版固有の要素 */
+        .post-v2 {
+            margin-bottom: 0; /* post-itemで管理 */
+            background: none;
+            box-shadow: none;
+            padding: 0;
+            border-radius: 0;
+        }
+        
+        .post-header {
+            display: none; /* 旧版スタイルに合わせて非表示 */
+        }
+        
+        /* ステータス表示（シンプル・シック） */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.85em;
+        }
+        
+        .error {
+            background: #f5f5f5;
+            color: #666;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 0.85em;
+        }
+        
+        .status {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 0.8em;
+            color: #666;
+        }
+        
+        .status.loading {
+            background: #f8f8f8;
+            color: #777;
+        }
+        
+        .status.error {
+            background: #f5f5f5;
+            color: #888;
+        }
+        
+        .status.success {
+            background: #f9f9f9;
+            color: #666;
+        }
+        
+        /* Luminousライトボックスのz-indexを最上位に設定 */
+        .lum-lightbox {
+            z-index: 99999 !important;
+        }
+        
+        .lum-lightbox-inner {
+            z-index: 100000 !important;
+        }
+        
+        .lum-close-button,
+        .lum-gallery-button {
+            z-index: 100001 !important;
+        }
+        
+        /* レスポンシブ調整（旧版準拠） */
+        @media (max-width: 768px) {
+            #planetspace {
+                padding: 10px;
+            }
+            
+            .post-images.images-2,
+            .post-images.images-3,
+            .post-images.images-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .post-images.images-3 .post-image-container:first-child {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <header id="header">
+            <div id="header-flex">
+                <nav id="back" aria-label="戻るナビゲーション">
+                    <a id="backicon" href="../index.html">
+                        &lt;
+                    </a>
+                </nav>
+                <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+                    <a class="addressbar" href="../index.html">
+                        100%health
+                    </a>/
+                    <a class="addressbar" href="planet_main.html">
+                        planet yuinoid
+                    </a>
+                </nav>
+            </div>
+        </header>
+        
+        <main id="main">
+            <div id="planetspace">
+                <h1 class="title">planet yuinoid</h1>
+                
+                <div class="planet-intro">
+                    <p>eniehackさんの<a href="https://www.eniehack.net/~eniehack/planet/" target="_blank">Planet eniehack</a>を<s>ガワだけ</s><ruby>参考にし<rt>パクっ</rt></ruby>て、私個人のSNS投稿とこのサイトの更新を1つのページにまとめたページです。</p>
+                    <div class="data-sources">
+                        <p>データソースの特徴:</p>
+                        <ul>
+                            <li>設定ファイルによる柔軟なデータソース管理</li>
+                            <li>Misskey API経由での高品質な投稿データ取得</li>
+                            <li>画像、リアクション、正確な時刻情報を含む詳細データ</li>
+                        </ul>
+                    </div>
+                    <p>新版では Misskey API を直接使用して、スクレイピングの制約を回避し、より詳細で正確な投稿情報を取得できます。</p>
+                </div>
+                
+                <div class="control-panel">
+                    <button class="refresh-button" onclick="refreshPlanetV2()" id="refresh-btn">
+                        更新
+                    </button>
+                    <button class="config-button" onclick="clearCache()" id="cache-btn">
+                        キャッシュクリア
+                    </button>
+                </div>
+                
+                <div id="status-container"></div>
+                <div id="planet-v2-content">
+                    <div class="loading">データを読み込み中...</div>
+                </div>
+                
+                <div id="load-more-container" style="display: none; text-align: center; margin: 20px 0;">
+                    <button id="load-more-btn" class="refresh-button" onclick="loadMorePosts()">
+                        もっと読み込む
+                    </button>
+                    <div id="load-more-status" class="status" style="display: none; margin-top: 10px;"></div>
+                </div>
+                
+                <div class="last-update">
+                    最終更新: <span id="last-update-time">--</span>
+                </div>
+            </div>
+        </main>
+        
+        <footer id="main-footer">
+            <div id="footerhtml"></div>
+        </footer>
+    </div>
+
+    <script src="config-manager.js"></script>
+    <script src="planet-scraper-light.js"></script>
+    <script>
+        
+        // ページ読み込み時の初期化
+        document.addEventListener('DOMContentLoaded', () => {
+                            showStatus('Planet を初期化中...', 'loading');
+            
+            // 少し遅延して初期化（DOM準備完了を確実にする）
+            setTimeout(() => {
+                try {
+                    initializePlanetV2();
+                    showStatus('初期化完了、データ取得中...', 'success');
+                } catch (error) {
+                    console.error('初期化エラー:', error);
+                    showStatus(`初期化エラー: ${error.message}`, 'error');
+                }
+            }, 500);
+        });
+        
+        // ステータス表示
+        function showStatus(message, type = 'info') {
+            const container = document.getElementById('status-container');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            
+            container.innerHTML = '';
+            container.appendChild(statusDiv);
+            
+            // 5秒後に自動削除（エラー以外）
+            if (type !== 'error') {
+                setTimeout(() => {
+                    if (statusDiv.parentNode) {
+                        statusDiv.remove();
+                    }
+                }, 5000);
+            }
+        }
+        
+        
+        // キャッシュクリア
+        function clearCache() {
+            if (typeof planetAggregator !== 'undefined' && planetAggregator) {
+                planetAggregator.clearCache();
+                showStatus('キャッシュをクリアしました - 次回更新時に新しいデータを取得します', 'success');
+                console.log('キャッシュクリア完了');
+            }
+        }
+        
+        // エラーハンドリング
+        window.addEventListener('error', (event) => {
+            console.error('グローバルエラー:', event.error);
+            showStatus(`予期しないエラー: ${event.error.message}`, 'error');
+        });
+        
+        // 未処理のPromise拒否をキャッチ
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('未処理のPromise拒否:', event.reason);
+            showStatus(`非同期エラー: ${event.reason}`, 'error');
+        });
+    </script>
+    <div id="lightbox">
+        <link rel="stylesheet" href="../../luminous-basic.min.css" />
+        <script src="../../Luminous.min.js"></script>
+        <script>
+            // Luminousライトボックスの初期化関数
+            function initializeLuminous() {
+                // 既存のLuminousインスタンスを破棄
+                if (window.luminousGallery) {
+                    window.luminousGallery.destroy();
+                }
+                
+                // 新しい画像リンクを検索してLuminousを初期化
+                const imageLinks = document.querySelectorAll("a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp],a[href$=jpeg]");
+                if (imageLinks.length > 0) {
+                    window.luminousGallery = new LuminousGallery(imageLinks);
+                    console.log(`Luminous初期化: ${imageLinks.length}件の画像リンクを検出`);
+                }
+            }
+            
+            // ページ読み込み時に初期化
+            document.addEventListener('DOMContentLoaded', () => {
+                // Luminousライブラリの読み込み完了を待つ
+                setTimeout(initializeLuminous, 100);
+            });
+        </script>
+    </div>
+</body>
+</html>

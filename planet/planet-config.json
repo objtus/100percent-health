@@ -1,0 +1,64 @@
+{
+  "site": {
+    "title": "planet 100%health",
+    "description": "Planet DebianやPlanet masakaのように、私個人の最新情報を1つのページにまとめたものです。",
+    "author": "100%health",
+    "maxPostsPerSource": 10,
+    "maxPostsTotal": 50,
+    "autoRefreshInterval": 1800000
+  },
+  "dataSources": [
+    {
+      "name": "更新履歴",
+      "type": "rss",
+      "url": "/rss.xml",
+      "icon": "📋",
+      "enabled": true,
+      "description": "サイトの更新履歴RSS"
+    },
+    {
+      "name": "tanoshii.site",
+      "type": "rss",
+      "url": "tanoshii.site/@health.atom",
+      "icon": "🌐",
+      "iconImage": "./tanoshiisite.jpg",
+      "enabled": true,
+      "description": "tanoshii.siteの投稿フィード",
+      "placeholder": "tanoshii.site/@health.atom"
+    },
+    {
+      "name": "misskey.io",
+      "type": "rss",
+      "url": "misskey.io/@yuinoid.atom",
+      "icon": "🌐",
+      "iconImage": "./misskeyio.webp",
+      "enabled": true,
+      "description": "misskey.ioの投稿フィード",
+      "placeholder": "misskey.io/@yuinoid.atom"
+    },
+    {
+      "name": "mistodon.cloud",
+      "type": "rss",
+      "url": "https://mistodon.cloud/@healthcare.rss",
+      "icon": "🌐",
+      "iconImage": "./mistodoncloud.png",
+      "enabled": true,
+      "description": "mistodon.cloudの投稿フィード",
+      "placeholder": "https://mistodon.cloud/@healthcare.rss"
+    }
+  ],
+  "display": {
+    "dateFormat": "YYYY-MM-DD",
+    "timeFormat": "HH:mm",
+    "postsPerPage": 25,
+    "showSummary": true,
+    "summaryLength": 100,
+    "groupByDate": true
+  },
+  "features": {
+    "autoRefresh": true,
+    "manualRefresh": true,
+    "rssOutput": false,
+    "jsonOutput": false
+  }
+}

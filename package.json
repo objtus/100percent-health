@@ -1,0 +1,16 @@
+{
+  "name": "100percent-health-rss",
+  "version": "1.0.0",
+  "description": "RSS Feed Generator for 100%health website",
+  "main": "rss-generator.js",
+  "scripts": {
+    "generate-rss": "node rss-generator.js",
+    "test": "node test-rss.js"
+  },
+  "dependencies": {
+    "jsdom": "^23.0.0"
+  },
+  "keywords": ["rss", "neocities", "changelog"],
+  "author": "100percent-health",
+  "license": "MIT"
+}

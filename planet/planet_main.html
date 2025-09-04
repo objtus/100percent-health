@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>planet yuinoid - 100%health</title>
+    <link rel="stylesheet" href="../1column.css">
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <script src="../js/main.js" defer></script>
+    <style>
+        #planetspace {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .planet-intro {
+            background: #f8f9fa;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .planet-intro p {
+            margin: 0 0 10px 0;
+            line-height: 1.6;
+        }
+        
+        .data-sources {
+            margin: 15px 0;
+        }
+        
+        .data-sources ul {
+            margin: 10px 0 0 20px;
+        }
+        
+        .date-section {
+            margin-bottom: 40px;
+        }
+        
+        .date-header {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #e0e0e0;
+            color: var(--text-color, #333);
+        }
+        
+        .post-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .post-item {
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            border-bottom: 1px solid transparent;
+        }
+        
+        .post-item:hover {
+            border-bottom-color: #e0e0e0;
+        }
+        
+        .post-time-link {
+            color: #666;
+            font-size: 0.85em;
+            min-width: 60px;
+            font-family: monospace;
+            align-self: flex-end;
+            margin-left: auto;
+            text-decoration: none;
+        }
+        
+        .post-time-link:hover {
+            color: #333;
+            text-decoration: underline;
+        }
+        
+        .post-content {
+            flex: 1;
+            line-height: 1.5;
+        }
+        
+        .post-text {
+            color: #333;
+            display: inline;
+            white-space: pre-line;
+        }
+        
+        .post-source {
+            color: #888;
+            font-size: 0.85em;
+            margin-left: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-style: italic;
+        }
+        
+        .source-icon-image {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            object-fit: cover;
+            vertical-align: middle;
+        }
+        
+        .config-icon-image {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            object-fit: cover;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+        
+        /* 投稿画像スタイル */
+        .post-images {
+            margin-top: 8px;
+            display: grid;
+            gap: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        /* 画像数に応じたグリッドレイアウト */
+        .post-images.images-1 {
+            grid-template-columns: 1fr;
+        }
+        
+        .post-images.images-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .post-images.images-3 {
+            grid-template-columns: 1fr 1fr;
+        }
+        .post-images.images-3 .post-image-container:first-child {
+            grid-column: 1 / -1;
+        }
+        
+        .post-images.images-4 {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .post-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px;
+            background: #f5f5f5;
+        }
+        
+        .post-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+        
+        .post-image:hover {
+            transform: scale(1.02);
+        }
+        
+        /* 1枚の場合は大きく表示 */
+        .post-images.images-1 .post-image {
+            height: 200px;
+            max-height: 200px;
+        }
+        
+        .post-summary {
+            margin-top: 5px;
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .error {
+            background: #ffe6e6;
+            color: #d00;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .control-panel {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-button, .config-button {
+            background: var(--accent-color, #000000);
+            color: white;
+            font-family: saitamaar;
+            border: none;
+            padding: 3px 10px 1px 10px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .config-button {
+            background: #6c757d;
+        }
+        
+        .refresh-button:hover, .config-button:hover {
+            opacity: 0.8;
+        }
+        
+        .refresh-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .config-panel {
+            background: #f8f9fa;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            h3{
+                font-size: 1em;
+                font-weight: bold;
+                margin-top: 0;
+                margin-bottom: 15px;
+            }
+            button{
+                background: #dc3545;
+                color: white;
+                border: none;
+                font-family: saitamaar;
+                padding: 3px 10px 1px 10px;
+                border-radius: 2px;
+                cursor: pointer;
+                font-size: 0.9em;
+            }
+        }
+        
+        .config-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .config-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 150px;
+        }
+        
+        .config-url {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .config-description {
+            font-size: 0.85em;
+            color: #666;
+            text-align: right;
+            margin-bottom: 25px;
+        }
+        
+        .last-update {
+            text-align: right;
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            #planetspace {
+                padding: 15px;
+            }
+            
+            .planet-intro {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .date-header {
+                font-size: 1.3em;
+            }
+            
+            .post-item {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .post-time {
+                min-width: auto;
+                font-size: 0.8em;
+            }
+            
+            .control-panel {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .refresh-button, .config-button {
+                width: 100%;
+                padding: 12px;
+                font-size: 1em;
+            }
+            
+            .config-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .config-label {
+                min-width: auto;
+            }
+            
+            .config-url {
+                width: 100%;
+            }
+            
+            .config-description {
+                margin-left: 0;
+            }
+            
+            .last-update {
+                text-align: center;
+                font-size: 0.8em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #planetspace {
+                padding: 10px;
+            }
+            
+            .planet-intro {
+                padding: 10px;
+            }
+            
+            .date-header {
+                font-size: 1.2em;
+                margin-bottom: 10px;
+            }
+            
+            .post-content {
+                font-size: 0.9em;
+            }
+            
+            .post-summary {
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <header id="header">
+            <div id="header-flex">
+                <nav id="back" aria-label="戻るナビゲーション">
+                    <a id="backicon" href="../index.html">
+                        &lt;
+                    </a>
+                </nav>
+                <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+                    <a class="addressbar" href="../index.html">
+                        100%health
+                    </a>/
+                    <a class="addressbar" href="planet_main.html">
+                        planet yuinoid
+                    </a>
+                </nav>
+            </div>
+        </header>
+        
+        <main id="main">
+            <div id="planetspace">
+                <h1 class="title">planet yuinoid</h1>
+                
+                <div class="planet-intro">
+                    <p>eniehackさんの<a href="https://www.eniehack.net/~eniehack/planet/" target="_blank">Planet eniehack</a>を<s>ガワだけ</s><ruby>参考にし<rt>パクっ</rt></ruby>て、私個人のSNS投稿とこのサイトの更新を1つのページにまとめたページです。</p>
+                    <div class="data-sources">
+                        <p>データソースは以下の通りです:</p>
+                        <ul>
+                            <li>このサイトのRSSフィード</li>
+                            <li>tanoshii.siteの投稿フィード</li>
+                            <li>misskey.ioの投稿フィード</li>
+                            <li>mistodon.cloudの投稿フィード</li>
+                        </ul>
+                    </div>
+                    <p>中身は簡易的なRSSリーダーです。データソースの最大エントリ数は制限されているため、データソース間で投稿頻度のギャップがある場合、過去投稿の表示が不足する場合があります。</p>
+                </div>
+                
+                <div class="control-panel">
+                    <button class="refresh-button" onclick="manualRefresh()" id="refresh-btn">
+                        更新
+                    </button>
+                    <button class="config-button" onclick="toggleConfigPanel()" id="config-btn">
+                        設定
+                    </button>
+                </div>
+                
+                <div id="config-panel" class="config-panel" style="display: none;">
+                    <h3>データソース設定</h3>
+                    <div id="config-sources"></div>
+                    <div>
+                        <button onclick="resetToDefaults()">
+                            設定をリセット
+                        </button>
+                        <small style="margin-left: 10px; color: #666;">設定ファイルの初期値に戻ります</small>
+                    </div>
+                </div>
+                
+                <div id="planet-content">
+                    <div class="loading">データを読み込み中...</div>
+                </div>
+                
+                <div class="last-update">
+                    最終更新: <span id="last-update-time">--</span>
+                </div>
+            </div>
+        </main>
+        
+        <footer id="main-footer">
+            <div id="footerhtml"></div>
+        </footer>
+    </div>
+
+    <script src="planet-config.js"></script>
+    <script src="planet-aggregator.js"></script>
+    <script>
+        // ページ読み込み時に実行
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 設定を読み込んでからPlanetを初期化
+            await initializePlanetConfig();
+            initializePlanet();
+        });
+        
+        // 手動更新ボタンの処理
+        async function manualRefresh() {
+            const btn = document.getElementById('refresh-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = '🔄 更新中...';
+            }
+            
+            try {
+                // 設定を強制的に再読み込み
+                if (planetConfig) {
+                    await planetConfig.loadConfig();
+                    console.log('設定を再読み込みしました');
+                }
+                
+                // データを再読み込み
+                refreshPlanet();
+                
+            } catch (error) {
+                console.error('更新エラー:', error);
+            } finally {
+                setTimeout(() => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.textContent = '🔄 更新';
+                    }
+                }, 2000);
+            }
+        }
+        
+        // デバッグ用：現在の設定を確認
+        function debugConfig() {
+            console.log('現在の設定:', planetConfig?.config);
+            console.log('データソース詳細:', planetAggregator?.dataSources?.map(ds => ({
+                name: ds.name,
+                enabled: ds.enabled,
+                url: ds.url,
+                type: ds.type
+            })));
+            console.log('有効なデータソース:', planetAggregator?.dataSources?.filter(ds => ds.enabled));
+            console.log('取得した投稿数:', planetAggregator?.posts?.length);
+            console.log('投稿詳細:', planetAggregator?.posts);
+            console.log('キャッシュ状況:', {
+                サイズ: planetAggregator?.cache?.size || 0,
+                レート制限追跡: planetAggregator?.rateLimitTracker?.size || 0
+            });
+        }
+        
+        // 設定パネルの表示/非表示
+        function toggleConfigPanel() {
+            const panel = document.getElementById('config-panel');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                renderConfigUI();
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+        
+        // 設定UIを描画
+        function renderConfigUI() {
+            const container = document.getElementById('config-sources');
+            if (!planetConfig?.config?.dataSources) return;
+            
+            let html = '';
+            planetConfig.config.dataSources.forEach(source => {
+                html += `<div class="config-item">`;
+                html += `<label class="config-label">`;
+                html += `<input type="checkbox" ${source.enabled ? 'checked' : ''} 
+                         onchange="toggleDataSource('${source.name}', this.checked)">`;
+                
+                // アイコン画像またはテキストアイコンを表示
+                if (source.iconImage) {
+                    html += `<img src="${source.iconImage}" alt="${source.name} icon" class="config-icon-image">`;
+                } else {
+                    html += source.icon;
+                }
+                html += ` ${source.name}`;
+                html += `</label>`;
+                
+                if (source.type === 'rss' && source.placeholder) {
+                    html += `<input type="url" class="config-url" 
+                             value="${source.url || ''}"
+                             placeholder="${source.placeholder}" 
+                             onchange="updateDataSourceUrl('${source.name}', this.value)">`;
+                }
+                
+                html += `</div>`;
+                html += `<div class="config-description">${source.description}</div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // データソースの有効/無効切り替え
+        function toggleDataSource(name, enabled) {
+            if (planetConfig) {
+                if (enabled) {
+                    planetConfig.enableDataSource(name);
+                } else {
+                    planetConfig.disableDataSource(name);
+                }
+                console.log(`${name} を ${enabled ? '有効' : '無効'} にしました`);
+                manualRefresh();
+            }
+        }
+        
+        // データソースのURL更新
+        function updateDataSourceUrl(name, url) {
+            if (planetConfig && url.trim()) {
+                planetConfig.setDataSourceUrl(name, url.trim());
+                console.log(`${name} のURL を ${url} に更新しました`);
+                manualRefresh();
+            }
+        }
+        
+        // 設定をデフォルトにリセット
+        function resetToDefaults() {
+            if (confirm('設定をリセットしますか？設定ファイルの初期値に戻ります。')) {
+                // ローカルストレージをクリア
+                localStorage.removeItem('planet-user-config');
+                console.log('ユーザー設定をクリアしました');
+                
+                // ページを再読み込み
+                location.reload();
+            }
+        }
+        
+        // デバッグ用ボタンを開発者ツールから呼び出せるように
+        window.debugConfig = debugConfig;
+        window.toggleConfigPanel = toggleConfigPanel;
+    </script>
+</body>
+</html>
