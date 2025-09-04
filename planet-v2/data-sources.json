@@ -93,13 +93,34 @@
   "globalSettings": {
     "autoRefreshInterval": 1800000,
     "maxTotalPosts": 100,
-    "defaultCacheDuration": 600000
+    "defaultCacheDuration": 600000,
+    "timeBasedFetch": true,
+    "daysBack": 7,
+    "recommendedConfig": {
+      "timeBasedFetch": true,
+      "daysBack": 7,
+      "misskey": {
+        "maxPosts": 30,
+        "rateLimit": 30000
+      },
+      "mastodon": {
+        "maxPosts": 20,
+        "rateLimit": 20000
+      },
+      "rss": {
+        "maxPosts": 10,
+        "rateLimit": 60000
+      }
+    }
   },
   "_settings_help": {
     "useProxy": "プロキシの使用設定。true: プロキシ経由でアクセス（CORS回避）、false: 直接アクセス（高速だがCORSエラーの可能性）",
-    "timeBasedFetch": "時間ベース取得の有効/無効",
-    "daysBack": "過去何日分の投稿を取得するか",
+    "timeBasedFetch": "時間ベース取得の有効/無効（グローバル設定）",
+    "daysBack": "過去何日分の投稿を取得するか（グローバル設定）",
     "maxPosts": "最大取得投稿数",
-    "rateLimit": "API呼び出し間隔（ミリ秒）"
+    "rateLimit": "API呼び出し間隔（ミリ秒）",
+    "autoRefreshInterval": "自動更新間隔（ミリ秒）",
+    "maxTotalPosts": "最大総投稿数",
+    "defaultCacheDuration": "デフォルトキャッシュ期間（ミリ秒）"
   }
 }
