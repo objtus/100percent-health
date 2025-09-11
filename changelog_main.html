@@ -65,17 +65,19 @@
             left: 20%;
         }
         #rss-link{
-            margin-top: 50px;
-            margin-bottom: 50px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin: 50px 0;
+            word-break: break-all;
+            white-space: nowrap;
             a{
+                margin: 0 5px;
                 color: #000;
                 &:hover{
                     color: #fff;
                 }
             }
+        }
+        _::-webkit-full-page-media, _:future, :root #rss-link{
+            white-space: normal;
         }
         @media screen and (max-width: 576px) {
             #changeloghtml{
@@ -117,7 +119,7 @@
             <div id="galleryspace">
                 <h1 class="title"><ruby>更新履歴<rt>このサイトの変わったところ</rt></ruby> / <small title="change log of this website" lang="en">change log</small></h1>
                 <p id="rss-link">
-                    changelogのRSSフィード（RSS2.0）は<a href="/rss.xml" target="_blank"><span class="rss-icon" aria-hidden="true">♥</span>&thinsp;こちら</a>から取得できます。
+                    changelogの<wbr>RSSフィード<wbr>（RSS2.0）は<wbr><a href="/rss.xml" target="_blank"><span class="rss-icon" aria-hidden="true">♥</span>&thinsp;こちら</a><wbr>から取得<wbr>できます。
                 </p>
                 <div id="changeloghtml"></div>
                 <div id="idoko_sleep">

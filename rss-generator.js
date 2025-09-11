@@ -21,7 +21,7 @@ class ChangelogRSSGenerator {
       maxAge: config.maxAge || null, // 最大保持期間（日数）null=無制限
       incrementalItems: config.incrementalItems || 5, // 増分更新で処理する最新エントリ数
       useGenerationTime: config.useGenerationTime || true, // 生成時刻を使用
-      guidType: config.guidType || 'random', // 'semantic', 'random', 'uuid'
+      guidType: config.guidType || 'semantic', // 'semantic', 'random', 'uuid'
       ...config
     };
   }
@@ -78,7 +78,7 @@ class ChangelogRSSGenerator {
       for (const item of itemsArray) {
         if (processedCount >= processingLimit) break;
         
-        const rssItem = this.extractRSSData(item);
+        const rssItem = this.extractRSSData(item, true); // 増分更新フラグを渡す
         if (rssItem) {
           newRssItems.push(rssItem);
           console.log(`✅ 新規エントリ: ${rssItem.title}`);
@@ -118,14 +118,47 @@ class ChangelogRSSGenerator {
     const allItems = [...uniqueNewItems, ...existingItems];
     allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
     
+    // 重複除去（タイトル+日付ベース）
+    const deduplicatedItems = this.removeDuplicates(allItems);
+    
     // 最大件数でカット
-    return allItems.slice(0, this.config.maxItems);
+    return deduplicatedItems.slice(0, this.config.maxItems);
+  }
+
+  /**
+   * 重複エントリを除去（タイトルベース、最新日付を保持）
+   */
+  removeDuplicates(items) {
+    const titleMap = new Map();
+    
+    for (const item of items) {
+      const title = item.title;
+      if (!titleMap.has(title)) {
+        titleMap.set(title, item);
+      } else {
+        // 既存のエントリと比較して、より新しい日付のものを保持
+        const existing = titleMap.get(title);
+        const existingDate = new Date(existing.pubDate);
+        const currentDate = new Date(item.pubDate);
+        
+        if (currentDate > existingDate) {
+          console.log(`🔄 重複更新: ${title} (${existing.pubDate} → ${item.pubDate})`);
+          titleMap.set(title, item);
+        } else {
+          console.log(`🔄 重複除去: ${title} (${item.pubDate})`);
+        }
+      }
+    }
+    
+    const uniqueItems = Array.from(titleMap.values());
+    console.log(`重複除去: ${items.length}件 → ${uniqueItems.length}件`);
+    return uniqueItems;
   }
 
   /**
    * li要素からRSSデータを抽出
    */
-  extractRSSData(liElement) {
+  extractRSSData(liElement, isIncremental = false) {
     try {
       // 日付の抽出
       const dateMatch = liElement.textContent.match(/>\s*(\d{4}\/\d{2}\/\d{2})/);
@@ -146,7 +179,8 @@ class ChangelogRSSGenerator {
       }
       
       // 生成時刻を使用するかchangelog日付を使用するか選択
-      const pubDate = this.config.useGenerationTime 
+      // 増分更新時は新規エントリのみ生成時刻を使用
+      const pubDate = (this.config.useGenerationTime && isIncremental)
         ? new Date().toUTCString() 
         : this.formatRSSDate(dateStr);
       
@@ -190,15 +224,9 @@ class ChangelogRSSGenerator {
       // GUIDの生成（data属性があれば使用、なければ自動生成）
       let guid = liElement.getAttribute('data-rss-guid');
       if (!guid) {
-        // 3つの生成方式から選択
-        if (this.config.guidType === 'random') {
-          guid = this.generateRandomGUID();
-        } else if (this.config.guidType === 'uuid') {
-          guid = this.generateUUID();
-        } else {
-          // デフォルト：意味のある文字列
-          guid = `${category}-${dateStr.replace(/\//g, '-')}`;
-        }
+        // デフォルト：意味のある文字列（タイトル+日付のハッシュ）
+        const titleHash = this.simpleHash(title);
+        guid = `${titleHash}-${dateStr.replace(/\//g, '')}`;
       }
       
       return {
@@ -248,14 +276,17 @@ class ChangelogRSSGenerator {
   }
 
   /**
-   * UUID v4を生成（簡易版）
+   * 文字列の簡易ハッシュを生成（GUID用）
    */
-  generateUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0;
-      const v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
+  simpleHash(str) {
+    let hash = 0;
+    if (str.length === 0) return hash.toString();
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // 32bit整数に変換
+    }
+    return Math.abs(hash).toString(36);
   }
 
   /**

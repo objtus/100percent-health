@@ -16,7 +16,7 @@
             margin: 0 auto;
             padding: 20px;
         }
-        
+    
         .planet-intro {
             background: #f8f9fa;
             font-size: 0.8rem;
@@ -24,27 +24,44 @@
             border-radius: 8px;
             margin-bottom: 30px;
         }
-        
+    
         .planet-intro p {
             margin: 0 0 10px 0;
             line-height: 1.6;
         }
-        
+    
         .data-sources {
             margin: 15px 0;
         }
-        
+    
         .data-sources ul {
-            margin: 10px 0 0 20px;
+            margin: 10px 0 0 1rem;
         }
-        
+    
+        .data-sources-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            list-style: none;
+            margin-left: 1rem;
+    
+            img {
+                width: 16px;
+                height: 16px;
+                object-fit: cover;
+                vertical-align: middle;
+                margin-right: 4px;
+            }
+        }
+    
         .control-panel {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
         }
-        
-        .refresh-button, .config-button {
+    
+        .refresh-button,
+        .config-button {
             background: var(--accent-color, #000000);
             color: white;
             font-family: saitamaar;
@@ -54,20 +71,21 @@
             cursor: pointer;
             font-size: 0.9em;
         }
-        
+    
         .config-button {
             background: #6c757d;
         }
-        
-        .refresh-button:hover, .config-button:hover {
+    
+        .refresh-button:hover,
+        .config-button:hover {
             opacity: 0.8;
         }
-        
+    
         .refresh-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
+    
         .config-panel {
             background: #f8f9fa;
             font-size: 0.9rem;
@@ -75,14 +93,14 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-        
+    
         .config-panel h3 {
             font-size: 1em;
             font-weight: bold;
             margin-top: 0;
             margin-bottom: 15px;
         }
-        
+    
         .config-panel button {
             background: #dc3545;
             color: white;
@@ -93,15 +111,15 @@
             cursor: pointer;
             font-size: 0.9em;
         }
-        
+    
         .config-panel button:hover {
             opacity: 0.8;
         }
-        
+    
         .date-section {
             margin-bottom: 40px;
         }
-        
+    
         .date-header {
             font-size: 1.2em;
             font-weight: bold;
@@ -110,55 +128,61 @@
             border-bottom: 2px solid #e0e0e0;
             color: var(--text-color, #333);
         }
-        
+    
         .post-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        
+    
         .post-item {
+            padding-top: 8px;
             padding-bottom: 8px;
             margin-bottom: 8px;
             display: flex;
             align-items: flex-start;
             gap: 10px;
+            border-top: 1px solid transparent;
             border-bottom: 1px solid transparent;
         }
-        
+    
         .post-item:hover {
+            border-top-color: #e0e0e0;
             border-bottom-color: #e0e0e0;
+            transition: all 0.3s ease;
         }
-        
+    
         .post-time-link {
-            color: #666;
+            color: #999;
             font-size: 0.85em;
             min-width: 60px;
-            font-family: monospace;
             align-self: flex-end;
             margin-left: auto;
             text-decoration: none;
         }
-        
+    
         .post-time-link:hover {
-            color: #333;
+            color: #000;
+            background-color: #fff;
             text-decoration: underline;
         }
-        
+    
         .post-content {
             flex: 1;
             line-height: 1.5;
         }
-        
+    
         .post-text {
             color: #333;
+            font-size: 0.9rem;
             display: inline;
             white-space: pre-line;
-            a:hover{
-                color: #fff!important;
+    
+            a:hover {
+                color: #fff !important;
             }
         }
-        
+    
         .post-source {
             color: #888;
             font-size: 0.85em;
@@ -168,7 +192,7 @@
             gap: 4px;
             font-style: italic;
         }
-        
+    
         .source-icon-image {
             width: 16px;
             height: 16px;
@@ -176,7 +200,7 @@
             object-fit: cover;
             vertical-align: middle;
         }
-        
+    
         .config-icon-image {
             width: 16px;
             height: 16px;
@@ -185,7 +209,7 @@
             vertical-align: middle;
             margin-right: 4px;
         }
-        
+    
         /* 投稿画像スタイル */
         .post-images {
             margin-top: 8px;
@@ -194,33 +218,34 @@
             border-radius: 8px;
             overflow: hidden;
         }
-        
+    
         .post-images.images-1 {
             grid-template-columns: 1fr;
         }
-        
+    
         .post-images.images-2 {
             grid-template-columns: 1fr 1fr;
         }
-        
+    
         .post-images.images-3 {
             grid-template-columns: 1fr 1fr;
         }
+    
         .post-images.images-3 .post-image-container:first-child {
             grid-column: 1 / -1;
         }
-        
+    
         .post-images.images-4 {
             grid-template-columns: 1fr 1fr;
         }
-        
+    
         .post-image-container {
             position: relative;
             overflow: hidden;
             border-radius: 6px;
             background: #f5f5f5;
         }
-        
+    
         .post-image {
             width: 100%;
             height: 150px;
@@ -228,30 +253,30 @@
             display: block;
             transition: transform 0.2s ease;
         }
-        
+    
         .post-image:hover {
             transform: scale(1.02);
         }
-        
+    
         /* 1枚の場合は大きく表示 */
         .post-images.images-1 .post-image {
             height: 200px;
             max-height: 200px;
         }
-        
+    
         /* リアクション表示 */
         .post-reactions {
             display: flex;
             gap: 8px;
-            margin-top: 8px;
-            font-size: 0.85em;
+            margin-top: 6px;
+            font-size: 0.7em;
         }
-        
+    
         .reaction {
             color: #666;
             margin-right: 10px;
         }
-        
+    
         .last-update {
             text-align: right;
             color: #666;
@@ -260,20 +285,22 @@
             padding-top: 20px;
             border-top: 1px solid #eee;
         }
-        
+    
         /* 新版固有の要素 */
         .post-v2 {
-            margin-bottom: 0; /* post-itemで管理 */
+            margin-bottom: 0;
+            /* post-itemで管理 */
             background: none;
             box-shadow: none;
             padding: 0;
             border-radius: 0;
         }
-        
+    
         .post-header {
-            display: none; /* 旧版スタイルに合わせて非表示 */
+            display: none;
+            /* 旧版スタイルに合わせて非表示 */
         }
-        
+    
         /* ステータス表示（シンプル・シック） */
         .loading {
             text-align: center;
@@ -281,7 +308,7 @@
             color: #666;
             font-size: 0.85em;
         }
-        
+    
         .error {
             background: #f5f5f5;
             color: #666;
@@ -290,7 +317,7 @@
             margin: 10px 0;
             font-size: 0.85em;
         }
-        
+    
         .status {
             background: #f8f9fa;
             padding: 8px 12px;
@@ -299,50 +326,64 @@
             font-size: 0.8em;
             color: #666;
         }
-        
+    
         .status.loading {
             background: #f8f8f8;
             color: #777;
         }
-        
+    
         .status.error {
             background: #f5f5f5;
             color: #888;
         }
-        
+    
         .status.success {
             background: #f9f9f9;
             color: #666;
         }
-        
+    
         /* Luminousライトボックスのz-indexを最上位に設定 */
         .lum-lightbox {
             z-index: 99999 !important;
         }
-        
+    
         .lum-lightbox-inner {
             z-index: 100000 !important;
         }
-        
+    
         .lum-close-button,
         .lum-gallery-button {
             z-index: 100001 !important;
         }
-        
-        /* レスポンシブ調整（旧版準拠） */
-        @media (max-width: 768px) {
+    
+        /* レスポンシブ調整 */
+        @media screen and (max-width: 768px) {
             #planetspace {
                 padding: 10px;
             }
-            
+    
             .post-images.images-2,
             .post-images.images-3,
             .post-images.images-4 {
                 grid-template-columns: 1fr;
             }
-            
+    
             .post-images.images-3 .post-image-container:first-child {
                 grid-column: auto;
+            }
+
+            .post-item {
+                flex-direction: column;
+            }
+
+            .post-time-link {
+                min-width: 0px;
+            }
+        }
+    
+        @media screen and (max-width: 576px) {
+            #planetspace {
+                padding-right: 15px;
             }
         }
     </style>
@@ -373,16 +414,17 @@
                 <h1 class="title">planet yuinoid</h1>
                 
                 <div class="planet-intro">
-                    <p>eniehackさんの<a href="https://www.eniehack.net/~eniehack/planet/" target="_blank">Planet eniehack</a>を<s>ガワだけ</s><ruby>参考にし<rt>パクっ</rt></ruby>て、私個人のSNS投稿とこのサイトの更新を1つのページにまとめたページです。</p>
+                    <p>eniehackさんの<a href="https://www.eniehack.net/~eniehack/planet/" target="_blank">planet eniehack</a>を参考にしたページです。私個人のSNS投稿とこのサイトの更新を1つのページにまとめて見ることができます。</p>
                     <div class="data-sources">
-                        <p>データソースの特徴:</p>
-                        <ul>
-                            <li>設定ファイルによる柔軟なデータソース管理</li>
-                            <li>Misskey API経由での高品質な投稿データ取得</li>
-                            <li>画像、リアクション、正確な時刻情報を含む詳細データ</li>
+                        <p>データソース:</p>
+                        <ul class="data-sources-list">
+                            <li><img src="../icon.webp" alt="100%healthのロゴ" width="16" height="16">100%health (このサイト) のRSSフィード (<a href="/rss.xml" target="_blank">rss.xml</a>)</li>
+                            <li><img src="./tanoshiisite.jpg" alt="tanoshii.siteのロゴ" width="16" height="16">tanoshii.siteの投稿 (<a href="https://tanoshii.site/@health" target="_blank">@health@tanoshii.site</a>)</li>
+                            <li><img src="./misskeyio.webp" alt="misskey.ioのロゴ" width="16" height="16">misskey.ioの投稿 (<a href="https://misskey.io/@yuinoid" target="_blank">@yuinoid@misskey.io</a> )</li>
+                            <li><img src="./mistodon-cloud.jpg" alt="mistodon.cloudのロゴ" width="16" height="16">mistodon.cloudの投稿 (<a href="https://mistodon.cloud/@healthcare" target="_blank">@healthcare@mistodon.cloud</a>)</li>
                         </ul>
                     </div>
-                    <p>新版では Misskey API を直接使用して、スクレイピングの制約を回避し、より詳細で正確な投稿情報を取得できます。</p>
+                    <p>misskeyとmastodonはAPIを使用して投稿を取得します。あんまり更新しないでください。</p>
                 </div>
                 
                 <div class="control-panel">
