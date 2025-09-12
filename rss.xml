@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
-<channel>
-<title>100%health - 更新情報</title>
-<link>https://yuinoid.neocities.org</link>
-<description>100%healthサイトの更新履歴</description>
-<language>ja</language>
-<lastBuildDate>Thu, 04 Sep 2025 18:00:24 GMT</lastBuildDate>
-<generator>100%health RSS Generator</generator>
-<item>
-<title>アクティビティまとめページ「planet yuinoid」を追加</title>
-<link>https://yuinoid.neocities.org/planet/planet_main.html</link>
-<description>eniehackさんのPlanetを参考に、「planet yuinoid」を作成しました。個人サイトの更新履歴とSNSのアクティビティの近況をまとめて閲覧することができます。misskeyとmastodonはAPIを使用して投稿を取得します。むやみに更新したりアクセスするとなんとなくやばそうなのでやめてください。機能はバイブコーディングで作りました。私はコーディングをしてないので、正確に言えば「バイブ」です。</description>
-<pubDate>Thu, 04 Sep 2025 18:00:24 GMT</pubDate>
-<category>system</category>
-<guid isPermaLink="false">https://yuinoid.neocities.org/rss#mb18feka8x946ekus4345</guid>
-</item>
-<item>
-<title>半自動RSS生成機能を追加</title>
-<link>https://yuinoid.neocities.org/changelog_main.html</link>
-<description>changelog.htmlから自動でrssフィードを生成するスクリプトを作成しました。changelogを更新するたびに管理者がスクリプトを実行し、rss.xmlをアップロードすればrss機能が果たせるという寸法です。管理者が工程を忘れなければ。</description>
-<pubDate>Wed, 03 Sep 2025 19:19:22 GMT</pubDate>
-<category>system</category>
-<guid isPermaLink="false">https://yuinoid.neocities.org/rss#c1582v585hinrxy7k5dkpp</guid>
-</item>
-</channel>
+  <channel>
+    <title>100%health - 更新情報</title>
+    <link>https://yuinoid.neocities.org</link>
+    <description>100%healthサイトの更新履歴</description>
+    <language>ja</language>
+    <lastBuildDate>Fri, 12 Sep 2025 00:07:34 GMT</lastBuildDate>
+    <generator>100%health RSS Generator</generator>
+    
+    <item>
+      <title>リンクページ</title>
+      <link>https://yuinoid.neocities.org/links/links_main.html#crosslinks</link>
+      <description>リンクしていただいていました。ありがとうございます。gabrielさんの存在は以前から知っていて、時々サイトを見に行ったりしてました。音楽と好きなもののセンスが近くて共感しています。</description>
+      <pubDate>Fri, 12 Sep 2025 00:07:34 GMT</pubDate>
+      <category>links</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#hx0rbk-20250912</guid>
+    </item>
+    <item>
+      <title>アクティビティまとめページ「planet yuinoid」を追加</title>
+      <link>https://yuinoid.neocities.org/planet/planet_main.html</link>
+      <description>eniehackさんのPlanetを参考に、「planet yuinoid」を作成しました。個人サイトの更新履歴とSNSのアクティビティの近況をまとめて閲覧することができます。misskeyとmastodonはAPIを使用して投稿を取得します。むやみに更新したりアクセスするとなんとなくやばそうなのでやめてください。機能はバイブコーディングで作りました。私はコーディングをしてないので、正確に言えば「バイブ」です。</description>
+      <pubDate>Thu, 04 Sep 2025 18:00:24 GMT</pubDate>
+      <category>system</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#mb18feka8x946ekus4345</guid>
+    </item>
+    <item>
+      <title>半自動RSS生成機能を追加</title>
+      <link>https://yuinoid.neocities.org/changelog_main.html</link>
+      <description>changelog.htmlから自動でrssフィードを生成するスクリプトを作成しました。changelogを更新するたびに管理者がスクリプトを実行し、rss.xmlをアップロードすればrss機能が果たせるという寸法です。管理者が工程を忘れなければ。</description>
+      <pubDate>Wed, 03 Sep 2025 19:19:22 GMT</pubDate>
+      <category>system</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#c1582v585hinrxy7k5dkpp</guid>
+    </item>
+  </channel>
 </rss>

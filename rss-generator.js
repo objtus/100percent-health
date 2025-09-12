@@ -20,7 +20,7 @@ class ChangelogRSSGenerator {
       maxItems: config.maxItems || 20,
       maxAge: config.maxAge || null, // 最大保持期間（日数）null=無制限
       incrementalItems: config.incrementalItems || 5, // 増分更新で処理する最新エントリ数
-      useGenerationTime: config.useGenerationTime || true, // 生成時刻を使用
+      useGenerationTime: config.useGenerationTime || true, // 新規エントリに実行時刻を使用
       guidType: config.guidType || 'semantic', // 'semantic', 'random', 'uuid'
       ...config
     };
@@ -61,12 +61,18 @@ class ChangelogRSSGenerator {
   /**
    * changelog.htmlから最新エントリのみを抽出（増分更新）
    */
-  parseChangelogIncremental() {
+  parseChangelogIncremental(existingItems = []) {
     try {
       const html = fs.readFileSync(this.config.changelogPath, 'utf8');
       const dom = new JSDOM(html);
       const items = dom.window.document.querySelectorAll('ol > li');
       console.log(`総エントリ数: ${items.length}`);
+      
+      // 既存エントリからタイトルベースでのマップを作成
+      const existingByTitle = new Map();
+      for (const existing of existingItems) {
+        existingByTitle.set(existing.title, existing);
+      }
       
       const newRssItems = [];
       const processingLimit = this.config.incrementalItems;
@@ -78,15 +84,23 @@ class ChangelogRSSGenerator {
       for (const item of itemsArray) {
         if (processedCount >= processingLimit) break;
         
-        const rssItem = this.extractRSSData(item, true); // 増分更新フラグを渡す
+        const rssItem = this.extractRSSData(item, true, true); // 増分更新フラグと新規エントリフラグを渡す
         if (rssItem) {
+          // 既存エントリと同じタイトルの場合は、既存のGUIDとpubDateを使用
+          const existingItem = existingByTitle.get(rssItem.title);
+          if (existingItem) {
+            console.log(`♻️ 既存エントリを維持: ${rssItem.title} (GUID: ${existingItem.guid})`);
+            rssItem.guid = existingItem.guid;
+            rssItem.pubDate = existingItem.pubDate; // 既存のpubDateを保持
+          } else {
+            console.log(`✅ 新規エントリ: ${rssItem.title}`);
+          }
           newRssItems.push(rssItem);
-          console.log(`✅ 新規エントリ: ${rssItem.title}`);
           processedCount++;
         }
       }
       
-      console.log(`増分処理: ${processedCount}件の新規エントリを処理`);
+      console.log(`増分処理: ${processedCount}件のエントリを処理`);
       return newRssItems;
     } catch (error) {
       console.error('changelog.htmlの解析エラー:', error);
@@ -105,24 +119,23 @@ class ChangelogRSSGenerator {
     console.log(`既存GUID: ${Array.from(existingGuids).join(', ')}`);
     console.log(`新規GUID: ${newItems.map(item => item.guid).join(', ')}`);
     
-    // 新規エントリから重複を除外
+    // 新規エントリから重複を除外（既存RSSに含まれないもののみ）
     const uniqueNewItems = newItems.filter(item => {
       const isUnique = !existingGuids.has(item.guid);
-      console.log(`${item.guid}: ${isUnique ? '✅ 新規' : '❌ 重複'}`);
+      console.log(`${item.guid}: ${isUnique ? '✅ 新規' : '❌ 重複（既存RSS内）'}`);
       return isUnique;
     });
     
     console.log(`マージ: 既存${existingItems.length}件 + 新規${uniqueNewItems.length}件`);
     
-    // 結合して日付順ソート
+    // 既存エントリのpubDateを保持したまま結合
     const allItems = [...uniqueNewItems, ...existingItems];
+    
+    // 日付順ソート（pubDateベース）
     allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
     
-    // 重複除去（タイトル+日付ベース）
-    const deduplicatedItems = this.removeDuplicates(allItems);
-    
-    // 最大件数でカット
-    return deduplicatedItems.slice(0, this.config.maxItems);
+    // 最大件数でカット（重複除去は行わない - 既に GUID で重複を排除済み）
+    return allItems.slice(0, this.config.maxItems);
   }
 
   /**
@@ -158,7 +171,7 @@ class ChangelogRSSGenerator {
   /**
    * li要素からRSSデータを抽出
    */
-  extractRSSData(liElement, isIncremental = false) {
+  extractRSSData(liElement, isIncremental = false, isNewEntry = false) {
     try {
       // 日付の抽出
       const dateMatch = liElement.textContent.match(/>\s*(\d{4}\/\d{2}\/\d{2})/);
@@ -179,8 +192,8 @@ class ChangelogRSSGenerator {
       }
       
       // 生成時刻を使用するかchangelog日付を使用するか選択
-      // 増分更新時は新規エントリのみ生成時刻を使用
-      const pubDate = (this.config.useGenerationTime && isIncremental)
+      // 増分更新時の新規エントリのみ生成時刻を使用
+      const pubDate = (this.config.useGenerationTime && isIncremental && isNewEntry)
         ? new Date().toUTCString() 
         : this.formatRSSDate(dateStr);
       
@@ -347,15 +360,21 @@ ${items.map(item => this.generateRSSItem(item)).join('\n')}
     // 既存RSSを読み込み
     const existingItems = this.loadExistingRSS();
     
-    // 最新エントリのみを処理
-    const newItems = this.parseChangelogIncremental();
+    // 最新エントリのみを処理（既存エントリの情報を渡す）
+    const newItems = this.parseChangelogIncremental(existingItems);
     
-    // マージ
-    const allItems = this.mergeRSSFeeds(existingItems, newItems);
+    // マージ（シンプル化 - newItemsに既存エントリも含まれている）
+    const allItems = newItems;
     
-    console.log(`最終RSS: ${allItems.length}個のエントリ`);
+    // 日付順ソート（pubDateベース）
+    allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
     
-    const rssXML = this.generateRSSXML(allItems);
+    // 最大件数でカット
+    const finalItems = allItems.slice(0, this.config.maxItems);
+    
+    console.log(`最終RSS: ${finalItems.length}個のエントリ`);
+    
+    const rssXML = this.generateRSSXML(finalItems);
     
     fs.writeFileSync(this.config.outputPath, rssXML, 'utf8');
     console.log(`RSSフィードを生成: ${this.config.outputPath}`);
@@ -394,7 +413,7 @@ ${items.map(item => this.generateRSSItem(item)).join('\n')}
       
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        const rssItem = this.extractRSSData(item);
+        const rssItem = this.extractRSSData(item, false, false); // フル再生成時は既存エントリ扱い
         if (rssItem) {
           rssItems.push(rssItem);
           console.log(`✅ RSSに追加: ${rssItem.title} (${rssItem.pubDate})`);
