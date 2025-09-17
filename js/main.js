@@ -42,6 +42,29 @@ document.addEventListener('DOMContentLoaded', function() {
   const revealedImages = new Set();
   const lightboxRevealedImages = new Set();
   let touchInfo = { moved: false, longPress: false, startTarget: null };
+  
+  // ボタンサイズキャッシュ
+  let cachedButtonSize = null;
+
+  // CSSボタンサイズ取得（キャッシュ付き）
+  function getOverlayButtonSize() {
+    if (cachedButtonSize) return cachedButtonSize;
+    
+    const tempElement = document.createElement('div');
+    tempElement.style.cssText = `
+      position: absolute; top: -9999px; left: -9999px; visibility: hidden;
+      white-space: pre; font-size: 12px; line-height: 1.4; padding: 8px 4px;
+      border-radius: 4px; font-family: inherit;
+    `;
+    tempElement.textContent = '閲覧注意\nクリックして表示';
+    document.body.appendChild(tempElement);
+    
+    const rect = tempElement.getBoundingClientRect();
+    document.body.removeChild(tempElement);
+    
+    cachedButtonSize = { width: rect.width, height: rect.height };
+    return cachedButtonSize;
+  }
 
   function syncInitialState() {
     document.querySelectorAll('.nsfw.revealed img').forEach(img => {
@@ -54,6 +77,29 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.querySelectorAll('.nsfw:not(.revealed) a').forEach(link => {
       link.style.pointerEvents = 'none';
+    });
+  }
+
+  function initNewNSFWCards(addedNodes) {
+    addedNodes.forEach(node => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        // 追加されたノード自体がNSFWカードの場合
+        if (node.classList && node.classList.contains('nsfw')) {
+          const link = node.querySelector('a');
+          if (link && !node.classList.contains('revealed')) {
+            link.style.pointerEvents = 'none';
+          }
+        }
+        
+        // 追加されたノード内にNSFWカードが含まれる場合
+        const nsfwCards = node.querySelectorAll ? node.querySelectorAll('.nsfw:not(.revealed)') : [];
+        nsfwCards.forEach(card => {
+          const link = card.querySelector('a');
+          if (link) {
+            link.style.pointerEvents = 'none';
+          }
+        });
+      }
     });
   }
 
@@ -92,19 +138,17 @@ document.addEventListener('DOMContentLoaded', function() {
       const imageLink = nsfwCard.querySelector('a');
       if (!imageLink) return;
       
-      const linkRect = imageLink.getBoundingClientRect();
       const cardRect = nsfwCard.getBoundingClientRect();
-      const isInImage = x >= linkRect.left && x <= linkRect.right && y >= linkRect.top && y <= linkRect.bottom;
       const isHideButton = nsfwCard.classList.contains('revealed') && 
                           x > cardRect.right - 120 && y < cardRect.top + 35;
       
-      const centerX = linkRect.left + linkRect.width / 2;
-      const centerY = linkRect.top + linkRect.height * 0.44;
-      const overlayWidth = 120;
-      const overlayHeight = 60;
+      // CSS ::beforeボタン位置計算（カード全体基準）
+      const centerX = cardRect.left + cardRect.width / 2;
+      const centerY = cardRect.top + cardRect.height * 0.44;
+      const buttonSize = getOverlayButtonSize();
       const isOverlay = !nsfwCard.classList.contains('revealed') && 
-                       Math.abs(x - centerX) <= overlayWidth / 2 && 
-                       Math.abs(y - centerY) <= overlayHeight / 2;
+                       Math.abs(x - centerX) <= buttonSize.width / 2 && 
+                       Math.abs(y - centerY) <= buttonSize.height / 2;
       
       if (!nsfwCard.classList.contains('revealed')) {
         if (!isOverlay) {
@@ -165,12 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!filteredWrapper) return;
       
       const rect = filteredWrapper.getBoundingClientRect();
-      const relX = x - rect.left;
-      const relY = y - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      if (Math.abs(relX - centerX) <= 100 && Math.abs(relY - centerY) <= 50) {
+      if (Math.abs(x - rect.left - rect.width/2) <= 100 && Math.abs(y - rect.top - rect.height/2) <= 50) {
         e.preventDefault();
         e.stopPropagation();
         filteredWrapper.classList.remove('nsfw-filtered');
@@ -244,9 +283,10 @@ document.addEventListener('DOMContentLoaded', function() {
     updateLightboxFilter(wrapper, img.src);
   }
 
-  // ライトボックス状態監視
+  // DOM変更監視
   new MutationObserver(mutations => {
     mutations.forEach(m => {
+      // ライトボックスの開閉監視
       if (m.type === 'attributes' && m.attributeName === 'class') {
         const lightbox = m.target.closest('.lum-lightbox');
         if (lightbox) {
@@ -258,14 +298,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
       
+      // ライトボックス内画像src変更監視
       if (m.type === 'attributes' && m.attributeName === 'src' && m.target.classList.contains('lum-img')) {
         const wrapper = m.target.closest('.lum-lightbox-image-wrapper');
         if (wrapper) {
           setTimeout(() => updateLightboxFilter(wrapper, m.target.src), 10);
         }
       }
+      
+      // 動的にNSFWカードが追加された時の初期化
+      if (m.type === 'childList' && m.addedNodes.length > 0) {
+        initNewNSFWCards(m.addedNodes);
+      }
     });
-  }).observe(document.body, { attributes: true, attributeFilter: ['src', 'class'], subtree: true });
+  }).observe(document.body, { 
+    attributes: true, 
+    attributeFilter: ['src', 'class'], 
+    childList: true, 
+    subtree: true 
+  });
 });
 
 // Google Analytics初期化
