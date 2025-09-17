@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 通常状態のNSFWカード処理
     const nsfwCard = e.target.closest('.nsfw');
-    if (nsfwCard && !e.target.closest('.title, .caption, .date')) {
+    if (nsfwCard && !e.target.closest('.title, .caption, .date, .tags-section')) {
       const imageLink = nsfwCard.querySelector('a');
       if (!imageLink) return;
       
