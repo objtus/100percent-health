@@ -13,19 +13,14 @@ $(function() {
   $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
 
   $(document).on('click', '#back_to_top', function() {
-    // スクロール可能な要素を探す
     const wrapper = document.querySelector('#wrapper') || document.documentElement;
-    
     wrapper.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
-    
-    console.log('Scroll attempted on:', wrapper.id || 'documentElement');
   });
 
   $(document).on('click', '#back_to_bottom', function() {
-    // スクロール可能な要素を探す
     const wrapper = document.querySelector('#wrapper') || document.body;
     
     wrapper.scrollTo({
@@ -39,17 +34,32 @@ $(function() {
         bottomElement.scrollIntoView({ behavior: 'smooth' });
       }
     }, 100);
-    
-    console.log('Scroll attempted on iOS');
   });
 });
 
-// NSFWフィルター
+// NSFWフィルター機能
 document.addEventListener('DOMContentLoaded', function() {
   const revealedImages = new Set();
+  const lightboxRevealedImages = new Set();
   let touchInfo = { moved: false, longPress: false, startTarget: null };
 
-  // タッチ追跡
+  function syncInitialState() {
+    document.querySelectorAll('.nsfw.revealed img').forEach(img => {
+      revealedImages.add(img.src);
+      const link = img.closest('.nsfw').querySelector('a');
+      if (link) {
+        link.style.pointerEvents = 'auto';
+      }
+    });
+    
+    document.querySelectorAll('.nsfw:not(.revealed) a').forEach(link => {
+      link.style.pointerEvents = 'none';
+    });
+  }
+
+  syncInitialState();
+
+  // タッチイベント処理
   document.addEventListener('touchstart', e => {
     if (e.touches.length === 1) {
       touchInfo = { moved: false, longPress: false, startTarget: e.target };
@@ -61,11 +71,10 @@ document.addEventListener('DOMContentLoaded', function() {
     touchInfo.moved = true;
   }, { passive: true });
 
-  // 統合イベントハンドラー
+  // メインイベントハンドラー
   function handleEvent(e) {
     const isMobile = 'ontouchstart' in window;
     
-    // モバイルでの無効判定
     if (isMobile && e.type === 'touchend') {
       if (touchInfo.moved || touchInfo.longPress || 
           !e.target.closest('.nsfw, .lum-lightbox-image-wrapper') ||
@@ -77,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const x = touch?.clientX || e.clientX;
     const y = touch?.clientY || e.clientY;
     
-    // ギャラリー処理
+    // 通常状態のNSFWカード処理
     const nsfwCard = e.target.closest('.nsfw');
     if (nsfwCard && !e.target.closest('.title, .caption, .date')) {
       const imageLink = nsfwCard.querySelector('a');
@@ -88,7 +97,22 @@ document.addEventListener('DOMContentLoaded', function() {
       const isInImage = x >= linkRect.left && x <= linkRect.right && y >= linkRect.top && y <= linkRect.bottom;
       const isHideButton = nsfwCard.classList.contains('revealed') && 
                           x > cardRect.right - 120 && y < cardRect.top + 35;
-      const isOverlay = !nsfwCard.classList.contains('revealed') && isInImage;
+      
+      const centerX = linkRect.left + linkRect.width / 2;
+      const centerY = linkRect.top + linkRect.height * 0.44;
+      const overlayWidth = 120;
+      const overlayHeight = 60;
+      const isOverlay = !nsfwCard.classList.contains('revealed') && 
+                       Math.abs(x - centerX) <= overlayWidth / 2 && 
+                       Math.abs(y - centerY) <= overlayHeight / 2;
+      
+      if (!nsfwCard.classList.contains('revealed')) {
+        if (!isOverlay) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+      }
       
       if (isHideButton || isOverlay) {
         e.preventDefault();
@@ -97,78 +121,165 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const img = nsfwCard.querySelector('img');
         if (img) {
-          nsfwCard.classList.contains('revealed') ? 
-            revealedImages.add(img.src) : revealedImages.delete(img.src);
+          if (nsfwCard.classList.contains('revealed')) {
+            revealedImages.add(img.src);
+            imageLink.style.pointerEvents = 'auto';
+          } else {
+            revealedImages.delete(img.src);
+            imageLink.style.pointerEvents = 'none';
+          }
         }
       }
       return;
     }
     
-    // ライトボックス処理
+    // ライトボックス内処理
     const lightbox = document.querySelector('.lum-lightbox.lum-open');
     if (lightbox && !e.target.closest('.lum-close-button, .lum-gallery-button, .lum-previous-button, .lum-next-button')) {
-      const wrapper = lightbox.querySelector('.lum-lightbox-image-wrapper.nsfw-filtered');
-      if (!wrapper) return;
+      const revealedWrapper = lightbox.querySelector('.lum-lightbox-image-wrapper.nsfw-revealed');
+      const filteredWrapper = lightbox.querySelector('.lum-lightbox-image-wrapper.nsfw-filtered');
       
-      const rect = wrapper.getBoundingClientRect();
+      if (revealedWrapper) {
+        const rect = revealedWrapper.getBoundingClientRect();
+        const relX = x - rect.left;
+        const relY = y - rect.top;
+        
+        const isHideButton = relX > rect.width - 100 && relY < 52;
+        
+        if (isHideButton) {
+          e.preventDefault();
+          e.stopPropagation();
+          revealedWrapper.classList.remove('nsfw-revealed');
+          revealedWrapper.classList.add('nsfw-filtered');
+          
+          const img = revealedWrapper.querySelector('.lum-img');
+          if (img) {
+            lightboxRevealedImages.delete(img.src);
+            revealedImages.delete(img.src);
+            updateNormalState(img.src, false);
+          }
+          return;
+        }
+      }
+      
+      if (!filteredWrapper) return;
+      
+      const rect = filteredWrapper.getBoundingClientRect();
       const relX = x - rect.left;
       const relY = y - rect.top;
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
       
-      // 中央の200x100エリア内か判定
       if (Math.abs(relX - centerX) <= 100 && Math.abs(relY - centerY) <= 50) {
         e.preventDefault();
         e.stopPropagation();
-        wrapper.classList.remove('nsfw-filtered');
+        filteredWrapper.classList.remove('nsfw-filtered');
+        filteredWrapper.classList.add('nsfw-revealed');
         
-        const img = wrapper.querySelector('.lum-img');
-        if (img) revealedImages.add(img.src);
+        const img = filteredWrapper.querySelector('.lum-img');
+        if (img) {
+          lightboxRevealedImages.add(img.src);
+          revealedImages.add(img.src);
+          updateNormalState(img.src, true);
+        }
+        return;
       }
     }
   }
 
-  // イベント登録
   document.addEventListener('click', e => {
     if (!('ontouchstart' in window)) handleEvent(e);
-  }, { passive: false });
+  }, { passive: false, capture: true });
 
-  document.addEventListener('touchend', handleEvent, { passive: false });
+  document.addEventListener('touchend', handleEvent, { passive: false, capture: true });
 
-  // NSFW状態確認とMutationObserver
+  // ヘルパー関数
   function isNSFWFiltered(src) {
-    if (revealedImages.has(src)) return false;
     const img = [...document.querySelectorAll('.nsfw img')].find(i => i.src === src);
     return img ? !img.closest('.nsfw').classList.contains('revealed') : false;
   }
 
+  function isLightboxNSFWFiltered(src) {
+    if (lightboxRevealedImages.has(src)) return false;
+    return isNSFWFiltered(src);
+  }
+
+  function isNSFWImage(src) {
+    const img = [...document.querySelectorAll('.nsfw img')].find(i => i.src === src);
+    return !!img;
+  }
+
+  function updateNormalState(src, revealed) {
+    const normalImg = [...document.querySelectorAll('.nsfw img')].find(i => i.src === src);
+    if (normalImg) {
+      const normalCard = normalImg.closest('.nsfw');
+      const normalLink = normalCard.querySelector('a');
+      normalCard.classList.toggle('revealed', revealed);
+      if (normalLink) {
+        normalLink.style.pointerEvents = revealed ? 'auto' : 'none';
+      }
+    }
+  }
+
+  function updateLightboxFilter(wrapper, src) {
+    const shouldFilter = isLightboxNSFWFiltered(src);
+    wrapper.classList.toggle('nsfw-filtered', shouldFilter);
+    wrapper.classList.toggle('nsfw-revealed', !shouldFilter && isNSFWImage(src));
+  }
+
+  function cleanupLightboxState() {
+    lightboxRevealedImages.clear();
+  }
+
+  function initializeLightboxFilters() {
+    const lightbox = document.querySelector('.lum-lightbox.lum-open');
+    if (!lightbox) return;
+    
+    const wrapper = lightbox.querySelector('.lum-lightbox-image-wrapper');
+    if (!wrapper) return;
+    
+    const img = wrapper.querySelector('.lum-img');
+    if (!img || !img.src) return;
+    
+    updateLightboxFilter(wrapper, img.src);
+  }
+
+  // ライトボックス状態監視
   new MutationObserver(mutations => {
     mutations.forEach(m => {
+      if (m.type === 'attributes' && m.attributeName === 'class') {
+        const lightbox = m.target.closest('.lum-lightbox');
+        if (lightbox) {
+          if (lightbox.classList.contains('lum-open')) {
+            setTimeout(initializeLightboxFilters, 10);
+          } else {
+            cleanupLightboxState();
+          }
+        }
+      }
+      
       if (m.type === 'attributes' && m.attributeName === 'src' && m.target.classList.contains('lum-img')) {
         const wrapper = m.target.closest('.lum-lightbox-image-wrapper');
         if (wrapper) {
-          wrapper.classList.toggle('nsfw-filtered', isNSFWFiltered(m.target.src));
+          setTimeout(() => updateLightboxFilter(wrapper, m.target.src), 10);
         }
       }
     });
-  }).observe(document.body, { attributes: true, attributeFilter: ['src'], subtree: true });
+  }).observe(document.body, { attributes: true, attributeFilter: ['src', 'class'], subtree: true });
 });
 
-// Google Analyticsのタグコードを読み込む
+// Google Analytics初期化
 (function() {
-  // 既に読み込まれている場合は重複を避ける
   if (window.gtag) return;
   
   var script = document.createElement('script');
   script.async = true;
   script.src = 'https://www.googletagmanager.com/gtag/js?id=G-TSRT9G556F';
   
-  // エラーハンドリングを追加
   script.onerror = function() {
-    console.error('Google Analytics script failed to load');
+    // Google Analytics読み込み失敗時の処理
   };
   
-  // タグコードの読み込みが完了したら設定を行う
   script.onload = function() {
     try {
       window.dataLayer = window.dataLayer || [];
@@ -180,9 +291,8 @@ document.addEventListener('DOMContentLoaded', function() {
         'send_page_view': true,
         'anonymize_ip': true
       });
-      console.log('Google Analytics initialized successfully');
     } catch (error) {
-      console.error('Google Analytics initialization failed:', error);
+      // 初期化失敗時の処理
     }
   };
   

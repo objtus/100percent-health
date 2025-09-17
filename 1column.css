@@ -351,7 +351,7 @@ nav {
 /* iOS向けタッチ対応：related-itemは例外 */
 .nsfw:not(.revealed) > a {
   cursor: pointer;
-  /* pointer-events: none; を削除してタッチイベントを有効化 */
+  pointer-events: none; /* NSFWフィルター未解除時はリンククリックを無効化 */
 }
 
 .related-item.nsfw:not(.revealed) > a {
@@ -396,6 +396,32 @@ nav {
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
+}
+
+/* ライトボックス内でフィルター解除状態の「隠す」ボタン */
+.lum-lightbox .lum-lightbox-image-wrapper:not(.nsfw-filtered).nsfw-revealed::after {
+  content: "隠す";
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 10005;
+  backdrop-filter: blur(5px);
+  transition: background-color 0.2s ease;
+  /* iOS向けタッチ対応 */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  pointer-events: auto;
+}
+
+.lum-lightbox .lum-lightbox-image-wrapper:not(.nsfw-filtered).nsfw-revealed::after:hover {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 /* レスポンシブ対応 */
