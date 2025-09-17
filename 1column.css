@@ -231,8 +231,21 @@ nav {
 }
 
 .lum-lightbox-inner img {
-  max-width: fit-content;
-  max-height: 100vh;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Firefox専用の追加修正 */
+@-moz-document url-prefix() {
+  .lum-lightbox-inner img {
+    max-width: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto;
+  }
 }
 
 /*================================

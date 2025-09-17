@@ -144,6 +144,8 @@
             gap: 10px;
             border-top: 1px solid transparent;
             border-bottom: 1px solid transparent;
+            overflow-x: hidden; /* 横スクロールを防ぐ */
+            width: 100%;
         }
     
         .post-item:hover {
@@ -170,14 +172,26 @@
         .post-content {
             flex: 1;
             line-height: 1.5;
+            min-width: 0; /* flexboxでのテキストオーバーフローを防ぐ */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
     
         .post-text {
             color: #333;
             font-size: 0.9rem;
-            display: inline;
+            display: block;
             white-space: pre-line;
-    
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            max-width: 100%;
+            
+            a {
+                word-break: break-all; /* 長いURLも改行 */
+                overflow-wrap: break-word;
+            }
+            
             a:hover {
                 color: #fff !important;
             }
@@ -237,6 +251,30 @@
     
         .post-images.images-4 {
             grid-template-columns: 1fr 1fr;
+        }
+        
+        /* Last.fm投稿のコンパクトスタイル */
+        .post-item[data-source-type="lastfm_scrobble"] .post-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        /* Last.fm投稿のアイコンサイズを調整 */
+        .post-item[data-source-type="lastfm_scrobble"] .source-icon-image {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+        }
+        
+        /* Last.fm投稿のアルバムアート */
+        .lastfm-album-art {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            float: left;
+            margin-right: 12px;
+            margin-top: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
     
         .post-image-container {
@@ -422,6 +460,7 @@
                             <li><img src="./tanoshiisite.jpg" alt="tanoshii.siteのロゴ" width="16" height="16">tanoshii.siteの投稿 (<a href="https://tanoshii.site/@health" target="_blank">@health@tanoshii.site</a>)</li>
                             <li><img src="./misskeyio.webp" alt="misskey.ioのロゴ" width="16" height="16">misskey.ioの投稿 (<a href="https://misskey.io/@yuinoid" target="_blank">@yuinoid@misskey.io</a> )</li>
                             <li><img src="./mistodon-cloud.jpg" alt="mistodon.cloudのロゴ" width="16" height="16">mistodon.cloudの投稿 (<a href="https://mistodon.cloud/@healthcare" target="_blank">@healthcare@mistodon.cloud</a>)</li>
+                            <li><img src="./last-fm-square-color-icon.svg" alt="Last.fmのロゴ" width="16" height="16">Last.fmの音楽再生履歴（<a href="https://www.last.fm/user/objtus" target="_blank">last.fm</a>のscrobblesから60分間隔で自動同期、100件取得しているので古いものは表示できません。）</li>
                         </ul>
                     </div>
                     <p>misskeyとmastodonはAPIを使用して投稿を取得します。あんまり更新しないでください。</p>

@@ -1,0 +1,119 @@
+# Last.fm自動同期 - GitHub Actions ワークフロー
+# このファイルを .github/workflows/lastfm-sync.yml として配置してください
+
+name: Last.fm Scrobbles Sync
+
+on:
+  schedule:
+    # 1時間ごとに実行（毎時0分）
+    - cron: '0 * * * *'
+  
+  # 手動実行も可能
+  workflow_dispatch:
+
+jobs:
+  sync-lastfm:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. リポジトリをチェックアウト
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # 2. Last.fm APIからデータを取得
+      - name: Fetch Last.fm data
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          LASTFM_USERNAME: ${{ secrets.LASTFM_USERNAME }}
+        run: |
+          # Last.fm APIを呼び出してJSONファイルを生成（50件取得）
+          curl -s "https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&format=json&limit=50&extended=1" \
+            -o lastfm-data.json
+          
+          # APIレスポンスが正常かチェック
+          if ! jq -e '.recenttracks' lastfm-data.json > /dev/null; then
+            echo "Error: Invalid Last.fm API response"
+            echo "Response content:"
+            cat lastfm-data.json
+            exit 1
+          fi
+          
+          echo "✅ Last.fm data fetched successfully"
+          echo "Track count: $(jq '.recenttracks.track | length' lastfm-data.json)"
+      
+      # 3. データを検証・整形
+      - name: Validate and format data
+        run: |
+          # JSONファイルのサイズをチェック
+          FILE_SIZE=$(stat -c%s lastfm-data.json)
+          echo "Generated file size: ${FILE_SIZE} bytes"
+          
+          # 最小サイズチェック（100バイト未満はエラー）
+          if [ $FILE_SIZE -lt 100 ]; then
+            echo "Error: Generated file is too small"
+            exit 1
+          fi
+          
+          # タイムスタンプを追加（デバッグ用）
+          echo "Last updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > lastfm-sync-status.txt
+          echo "File size: ${FILE_SIZE} bytes" >> lastfm-sync-status.txt
+          
+          echo "✅ Data validation completed"
+      
+      # 4. Neocitiesにアップロード
+      - name: Upload to Neocities
+        env:
+          NEOCITIES_API_KEY: ${{ secrets.NEOCITIES_API_KEY }}
+          NEOCITIES_SITENAME: ${{ secrets.NEOCITIES_SITENAME }}
+        run: |
+          # Neocities APIを使ってファイルをアップロード
+          echo "Uploading to Neocities..."
+          
+          # lastfm-data.jsonを/planet/ディレクトリにアップロード
+          UPLOAD_RESULT=$(curl -s -X POST \
+            -H "Authorization: Bearer ${NEOCITIES_API_KEY}" \
+            -F "planet/lastfm-data.json=@lastfm-data.json" \
+            "https://neocities.org/api/upload")
+          
+          echo "Upload result: $UPLOAD_RESULT"
+          
+          # アップロード結果をチェック
+          if echo "$UPLOAD_RESULT" | jq -e '.result == "success"' > /dev/null; then
+            echo "✅ Successfully uploaded to Neocities"
+          else
+            echo "❌ Upload failed"
+            echo "$UPLOAD_RESULT"
+            exit 1
+          fi
+          
+          # ステータスファイルもアップロード（オプション）
+          curl -s -X POST \
+            -H "Authorization: Bearer ${NEOCITIES_API_KEY}" \
+            -F "lastfm-sync-status.txt=@lastfm-sync-status.txt" \
+            "https://neocities.org/api/upload" > /dev/null
+      
+      # 5. 成功時の通知（オプション）
+      - name: Success notification
+        if: success()
+        run: |
+          echo "🎵 Last.fm sync completed successfully at $(date)"
+          echo "Next sync will run in 30 minutes"
+      
+      # 6. エラー時の処理
+      - name: Error handling
+        if: failure()
+        run: |
+          echo "❌ Last.fm sync failed at $(date)"
+          echo "Please check the logs and your API keys"
+          
+          # エラー情報をファイルに保存
+          echo "Sync failed at $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > lastfm-error.txt
+          echo "Check GitHub Actions logs for details" >> lastfm-error.txt
+          
+          # エラーファイルをNeocitiesにアップロード（デバッグ用）
+          if [ -n "$NEOCITIES_API_KEY" ]; then
+            curl -s -X POST \
+              -H "Authorization: Bearer ${NEOCITIES_API_KEY}" \
+              -F "lastfm-error.txt=@lastfm-error.txt" \
+              "https://neocities.org/api/upload" > /dev/null || true
+          fi

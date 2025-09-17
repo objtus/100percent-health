@@ -88,6 +88,27 @@
         "maxImages": 6,
         "useProxy": false
       }
+    },
+    {
+      "id": "lastfm_scrobbles",
+      "type": "lastfm_static",
+      "enabled": true,
+      "config": {
+        "jsonUrl": "./lastfm-data.json",
+        "displayName": "Last.fm",
+        "sourceIconImage": "./last-fm-square-color-icon.svg",
+        "description": "Last.fmの音楽再生履歴（自動同期）"
+      },
+      "fetchSettings": {
+        "maxPosts": 100,
+        "includeReplies": false,
+        "includeReblogs": false,
+        "rateLimit": 5000,
+        "timeBasedFetch": true,
+        "daysBack": 7,
+        "maxImages": 1,
+        "useProxy": false
+      }
     }
   ],
   "globalSettings": {

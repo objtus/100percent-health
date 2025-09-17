@@ -5,11 +5,19 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 12 Sep 2025 00:07:34 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 15 Sep 2025 13:49:57 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
     <item>
-      <title>リンクページ</title>
+      <title>アクティビティまとめページ「planet yuinoid」に機能を追加</title>
+      <link>https://yuinoid.neocities.org/planet/planet_main.html</link>
+      <description>planet yuinoidにLast.fmの音楽再生履歴を追加しました。github actionsで自動更新しています。github actionsってはじめて使ったけどすごいですね。いろいろなことができそう。あと、last.fmのapiで取得できるリミットを考慮して100件取得するようにしているので、古いものは表示できません。</description>
+      <pubDate>Mon, 15 Sep 2025 13:49:57 GMT</pubDate>
+      <category>system</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#rxs3gv-20250915</guid>
+    </item>
+    <item>
+      <title>リンクページにgabrielさんのサイトを追加しました</title>
       <link>https://yuinoid.neocities.org/links/links_main.html#crosslinks</link>
       <description>リンクしていただいていました。ありがとうございます。gabrielさんの存在は以前から知っていて、時々サイトを見に行ったりしてました。音楽と好きなもののセンスが近くて共感しています。</description>
       <pubDate>Fri, 12 Sep 2025 00:07:34 GMT</pubDate>

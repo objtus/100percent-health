@@ -504,6 +504,8 @@ class ConfigValidator {
                 return ['instanceUrl', 'username'];
             case 'rss':
                 return ['feedUrl'];
+            case 'lastfm_static':
+                return ['jsonUrl']; // 静的JSONファイルのURL
             default:
                 return [];
         }

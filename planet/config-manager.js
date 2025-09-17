@@ -364,6 +364,8 @@ class DataSourceManager {
                 return this.validateMastodonConfig(source.config);
             case 'rss':
                 return this.validateRSSConfig(source.config);
+            case 'lastfm_static':
+                return this.validateLastfmStaticConfig(source.config);
             default:
                 console.warn(`未知のデータソースタイプ: ${source.type}`);
                 return true; // 警告だけで通す
@@ -422,6 +424,30 @@ class DataSourceManager {
                 console.error(`無効なRSS URL: ${config.feedUrl}`);
                 return false;
             }
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Last.fm Static設定の妥当性チェック
+     */
+    validateLastfmStaticConfig(config) {
+        const required = ['jsonUrl'];
+        const missing = required.filter(field => !config[field]);
+        
+        if (missing.length > 0) {
+            console.error(`Last.fm Static設定の必須フィールドが不足: ${missing.join(', ')}`);
+            return false;
+        }
+        
+        // JSONファイルのパスチェック（相対パスまたはHTTP URL）
+        if (!config.jsonUrl.startsWith('./') && 
+            !config.jsonUrl.startsWith('../') && 
+            !config.jsonUrl.startsWith('/') &&
+            !config.jsonUrl.startsWith('http')) {
+            console.error(`無効なLast.fm JSON URL: ${config.jsonUrl}`);
+            return false;
         }
         
         return true;

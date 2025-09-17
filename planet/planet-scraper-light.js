@@ -345,7 +345,7 @@ function isValidImageUrl(url) {
     
     // 相対パス（ローカルアイコン）の場合
     if (url.startsWith('./') || url.startsWith('../') || !url.includes('://')) {
-        return url.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+        return url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i);
     }
     
     // 絶対URLの場合
@@ -1126,9 +1126,15 @@ class PlanetAggregator {
         const linkUrl = post.originalUrl || `${post.sourceInstance}/notes/${post.id}`;
         const iconHtml = this.renderIcon(post);
         
+        // Last.fm投稿の特別処理
+        const isLastfm = post.extraData?.type === 'lastfm_scrobble';
+        const albumArtHtml = isLastfm && post.extraData?.albumArtUrl ? 
+            `<img src="${escapeHtml(post.extraData.albumArtUrl)}" alt="アルバムアート" class="lastfm-album-art">` : '';
+        
         let html = `
-            <li class="post-item">
+            <li class="post-item" data-source-type="${post.extraData?.type || 'default'}">
                 <div class="post-content">
+                    ${albumArtHtml}
                     <div class="post-text">${post.content}</div>
                     <span class="post-source">- ${iconHtml} ${post.sourceDisplayName}</span>
         `;
@@ -1842,6 +1848,9 @@ class AdapterFactory {
             case 'rss':
                 adapter = new RSSAdapter(validatedConfig.feedUrl, validatedConfig);
                 break;
+            case 'lastfm_static':
+                adapter = new LastfmStaticAdapter(null, null, validatedConfig);
+                break;
             default:
                 throw new Error(`未対応のアダプタータイプ: ${type}`);
         }
@@ -1866,6 +1875,8 @@ class AdapterFactory {
                 return `${type}:${config.instanceUrl}:${config.username}`;
             case 'rss':
                 return `${type}:${config.feedUrl}`;
+            case 'lastfm_static':
+                return `${type}:${config.jsonUrl || 'default'}`;
             default:
                 return `${type}:${JSON.stringify(config)}`;
         }
@@ -2035,6 +2046,7 @@ class Post {
         this.sourceDisplayName = data.sourceDisplayName || '';
         this.sourceIconImage = data.sourceIconImage || null;
         this.originalUrl = data.originalUrl || null;
+        this.extraData = data.extraData || {};
     }
 }
 
@@ -2275,7 +2287,8 @@ class BaseSNSAdapter extends APIAdapter {
             sourceInstance: this.instanceUrl,
             sourceDisplayName: data.sourceDisplayName || this.displayName,
             sourceIconImage: data.sourceIconImage || null,
-            originalUrl: data.originalUrl || null
+            originalUrl: data.originalUrl || null,
+            extraData: data.extraData || {}
         });
     }
     
@@ -3119,6 +3132,217 @@ class RSSAdapter extends BaseSNSAdapter {
 }
 
 // ========================================
+// Last.fm静的アダプター（GitHub Actions版）
+// ========================================
+
+/**
+ * Last.fm静的JSONファイルアダプター
+ * GitHub Actionsで生成された静的JSONファイルを読み込む
+ */
+class LastfmStaticAdapter extends BaseSNSAdapter {
+    constructor(instanceUrl, username, options = {}) {
+        super('', 'lastfm-user', {
+            ...options,
+            displayName: options.displayName || 'Last.fm',
+            sourceIcon: options.sourceIcon || '[♪]',
+            sourceIconImage: options.sourceIconImage,
+            rateLimit: options.rateLimit || 5000 // 静的ファイルなので短い間隔
+        });
+        
+        this.jsonUrl = options.jsonUrl || './lastfm-data.json';
+        
+        // sourceIconImageを明示的に設定（設定ファイルの値を使用）
+        this.sourceIconImage = options.sourceIconImage;
+        
+        console.log(`Last.fm静的アダプター: JSONファイルを使用 (${this.jsonUrl})`);
+    }
+    
+    /**
+     * fetchPostsメソッドを実装（BaseSNSAdapterで要求される）
+     */
+    async fetchPosts() {
+        return await this.fetchRawPosts();
+    }
+    
+    /**
+     * 静的JSONファイルからscrobblesを取得
+     */
+    async fetchRawPosts() {
+        try {
+            console.log(`${this.displayName}: 静的JSONファイルから音楽データを取得中...`);
+            
+            const response = await fetch(this.jsonUrl);
+            
+            if (!response.ok) {
+                if (response.status === 404) {
+                    console.warn(`${this.displayName}: JSONファイルが見つかりません`);
+                    return this.createSetupMessage();
+                }
+                throw new Error(`JSONファイル取得エラー: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Last.fm APIの標準的なレスポンス形式を想定
+            const tracks = data.recenttracks?.track || [];
+            console.log(`${this.displayName}: ${tracks.length}件の音楽データを取得`);
+            
+            return this.parseLastfmTracks(tracks);
+            
+        } catch (error) {
+            console.error(`${this.displayName}: 取得エラー:`, error);
+            return this.createErrorMessage(error);
+        }
+    }
+    
+    /**
+     * Last.fmトラックデータをpostオブジェクトに変換
+     */
+    parseLastfmTracks(tracks) {
+        const posts = [];
+        
+        tracks.forEach(track => {
+            try {
+                // "Now playing"は除外（GitHub Actionsでは通常含まれない）
+                if (track['@attr'] && track['@attr'].nowplaying) {
+                    return;
+                }
+                
+                const post = this.createPostFromTrack(track);
+                if (post) {
+                    posts.push(post);
+                }
+            } catch (error) {
+                console.warn(`${this.displayName}: トラック解析エラー:`, error);
+            }
+        });
+        
+        return posts.slice(0, this.maxPosts);
+    }
+    
+    /**
+     * トラックデータからpostオブジェクトを作成
+     */
+    createPostFromTrack(track) {
+        const artist = track.artist?.['#text'] || track.artist?.name || 'Unknown Artist';
+        const trackName = track.name || 'Unknown Track';
+        const album = track.album?.['#text'] || '';
+        const timestamp = track.date?.uts ? parseInt(track.date.uts) * 1000 : Date.now();
+        
+        // コンパクトな楽曲情報を構成
+        let content = `🎵 ${trackName}`;
+        if (artist) {
+            content += ` / ${artist}`;
+        }
+        if (album) {
+            content += ` (${album})`;
+        }
+        
+        // Last.fmリンクをHTMLリンクとして追加
+        const trackUrl = track.url;
+        if (trackUrl) {
+            content += `\n🔗 <a href="${trackUrl}" target="_blank">Last.fmで見る</a>`;
+        }
+        
+        // アルバムアートを取得（別途表示用）
+        const albumArtUrl = this.extractAlbumArtForIcon(track);
+        
+        return this.createPost({
+            content,
+            timestamp,
+            images: [],
+            sourceIcon: this.sourceIcon,
+            sourceDisplayName: this.displayName,
+            sourceIconImage: this.sourceIconImage, // 元のLast.fmロゴを使用
+            link: trackUrl,
+            timeText: formatRelativeTime(new Date(timestamp)),
+            extraData: {
+                type: 'lastfm_scrobble',
+                artist,
+                track: trackName,
+                album,
+                lastfmUrl: trackUrl,
+                albumArtUrl: albumArtUrl // アルバムアートURLを追加
+            }
+        });
+    }
+    
+    /**
+     * アイコン用のアルバムアート取得
+     */
+    extractAlbumArtForIcon(track) {
+        if (track.image && Array.isArray(track.image)) {
+            // アイコンサイズに適したサイズを選択
+            const imageUrl = track.image.find(img => img.size === 'small')?.['#text'] ||
+                           track.image.find(img => img.size === 'medium')?.['#text'] ||
+                           track.image[track.image.length - 1]?.['#text'];
+            
+            if (imageUrl && imageUrl.trim() && !imageUrl.includes('default')) {
+                return imageUrl;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * アルバムアートワークの抽出
+     */
+    extractAlbumArt(track, trackName, artist) {
+        const images = [];
+        
+        if (track.image && Array.isArray(track.image)) {
+            // コンパクト表示のため小さめの画像を優先
+            const imageUrl = track.image.find(img => img.size === 'medium')?.['#text'] ||
+                           track.image.find(img => img.size === 'small')?.['#text'] ||
+                           track.image.find(img => img.size === 'large')?.['#text'] ||
+                           track.image[track.image.length - 1]?.['#text'];
+            
+            if (imageUrl && imageUrl.trim() && !imageUrl.includes('default')) {
+                images.push({
+                    url: imageUrl,
+                    alt: `${trackName} - ${artist}のアルバムアート`
+                });
+            }
+        }
+        
+        return images.slice(0, 1); // 1枚のアートワークのみ
+    }
+    
+    /**
+     * セットアップメッセージを作成
+     */
+    createSetupMessage() {
+        return [this.createPost({
+            content: `🎵 **Last.fm統合準備中**\n\nGitHub Actionsによる自動同期システムをセットアップしてください。\n\n📋 セットアップ手順:\n1. GitHubリポジトリを作成\n2. Last.fm APIキーを取得\n3. GitHub ActionsワークフローをBuddiesに設定\n4. 30分後に音楽データが表示されます`,
+            sourceIcon: '[🎵 セットアップ]',
+            sourceDisplayName: this.displayName,
+            sourceIconImage: this.sourceIconImage,
+            timeText: 'セットアップ待ち',
+            extraData: { type: 'setup_message' }
+        })];
+    }
+    
+    /**
+     * エラーメッセージを作成
+     */
+    createErrorMessage(error) {
+        const isNetworkError = error.message?.includes('fetch') || error.message?.includes('network');
+        const content = isNetworkError
+            ? `🎵 **一時的に音楽データを取得できません**\n\nネットワークの問題、またはGitHub Actionsの同期に遅延が発生している可能性があります。\n\nしばらく後に再度お試しください。`
+            : `🎵 **音楽データの取得に失敗**\n\nGitHub Actionsの設定に問題があるか、Last.fm APIの制限に達している可能性があります。\n\n設定を確認してください。`;
+        
+        return [this.createPost({
+            content,
+            sourceIcon: '[🎵 エラー]',
+            sourceDisplayName: this.displayName,
+            sourceIconImage: this.sourceIconImage,
+            timeText: 'エラー',
+            extraData: { type: 'error_message', error: error.message }
+        })];
+    }
+}
+
+// ========================================
 // メインアグリゲータークラス
 // ========================================
 
@@ -3150,7 +3374,7 @@ async function initializePlanetV2() {
             dataSources.forEach(source => {
                 try {
                     if (manager.validateDataSource(source)) {
-                        // RSSの場合は特別な処理
+                        // 各タイプ別の処理
                         if (source.type === 'rss') {
                             planetAggregator.addAdapter(
                                 source.type,
@@ -3160,6 +3384,19 @@ async function initializePlanetV2() {
                                     displayName: source.config.displayName,
                                     sourceIconImage: source.config.sourceIconImage,
                                     description: source.config.description,
+                                    ...source.fetchSettings
+                                }
+                            );
+                        } else if (source.type === 'lastfm_static') {
+                            planetAggregator.addAdapter(
+                                source.type,
+                                null, // lastfm_staticの場合はinstanceUrl不要
+                                null, // username不要
+                                {
+                                    displayName: source.config.displayName,
+                                    sourceIconImage: source.config.sourceIconImage,
+                                    description: source.config.description,
+                                    jsonUrl: source.config.jsonUrl,
                                     ...source.fetchSettings
                                 }
                             );

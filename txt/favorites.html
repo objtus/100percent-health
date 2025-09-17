@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>favorites - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="../../js/jquery-3.6.0.min.js" defer></script>
+  <script src="../../js/main.js" defer></script>
+  <script src="/js/mouse.js" defer></script>
+  <style>
+    p {
+      margin-bottom: 1rem;
+      margin-left: 1rem;
+    }
+    #change_log ul {
+      list-style-type: none;
+      font-size: 10pt;
+    }
+    #linklist {
+      font-size: 11pt;
+      margin-left: 1rem;
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        margin: 10px 0;
+        display: flex;
+      }
+      li a {
+        display: inline-block;
+        min-width: 130px;
+        margin-right: 10px;
+      }
+    }
+    #textblock{
+      section{
+        margin-bottom: 3rem;
+      }
+      h2{
+        display: inline-block;
+        border-bottom: dotted 3px;
+        margin-bottom: 0.5rem;
+        line-height: 18px;
+      }
+      h1 {
+        text-align: right;
+        line-height: 24px;
+      }
+      .str{
+        font-size: large;
+        font-weight: bold;
+      }
+      .smalltext{
+        font-size: 11pt;
+      }
+      p{
+        margin-bottom: 1rem;
+      }
+      hr{
+        border: none;
+        text-align: center;
+        font-size: 1em;
+        margin-right: 40px;
+      }
+      hr::before{
+        content: '*****';
+        letter-spacing: 1em;
+        padding-left: 1em;
+      }
+      a img{
+        width: calc(100% - 1rem);
+        max-width: calc(100% - 1rem);
+        margin-left: 1rem;
+      }
+      a:has(img):hover{
+        text-decoration: none;
+        background-color: #00000000;
+      }
+    }
+    #texthtml, ol {
+      list-style-type: none;
+    }
+  </style>
+  <style>      
+    .music-section {
+      margin-bottom: 50px;
+    }
+  
+    .album-grid {
+      margin-bottom: 30px;
+    }
+
+    .album-grid ul {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  
+    .album-tile {
+      aspect-ratio: 1;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .album-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      image-rendering: initial;
+    }
+  
+    .album-tile:hover {
+      transform: scale(1.05);
+      border-color: #333;
+    }
+  
+    .album-tile.selected {
+      border-color: #000;
+      transform: scale(1.02);
+    }
+  
+    .album-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 8px;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  
+    .album-tile:hover .album-overlay {
+      opacity: 1;
+    }
+  
+    .detail-panel {
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 25px;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-style: italic;
+    }
+  
+    .detail-content {
+      display: none;
+    }
+  
+    .detail-content.active {
+      display: block;
+    }
+  
+    .detail-header {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+  
+    .detail-cover {
+      width: 120px;
+      height: 120px;
+      border: 1px solid #ddd;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .detail-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      image-rendering: initial;
+    }
+  
+    .detail-info h3 {
+      margin: 0 0 5px 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  
+    .detail-info .artist {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+  
+    .detail-info .year {
+      font-size: 14px;
+      color: #999;
+    }
+  
+    .detail-description {
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+  
+    .detail-tracks {
+      font-size: 14px;
+    }
+  
+    .detail-tracks h4 {
+      margin: 10px 0 5px 0;
+      font-weight: bold;
+    }
+  
+    .track-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  
+    .track-list li {
+      padding: 2px 0;
+      color: #666;
+    }
+  
+    /* 他のセクション */
+    .books-section {
+      margin-top: 50px;
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+  
+    th,
+    td {
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1px solid #ddd;
+    }
+  
+    th {
+      background-color: #f8f8f8;
+      font-weight: bold;
+    }
+  
+    @media (max-width: 768px) {
+      .album-grid ul {
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+      }
+  
+      .album-overlay {
+        font-size: 10px;
+        padding: 4px;
+      }
+  
+      .detail-header {
+        flex-direction: column;
+      }
+  
+      .detail-cover {
+        width: 100px;
+        height: 100px;
+        align-self: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="../index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <a class="addressbar" href="../index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="/txt/txt_main.html">
+            txt
+          </a>/
+          <a href="/txt/favorites.html" class="addressbar">favorites</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <article id="textblock">
+        <h1 class="title">お気に入り</h1>
+      
+        <section class="music-section">
+          <h2>音楽</h2>
+          <section class="album-grid">
+            <ul>
+              <li>
+                <div class="album-tile" data-album="Ecco2k-E">
+                  <img src="/txt/photo/albums/Ecco2k-E.png" alt="Ecco2k-E - Ecco2k Album art" loading="lazy">
+                  <div class="album-overlay">E<br>Ecco2k</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Aphex-Twin_Syro">
+                  <img src="/txt/photo/albums/Aphex-Twin_Syro.webp" alt="Aphex Twin - Syro Album art" loading="lazy">
+                  <div class="album-overlay">Syro<br>Aphex Twin</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Jam-City_Dream-A-Garden">
+                  <img src="/txt/photo/albums/Jam-City_Dream-A-Garden.webp" alt="Jam-City - Dream A Garden Album art" loading="lazy">
+                  <div class="album-overlay">Dream A Garden<br>Jam City</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Drain-Gang_Trash-Island">
+                  <img src="/txt/photo/albums/Drain-Gang_Trash-Island.webp" alt="Drain-Gang - Trash Island Album art" loading="lazy">
+                  <div class="album-overlay">Trash Island<br>Drain-Gang</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="group-inou_under-bar">
+                  <img src="/txt/photo/albums/group-inou_under-bar.webp" alt="group inou - under-bar Album art" loading="lazy">
+                  <div class="album-overlay">_<br>group_inou</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="SOPHIE_PRODUCT">
+                  <img src="/txt/photo/albums/SOPHIE_PRODUCT.webp" alt="SOPHIE - PRODUCT" loading="lazy">
+                  <div class="album-overlay">PRODUCT<br>SOPHIE</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Oneohtrix-Point-Never_Garden-of-Delete">
+                  <img src="/txt/photo/albums/Oneohtrix-Point-Never_Garden-of-Delete.webp" alt="Oneohtrix Point Never - Garden of Delete Album art" loading="lazy">
+                  <div class="album-overlay">Garden of Delete<br>Oneohtrix Point Never</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Clark_Body-Riddle">
+                  <img src="/txt/photo/albums/Clark_Body-Riddle.webp" alt="Clark - Body Riddle Album art" loading="lazy">
+                  <div class="album-overlay">Body Riddle<br>Clark</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="中谷美紀_MIKI">
+                  <img src="/txt/photo/albums/中谷美紀_MIKI.webp" alt="中谷美紀 - Miki Album art" loading="lazy">
+                  <div class="album-overlay">Miki<br>中谷美紀</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="ZAZEN-BOYS_Zazen-Boys">
+                  <img src="/txt/photo/albums/ZAZEN-BOYS_Zazen-Boys.webp" alt="ZAZEN-BOYS - Zazen Boys Album art" loading="lazy">
+                  <div class="album-overlay">Zazen Boys<br>ZAZEN-BOYS</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="戸川純ユニット_極東慰安婦唱歌">
+                  <img src="/txt/photo/albums/戸川純ユニット_極東慰安婦唱歌.webp" alt="戸川純ユニット - 極東慰安婦唱歌 Album art" loading="lazy">
+                  <div class="album-overlay">極東慰安婦唱歌<br>戸川純ユニット</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="竹村延和_Child's-View">
+                  <img src="/txt/photo/albums/竹村延和_Child's-View.webp" alt="竹村延和 - Child's View Album art" loading="lazy">
+                  <div class="album-overlay">Child's View<br>竹村延和</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="菅野よう子_Ghost-in-the-Shell-Stand-Alone-Complex-OST">
+                  <img src="/txt/photo/albums/菅野よう子_Ghost-in-the-Shell-Stand-Alone-Complex-OST.jpg" alt="菅野よう子 - Ghost in the Shell Stand Alone Complex OST Album art" loading="lazy">
+                  <div class="album-overlay">Ghost in the Shell Stand Alone Complex OST<br>菅野よう子</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Toro-y-Moi_Causers-of-This">
+                  <img src="/txt/photo/albums/Toro-y-Moi_Causers-of-This.webp" alt="Toro y Moi - Causers of This Album art" loading="lazy">
+                  <div class="album-overlay">Causers of This<br>toro y moi</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Kelela_Take-Me-Apart">
+                  <img src="/txt/photo/albums/Kelela_Take-Me-Apart.webp" alt="Kelela - Take Me Apart Album art" loading="lazy">
+                  <div class="album-overlay">Take Me Apart<br>Kelela</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Mount-kimbie_Love-What-Survives">
+                  <img src="/txt/photo/albums/Mount-kimbie_Love-What-Survives.webp" alt="Mount kimbie - Love What Survives Album art" loading="lazy">
+                  <div class="album-overlay">Love What Survives<br>Mount kimbie</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Games_That-We-Can-Play">
+                  <img src="/txt/photo/albums/Games_That-We-Can-Play.webp" alt="Games That We Can Play Album art" loading="lazy">
+                  <div class="album-overlay">Games That We Can Play<br>Games</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Bon-Iver_22,-A-Million">
+                  <img src="/txt/photo/albums/Bon-Iver_22,-A-Million.webp" alt="Bon Iver - 22, A Million Album art" loading="lazy">
+                  <div class="album-overlay">22, A Million<br>Bon Iver</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="パソコン音楽クラブ_DREAM-WALK">
+                  <img src="/txt/photo/albums/パソコン音楽クラブ_DREAM-WALK.webp" alt="パソコン音楽クラブ - DREAM WALK Album art" loading="lazy">
+                  <div class="album-overlay">DREAM WALK<br>パソコン音楽クラブ</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Amnesia-Scanner_Another-Life">
+                  <img src="/txt/photo/albums/Amnesia-Scanner_Another-Life.webp" alt="Amnesia Scanner - Another Life Album art" loading="lazy">
+                  <div class="album-overlay">Another Life<br>Amnesia Scanner</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="cloneaid_cloneaid">
+                  <img src="/txt/photo/albums/cloneaid_cloneaid.webp" alt="cloneaid - cloneaid Album art" loading="lazy">
+                  <div class="album-overlay">cloneaid<br>cloneaid</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="再生ハイパーべるーヴ_ぱんださんようちえん">
+                  <img src="/txt/photo/albums/再生ハイパーべるーヴ_ぱんださんようちえん.webp" alt="再生ハイパーべるーヴ - ぱんださんようちえん Album art" loading="lazy">
+                  <div class="album-overlay">ぱんださんようちえん<br>再生ハイパーべるーヴ</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Bladee-and-Ecco2K_Crest">
+                  <img src="/txt/photo/albums/Bladee-and-Ecco2K_Crest.webp" alt="Bladee and Ecco2K - Crest Album art" loading="lazy">
+                  <div class="album-overlay">Crest<br>Bladee and Ecco2K</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Mount-kimbie_Love-What-Survives">
+                  <img src="/txt/photo/albums/Mount-kimbie_Love-What-Survives.jpg" alt="Mount kimbie - Love What Survives Album art" loading="lazy">
+                  <div class="album-overlay">Love What Survives<br>Mount kimbie</div>
+                </div>
+              </li>
+              <li>
+                <div class="album-tile" data-album="Mount-kimbie_Love-What-Survives">
+                  <img src="/txt/photo/albums/Mount-kimbie_Love-What-Survives.jpg" alt="Mount kimbie - Love What Survives Album art" loading="lazy">
+                  <div class="album-overlay">Love What Survives<br>Mount kimbie</div>
+                </div>
+              </li>
+            </ul>
+          </section>
+      
+          <section class="detail-panel">
+            <div class="detail-placeholder">
+              アルバムをクリックして詳細を表示
+            </div>
+      
+            <div class="detail-content" id="Ecco2k-E">
+              <div class="detail-header">
+                <div class="detail-cover"><img src="/txt/photo/albums/Ecco2k-E.png" alt="Ecco2k-E - Ecco2k Album art"></div>
+                <div class="detail-info">
+                  <h3>Ecco2k-E</h3>
+                  <div class="artist">Ecco2k</div>
+                  <div class="year">2025年</div>
+                </div>
+              </div>
+              <div class="detail-description">
+                モードジャズの金字塔。シンプルなスケールから生まれる無限の表現力。ビル・エヴァンスのピアノとの絶妙なバランス。何度聴いても新しい発見がある不朽の名作。
+              </div>
+              <div class="detail-tracks">
+                <h4>注目トラック</h4>
+                <ul class="track-list">
+                  <li>So What</li>
+                  <li>All Blues</li>
+                  <li>Blue in Green</li>
+                </ul>
+              </div>
+            </div>
+      
+            <div class="detail-content" id="waltz-for-debby">
+              <div class="detail-header">
+                <div class="detail-cover"><img src="/txt/photo/albums/waltz-for-debby.jpg" alt="Waltz for Debby - Bill Evans"></div>
+                <div class="detail-info">
+                  <h3>Waltz for Debby</h3>
+                  <div class="artist">Bill Evans Trio</div>
+                  <div class="year">1961年</div>
+                </div>
+              </div>
+              <div class="detail-description">
+                ヴィレッジ・ヴァンガードでのライブ録音。繊細なタッチと詩的な表現。スコット・ラファロのベースとの対話が美しい。ピアノトリオの理想形の一つ。
+              </div>
+              <div class="detail-tracks">
+                <h4>注目トラック</h4>
+                <ul class="track-list">
+                  <li>Waltz for Debby</li>
+                  <li>Autumn Leaves</li>
+                  <li>Some Other Time</li>
+                </ul>
+              </div>
+            </div>
+      
+            <div class="detail-content" id="getz-gilberto">
+              <div class="detail-header">
+                <div class="detail-cover"><img src="/txt/photo/albums/getz-gilberto.jpg" alt="Getz/Gilberto - Stan Getz & João Gilberto"></div>
+                <div class="detail-info">
+                  <h3>Getz/Gilberto</h3>
+                  <div class="artist">Stan Getz & João Gilberto</div>
+                  <div class="year">1964年</div>
+                </div>
+              </div>
+              <div class="detail-description">
+                ボサノバをアメリカに広めた歴史的作品。スタン・ゲッツのサックスとジョアン・ジルベルトのギター&ヴォーカルの完璧な融合。「イパネマの娘」収録。
+              </div>
+              <div class="detail-tracks">
+                <h4>注目トラック</h4>
+                <ul class="track-list">
+                  <li>The Girl from Ipanema</li>
+                  <li>Desafinado</li>
+                  <li>Corcovado</li>
+                </ul>
+              </div>
+            </div>
+      
+            <!-- 他のアルバムの詳細も同様に追加可能 -->
+          </section>
+        </section>
+      
+        <section class="books-section">
+          <h2>書籍</h2>
+          <table class="book-table" aria-label="書籍一覧">
+            <thead>
+              <tr>
+                <th>タイトル</th>
+                <th>著者</th>
+                <th>ジャンル</th>
+                <th>評価</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ノルウェイの森</td>
+                <td>村上春樹</td>
+                <td>文学</td>
+                <td>A</td>
+              </tr>
+              <tr>
+                <td>銀河ヒッチハイク・ガイド</td>
+                <td>ダグラス・アダムス</td>
+                <td>SF・コメディ</td>
+                <td>A</td>
+              </tr>
+              <tr>
+                <td>思考の整理学</td>
+                <td>外山滋比古</td>
+                <td>エッセイ</td>
+                <td>B+</td>
+              </tr>
+              <tr>
+                <td>三体</td>
+                <td>劉慈欣</td>
+                <td>SF</td>
+                <td>A-</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <section id="change_log">
+          <ul>
+            <li>2025年09月16日初版公開</li>
+          </ul>
+        </section>
+      </article>
+      <script>
+        const albumTiles = document.querySelectorAll('.album-tile');
+        const detailPlaceholder = document.querySelector('.detail-placeholder');
+        const detailContents = document.querySelectorAll('.detail-content');
+
+        albumTiles.forEach(tile => {
+            tile.addEventListener('click', function() {
+                const albumId = this.getAttribute('data-album');
+                
+                // 選択状態をリセット
+                albumTiles.forEach(t => t.classList.remove('selected'));
+                detailContents.forEach(content => content.classList.remove('active'));
+                
+                // 新しい選択を適用
+                this.classList.add('selected');
+                detailPlaceholder.style.display = 'none';
+                
+                const targetDetail = document.getElementById(albumId);
+                if (targetDetail) {
+                    targetDetail.classList.add('active');
+                }
+            });
+        });
+    </script>
+
+    </main>
+    <footer id="main-footer">
+      <div id="texthtml"></div>
+      <!-- main.jsからsitenav.htmlの挿入 -->
+      <div id="sitenavhtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="/luminous-basic.min.css">
+    <script src="/Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+    </script>
+  </div>
+</body>
+
+</html>
