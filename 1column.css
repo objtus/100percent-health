@@ -575,6 +575,7 @@ nav {
 ===================*/
 #footer {
   display: flex;
+  align-items: flex-end;
   position: relative;
   justify-content: space-between;
   width: 100%;
@@ -603,23 +604,20 @@ nav {
   min-width: 1em;
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 768px) {
-  #foot_comment {
-    font-size: 0.75em;
-    line-height: 1.5;
-  }
-}
-
-@media (max-width: 480px) {
-  #foot_comment {
-    display: block;
-    text-align: center;
-    font-size: 0.7em;
-  }
-}
-
 .logo {
+  .logo-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: inline-block;
+    
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
   &::before {
     content: '';
     display: inline-block;
@@ -631,10 +629,6 @@ nav {
     vertical-align: right;
     image-rendering: pixelated;
   }
-  
-  a:hover {
-    background-color: #00000000;
-  }
 }
 
 #logo_footer {
@@ -642,6 +636,113 @@ nav {
   min-width: 35px;
   padding: 0;
   image-rendering: pixelated;
+}
+
+/*===================
+  シークレットモーダル
+===================*/
+#secret-modal {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  max-width: 90%;
+  max-height: 90%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  .modal-content {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    text-align: center;
+    min-width: 280px;
+  }
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: saturate(0);
+    -webkit-backdrop-filter: saturate(0);
+  }
+  h2 {
+    display: inline-block;
+    margin:0 0 8px 0;
+    font-size: 1rem;
+    background-color: white;
+    color: black;
+    clip-path: inset(2px 1px 3px 0);
+  }
+  p {
+    display: inline-block;
+    margin: 0 0 20px 0;
+    font-size: 0.8rem;
+    background-color: white;
+    color: black;
+    line-height: 1.4;
+    clip-path: inset(3px 1px 3px 0);
+  }
+  .secret-link-and-button {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  a {
+    display: inline-block;
+    font-size: 0.8rem;
+    background-color: blue;
+    color: white;
+    clip-path: inset(2px 1px 1px 0);
+    &:hover {
+      background-color: blue;
+      color: white;
+    }
+  }
+  #close-secret-modal {
+    font-family: 'saitamaar';
+    background-color: black;
+    color: white;
+    padding: 1px 1px 0 3px;
+    border: none;
+    margin: 0 0 0 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    clip-path: inset(2px 1px 1px 2px);
+    &:hover {
+      background-color: white;
+      color: black;
+    }
+  }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  #foot_comment {
+    font-size: 0.75em;
+    line-height: 1.5;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  #secret-modal .modal-content {
+    padding: 15px;
+    min-width: 240px;
+  }
+  
+  #secret-modal h2 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #foot_comment {
+    display: block;
+    text-align: center;
+    font-size: 0.7em;
+  }
 }
 
 /*===================

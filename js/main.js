@@ -16,7 +16,7 @@ $(function() {
   $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
 
   // トップへ戻るボタン
-  $(document).on('click', '#back_to_top', function() {
+  $(document).on('click', '#back_to_top, #logo_to_top', function() {
     const wrapper = document.querySelector('#wrapper') || document.documentElement;
     wrapper.scrollTo({
       top: 0,
@@ -67,9 +67,33 @@ function updateFooterStats() {
     msgElement.dataset.initialized = 'true';
     const messages = new Date().getHours() >= 6 && new Date().getHours() < 18 
       ? ['♪', '♥', '♫', '☀', '☁'] : ['☽', '♢', '◍', '☾', '☆', '✧'];
-    let clickCount = 0, maxClicks = Math.floor(Math.random() * 3) + 4;
+    let clickCount = 0, maxClicks = Math.floor(Math.random() * 3) + 4, secretModal;
+    
+    // シークレットモーダル作成
+    const createSecretModal = () => secretModal || ((d = document.createElement('dialog')) => (
+      d.id = 'secret-modal',
+      d.innerHTML = `
+        <div class="modal-content">
+          <h2>♥ secret found! ♥</h2>
+          <p>you found the hidden contents ... but, not yet ...</p>
+          <div class="secret-link-and-button">
+            <a href="">go to the secret page →... under construction ///</a>
+            <button id="close-secret-modal">close</button>
+          </div>
+        </div>
+      `,
+      document.body.appendChild(d),
+      d.querySelector('#close-secret-modal').addEventListener('click', () => d.close()),
+      secretModal = d
+    ))();
+    
+    // シークレットモーダル表示
+    const showSecretModal = () => createSecretModal().showModal();
     
     const changeMessage = () => {
+      // 4%確率でシークレットモーダル
+      if (Math.random() < 0.04) return showSecretModal();
+      
       if (++clickCount >= maxClicks) {
         // 飛び跳ね演出で変化
         msgElement.style.transform = 'translateY(-4px)';

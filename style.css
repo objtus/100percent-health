@@ -581,7 +581,7 @@ button:hover {
 ===================*/
 
 #footerhtml{
-  margin-top: 2rem;
+  margin-top: 0rem;
   z-index: -100;
 }
 
