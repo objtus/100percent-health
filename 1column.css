@@ -628,6 +628,7 @@ nav {
     background-size: contain;
     vertical-align: right;
     image-rendering: pixelated;
+    pointer-events: none;
   }
 }
 
