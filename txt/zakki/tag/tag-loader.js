@@ -9,7 +9,7 @@ const CONFIG = {
     blockedProtocols: ['javascript:', 'data:', 'vbscript:', 'file:', 'ftp:'],
     allowedTagPattern: /^[a-zA-Z0-9_\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]+$/,
     maxTagLength: 50,
-    allowedHtmlTags: ['h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'span', 'div', 'ul', 'ol', 'li', 'br', 'strong', 'em', 'iframe', 'section'],
+    allowedHtmlTags: ['h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'span', 'div', 'ul', 'ol', 'li', 'br', 'hr', 'strong', 'em', 'iframe', 'section', 'ruby', 'rt'],
     allowedAttributes: ['class', 'href', 'data-relevance', 'width', 'height', 'src', 'frameborder', 'allow', 'allowfullscreen', 'referrerpolicy', 'title', 'target', 'style']
   },
   processing: {
