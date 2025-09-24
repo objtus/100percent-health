@@ -43,16 +43,22 @@ $(function() {
 
 // フッター統計情報更新関数
 function updateFooterStats() {
-  const updateElement = document.getElementById('last-update');
-  if (updateElement) {
-    fetch('https://weirdscifi.ratiosemper.com/neocities.php?sitename=yuinoid')
-      .then(r => r.json())
-      .then(data => {
-        const date = new Date(data.info.last_updated);
-        const formatted = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
-        updateElement.textContent = formatted;
-      })
-      .catch(() => updateElement.textContent = '---');
+  const u = document.getElementById('last-update');
+  if (u) {
+    fetch('/rss.xml?t=' + Date.now()).then(r => r.ok ? r.text() : Promise.reject()).then(x => {
+      const d = new DOMParser().parseFromString(x, 'text/xml').querySelector('lastBuildDate');
+      if (d && d.textContent) {
+        const j = new Date(new Date(d.textContent.trim()).getTime() + 32400000);
+        const dateOnly = `${j.getUTCFullYear()}/${(j.getUTCMonth() + 1).toString().padStart(2, '0')}/${j.getUTCDate().toString().padStart(2, '0')}`;
+        const fullDateTime = `${dateOnly} ${j.getUTCHours().toString().padStart(2, '0')}:${j.getUTCMinutes().toString().padStart(2, '0')}:${j.getUTCSeconds().toString().padStart(2, '0')}`;
+        u.textContent = dateOnly;
+        const iso8601 = `${j.getUTCFullYear()}-${(j.getUTCMonth() + 1).toString().padStart(2, '0')}-${j.getUTCDate().toString().padStart(2, '0')}T${j.getUTCHours().toString().padStart(2, '0')}:${j.getUTCMinutes().toString().padStart(2, '0')}:${j.getUTCSeconds().toString().padStart(2, '0')}.000+09:00`;
+        u.setAttribute('title', fullDateTime + ' JST (日本標準時) | ' + iso8601);
+      } else throw new Error();
+    }).catch(e => {
+      console.error('RSS更新日取得エラー:', e);
+      u.textContent = '---';
+    });
   }
   
   // ランダムメッセージ

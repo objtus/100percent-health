@@ -1,29 +1,44 @@
-<div aria-label="サイト最終更新日">>&thinsp;updated: <time id="lastupdate" aria-live="polite"></time></div>
+<div aria-label="サイト最終更新日">>&thinsp;updated: <time id="lastupdate" aria-live="polite">---</time></div>
 
 <script>
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var site_data = JSON.parse(this.responseText);
-
-      var date_str = site_data.info.last_updated;
-      var date_obj = new Date(site_data.info.last_updated);
-      
-      // 月と日を2桁で表示するようにフォーマット
-      var year = date_obj.getFullYear();
-      var month = String(date_obj.getMonth() + 1).padStart(2, '0');
-      var day = String(date_obj.getDate()).padStart(2, '0');
-      var hours = String(date_obj.getHours()).padStart(2, '0');
-      var minutes = String(date_obj.getMinutes()).padStart(2, '0');
-      var seconds = String(date_obj.getSeconds()).padStart(2, '0');
-      
-      var formatted_date = year + '/' + month + '/' + day + ' ' + hours + ':' + minutes + ':' + seconds;
-      var iso_date = date_obj.toISOString();
-      var timeElement = document.getElementById("lastupdate");
-      timeElement.innerHTML = formatted_date;
-      timeElement.setAttribute("datetime", iso_date);
-    }
-  };
-  xhttp.open("GET", "https://weirdscifi.ratiosemper.com/neocities.php?sitename=yuinoid", true);
-  xhttp.send();
+  (function() {
+    var x = new XMLHttpRequest();
+    x.onreadystatechange = function() {
+      var t = document.getElementById("lastupdate");
+      if (this.readyState == 4) {
+        if (this.status == 200) {
+          try {
+            var d = (this.responseXML || new DOMParser().parseFromString(this.responseText, "text/xml")).querySelector("lastBuildDate");
+            if (d && d.textContent) {
+              var r = new Date(d.textContent.trim()),
+                  j = new Date(r.getTime() + 32400000);
+              var formatted = j.getUTCFullYear() + '/' + 
+                              (j.getUTCMonth() + 1).toString().padStart(2, '0') + '/' + 
+                              j.getUTCDate().toString().padStart(2, '0') + ' ' + 
+                              j.getUTCHours().toString().padStart(2, '0') + ':' + 
+                              j.getUTCMinutes().toString().padStart(2, '0') + ':' + 
+                              j.getUTCSeconds().toString().padStart(2, '0');
+              t.innerHTML = formatted;
+              t.setAttribute("datetime", r.toISOString());
+              var iso8601 = j.getUTCFullYear() + '-' + 
+                           (j.getUTCMonth() + 1).toString().padStart(2, '0') + '-' + 
+                           j.getUTCDate().toString().padStart(2, '0') + 'T' + 
+                           j.getUTCHours().toString().padStart(2, '0') + ':' + 
+                           j.getUTCMinutes().toString().padStart(2, '0') + ':' + 
+                           j.getUTCSeconds().toString().padStart(2, '0') + '.000+09:00';
+              t.setAttribute("title", formatted + " JST (日本標準時) | " + iso8601);
+            } else t.innerHTML = '---';
+          } catch (e) {
+            console.error('RSS解析エラー:', e);
+            t.innerHTML = '---';
+          }
+        } else {
+          console.error('RSS取得エラー (HTTP', this.status + ')');
+          t.innerHTML = '---';
+        }
+      }
+    };
+    x.open("GET", "./rss.xml?t=" + Date.now(), true);
+    x.send();
+  })()
 </script>
