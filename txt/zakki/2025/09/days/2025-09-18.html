@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025-09-18 - 100%health</title>
+  <link rel="stylesheet" href="/1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+  <script>
+    $(function () {
+      $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+      $("#taghtml").load("/txt/txt_main.html #tag-list");
+    });
+  </script>
+  <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
+  <link rel="stylesheet" href="/txt/zakki/tag-style.css">
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="/index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <a class="addressbar" href="/index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="/txt/txt_main.html">
+            txt
+          </a>/
+          <a class="addressbar" href="../../2025.html">
+            2025
+          </a>/
+          <a class="addressbar" href="../2025-09.html">
+            2025-09
+          </a>/
+          <a class="addressbar" href="2025-09-18.html">
+            2025-09-18
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <br>
+      <h1>2025年09月18日の雑記</h1>
+      <nav class='arrow' aria-label="前後日へのリンク">
+        <div class='rowarrow'>
+          <a class="leftarrow" href="./2025-09-02.html" style="" aria-label="前の日へ移動">&lt;</a>
+          <a class="uparrow" href="../2025-09.html" aria-label="月間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="" style="visibility: hidden;" aria-label="次の日へ移動">&gt;</a>
+        </div>
+      </nav>
+
+      <h2 style="display: none;">2025年09月18日の雑記</h2>
+      <article id="250918" class="daily-article">
+        <h3><a href="/txt/zakki/2025/09/days/2025-09-18.html">2025-09-18</a></h3>
+        <div class="article-body">
+          <section>
+            <h4>近況</h4>
+            <p>
+              みんなどうも。雑記を書いていくぞ！<br>
+              <br>
+              昨今、国際情勢が混迷を極めている感じするよね。<br>
+              <br>
+              こまめな更新を目指すために、今回は新たなソリューションを導入してみた。執筆時間を決めて、その時間の中で書けるだけ書いて、時間が終わったところでやめてもうアップしちゃおうってソリューションだ。<br>
+              <br>
+              今回の執筆時間は25分。書くことを決めているわけじゃないので、この時間の中で書くことを考えている。<br>
+              <br>
+              この文章も時間の中で書いてるんだけど、なんだか「競技」感があって面白い。面白いけどつらい。タイピングが早いわけじゃないからそこも辛いところだ。<br>
+              <br>
+              今、タイピングの速度が求められている。タイピングが早くなりたい。
+            </p>
+          </section>
+          <hr><br>
+          <section>
+            <h4>サイトの更新について</h4>
+            <p>
+              更新履歴には書いてないんだけど、ギャラリーのnsfwフィルターの動作を改善した。<br>
+              <br>
+              改善したと言っても全部LLMにやってもらったんだけど。<br>
+              <br>
+              改善点を簡単に説明すると、nsfwなイラストに「ぼかし」をかけて、ボタンで外したり、またつけ直したりできる機能がnsfwフィルターなのね。<br>
+              <br>
+              で、これまでのnsfwフィルターは、「ライトボックス」機能との連携がうまくいってなかった。ライトボックスっていうのは、画像をクリックするとその画像が拡大表示される機能のこと。指定した画像をライトボックス表示にできるスクリプトがあって、このサイトではluminous.jsっていうライブラリ？を使ってる。<br>
+              <br>
+              連携について細かく説明するのもめんどくさいんだが、このライトボックス機能には、ライトボックス表示のときに、そのページ内の他の画像に移動できる機能があって、特にそれとnsfwフィルターの機能がうまく連携して動かなかったってことなんですね。<br>
+              <br>
+              今はうまくいってるはず。行ってるよね？　<a href="/gallery/tag-page/oc3.html">gallery/tag-page/oc3.html</a>をみてみてください。<br>
+              <br>
+              あと、これは全然気づいてなかったんだけど、firefoxでライトボックスの表示がおかしかったらしくて、それも修正した。<br>
+              <br>
+              fediverseの人が教えてくれて、LLMに聞いて直したんだけど、firefox固有の問題らしい。ライトボックスを導入して4年くらい経つから、もうずっとfirefoxでは変な表示だったってことになる。<br>
+              <br>
+              教えてくれてありがとうございました。正直、このサイトのコードは結構自己流でやってるから変なところが多い気がする。雑記とか、タグページとか、そういうのは結構LLMにやってもらってるけど、基本的な骨組みはコーディング（というのかも定かでないくらい）素人が作ってるから、多分妙なところが多いんだろうなと思ってる。<br>
+              <br>
+              なんか変な挙動のところがあったら教えて下さい。今はLLMがあるので、全部そこに突っ込んで直してもらいます。ありがとうLLM。
+            </p>
+          </section>
+          <hr><br>
+          <section>
+            <h4>最近の話？</h4>
+            <p>
+              もう制限時間が残り少なくなってきた。25分縛りはきつすぎるかも。何も考えずにはじめたのもだめだ。<br>
+              <br>
+              最近の話。最近の話？時間がやばくて何も思いつかないんだけど。<br>
+              <br>
+              やっぱり、絵がうまくなりたいと思ったね。うまいっていうか、自分がいいと思えるような絵が、そこまで時間をかけずに描けるような技能がほしい。<br>
+              <br>
+              あと、アニメーションとかいいと思った。このサイトと相互リンクの人で、アニメーターの人が二人？いて、gifアニメとか、アニメーションリールとかを掲載してて、かっこいいなーと思って。<br>
+              <br>
+              凝ったことじゃなくて、例えば「目パチ」とかからでも始められるわけだし、ちょっとやってみようかなって思った。<br>
+              <br>
+              あとなんだろう。もう制限時間が1分なんだけど。<br>
+              <br>
+              ちょっと前にいい音楽ってディスコードサーバーでボカロを聴く会があって、ボカロを聴いたんだけど、ボカロっていいなって思った。ボカロ曲、作れるようになりたい。<br>
+              <br>
+              コミュニティがしっかりしてるっていうか、「ボカロ文化」みたいなものが息づいていて、そこで
+            </p>
+          </section>
+          <hr><br>
+          <section>
+            <h4>まとめ</h4>
+            <p>
+              25分が経過しました。ありがとうございます。5分追加してまとめを書く。<br>
+              <br>
+              書いてると25分は一瞬だった。しかし、チャレンジングなソリューションすぎたかもしれない。まあ、雑記の更新のハードルを下げるって意味ではよかったのかな。<br>
+              <br>
+              自分のタイピングスキルのなさを実感してしまった。<br>
+              <br>
+              寿司打とかしたほうがいい？ いや、めんどくさいからいいや。<br>
+              <br>
+              というわけで、今回の雑記はこんな感じでございます。これならもっとこまめに更新できる気がするぞ！その分、内容が希薄になってる気がするけど。なんの内容もない回だった。次回もこれで行く可能性がある。というわけで、合計30分で書いたこの雑記も終わりでございます。時間ちょうどだわ。<br>
+            </p>
+          </section>
+        </div>
+      </article>
+
+      <nav class='arrow' aria-label="前後日へのリンク">
+        <div class='rowarrow'>
+          <a class="leftarrow" href="./2025-09-02.html" style="" aria-label="前の日へ移動">&lt;</a>
+          <a class="uparrow" href="../2025-09.html" aria-label="月間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="" style="visibility: hidden;" aria-label="次の日へ移動">&gt;</a>
+        </div>
+      </nav>
+
+    </main>
+    <footer id="main-footer">
+      <div id="zakkihtml"></div>
+      <div id="taghtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="/luminous-basic.min.css">
+    <script src="/Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+</body>
+
+</html>

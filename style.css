@@ -602,6 +602,7 @@ button:hover {
 
 #foot_comment {
   display: inline;
+  visibility: hidden;
   font-size: 0.8;
   margin-top: 23px;
 }

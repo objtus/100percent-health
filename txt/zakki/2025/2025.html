@@ -276,6 +276,17 @@
           return truncatedArticle;
         }
 
+        // 共通ライブラリを読み込む関数
+        function loadCommonUtils() {
+          return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = '/txt/zakki/monthly-article-utils.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+        }
+
         // 月別スクリプトを動的にロードする関数
         function loadMonthScript(month) {
           return new Promise((resolve, reject) => {
@@ -316,20 +327,14 @@
               // 2. 月別スクリプトの読み込み
               await loadMonthScript(paddedMonth);
 
-              // 3. 記事読み込み関数の実行
+              // 3. 記事読み込み関数の実行（月別スクリプト内で省略表示処理済み）
               const funcName = `loadDailyArticles${paddedMonth}`;
               if (typeof window[funcName] === 'function') {
                 await window[funcName]();
 
-                // 4. 記事を省略表示に変換
-                const articles = document.querySelectorAll(`#${monthId} article`);
-                articles.forEach(article => {
-                  const truncatedArticle = createTruncatedArticle(article);
-                  article.parentNode.replaceChild(truncatedArticle, article);
-                });
-
                 if (PreviewConfig.debug) {
-                  console.log(`Month ${paddedMonth}: processed ${articles.length} articles`);
+                  const articles = document.querySelectorAll(`#${monthId} article`);
+                  console.log(`Month ${paddedMonth}: loaded ${articles.length} articles with preview`);
                 }
               }
             }
@@ -344,8 +349,14 @@
           }
         }
 
-        // 1月から読み込み開始
-        loadMonth(1);
+        // 共通ライブラリを読み込んでから1月から開始
+        loadCommonUtils().then(() => {
+          loadMonth(1);
+        }).catch(error => {
+          console.error('Failed to load common utils:', error);
+          // フォールバック：ライブラリなしで実行
+          loadMonth(1);
+        });
       });
     </script>
 

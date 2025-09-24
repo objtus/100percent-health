@@ -49,7 +49,6 @@ article {
 		border: none;
 		text-align: center;
 		font-size: 1em;
-		margin-right: 40px;
 	}
 	hr::before {
 		content: "*****";
@@ -71,6 +70,7 @@ article {
 		font-size: 12pt;
 		text-align: center;
 		margin: 10px 0;
+		padding-left: 15px;
 	}
 	.ellipsis {
 		font-style: italic;

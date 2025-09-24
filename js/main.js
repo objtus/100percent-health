@@ -2,7 +2,10 @@ $(function() {
   $("#gallerymaphtml").load("/include/gallerymap.html");
   $("#serieshtml").load("/include/series.html");
   $("#workshtml").load("/include/works.html");
-  $("#footerhtml").load("/include/footer.html");
+  $("#footerhtml").load("/include/footer.html", function() {
+    // フッター読み込み完了後に統計情報を更新
+    updateFooterStats();
+  });
   $("#headerhtml").load("/include/header.html");
   $("#accesscounterhtml").load("/include/accesscounter.html");
   $("#last_updatedhtml").load("/include/last_updated.html");
@@ -12,6 +15,7 @@ $(function() {
   $("#texthtml").load("/include/text.html");
   $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
 
+  // トップへ戻るボタン
   $(document).on('click', '#back_to_top', function() {
     const wrapper = document.querySelector('#wrapper') || document.documentElement;
     wrapper.scrollTo({
@@ -37,194 +41,176 @@ $(function() {
   });
 });
 
+// フッター統計情報更新関数
+function updateFooterStats() {
+  const updateElement = document.getElementById('last-update');
+  if (updateElement) {
+    fetch('https://weirdscifi.ratiosemper.com/neocities.php?sitename=yuinoid')
+      .then(r => r.json())
+      .then(data => {
+        const date = new Date(data.info.last_updated);
+        const formatted = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+        updateElement.textContent = formatted;
+      })
+      .catch(() => updateElement.textContent = '---');
+  }
+  
+  // ランダムメッセージ
+  const msgElement = document.getElementById('random-msg');
+  if (msgElement && !msgElement.dataset.initialized) {
+    msgElement.dataset.initialized = 'true';
+    const messages = new Date().getHours() >= 6 && new Date().getHours() < 18 
+      ? ['♪', '♥', '♫', '☀', '☁'] : ['☽', '♢', '◍', '☾', '☆', '✧'];
+    let clickCount = 0, maxClicks = Math.floor(Math.random() * 3) + 4;
+    
+    const changeMessage = () => {
+      if (++clickCount >= maxClicks) {
+        // 飛び跳ね演出で変化
+        msgElement.style.transform = 'translateY(-4px)';
+        setTimeout(() => msgElement.style.transform = 'translateY(0px)', 100);
+        setTimeout(() => msgElement.style.opacity = '0', 150);
+        setTimeout(() => {
+          msgElement.textContent = messages[Math.floor(Math.random() * messages.length)];
+          msgElement.style.transform = 'translateY(-4px)';
+          msgElement.style.opacity = '1';
+          setTimeout(() => msgElement.style.transform = 'translateY(0px)', 50);
+        }, 250);
+        clickCount = 0;
+        maxClicks = Math.floor(Math.random() * 3) + 4;
+      } else {
+        // 通常の「-」反応
+        const current = msgElement.textContent;
+        msgElement.textContent = '-';
+        setTimeout(() => msgElement.textContent = current, 150);
+      }
+    };
+    
+    msgElement.textContent = messages[Math.floor(Math.random() * messages.length)];
+    msgElement.addEventListener('click', changeMessage);
+  }
+}
+
 // NSFWフィルター機能
 document.addEventListener('DOMContentLoaded', function() {
-  const revealedImages = new Set();
-  const lightboxRevealedImages = new Set();
-  let touchInfo = { moved: false, longPress: false, startTarget: null };
-  
-  // ボタンサイズキャッシュ
-  let cachedButtonSize = null;
+  const revealedImages = new Set(), lightboxRevealedImages = new Set();
+  let touchInfo = {moved:0, longPress:0, startTarget:null}, cachedButtonSize, 
+      nsfwSel = '.nsfw', revSel = '.revealed', imgSel = 'img', aSel = 'a';
 
   // CSSボタンサイズ取得（キャッシュ付き）
-  function getOverlayButtonSize() {
-    if (cachedButtonSize) return cachedButtonSize;
-    
-    const tempElement = document.createElement('div');
-    tempElement.style.cssText = `
-      position: absolute; top: -9999px; left: -9999px; visibility: hidden;
-      white-space: pre; font-size: 12px; line-height: 1.4; padding: 8px 4px;
-      border-radius: 4px; font-family: inherit;
-    `;
-    tempElement.textContent = '閲覧注意\nクリックして表示';
-    document.body.appendChild(tempElement);
-    
-    const rect = tempElement.getBoundingClientRect();
-    document.body.removeChild(tempElement);
-    
-    cachedButtonSize = { width: rect.width, height: rect.height };
-    return cachedButtonSize;
-  }
+  const getOverlayButtonSize = () => cachedButtonSize || 
+    ((e = document.createElement('div')) => (
+      e.style.cssText = 'position:absolute;top:-9999px;left:-9999px;visibility:hidden;white-space:pre;font-size:12px;line-height:1.4;padding:8px 4px;border-radius:4px;font-family:inherit',
+      e.textContent = '閲覧注意\nクリックして表示',
+      document.body.appendChild(e),
+      cachedButtonSize = {width: (r = e.getBoundingClientRect()).width, height: r.height},
+      document.body.removeChild(e),
+      cachedButtonSize
+    ))();
 
-  function syncInitialState() {
-    document.querySelectorAll('.nsfw.revealed img').forEach(img => {
-      revealedImages.add(img.src);
-      const link = img.closest('.nsfw').querySelector('a');
-      if (link) {
-        link.style.pointerEvents = 'auto';
-      }
-    });
-    
-    document.querySelectorAll('.nsfw:not(.revealed) a').forEach(link => {
-      link.style.pointerEvents = 'none';
-    });
-  }
+  // 初期化と新規カード処理を統合
+  const initNSFWCards = (nodes = [document]) => nodes.forEach(node => {
+    if (node.nodeType === 1 || !node.nodeType) {
+      // 既存の表示済みカード
+      (node.querySelectorAll?.(nsfwSel + revSel + ' ' + imgSel) || []).forEach(img => (
+        revealedImages.add(img.src),
+        (l = img.closest(nsfwSel).querySelector(aSel)) && (l.style.pointerEvents = 'auto')
+      ));
+      // 未表示カード
+      (node.querySelectorAll?.(nsfwSel + ':not(' + revSel + ') ' + aSel) || []).forEach(link => 
+        link.style.pointerEvents = 'none'
+      );
+      // ノード自体がNSFWカードの場合
+      node.classList?.contains?.('nsfw') && !node.classList.contains('revealed') && 
+        (l = node.querySelector(aSel)) && (l.style.pointerEvents = 'none');
+    }
+  });
 
-  function initNewNSFWCards(addedNodes) {
-    addedNodes.forEach(node => {
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        // 追加されたノード自体がNSFWカードの場合
-        if (node.classList && node.classList.contains('nsfw')) {
-          const link = node.querySelector('a');
-          if (link && !node.classList.contains('revealed')) {
-            link.style.pointerEvents = 'none';
-          }
-        }
-        
-        // 追加されたノード内にNSFWカードが含まれる場合
-        const nsfwCards = node.querySelectorAll ? node.querySelectorAll('.nsfw:not(.revealed)') : [];
-        nsfwCards.forEach(card => {
-          const link = card.querySelector('a');
-          if (link) {
-            link.style.pointerEvents = 'none';
-          }
-        });
-      }
-    });
-  }
-
-  syncInitialState();
+  initNSFWCards();
 
   // タッチイベント処理
-  document.addEventListener('touchstart', e => {
-    if (e.touches.length === 1) {
-      touchInfo = { moved: false, longPress: false, startTarget: e.target };
-      setTimeout(() => touchInfo.longPress = true, 300);
-    }
-  }, { passive: true });
+  document.addEventListener('touchstart', e => 
+    e.touches.length === 1 && (
+      touchInfo = {moved:0, longPress:0, startTarget:e.target},
+      setTimeout(() => touchInfo.longPress = 1, 300)
+    ), {passive:1});
 
-  document.addEventListener('touchmove', e => {
-    touchInfo.moved = true;
-  }, { passive: true });
+  document.addEventListener('touchmove', e => touchInfo.moved = 1, {passive:1});
 
   // メインイベントハンドラー
-  function handleEvent(e) {
-    const isMobile = 'ontouchstart' in window;
+  const handleEvent = e => {
+    const isMobile = 'ontouchstart' in window,
+          touch = e.changedTouches?.[0],
+          x = touch?.clientX || e.clientX,
+          y = touch?.clientY || e.clientY;
     
-    if (isMobile && e.type === 'touchend') {
-      if (touchInfo.moved || touchInfo.longPress || 
-          !e.target.closest('.nsfw, .lum-lightbox-image-wrapper') ||
-          touchInfo.startTarget?.closest('.nsfw, .lum-lightbox-image-wrapper') !== 
-          e.target.closest('.nsfw, .lum-lightbox-image-wrapper')) return;
-    }
+    // モバイルタッチ検証
+    if (isMobile && e.type === 'touchend' && (touchInfo.moved | touchInfo.longPress | 
+        !e.target.closest('.nsfw, .lum-lightbox-image-wrapper') |
+        (touchInfo.startTarget?.closest('.nsfw, .lum-lightbox-image-wrapper') !== 
+         e.target.closest('.nsfw, .lum-lightbox-image-wrapper')))) return;
     
-    const touch = e.changedTouches?.[0];
-    const x = touch?.clientX || e.clientX;
-    const y = touch?.clientY || e.clientY;
-    
-    // 通常状態のNSFWカード処理
-    const nsfwCard = e.target.closest('.nsfw');
-    if (nsfwCard && !e.target.closest('.title, .caption, .date, .tags-section')) {
-      const imageLink = nsfwCard.querySelector('a');
-      if (!imageLink) return;
+    // NSFWカード処理
+    if ((nsfwCard = e.target.closest(nsfwSel)) && !e.target.closest('.title, .caption, .date, .tags-section') && 
+        (imageLink = nsfwCard.querySelector(aSel))) {
       
-      const cardRect = nsfwCard.getBoundingClientRect();
-      const isHideButton = nsfwCard.classList.contains('revealed') && 
-                          x > cardRect.right - 120 && y < cardRect.top + 35;
-      
-      // CSS ::beforeボタン位置計算（カード全体基準）
-      const centerX = cardRect.left + cardRect.width / 2;
-      const centerY = cardRect.top + cardRect.height * 0.44;
-      const buttonSize = getOverlayButtonSize();
-      const isOverlay = !nsfwCard.classList.contains('revealed') && 
-                       Math.abs(x - centerX) <= buttonSize.width / 2 && 
+      const cardRect = nsfwCard.getBoundingClientRect(),
+            isRevealed = nsfwCard.classList.contains('revealed'),
+            isHideButton = isRevealed && x > cardRect.right - 120 && y < cardRect.top + 35,
+            buttonSize = getOverlayButtonSize(),
+            centerX = cardRect.left + cardRect.width / 2,
+            centerY = cardRect.top + cardRect.height * 0.44,
+            isOverlay = !isRevealed && Math.abs(x - centerX) <= buttonSize.width / 2 && 
                        Math.abs(y - centerY) <= buttonSize.height / 2;
       
-      if (!nsfwCard.classList.contains('revealed')) {
-        if (!isOverlay) {
-          e.preventDefault();
-          e.stopPropagation();
-          return;
-        }
-      }
+      // 未表示時はオーバーレイクリック以外を無効化
+      !isRevealed && !isOverlay && (e.preventDefault(), e.stopPropagation());
       
-      if (isHideButton || isOverlay) {
-        e.preventDefault();
-        e.stopPropagation();
-        nsfwCard.classList.toggle('revealed');
-        
-        const img = nsfwCard.querySelector('img');
-        if (img) {
-          if (nsfwCard.classList.contains('revealed')) {
-            revealedImages.add(img.src);
-            imageLink.style.pointerEvents = 'auto';
-          } else {
-            revealedImages.delete(img.src);
-            imageLink.style.pointerEvents = 'none';
-          }
-        }
-      }
+      // ボタンクリック処理
+      (isHideButton | isOverlay) && (
+        e.preventDefault(),
+        e.stopPropagation(),
+        nsfwCard.classList.toggle('revealed'),
+        (img = nsfwCard.querySelector(imgSel)) && (
+          nsfwCard.classList.contains('revealed') ? 
+            (revealedImages.add(img.src), imageLink.style.pointerEvents = 'auto') :
+            (revealedImages.delete(img.src), imageLink.style.pointerEvents = 'none')
+        )
+      );
       return;
     }
     
-    // ライトボックス内処理
-    const lightbox = document.querySelector('.lum-lightbox.lum-open');
-    if (lightbox && !e.target.closest('.lum-close-button, .lum-gallery-button, .lum-previous-button, .lum-next-button')) {
-      const revealedWrapper = lightbox.querySelector('.lum-lightbox-image-wrapper.nsfw-revealed');
-      const filteredWrapper = lightbox.querySelector('.lum-lightbox-image-wrapper.nsfw-filtered');
-      
-      if (revealedWrapper) {
-        const rect = revealedWrapper.getBoundingClientRect();
-        const relX = x - rect.left;
-        const relY = y - rect.top;
-        
-        const isHideButton = relX > rect.width - 100 && relY < 52;
-        
-        if (isHideButton) {
-          e.preventDefault();
-          e.stopPropagation();
-          revealedWrapper.classList.remove('nsfw-revealed');
-          revealedWrapper.classList.add('nsfw-filtered');
-          
-          const img = revealedWrapper.querySelector('.lum-img');
-          if (img) {
-            lightboxRevealedImages.delete(img.src);
-            revealedImages.delete(img.src);
-            updateNormalState(img.src, false);
-          }
-          return;
-        }
-      }
-      
-      if (!filteredWrapper) return;
-      
-      const rect = filteredWrapper.getBoundingClientRect();
-      if (Math.abs(x - rect.left - rect.width/2) <= 100 && Math.abs(y - rect.top - rect.height/2) <= 50) {
-        e.preventDefault();
-        e.stopPropagation();
-        filteredWrapper.classList.remove('nsfw-filtered');
-        filteredWrapper.classList.add('nsfw-revealed');
-        
-        const img = filteredWrapper.querySelector('.lum-img');
-        if (img) {
-          lightboxRevealedImages.add(img.src);
-          revealedImages.add(img.src);
-          updateNormalState(img.src, true);
-        }
-        return;
-      }
-    }
-  }
+    // ライトボックス処理
+    (lightbox = document.querySelector('.lum-lightbox.lum-open')) && 
+    !e.target.closest('.lum-close-button, .lum-gallery-button, .lum-previous-button, .lum-next-button') && (
+      (revealedWrapper = lightbox.querySelector('.lum-lightbox-image-wrapper.nsfw-revealed')) ? (
+        rect = revealedWrapper.getBoundingClientRect(),
+        (x - rect.left > rect.width - 100 && y - rect.top < 52) && (
+          e.preventDefault(),
+          e.stopPropagation(),
+          revealedWrapper.classList.remove('nsfw-revealed'),
+          revealedWrapper.classList.add('nsfw-filtered'),
+          (img = revealedWrapper.querySelector('.lum-img')) && (
+            lightboxRevealedImages.delete(img.src),
+            revealedImages.delete(img.src),
+            updateNormalState(img.src, 0)
+          )
+        )
+      ) : (filteredWrapper = lightbox.querySelector('.lum-lightbox-image-wrapper.nsfw-filtered')) && (
+        rect = filteredWrapper.getBoundingClientRect(),
+        Math.abs(x - rect.left - rect.width/2) <= 100 && Math.abs(y - rect.top - rect.height/2) <= 50 && (
+          e.preventDefault(),
+          e.stopPropagation(),
+          filteredWrapper.classList.remove('nsfw-filtered'),
+          filteredWrapper.classList.add('nsfw-revealed'),
+          (img = filteredWrapper.querySelector('.lum-img')) && (
+            lightboxRevealedImages.add(img.src),
+            revealedImages.add(img.src),
+            updateNormalState(img.src, 1)
+          )
+        )
+      )
+    );
+  };
 
   document.addEventListener('click', e => {
     if (!('ontouchstart' in window)) handleEvent(e);
@@ -232,120 +218,51 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.addEventListener('touchend', handleEvent, { passive: false, capture: true });
 
-  // ヘルパー関数
-  function isNSFWFiltered(src) {
-    const img = [...document.querySelectorAll('.nsfw img')].find(i => i.src === src);
-    return img ? !img.closest('.nsfw').classList.contains('revealed') : false;
-  }
+  // ヘルパー関数統合
+  const findNSFWImg = src => [...document.querySelectorAll(nsfwSel + ' ' + imgSel)].find(i => i.src === src),
+        isNSFWFiltered = src => (img = findNSFWImg(src)) && !img.closest(nsfwSel).classList.contains('revealed'),
+        isLightboxFiltered = src => !lightboxRevealedImages.has(src) && isNSFWFiltered(src),
+        updateNormalState = (src, revealed) => (img = findNSFWImg(src)) && (
+          (card = img.closest(nsfwSel)).classList.toggle('revealed', revealed),
+          (link = card.querySelector(aSel)) && (link.style.pointerEvents = revealed ? 'auto' : 'none')
+        ),
+        updateLightboxFilter = (wrapper, src) => (
+          shouldFilter = isLightboxFiltered(src),
+          wrapper.classList.toggle('nsfw-filtered', shouldFilter),
+          wrapper.classList.toggle('nsfw-revealed', !shouldFilter && findNSFWImg(src))
+        ),
+        initLightboxFilters = () => (
+          (lightbox = document.querySelector('.lum-lightbox.lum-open')) &&
+          (wrapper = lightbox.querySelector('.lum-lightbox-image-wrapper')) &&
+          (img = wrapper.querySelector('.lum-img')) && img.src &&
+          updateLightboxFilter(wrapper, img.src)
+        );
 
-  function isLightboxNSFWFiltered(src) {
-    if (lightboxRevealedImages.has(src)) return false;
-    return isNSFWFiltered(src);
-  }
-
-  function isNSFWImage(src) {
-    const img = [...document.querySelectorAll('.nsfw img')].find(i => i.src === src);
-    return !!img;
-  }
-
-  function updateNormalState(src, revealed) {
-    const normalImg = [...document.querySelectorAll('.nsfw img')].find(i => i.src === src);
-    if (normalImg) {
-      const normalCard = normalImg.closest('.nsfw');
-      const normalLink = normalCard.querySelector('a');
-      normalCard.classList.toggle('revealed', revealed);
-      if (normalLink) {
-        normalLink.style.pointerEvents = revealed ? 'auto' : 'none';
-      }
-    }
-  }
-
-  function updateLightboxFilter(wrapper, src) {
-    const shouldFilter = isLightboxNSFWFiltered(src);
-    wrapper.classList.toggle('nsfw-filtered', shouldFilter);
-    wrapper.classList.toggle('nsfw-revealed', !shouldFilter && isNSFWImage(src));
-  }
-
-  function cleanupLightboxState() {
-    lightboxRevealedImages.clear();
-  }
-
-  function initializeLightboxFilters() {
-    const lightbox = document.querySelector('.lum-lightbox.lum-open');
-    if (!lightbox) return;
-    
-    const wrapper = lightbox.querySelector('.lum-lightbox-image-wrapper');
-    if (!wrapper) return;
-    
-    const img = wrapper.querySelector('.lum-img');
-    if (!img || !img.src) return;
-    
-    updateLightboxFilter(wrapper, img.src);
-  }
-
-  // DOM変更監視
-  new MutationObserver(mutations => {
-    mutations.forEach(m => {
-      // ライトボックスの開閉監視
-      if (m.type === 'attributes' && m.attributeName === 'class') {
-        const lightbox = m.target.closest('.lum-lightbox');
-        if (lightbox) {
-          if (lightbox.classList.contains('lum-open')) {
-            setTimeout(initializeLightboxFilters, 10);
-          } else {
-            cleanupLightboxState();
-          }
-        }
-      }
-      
-      // ライトボックス内画像src変更監視
-      if (m.type === 'attributes' && m.attributeName === 'src' && m.target.classList.contains('lum-img')) {
-        const wrapper = m.target.closest('.lum-lightbox-image-wrapper');
-        if (wrapper) {
-          setTimeout(() => updateLightboxFilter(wrapper, m.target.src), 10);
-        }
-      }
-      
-      // 動的にNSFWカードが追加された時の初期化
-      if (m.type === 'childList' && m.addedNodes.length > 0) {
-        initNewNSFWCards(m.addedNodes);
-      }
-    });
-  }).observe(document.body, { 
-    attributes: true, 
-    attributeFilter: ['src', 'class'], 
-    childList: true, 
-    subtree: true 
-  });
+  // DOM監視
+  new MutationObserver(mutations => mutations.forEach(m => (
+    // ライトボックス開閉
+    m.type === 'attributes' && m.attributeName === 'class' && (lightbox = m.target.closest('.lum-lightbox')) &&
+      (lightbox.classList.contains('lum-open') ? setTimeout(initLightboxFilters, 10) : lightboxRevealedImages.clear()),
+    // ライトボックス画像src変更
+    m.type === 'attributes' && m.attributeName === 'src' && m.target.classList.contains('lum-img') &&
+      (wrapper = m.target.closest('.lum-lightbox-image-wrapper')) && setTimeout(() => updateLightboxFilter(wrapper, m.target.src), 10),
+    // 動的NSFWカード追加
+    m.type === 'childList' && m.addedNodes.length && initNSFWCards(m.addedNodes)
+  ))).observe(document.body, {attributes:1, attributeFilter:['src','class'], childList:1, subtree:1});
 });
 
 // Google Analytics初期化
-(function() {
-  if (window.gtag) return;
-  
-  var script = document.createElement('script');
-  script.async = true;
-  script.src = 'https://www.googletagmanager.com/gtag/js?id=G-TSRT9G556F';
-  
-  script.onerror = function() {
-    // Google Analytics読み込み失敗時の処理
-  };
-  
-  script.onload = function() {
+!window.gtag && ((s = document.createElement('script')) => (
+  s.async = 1,
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-TSRT9G556F',
+  s.onerror = () => {}, // GA読み込み失敗時
+  s.onload = () => {
     try {
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        window.dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-TSRT9G556F', {
-        'send_page_view': true,
-        'anonymize_ip': true
-      });
-    } catch (error) {
-      // 初期化失敗時の処理
-    }
-  };
-  
-  document.head.appendChild(script);
-})();
+      window.dataLayer = window.dataLayer || [],
+      window.gtag = (...args) => window.dataLayer.push(args),
+      gtag('js', new Date()),
+      gtag('config', 'G-TSRT9G556F', {send_page_view:1, anonymize_ip:1})
+    } catch(e) {} // 初期化失敗時
+  },
+  document.head.appendChild(s)
+))();

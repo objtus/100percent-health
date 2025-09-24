@@ -1,7 +1,14 @@
 async function loadDailyArticles09() {
 	const month = "09";
 	const year = "2025";
-	const dates = ["02", "12"];
+	const dates = ["02", "18"];
+
+	// 月別ページ用プレビュー設定（オプション）
+	const customConfig = {
+		// デフォルト設定をオーバーライドしたい場合のみ記述
+		// maxChars: 350,
+		// debug: true
+	};
 
 	let monthContainer = document.querySelector("#zakki09");
 	if (!monthContainer) {
@@ -11,7 +18,7 @@ async function loadDailyArticles09() {
 			return;
 		}
 
-		// #zakki02を作成
+		// #zakki09を作成
 		monthContainer = document.createElement("div");
 		monthContainer.id = "zakki09";
 
@@ -52,7 +59,15 @@ async function loadDailyArticles09() {
 			const article = doc.querySelector("article");
 
 			if (article) {
-				articleContainer.appendChild(article);
+				// MonthlyArticleUtilsが利用可能かチェック
+				if (typeof MonthlyArticleUtils !== 'undefined' && MonthlyArticleUtils.createTruncatedArticle) {
+					// 省略表示記事を作成
+					const truncatedArticle = MonthlyArticleUtils.createTruncatedArticle(article, year, customConfig);
+					articleContainer.appendChild(truncatedArticle);
+				} else {
+					// フォールバック：そのまま表示
+					articleContainer.appendChild(article);
+				}
 			}
 		} catch (error) {
 			console.error(`Error loading article for ${date}:`, error);

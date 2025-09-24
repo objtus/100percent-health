@@ -206,19 +206,7 @@ p.date {
   overflow: hidden;
 }
 
-nav {
-  &.rowarrow {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    
-    a {
-      background-color: #000;
-      color: #fff;
-      text-decoration: none;
-    }
-  }
-  
+nav {  
   &.childpagearrow {
     text-align: right;
     
@@ -227,6 +215,18 @@ nav {
       color: #fff;
       text-decoration: none;
     }
+  }
+}
+
+.rowarrow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  
+  a {
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
   }
 }
 
@@ -583,8 +583,40 @@ nav {
 
 #foot_comment {
   display: inline;
-  font-size: 0.8;
+  font-size: 0.8em;
   margin-top: 23px;
+  line-height: 1.4;
+}
+
+/* フッター統計情報のスタイル */
+#foot_comment #last-update {
+  font-feature-settings: 'tnum';
+  white-space: nowrap;
+}
+
+#foot_comment #random-msg {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  min-width: 1em;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  #foot_comment {
+    font-size: 0.75em;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  #foot_comment {
+    display: block;
+    text-align: center;
+    font-size: 0.7em;
+  }
 }
 
 .logo {

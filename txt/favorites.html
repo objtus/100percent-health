@@ -37,9 +37,6 @@
       }
     }
     #textblock{
-      section{
-        margin-bottom: 3rem;
-      }
       h2{
         display: inline-block;
         border-bottom: dotted 3px;
@@ -106,7 +103,6 @@
     .album-tile {
       aspect-ratio: 1;
       cursor: pointer;
-      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
     }
@@ -120,26 +116,24 @@
     }
   
     .album-tile:hover {
-      transform: scale(1.05);
       border-color: #333;
     }
   
     .album-tile.selected {
       border-color: #000;
-      transform: scale(1.02);
     }
   
     .album-overlay {
       position: absolute;
+      width: 100%;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: brightness(0.3) grayscale(100%);
       color: white;
-      padding: 8px;
+      padding: 0 0 0 0;
       font-size: 12px;
       opacity: 0;
-      transition: opacity 0.3s ease;
     }
   
     .album-tile:hover .album-overlay {
@@ -155,7 +149,6 @@
       align-items: center;
       justify-content: center;
       color: #666;
-      font-style: italic;
     }
   
     .detail-content {
@@ -187,60 +180,86 @@
       display: block;
       image-rendering: initial;
     }
-  
-    .detail-info h3 {
-      margin: 0 0 5px 0;
-      font-size: 24px;
-      font-weight: bold;
-    }
-  
-    .detail-info .artist {
-      font-size: 18px;
-      color: #666;
-      margin-bottom: 5px;
-    }
-  
-    .detail-info .year {
-      font-size: 14px;
-      color: #999;
+
+    .detail-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      h3{
+        margin: 0 0 5px 0;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .artist {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 5px;
+      }
+
+      .year {
+        font-size: 14px;
+        color: #999;
+      }
+
+      .label {
+        font-size: 14px;
+        color: #999;
+      }
+
+      .albumlink {
+        font-size: 14px;
+        color: #999;
+      }
     }
   
     .detail-description {
-      font-size: 15px;
-      line-height: 1.6;
-      margin-bottom: 15px;
+      font-size: 13px;
+      margin-bottom: 2rem;
     }
   
     .detail-tracks {
       font-size: 14px;
-    }
-  
-    .detail-tracks h4 {
-      margin: 10px 0 5px 0;
-      font-weight: bold;
-    }
-  
-    .track-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-  
-    .track-list li {
-      padding: 2px 0;
-      color: #666;
+
+      h4{
+        margin: 10px 0 5px 0;
+        font-weight: bold;
+      }
+
+      table{
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      th, td {
+        text-align: left;
+        padding: 4px 6px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .track-number {
+        width: 50px;
+        color: #000;
+        text-align: left;
+      }
+
+      .track-title {
+        color: #000;
+        width: auto; /* 残りのスペースを使用 */
+        text-align: left;
+      }
+
+      .track-time {
+        width: 60px;
+        text-align: right;
+      }
     }
   
     /* 他のセクション */
     .books-section {
       margin-top: 50px;
-    }
-  
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-      font-size: 14px;
     }
   
     th,
@@ -275,6 +294,21 @@
         height: 100px;
         align-self: center;
       }
+
+      .detail-info {
+        gap: 0;
+        line-height: 1;
+        h3{
+          font-size: 18px;
+        }
+        .artist {
+          font-size: 14px;
+        }
+      }
+
+      .detail-tracks {
+        line-height: 1;
+      }    
     }
   </style>
 </head>
@@ -446,15 +480,15 @@
                 </div>
               </li>
               <li>
-                <div class="album-tile" data-album="Mount-kimbie_Love-What-Survives">
-                  <img src="/txt/photo/albums/Mount-kimbie_Love-What-Survives.jpg" alt="Mount kimbie - Love What Survives Album art" loading="lazy">
-                  <div class="album-overlay">Love What Survives<br>Mount kimbie</div>
+                <div class="album-tile" data-album="Arca_Xen">
+                  <img src="/txt/photo/albums/Arca_Xen.webp" alt="Arca - Xen Album art" loading="lazy">
+                  <div class="album-overlay">Xen<br>Arca</div>
                 </div>
               </li>
               <li>
-                <div class="album-tile" data-album="Mount-kimbie_Love-What-Survives">
-                  <img src="/txt/photo/albums/Mount-kimbie_Love-What-Survives.jpg" alt="Mount kimbie - Love What Survives Album art" loading="lazy">
-                  <div class="album-overlay">Love What Survives<br>Mount kimbie</div>
+                <div class="album-tile" data-album="Fatboy-Slim_Youve-come-a-long-way-baby">
+                  <img src="/txt/photo/albums/Fatboy-Slim_Youve-come-a-long-way-baby.webp" alt="Fatboy Slim - You've Come a Long Way Baby Album art" loading="lazy">
+                  <div class="album-overlay">You've Come a Long Way, Baby<br>Fatboy Slim</div>
                 </div>
               </li>
             </ul>
@@ -469,22 +503,94 @@
               <div class="detail-header">
                 <div class="detail-cover"><img src="/txt/photo/albums/Ecco2k-E.png" alt="Ecco2k-E - Ecco2k Album art"></div>
                 <div class="detail-info">
-                  <h3>Ecco2k-E</h3>
+                  <h3>Ecco2k - E</h3>
                   <div class="artist">Ecco2k</div>
-                  <div class="year">2025年</div>
+                  <div class="year">release: 2019年</div>
+                  <div class="label">label: Year0001</div>
+                  <div class="albumlink"><a href="https://e-ec.co" target="_blank">https://e-ec.co</a></div>
                 </div>
               </div>
               <div class="detail-description">
-                モードジャズの金字塔。シンプルなスケールから生まれる無限の表現力。ビル・エヴァンスのピアノとの絶妙なバランス。何度聴いても新しい発見がある不朽の名作。
+                Ecco2kのデビューアルバム。サプライズアルバムで、2019年11月27日にリリースされた。<br>
+                <br>
+                自分がEcco2Kを知ったのは、ちょうどこのアルバムがサプライズでリリースされて、SNSで話題になっていたことがきっかけだった。<br>
+                <br>
+                Ecco2k本人が手がけてるアートワークがいいんだよね。
               </div>
-              <div class="detail-tracks">
-                <h4>注目トラック</h4>
-                <ul class="track-list">
-                  <li>So What</li>
-                  <li>All Blues</li>
-                  <li>Blue in Green</li>
-                </ul>
-              </div>
+              <section class="detail-tracks">
+                <h4>トラックリスト / <span lang="en">track listing</span></h4>
+                <table aria-label="Ecco2k - Eのトラックリスト">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col"><span lang="en">title</span></th>
+                      <th scope="col" class="track-time"><span lang="en">length</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="track-number">1</td>
+                      <td class="track-title" scope="row">AAA Powerline</td>
+                      <td class="track-time">04:12</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">2</td>
+                      <td class="track-title" scope="row">Peroxide</td>
+                      <td class="track-time">03:34</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">3</td>
+                      <td class="track-title" scope="row">Fragile</td>
+                      <td class="track-time">02:53</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">4</td>
+                      <td class="track-title" scope="row">Bliss Fields</td>
+                      <td class="track-time">00:22</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">5</td>
+                      <td class="track-title" scope="row">Fruit Bleed Juice</td>
+                      <td class="track-time">01:12</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">6</td>
+                      <td class="track-title" scope="row">Cc</td>
+                      <td class="track-time">02:34</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">7</td>
+                      <td class="track-title" scope="row">Calcium</td>
+                      <td class="track-time">03:44</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">8</td>
+                      <td class="track-title" scope="row">Sugar & Diesel</td>
+                      <td class="track-time">03:19</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">9</td>
+                      <td class="track-title" scope="row">Don't Ask</td>
+                      <td class="track-time">02:20</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">10</td>
+                      <td class="track-title" scope="row">Security!</td>
+                      <td class="track-time">02:35</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">11</td>
+                      <td class="track-title" scope="row">Time</td>
+                      <td class="track-time">02:01</td>
+                    </tr>
+                    <tr>
+                      <td class="track-number">12</td>
+                      <td class="track-title" scope="row">Blue Eyes</td>
+                      <td class="track-time">01:33</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
             </div>
       
             <div class="detail-content" id="waltz-for-debby">

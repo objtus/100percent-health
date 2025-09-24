@@ -16,7 +16,7 @@
       $("#taghtml").load("/txt/txt_main.html #tag-list");
     });
   </script>
-  <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
+  <link rel="stylesheet" href="/txt/zakki/zakki-month.css">
   <link rel="stylesheet" href="/txt/zakki/tag-style.css">
 </head>
 
@@ -49,28 +49,29 @@
       <br>
       <h1>2025年09月の雑記</h1>
       <nav class='arrow' aria-label="前後月へのリンク">
-        <nav class='rowarrow' aria-label="前後月へのリンク">
-          <a class="leftarrow" href="../08/2025-08.html">&lt;</a>
-          <a class="uparrow" href="../2025.html">&lt;&lt;</a>
-          <a class="rightarrow" href="../10/2025-10.html">&gt;</a>
-        </nav>
+        <div class='rowarrow' aria-label="前後月へのリンク">
+          <a class="leftarrow" href="../08/2025-08.html" aria-label="前の月へ移動">&lt;</a>
+          <a class="uparrow" href="../2025.html" aria-label="年間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="../10/2025-10.html" aria-label="次の月へ移動">&gt;</a>
+        </div>
       </nav>
 
       <div id="zakki09">
         <h2><a href="/txt/zakki/2025/09/2025-09.html">2025-09</a></h2>
         <div class="month-article"></div> 
       </div>
+      <script src="/txt/zakki/monthly-article-utils.js"></script>
       <script src="zakki09.js"></script>
       <script>
         window.addEventListener('load', loadDailyArticles09);
       </script>
 
       <nav class='arrow' aria-label="前後月へのリンク"> 
-        <nav class='rowarrow' aria-label="前後月へのリンク">
-          <a class="leftarrow" href="../08/2025-08.html">&lt;</a>
-          <a class="uparrow" href="../2025.html">&lt;&lt;</a>
-          <a class="rightarrow" href="../10/2025-10.html">&gt;</a>
-        </nav>
+        <div class='rowarrow' aria-label="前後月へのリンク">
+          <a class="leftarrow" href="../08/2025-08.html" aria-label="前の月へ移動">&lt;</a>
+          <a class="uparrow" href="../2025.html" aria-label="年間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="../10/2025-10.html" aria-label="次の月へ移動">&gt;</a>
+        </div>
       </nav>
 
     </main>
@@ -86,7 +87,10 @@
     <link rel="stylesheet" href="/luminous-basic.min.css">
     <script src="/Luminous.min.js" defer></script>
     <script>
-      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      // LuminousGalleryが読み込まれてから実行
+      if (typeof LuminousGallery !== 'undefined') {
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      }
     </script>
   </div>
 </body>
