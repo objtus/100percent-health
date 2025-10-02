@@ -5,9 +5,17 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Thu, 18 Sep 2025 01:00:54 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 02 Oct 2025 16:36:47 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>雑記ページを更新&amp;リンクページを更新&amp;もろもろ修正など</title>
+      <link>https://yuinoid.neocities.org/txt/zakki/2025/10/days/2025-10-03.html</link>
+      <description>雑記についてなんですが、謎の長文を書いてしまいました。変なテンションでした。あとリンクページを更新しています。相互リンクやお気に入りリンクの部分にいくつかのリンクを追加しています。みなさまいつもありがとうございます。あと、もろもろ修正とか追加をしています。フッターとかをいじった記憶があるけどもう覚えてない。</description>
+      <pubDate>Thu, 02 Oct 2025 16:36:47 GMT</pubDate>
+      <category>zakki</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#km6uw7-20251003</guid>
+    </item>
     <item>
       <title>雑記ページを更新</title>
       <link>https://yuinoid.neocities.org/txt/zakki/2025/09/days/2025-09-18.html</link>
@@ -39,14 +47,6 @@
       <pubDate>Thu, 04 Sep 2025 18:00:24 GMT</pubDate>
       <category>system</category>
       <guid isPermaLink="false">https://yuinoid.neocities.org/rss#mb18feka8x946ekus4345</guid>
-    </item>
-    <item>
-      <title>半自動RSS生成機能を追加</title>
-      <link>https://yuinoid.neocities.org/changelog_main.html</link>
-      <description>changelog.htmlから自動でrssフィードを生成するスクリプトを作成しました。changelogを更新するたびに管理者がスクリプトを実行し、rss.xmlをアップロードすればrss機能が果たせるという寸法です。管理者が工程を忘れなければ。</description>
-      <pubDate>Wed, 03 Sep 2025 19:19:22 GMT</pubDate>
-      <category>system</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#c1582v585hinrxy7k5dkpp</guid>
     </item>
   </channel>
 </rss>
