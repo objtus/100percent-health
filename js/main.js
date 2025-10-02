@@ -124,7 +124,8 @@ function updateFooterStats() {
 document.addEventListener('DOMContentLoaded', function() {
   const revealedImages = new Set(), lightboxRevealedImages = new Set();
   let touchInfo = {moved:0, longPress:0, startTarget:null}, cachedButtonSize, 
-      nsfwSel = '.nsfw', revSel = '.revealed', imgSel = 'img', aSel = 'a';
+      nsfwSel = '.nsfw', revSel = '.revealed', imgSel = 'img', aSel = 'a',
+      mutationTimeout, isUpdating = false;
 
   // CSSボタンサイズ取得（キャッシュ付き）
   const getOverlayButtonSize = () => cachedButtonSize || 
@@ -248,6 +249,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.addEventListener('touchend', handleEvent, { passive: false, capture: true });
 
+  // デバウンス機能
+  const debouncedUpdate = (fn, delay = 50) => {
+    clearTimeout(mutationTimeout);
+    mutationTimeout = setTimeout(fn, delay);
+  };
+
+  // 状態チェック機能
+  const hasStateChanged = (wrapper, shouldFilter) => {
+    const isFiltered = wrapper.classList.contains('nsfw-filtered');
+    const isRevealed = wrapper.classList.contains('nsfw-revealed');
+    return (shouldFilter && !isFiltered) || (!shouldFilter && !isRevealed);
+  };
+
   // ヘルパー関数統合
   const findNSFWImg = src => [...document.querySelectorAll(nsfwSel + ' ' + imgSel)].find(i => i.src === src),
         isNSFWFiltered = src => (img = findNSFWImg(src)) && !img.closest(nsfwSel).classList.contains('revealed'),
@@ -256,11 +270,26 @@ document.addEventListener('DOMContentLoaded', function() {
           (card = img.closest(nsfwSel)).classList.toggle('revealed', revealed),
           (link = card.querySelector(aSel)) && (link.style.pointerEvents = revealed ? 'auto' : 'none')
         ),
-        updateLightboxFilter = (wrapper, src) => (
-          shouldFilter = isLightboxFiltered(src),
-          wrapper.classList.toggle('nsfw-filtered', shouldFilter),
-          wrapper.classList.toggle('nsfw-revealed', !shouldFilter && findNSFWImg(src))
-        ),
+        updateLightboxFilter = (wrapper, src) => {
+          if (isUpdating) return;
+          const shouldFilter = isLightboxFiltered(src);
+          if (hasStateChanged(wrapper, shouldFilter)) {
+            isUpdating = true;
+            if (shouldFilter) {
+              wrapper.classList.add('nsfw-filtered');
+              wrapper.classList.remove('nsfw-revealed');
+            } else {
+              wrapper.classList.remove('nsfw-filtered');
+              // NSFWでない画像の場合は nsfw-revealed クラスを付けない
+              if (findNSFWImg(src)) {
+                wrapper.classList.add('nsfw-revealed');
+              } else {
+                wrapper.classList.remove('nsfw-revealed');
+              }
+            }
+            setTimeout(() => isUpdating = false, 10);
+          }
+        },
         initLightboxFilters = () => (
           (lightbox = document.querySelector('.lum-lightbox.lum-open')) &&
           (wrapper = lightbox.querySelector('.lum-lightbox-image-wrapper')) &&
@@ -269,16 +298,28 @@ document.addEventListener('DOMContentLoaded', function() {
         );
 
   // DOM監視
-  new MutationObserver(mutations => mutations.forEach(m => (
+  new MutationObserver(mutations => mutations.forEach(m => {
+    // 更新中は処理をスキップ
+    if (isUpdating) return;
+    
     // ライトボックス開閉
-    m.type === 'attributes' && m.attributeName === 'class' && (lightbox = m.target.closest('.lum-lightbox')) &&
-      (lightbox.classList.contains('lum-open') ? setTimeout(initLightboxFilters, 10) : lightboxRevealedImages.clear()),
+    if (m.type === 'attributes' && m.attributeName === 'class' && (lightbox = m.target.closest('.lum-lightbox'))) {
+      if (lightbox.classList.contains('lum-open')) {
+        debouncedUpdate(() => initLightboxFilters(), 50);
+      } else {
+        lightboxRevealedImages.clear();
+      }
+    }
     // ライトボックス画像src変更
-    m.type === 'attributes' && m.attributeName === 'src' && m.target.classList.contains('lum-img') &&
-      (wrapper = m.target.closest('.lum-lightbox-image-wrapper')) && setTimeout(() => updateLightboxFilter(wrapper, m.target.src), 10),
+    else if (m.type === 'attributes' && m.attributeName === 'src' && m.target.classList.contains('lum-img') &&
+             (wrapper = m.target.closest('.lum-lightbox-image-wrapper'))) {
+      debouncedUpdate(() => updateLightboxFilter(wrapper, m.target.src), 50);
+    }
     // 動的NSFWカード追加
-    m.type === 'childList' && m.addedNodes.length && initNSFWCards(m.addedNodes)
-  ))).observe(document.body, {attributes:1, attributeFilter:['src','class'], childList:1, subtree:1});
+    else if (m.type === 'childList' && m.addedNodes.length) {
+      initNSFWCards(m.addedNodes);
+    }
+  })).observe(document.body, {attributes:1, attributeFilter:['src','class'], childList:1, subtree:1});
 });
 
 // Google Analytics初期化
