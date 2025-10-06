@@ -74,13 +74,15 @@
               <br>
               雑記のシステムがちょっと変わったの、みんな気づいた？<br>
               <br>
-              2025年分だけなんだけど、雑記の月別ページのシステムをすこし変更した。これまでは全文を読み込んで表示させていたが、一部だけを読み込むようにした。あと、日別の個別ページに誘導するようにした。<br>
+              2025年分だけなんだけど、雑記の月別ページ（たとえば<a href="../2025-10.html">2025年10月のページ</a>）のシステムをすこし変更した。これまではその月のエントリ全文を読み込んで本文を表示させていたが、一部だけを読み込むようにして冒頭の一部のみを表示させるようにした。あと、日別エントリに誘導するようにした。<br>
               <br>
-              年別と月別ページのプレビュー表示をもう少し改善したいんだよね。<br>
+              この修正を行ってから思ったんだけど、年別と月別ページのプレビュー表示をもう少し改善したい。<br>
               <br>
-              何も考えずに雑記を書いてきたけど、月別年別ページのプレビューで最初の一部分しか表示されないと、雑記全体で何が書いてあるのかわからない。目次を生成させるほど構造化してないし、だったら最初の段落を表示するようにして、雑記を書くときに最初の段落にその雑記の概要を書くようにしたらいいんじゃないかと思って。<br>
+              年別と月別ページのプレビューで最初の一部分しか表示されないと、その日のエントリが何を書いてあるのかわからない。これまでこの点を何も考えずに雑記を書いてきたから、プレビューで目次を生成できるほど構造化したものを書いてない。<br>
               <br>
-              修正はこれからだから飽きて何もしないかもしれないんだけどね。<br>
+              だったら、プレビューで必ず最初の段落を表示するように修正して、雑記を書くときに、最初の段落にその雑記の概要を書くようにしたらいいんじゃないかと思って。<br>
+              <br>
+              修正はこれからだから、飽きて何もしないかもしれないんだけどね。<br>
               <br>
               さて、話を戻すとして、今回は、まとめの表はなしでいいかなとか思ってる。めんどうくさいし。<br>
               <br>
@@ -93,47 +95,61 @@
           <section>
             <h4>サイトの更新したこと</h4>
             <p>
-              実は地味にちょこちょこサイトを修正している。<br>
-              <br>
-              まずは、ヘッダーコメントの追加と、最終更新日の挙動の修正について。<br>
-              <br>
-              このサイトはもともと、<a href="/index.html">indexページ</a>にサイトの更新日を表示させている。実は、09月15日に「<a href="/planet/planet_main.html">planet yuinoid</a>」ページの修正をしてから、それが機能しなくなっていたのだ。<br>
-              <br>
-              なぜか。planet yuinoidの修正として、まずデータソースにlast.fmを追加して、音楽視聴履歴を見られるようにした。これまであったmisskeyやmastodonのデータソースはAPIを利用していて、RSSは直接参照している。last.fmもAPIを利用しているのだが、調べてみると、実は従来のシステムとは統合しづらいものだった。<br>
-              <br>
-              そのため、last.fmについては、github actionsでlast.fmのapiを参照してjsonファイルを生成し、それをneocitiesに自動でアップロードするようにした。<br>
-              <br>
-              これまで、indexページに表示していた更新日はneocitiesのapiから取得していたが、neocitiesの更新日は自動更新した日付も含まれてしまう。自動更新は1時間に一回行われるため、従来のシステムでは毎日1時間毎に更新していることになる。<br>
-              <br>
-              実は、これに気づいたのは、ヘッダーコメントを追加しようとしたからだった。これまで各ページのヘッダーには、このサイトの各コーナーのメインページへのリンクと「トップへ移動」ボタン、そしてわたしのSNSのリンクを掲示しているのみだった。<br>
-              <br>
-              planetページの元ネタの一つである<a href="https://www.kanzaki.com/info/planet" target="_blank">planet masaka</a>をみていて、ヘッダーのコメントに色々あったらかっこいいかもなーと思ったのが、コメント追加の直接のきっかけだ。「by (著者名)」という形式は元ネタを意識している。<br>
-              <br>
-              経緯をまとめると、ヘッダーコメントに著者名とプロフィールへのリンク、そして細々とした機能を追加しようと思って、サイトの最終更新日も掲示することにした。それで、よくみるとサイトの最終更新日がうまく働いていないことに気づいた。原因は、最近追加した機能らしい。そこで、最終更新日の取得方法を変更することにした。<br>
-              <br>
-              どう対応したのか。09月04日に、このサイトの更新履歴をRSS化するシステムを追加した。スクリプトでその都度手動で更新するのだが、RSS2.0にはlastBuildDateという要素があり、これにRSSを生成した時刻が記録される。APIを利用するのではなく、これを使えばいいんじゃないか。<br>
-              <br>
-              現在はうまく最終更新日が表示されているはずだ。RSSのlastBuildDateから取得している。まるで自分が全部修正したかのようだが、ほとんどすべてはclaude 4 sonnetのおかげだ。偉そうに書いてるけどLLMなしには何もできない。<br>
+              実は地味にちょこちょこサイトを修正している。
             </p>
+            <h5>ヘッダーコメントの追加と、最終更新日の挙動の修正</h5>
             <p>
-              ほかにも色々修正したんだが、一番わかりやすいのは、ロゴボタンの挙動だろう。これまではボタンはリンクとして設定されていたが、クリックしてもどうにもならなかった。<br>
+              このサイトはもともと、<a href="/index.html">indexページ</a>にサイトの更新日を表示させていた。実は、09月15日に「<a href="/planet/planet_main.html">planet yuinoid</a>」ページの修正をしてから、それが機能しなくなっていた。<br>
+              <br>
+              なぜかというと、planet yuinoidの修正として自動であるページが更新されるようにしたからだ。<br>
+              <br>
+              順を追って説明すると、まず、planet yuinoidのデータソースにlast.fmを追加して、音楽視聴履歴を見られるようにした。<br>
+              <br>
+              planet yuinoidのデータソースのうち、これまであったmisskeyやmastodonのデータソースはAPIを利用していて、RSSは直接参照している。last.fmもAPIを利用しているのだが、調べてみると、実は従来のシステムとは統合しづらいものだった。<br>
+              <br>
+              そのためlast.fmについては、自動でjsonファイルをneocitiesにアップロードするようにした。github actionsでlast.fmのAPIを参照し、その分をjsonファイルにしてneocitiesにアップロードする仕組みになっている。<br>
+              <br>
+              neocitiesの更新日は自動更新した日付も含まれてしまう。自動更新は1時間に一回行われるため、従来のシステムでは毎日1時間毎に更新していることになる。 <br>
+              <br>
+              実は、これに気づいたのは、ヘッダーコメントを追加しようとしたからだった。<br>
+              <br>
+              これまで各ページのフッターはいくつかのナビゲーション用リンクがあるだけだった。このサイトの各コーナーへのリンク、「トップへ移動」ボタン、そしてSNSのリンクを掲示しているのみだった。<br>
+              <br>
+              フッターに細かな機能を追加したいと思ったのは、planetページの元ネタの一つである<a href="https://www.kanzaki.com/info/planet" target="_blank">planet masaka</a>をみていてかっこいいなーと思ったからだった。実は、今のフッターコメントの「by (著者名)」という形式は、元ネタであるplanet masakaを意識している。<br>
+              <br>
+              そういえばどう対応したのか書いてなかった。<br>
+              <br>
+              端的に言えば、09月04日に追加した、更新履歴をRSS化するシステムを利用することにした。スクリプトを使って、その都度手動でRSSを更新する仕組みだ。この半自動で生成されるRSS2.0にはlastBuildDateという要素がある。これはRSSを生成した時刻が記録される。<br>
+              <br>
+              つまり、この半自動で生成しているRSSのファイルをjavascriptで参照すればいいんじゃないか。もとはneocitiesのAPIを利用していたけど、これだとAPIを使う必要がない。<br>
+              <br>
+              という感じで、現在はうまく最終更新日が表示されているはずだ。<br>
+              <br>
+              まるで全部自分で修正したように偉そうに書いているが、ほとんどすべてはclaude 4 sonnetが修正している。LLMなしには何もできないんだよね。<br>
+            </p>
+            <h5>ロゴボタンの挙動&雑記のシステムの修正</h5>
+            <p>
+              ほかにも色々修正したんだが、一番わかりやすいのは、ロゴボタン（ページ右下の<span style="display: inline-block;width: 1rem;height: 1rem;"><button id="logo_to_top" class="logo-button"><img src="/icon.webp" alt="logo-button" style="cursor: pointer;" class="pixelated"></button></span>←これ）の挙動だろう。<br>
+              <br>
+              これまでこのロゴはリンクとして設定してたんだけど、クリックしてもどうにもならなかった。<br>
               <br>
               これを、ページ上部に戻るボタンに変更した。押してみてください。<br>
               <br>
               あとは上でも書いた通り、雑記のシステムの修正。月別ページの挙動を修正したりとか。<br>
             </p>
+            <h5>リンクページの更新</h5>
             <p>
               そんで最後は、リンクページを更新。<br>
               <br>
-              dekamofuchanさんのサイトがこのサイトのバナーを掲示しているのを気づいたのが大きい。気づくのが遅れた。<br>
+              <a href="https://dekamofuchan.moo.jp" target="_blank">dekamofuchanさんのサイト</a>がこのサイトのバナーを掲示しているのに気づいたのが大きかった。気づくのが遅れた。<br>
               <br>
-              すごいかっこいい感じの絵を描く方なのだが、実はこれまで知らなかった。サイトの解析ページをみていてこのサイトを知り、この方を知った。それでなんでわたくしめのこんなサイトをリンクしてくれてんの！？ってびっくり。<br>
+              サイトの解析ページをみていてこのサイトを知り、この方を知った。すごいかっこいい感じの絵を描く方なのだが、実はこれまで知らなかった。それで、なんでﾜﾀｸｼﾒのこんなサイトをリンクしてくれてるの！？ってびっくりした。<br>
               <br>
               経緯はリンクページに同じことを書いたんだけども、光栄なことだと思う。過剰な謙遜というか卑下はするものではないけど、素朴な感情として、どういうこと！？と思ったのは事実。許してください。<br>
               <br>
               リンクページにはもう少し修正と追記がされている。まずは相互リンクに「陸橋」の追加。これまでは「お気に入り」セクションにあったんだけど、リンクを追加してくださって、晴れて相互リンクになったので。<br>
               <br>
-              そんで、お気に入りセクションにmisskeyの相互フォローの関係のサイトを追加。実はお気に入りセクションには相互リンク化を目論んで下心ありで追加することもあるんだけど、今回は下心なし。<br>
+              そんで、お気に入りセクションにmisskeyで相互フォローしてる人関係のサイトを追加。実はお気に入りセクションには相互リンク化を目論んで、下心ありでリンクを追加することもあるんだけど、今回は下心なし。<br>
               <br>
               SNSで相互フォローなのに掲載されてないなーっていう人もいるとは思うが、このセレクトに他意はないです。こっち側に掲載する勇気がないか、機会を伺っているが、単に忘れているか（失礼だけど）ということも多いので（つまり深く考えてない）、リンクを掲載して欲しい人がいたらリプライをください。<br>
               <br>
@@ -148,6 +164,8 @@
           <hr><br>
           <section>
             <h4>このサイトのフォントと、あるタイプのフォントの歴史について</h4>
+            <br>
+            <h5>フォントを変更して考えたこと 導入</h5>
             <p>
               これまで書いたとおり、サイトの修正を色々と行っていて、その一環として、サイトのフォントを変更する実験をやってみた。<br>
               <br>
@@ -161,30 +179,40 @@
               <br>
               話が大きくなってしまったが、すこし細かい話をさせてほしい。
             </p>
+            <h5>ピクセル風フォントを変更して</h5>
             <p>
-              これまで書いた通り、きっかけは、フォントを変更したいと思っていろいろなピクセル風フォントを試してみたことだった。<br>
+              これまで書いた通り、きっかけはフォントを変更したいと思って、いろいろなピクセル風フォントを試してみたことだった。<br>
               <br>
               windowsでみるとそこまでの違和感はない。saitamaarでも他のピクセル風フォントでもそうだ。しかし、iphoneで見ると違和感がある。<br>
               <br>
-              端的にいえば、これは歴史的にappleがデザインを洗練させてきたからだ。<br>
+              端的にいえば、これは歴史的にappleがデザインを洗練させてきたからだろう。<br>
               <br>
-              この点は、他のメーカーやOSとの相違点として認知されている。appleのデザイン性はある種のブランドを持っていて、appleを好む人のなかにはこうしたデザインの洗練さを好んでいる人も多いのではないか。<br>
+              この点は、他のメーカーやOSとApple製品の相違点として認知されている。appleのデザイン性はある種のブランドを持っていて、appleを好む人のなかにはこうしたデザインの洗練さを好んでいる人も多いのではないか。<br>
               <br>
               わたしは子供の頃からwindowsに慣れ親しんできた。一方で、windowsやmicrosoftに特段の愛着があるわけではない。現在使用しているスマホはiphoneだし、ipadでイラストを描いている。<br>
               <br>
-              このサイトのレスポンシブ対応のために、普段使っているiphoneでこのサイトを見ると、フォントの「洗練されていなさ」が際立つ気がした。野暮ったさがあって、スマートフォンらしくない。フォントを変えたいと思ったのは、これが理由だった。<br>
+              このサイトのレスポンシブ対応のために、普段使っているiphoneでこのサイトを見ると、フォントの「洗練されていなさ」が際立つ気がした。なんとなく野暮ったさがあって、スマートフォンらしくない。フォントを変えたいと思ったのは、これが理由だった。<br>
             </p>
+            <h5>最近のピクセル風フォント DotGothic16</h5>
+            <a href="/txt/photo/zakki/2025-10-03/image_DotGothic16.png" target="_blank"><img src="/txt/photo/zakki/2025-10-03/image_DotGothic16.png" alt="DotGothic16 example image" class="pixelated"></a>
+            <cite>画像引用：<a href="https://github.com/fontworks-fonts/DotGothic16/blob/master/image_DotGothic16.png" target="_blank">fontworks-fonts/DotGothic16/image_Dotgothic16.png | github</a></cite>
+            <br>
             <p>
-              現在、日本語に対応した、本文にも使えるピクセル風フォントというと、選択肢は限られる。<br>
+              現在、日本語に対応した本文にも使えるピクセル風フォントというと、選択肢は限られる。<br>
               <br>
-              最初に挙げられるのはfontworksが制作した「DotGothic16」だろう。<a href="https://forest.watch.impress.co.jp/docs/news/1301200.html" target="_blank">2021年01月15日にfontworksの8書体がgoogle fontsに提供</a>された。「DotGothic16」はこのうちの一つだ。「携帯の画面やパソコン画面の雰囲気を、そのまま印刷物などで表現したい」という要望があったというのが<a href="https://fontworks.co.jp/fontsearch/dotgothic16std-m/" target="_blank">最初の開発のきっかけ</a>らしい。<br>
+              最初に挙げたいのは、fontworksが制作した「DotGothic16」だ。DotGothic16は、<a href="https://forest.watch.impress.co.jp/docs/news/1301200.html" target="_blank">2021年01月15日にgoogle fontsに提供されたfontworksの8書体のうちの一つ</a>だ。「携帯の画面やパソコン画面の雰囲気を、そのまま印刷物などで表現したい」という要望があったというのが<a href="https://fontworks.co.jp/fontsearch/dotgothic16std-m/" target="_blank">最初の開発のきっかけ</a>らしい。<br>
               <br>
               ちなみに、fontworksのgithubを見ると、「DotGothic16」の<a href="https://github.com/fontworks-fonts/DotGothic16/commit/90e4d78fffba0740161ebb752920f1e48018ba39" target="_blank">ファーストコミットは2020年12月15日</a>だった。比較的新しい書体といえるだろう。<br>
               <br>
-              一文字あたり16*16のビットマップを元にしているというが、他のビットマップと比べてみると、これは解像度が高い。だからこそ可読性が高いともいえるが、これ以上大きくなるとピクセル感が薄れてしまうだろうから、ちょうどいいサイズなんだろう。<br>
+              一文字あたり16*16のビットマップを元にしているというが、他のビットマップと比べてみると、これは解像度が高い。だからこそ可読性が高いともいえるが、これ以上大きくなるとピクセル感が薄れてしまうだろう。製作目的を考えると、このサイズがピクセル感を保ちつつ可読性もある、ちょうどいいサイズなのかもしれない。<br>
               <br>
               このサイトと相互リンクのmisononoaさんのサイト「<a href="https://www.misononoa.cc/" target="_blank">misononoa.cc</a>」が使用しているフォントが「DotGothic16」だった。
             </p>
+            <h5>最近のピクセル風フォント x0y0pxFreeFont</h5>
+            <br>
+            <a href="/txt/photo/zakki/2025-10-03/marumonica_02.png" target="_blank"><img src="/txt/photo/zakki/2025-10-03/marumonica_02.png" alt="marumonica_02 example image" class="pixelated"></a>
+            <cite>画像引用：<a href="https://sankoufont.com/japanese-font/marumonica/" target="_blank">マルモニカ | 商用可能な有料･フリーフォントの検索サイト | SANKOU! font</a></cite>
+            <br>
             <p>
               ほかの選択肢としては、患者長ひっくさんのピクセルフリーフォントブランド「<a href="https://hicchicc.github.io/00ff/" target="_blank">x0y0pxFreeFont</a>」のものが挙げられるだろう。<br>
               <br>
@@ -196,6 +224,7 @@
               <br>
               「マルモニカ」を本文に利用したサイトとしては、汲さんのサイト「<a href="https://ksnjk.moo.jp" target="_blank">河川敷</a>」が挙げられる。どこで利用しているのかはわからなかったが、Linksコーナーには門真なむさん制作の「<a href="https://littlelimit.net/k12x8.htm" target="_blank">12×8ドット日本語フォント「k12x8」</a>」へのリンクもあった。<br>
             </p>
+            <h5>最近のピクセル風フォント その他</h5>
             <p>
               ピクセル風の日本語フリーフォントをまとめた記事として、<a href="https://coliss.com/articles/freebies/pixel-japanese-free-fonts.html" target="_blank">「ピクセルフォント・ビットマップ・電卓数字の日本語フリーフォント 総まとめ」</a>という記事がある。<br>
               <br>
@@ -207,6 +236,11 @@
               <br>
               記事中、<a href="https://littlelimit.net/font.htm" target="_blank">門真なむさん制作のフォント</a>も複数紹介されており、2002年06月03日から公開されている、歴史ある「<a href="https://littlelimit.net/misaki.htm" target="_blank">美咲フォント</a>」も紹介されている。このサイトと相互リンクのパラキヤさんのサイト「<a href="https://www.deepblue3000dot.com" target="_blank">どこぞのドット打ちのWeb</a>」は、現在タイトルとコーナーのリンクのみが、かつては本文も「美咲フォント」を使用していた。<br>
             </p>
+            <a href="/txt/photo/zakki/2025-10-03/misaki_mincho.gif" target="_blank"><img src="/txt/photo/zakki/2025-10-03/misaki_mincho.gif" alt="misaki_mincho example image" class="pixelated"></a>
+            <cite>画像引用：<a href="https://www.kanji-free-font-gallery.com/misaki-font-mincho/" target="_blank">美咲フォント 明朝  |  漢字フリーフォントギャラリー ～無料の漢字フォントまとめました～</a></cite>
+            <br>
+            <br>
+            <h5>改めて、saitamaarとは</h5>
             <p>
               ここまでは、現在よく紹介されていて、よく使用されているピクセル風の日本語フリーフォントを紹介した。<br>
               <br>
@@ -218,6 +252,7 @@
               <br>
               フォント名から予測が付く人もいただろうが、このフォントは、アスキーアートを正しく表示するために制作されたフォントだったのだ。
             </p>
+            <h5>saitamaarの背景 その1 AAとモバイル端末の普及</h5>
             <p>
               アスキーアート（AA）とは、Asciiコードで表現されたアートのことだ。現在では普通、文字記号で構成されたグラフィックを指すことが多い。<br>
               <br>
@@ -226,6 +261,9 @@
               AAの歴史についてここで深くは書かないが、saitamaarは匿名掲示板文化と深く関わっている。<br>
               <br>
               saitamaarの初出は、作者であるkeageの2012年12月27日のブログ記事「<a href="https://keagelog.blogspot.com/2012/12/iosandroid-aa.html" target="_blank">ブックマークレットで iOS，Android 端末でも綺麗なアスキーアート（AA）を表示しよう！</a>」と思われる。<br>
+              <br>
+              <a href="/txt/photo/zakki/2025-10-03/keagelog.webp" target="_blank"><img src="/txt/photo/zakki/2025-10-03/keagelog.webp" alt="keage's blog entry screenshot image" class="pixelated"></a>
+              <cite>スクリーンショット：<a href="https://keagelog.blogspot.com/2012/12/iosandroid-aa.html" target="_blank">keageLog: ブックマークレットで iOS，Android 端末でも綺麗なアスキーアート（AA）を表示しよう！</a></cite>
               <br>
               この記事では、モバイル端末でのAA表示のためのブックマークレットを紹介している。当時、モバイル端末でAAを表示させるために、webフォントの需要があったためだ。<br>
               <br>
@@ -243,12 +281,18 @@
               <br>
               このため、モバイル端末でAAを正確に表示させたい需要に応えるには、専用のブックマークレットとAA表示に最適化したwebフォントの配信がセットで発表される必要があった。
             </p>
+            <h5>saitamaarの背景 その2</h5>
             <p>
               初出の記事を見るとわかるが、saitamaarフォント自体の説明はあまりない。要約すれば、このブログ（keageの個人ブログ）の開設以前に「Kuma_Lite」フォントを利用したブックマークレットを公開しており、今回フォントを一から作り直した、とある。作り直した理由は表示のクオリティに不満があったからで、そのためフォントのファイルサイズはKuma_Liteから増えているが、問題ないレベルだろう、とのことだった。<br>
               <br>
               Kuma_Liteブックマークレットは個人ブログなどで公開していたわけではなかったらしい。webフォントとブックマークレットの使用について、経緯をまとめよう。<br>
-              <br>
+            </p>
+            <h5>saitamaarの背景 その3 textar fontと2ちゃんねるAA文化</h5>
+            <p>
               そもそも、AAの表示にブックマークレットを利用するという手法はどこで生まれたのか。ことは、したらば掲示板の「やる夫系雑談・避難・投下板（やる夫板）」で「てくすた ◆GQeLFESKuc」（当初は匿名）が2010年10月22日に立てた、「Textar DB」というAAのデータベースサイトの告知スレが発端だった。<br>
+              <br>
+              <a href="/txt/photo/zakki/2025-10-03/jbbs_textar_thread.png" target="_blank"><img src="/txt/photo/zakki/2025-10-03/jbbs_textar_thread.png" alt="jbbs thread screenshot image" class="pixelated"></a>
+              <cite>スクリーンショット：<a href="https://web.archive.org/web/20130523143750/http://jbbs.livedoor.jp/bbs/read.cgi/otaku/12368/1287753690/" target="_blank">Wayback Machine : AAのデータベース的なサイトつくってみた - やる夫系雑談・避難・投下板（やる夫板）</a></cite>
               <br>
               このスレ「<a href="https://web.archive.org/web/20130523143750/http://jbbs.livedoor.jp/bbs/read.cgi/otaku/12368/1287753690/" target="_blank">AAのデータベース的なサイトつくってみた</a>」は、Textar DBの告知が目的で立てられ、>>1でのサイト開始告知以降は、スレ住人とサイト管理者であるてくすたがサービスについてやり取りを行う場だった。<br>
               <br>
@@ -264,18 +308,29 @@
               <br>
               AAを正常に表示するためにブックマークレットでwebフォントを利用する手法は、この解説転載記事のコメント欄で、翌11日にユーザー名keageが投稿したことで生まれた。<br>
               <br>
-              この手法が広まる過程は少し複雑だ。てくすたの解説は、<a href="http://yaruobook.blog66.fc2.com/blog-entry-1031.html" target="_blank">やる夫系まとめブログ「やる夫之書」に01月11日に転載</a>された。この記事をみた「タナボタは寝て待て」はサンブルブログのコメント欄で<a href="https://botamate.doorblog.jp/archives/2305551.html" target="_blank">ブックマークレットについてのコメントがあるということを発見</a>し、12日にブログで紹介する。「タナボタは寝て待て」記事のトラックバックでこのことを知った「やる夫之書」は当初の記事を追記する形でブックマークレットを紹介し、記事が話題になったことでブックマークレット手法も広まった、という流れのようだ。<br>
+              <a href="/txt/photo/zakki/2025-10-03/textar_fc2blog_comment.png" target="_blank"><img src="/txt/photo/zakki/2025-10-03/textar_fc2blog_comment.png" alt="textar's fc2 blog screenshot image"></a>
+              <cite>スクリーンショット：<a href="http://textarfont.blog98.fc2.com/blog-entry-4.html" target="_blank">Textar Font Sample Blog　やる夫はスマートフォンでもAAを見たいようです</a></cite>
+              <br>
+            </p>
+            <h5>saitamaarの背景 その4 やる夫スレコミュニティ</h5>
+            <p>
+              この手法が広まる過程は少し複雑だ。<br>
+              <br>
+              てくすたの解説は、<a href="http://yaruobook.blog66.fc2.com/blog-entry-1031.html" target="_blank">やる夫系まとめブログ「やる夫之書」に01月11日に転載</a>された。この記事をみた「タナボタは寝て待て」はサンブルブログのコメント欄で<a href="https://botamate.doorblog.jp/archives/2305551.html" target="_blank">ブックマークレットについてのコメントがあるということを発見</a>し、12日にブログで紹介する。「タナボタは寝て待て」記事のトラックバックでこのことを知った「やる夫之書」は当初の記事を追記する形でブックマークレットを紹介し、記事が話題になったことでブックマークレット手法も広まった、という流れのようだ。<br>
               <br>
               textar fontで配信していたwebフォントは既存のフォントを配信していたわけではなく、新たに作成した「textar font」を配信していたようだ。フォントデータはIPAフォントライセンスv1.0で<a href="https://code.google.com/archive/p/textar-font/" target="_blank">Google Codeで公開</a>されていた。Textar DBは2019年頃閉鎖しており詳細は現在は不明だが、フォントデータのv0.1は2010年10月21日にアップロードされており、Textar DBが告知される1日前だった。<br>
               <br>
               keageがKuma_Liteを発表したのは、twitterアカウント上でのことだ。<a href="https://x.com/keage/status/65116116955045888" target="_blank">2011年05月03日に行ったツイート</a>に、dropboxへの短縮リンクを載せる形で発表している。ツイートを見ると、「『やる夫之書』（URL省略）にあるブックマークレットを再改造して」という文言があり、「やる夫之書」の影響力が大きかったことが理解できる。また、「Textarから漢字フォントを抜いて9割ほど軽量化した」とあり、Textar Fontを改変したフォントファイル「Kuma_Lite」フォントを作成して、webフォント配信していることがわかる。<br>
               <br>
-              やる夫之書側は、元記事をさらに追記する形で、このKuma_Liteを紹介した。こうして、最初のsaitamaar初出記事に戻る。saitamaarは、こうした2ちゃんねるAA文化の、やる夫スレコミュニティのなかで育まれてきたものだったのだ。<br>
-              <br>
+              やる夫之書側は、元記事をさらに追記する形で、このKuma_Liteを紹介した。こうして、最初のsaitamaar初出記事に戻る。saitamaarは、こうした2ちゃんねるAA文化の、やる夫スレコミュニティのなかで育まれてきたものだったのだ。
+            </p>
+            <h5>saitamaarの背景 その5 ライセンスについてのメモ</h5>
+            <p>
               どこにも明記されてはいないが、IPAフォントライセンスv1.0は継承されるため、IPAフォントライセンスv1.0のtextar fontを改変したKuma_Liteも同様にIPAフォントライセンスv1.0ということになる。<br>
               <br>
               saitamaarはkeageによる新しいフォントと考えられるため、IPAフォントライセンスv1.0は継承されない。実は、saitamaarのライセンスは長らく明示されておらず、<a href="https://qiita.com/Duct-and-rice/items/cac5c6855d35adcfe06d" target="_blank">MITライセンスだという説も流布</a>していた。これは、keageが配布した<a href="https://github.com/keage/Saitamaar" target="_blank">saitamar.jsスクリプト</a>のライセンス表記によると思われる。saitamaar.js自体はMITライセンスで公開されており（<a href="https://github.com/keage/Saitamaar/commit/5ac1a5bdf354f0ef780eeb1e981cb29406204f30" target="_blank">kegae本人が2014年09月12日に明示</a>）、ここから生まれた誤解の可能性が高い。長らくフォントそのもののライセンスは明示されていなかったが、ライセンスが「パブリックドメイン」だと明示されるのは、<a href="https://github.com/keage/Saitamaar/commit/9a67316cc342a6c2e8fd30e726a1a6bd12badfd1" target="_blank">時が流れた2023年06月04日のこと</a>だった。
             </p>
+            <h5>saitamaarの背景 その6 まとめ</h5>
             <p>
               話が複雑になってしまった。ここまでの話をまとめよう。<br>
               <br>
@@ -296,6 +351,7 @@
               <br>
               AAの解説部分で、AA表示用フォントはMS P ゴシックがデファクトスタンダードだったと書いた。MS P ゴシックがない環境でAAを正しく表示させるためのフォントの開発は、Textar Fontからさらに遡ることができる。ここからは、MS P ゴシックと、そのAA表示用代替フォントの歴史を見ていこう。<br>
             </p>
+            <h5>改めて、MS P ゴシックとは</h5>
             <p>
               そもそも、MS P ゴシックとはどういうものだったのか。<br>
               <br>
@@ -304,19 +360,29 @@
               MS P ゴシックは、MS ゴシックのプロポーショナルフォントだ。MS ゴシックは文字幅が一定の等幅フォントであり、MS ゴシックの文字間を調整したフォントがMS P ゴシックである。明朝体としては「MS 明朝」と「MS P 明朝」がある。<br>
               <br>
               MS ゴシックはWindows 3.1日本語版から搭載、MS P ゴシックはWindows 95から搭載されている。Windows 3.1ではプロポーショナルフォントに対応していなかったが、Windows 95がプロポーショナルフォントに対応したことで用意されたフォントだという。<br>
-              <br>
+            </p>
+            <a href="/txt/photo/zakki/2025-10-03/w31progman.gif" target="_blank"><img src="/txt/photo/zakki/2025-10-03/w31progman.gif" alt="windows 3.1 program manager screenshot img"></a>
+            <cite>画像引用：<a href="https://www.os-museum.com/windows3.1/windows31.htm" target="_blank">オープンギャラリー：Windows3.1の環境 | OS博物館</a></cite>
+            <p class="caption">
+              Windows 3.1のスクリーンショット。フォントに注目するとMS ゴシックのビットマップがわかる。
+            </p>
+            <br>
+            <h5>システムフォントとしてのMS ゴシック</h5>
+            <p>
               調べてみると、80年代末から90年代前半の印刷技術、写植、フォント、DTP業界は波乱に満ちていたようで、システムフォントから当時の状況が垣間見えるのが面白い。<br>
               <br>
               当時リョービイマジクス株式会社の顧問だった澤田善彦が、<a href="https://web.archive.org/web/20120121050555/http://www.jagat.or.jp/story_memo_view.asp?StoryID=1476" target="_blank">JAGATのサイトに掲載していた</a>コラムシリーズ『<a href="https://www.jagat.or.jp/archives/7443" target="_blank">フォント千夜一夜物語</a>』を見るとその様子がわかる。<br>
               <br>
               澤田善彦について調べてみると、朗文堂の<a href="https://robundo.com/robundo/column/archives/6840" target="_blank">「タイポグラファ群像」に詳しい略歴</a>があった。不明確な情報ではあるが、朗文堂は<a href="https://tokyodesignapartment.blogspot.com/2015/06/blog-post_5.html" target="_blank">「MS 明朝」や「メイリオ」に関わっている</a>らしい。wikipediaなどのページを閲覧してもMSゴシックの制作者についての情報はわからなかったが、朗文堂の関連ウェブサイトをみると<a href="https://robundo.com/robundo/notesontypography/archives/1762" target="_blank">米田隆がMS ゴシック体に関与しているという記事</a>があった。<br>
               <br>
-              MS ゴシック、MS P ゴシックおよびMS 明朝、MS P 明朝は、リョービイマジクスが写真植字向けに制作した字母をもとに、リコーがしているという。<br>
+              MS ゴシック、MS P ゴシックおよびMS 明朝、MS P 明朝は、リョービイマジクスが写真植字向けに制作した字母をもとに、リコーが作成しているという。<br>
               <br>
               MS ゴシック、MS 明朝シリーズ自体はTrueTypeのアウトラインフォントだが、<a href="https://rpc.ricoh.com/products/font/ms" target="_blank">ビットマップフォントが内蔵</a>されている。これは、低解像度ディスプレイに向けて、文字サイズが小さい場合に文字潰れを防ぎ視認しやすくする目的があった。<br>
               <br>
               7、8dot（5、6pt）では仮名のみ、10、12、13、14、16、18、20pt（7.5、9、10、10.5、12、13.5、15pt）では漢字を含めてビットマップフォントが収録されている。<br>
-              <br>
+            </p>
+            <h5>ビットマップフォントとしてのMS ゴシック</h5>
+            <p>
               かつて、デジタル日本語フォントはビットマップフォントが主だった。<br>
               <br>
               ワープロや電子組版機、コンピュータの出力装置（ディスプレイやプリンタ）で用いられるフォントはビットマップフォントが主流だった。そこから、80年代を通してアウトラインフォントの開発が進められていくことになる。<br>
@@ -333,11 +399,20 @@
               <br>
               WIFEと決別したWindows 3.1。"Windows Intelligent Font Environment"の頭字語だが、これでは<a href="https://www.wdic.org/w/TECH/WIFE" target="_blank">「離婚した」と表現</a>されても無理からぬ話だ。
             </p>
+            <h5>インターネットの夜明けとフォント</h5>
             <p>
               Windows 95がプロポーショナルフォントに対応したことで、MS P ゴシックが搭載されるようになった。1995年のWindows 95発売は日本においてインターネット普及の契機となった。<a href="https://www.jiyu.co.jp/singo/index.php?eid=00012" target="_blank">流行語大賞のトップテンに「インターネット」が入った</a>のはこの年のことだ。<br>
               <br>
-              ここからは、時系列的に簡単に関連する話題を見ていきたい。<br>
-              <br>
+              ここからは、時系列的に簡単に関連する話題を見ていきたい。
+            </p>
+            <h5>cleartypeと徐々に進むディスプレイの高解像度化</h5>
+            <br>
+            <a href="/txt/photo/zakki/2025-10-03/ClearTypePixels.svg.png" target="_blank"><img src="/txt/photo/zakki/2025-10-03/ClearTypePixels.svg.png" alt="cleartype screenshot example img" class="pixelated"></a>
+            <cite>画像引用：<a href="https://commons.wikimedia.org/wiki/File:ClearTypePixels.svg" target="_blank">Perey</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.ja" target="_blank">CC BY-SA 3.0 Unported</a>, via Wikimedia Commons</cite>
+            <p class="caption">
+              ClearTypeのサブピクセルレンダリングを模した図。上の"a"は通常のビットマップフォント、下の"b"はClearTypeが機能した場合のビットマップフォント。
+            </p>
+            <p>
               まず、2001年10月末に発売された<a href="https://atmarkit.itmedia.co.jp/fpc/xp_feature/cleartype/cleartype.html" target="_blank">Windows XPからClearType機能が搭載</a>された。ClearTypeはフォントのスムージング表示技術で、通常のアンチエイジングとは異なり、中間色のスムージングをディスプレイのサブピクセルを用いて行う。<br>
               <br>
               RGBの一セットを単位とする「ピクセル」ごとにアンチエイジングするのではなく、RGBそれぞれの「サブピクセル」を個別に計算してアンチエイジングを行う。ClearTypeがサブピクセルレンダリング技術と呼ばれるのはこのためだ。<br>
@@ -345,39 +420,63 @@
               フォントとの関係でみると、MS ゴシックなどのビットマップ内蔵フォントについてはClearTypeが機能しない。MS ゴシックなどのプリインストールフォントが忌避されるようになるのはこのことも関係していたのかもしれない。<br>
               <br>
               ちなみに、サブピクセルレンダリングの質感を再現した<a href="https://forest.watch.impress.co.jp/docs/news/1635068.html" target="_blank">カラーピクセルフォント「珊瑚」が2024年10月25日に公開</a>されている。ビットマップフォントがノスタルジーの対象になるだけでなく、サブピクセルレンダリング以降の質感もノスタルジーの対象になるのはおもしろい。<br>
-              <br>
-              少し時を遡るが、AA用フォントの元祖である<a href="https://monafont.sourceforge.net/981805118.html" target="_blank">「Mona Font」が発表されるのが2001年02月10日</a>のことだ。<br>
-              <br>
-              2ちゃんねるのUnix板に作られた「<a href="https://kako.5ch.net/test/read.cgi/unix/981805118/" target="_blank">2ちゃんねる用フォント「モナー」</a>」の>>1で、Mone fontのサイトが告知された。Unix板で発表されたこともからもわかるように、X Window SystemおよびUnix系の環境でAAを正しく閲覧するために開発されている。<br>
-              <br>
-              もとは古川泰之による日本語ビットマップフォント「東雲フォント」をもとにしており、文字幅をMS P ゴシックに合わせることで作成された。<br>
-              <br>
-              <a href="https://web.archive.org/web/20040804082649/http://www.on.cs.keio.ac.jp/~yasu/linuxjapan_kochi_200202.pdf" target="_blank">東雲フォント自体も系統を遡ることができ</a>、要町フォントやk14フォント、jiskan16をもとに、MS ゴシックやSolaris/SunOSのsunフォントを参考にしているという。<br>
-              <br>
-              古川泰之はビットマップの東雲フォントからアウトラインフォントの東風フォントを制作し発表したが、元にしたいわゆる「渡邊フォント」が<a href="https://web.archive.org/web/20191216064514/https://mag.osdn.jp/03/09/29/1416204" target="_blank">市販フォントと酷似しているとして2003年に問題</a>（<a href="https://web.archive.org/web/20030801083403/http://khdd.net/kanou/fonts/stolenbitmap.html" target="_blank">2003年06月18日に狩野宏樹が取り上げ</a>、<a href="https://web.archive.org/web/20080325233625/http://slashdot.jp:80/articles/03/06/18/1054209.shtml" target="_blank">スラッシュドット・ジャパンで話題</a>）になると、東風フォントもそのあおりを受け<a href="https://web.archive.org/web/20040725082551/http://www.on.cs.keio.ac.jp:80/~yasu/jp_fonts.html" target="_blank">公開停止する</a>という出来事があった。<br>
-              <br>
-              Mona Fontは2ちゃんねるのスレ上で質問・要望を受け付け、コミュニティ内で交流しながらメンテナンスが続けられた。2003年前半には東風フォントを元にアウトライン化されたが、2003年09月09日を最後に更新が行われなくなった。<br>
-              <br>
-              Mona Fontのプロジェクトを引き継ぐ形で生まれたのが「<a href="https://web.archive.org/web/20190326123924/http://www.geocities.jp/ipa_mona/" target="_blank">IPAモナーフォント</a>」だ。<a href="https://web.archive.org/web/20190314172243/http://www.junkobayashi.jp//" target="_blank">小林準</a>の手によって2005年04月30日に最初のリリースが行われた。<br>
-              <br>
-              元になったのは「IPAフォント」である。情報処理推進機構が配布する日本語フォントだが、元は「オープンソースソフトウェア活用基盤整備事業」2003年度採択事業のうちのひとつである株式会社オークニーの「<a href="https://warp.da.ndl.go.jp/info:ndljp/pid/8198317/www.ipa.go.jp/software/open/2003/saitaku/orkney.html">オープンソースGISプラットフォームの開発</a>」の<a href="https://grass-japan.org/FOSS4G/index.php?newlang=japanese" target="_blank">成果物</a>の一つとして、オープンソース地理空間プロジェクトの<a href="https://web.archive.org/web/20080204161620/http://www.grass-japan.org/FOSS4G/readme-grass-i18n-ipafonts.eucjp.htm" target="_blank">GRASS GIS、MapServer、PostGISに添付された状態で配布</a>されていた。<br>
-              <br>
-              2004年前半に公開されたが、IPAフォントが高品質な日本語フォントとして注目されたのは<a href="https://web.archive.org/web/20080105212525/http://slashdot.jp/articles/04/07/16/0624235.shtml?topic=36" target="_blank">2004年07月16日頃</a>からのことだった。「電子書体オープンラボ」の<a href="https://web.archive.org/web/20070416120953/http://lists.sourceforge.jp/mailman/archives/efont-devel/2004-July/thread.html" target="_blank">メーリングリスト上</a>で単独再配布可能かどうかや、具体的にどんなライセンスなのかについて確認するやり取りが行われている。<br>
-              <br>
-              IPAモナーフォントもMona Fontと同様に、字間を「MS P ゴシック」と同じ状態に調整することで、AAを正しく表示するために開発された。IPAフォントのほかに、「さざなみフォント」、「モナーフォント」、「M+フォント」を組み合わせている。<br>
-              <br>
-              IPAフォントのライセンスは、当初フォントの単独再配布は認められておらず、ソフトウェアに同梱する場合のみ再配布することができた。これはIPAファイルの派生物にも当てはまったため、IPAモナーフォントも「HP Vector Driver」に同梱して配布していた。<br>
-              <br>
-              IPAフォントの単独配布が開始されたのは2007年10月01日だが、この時には派生物の単独配布はまだライセンス上認められていなかった。2009年04月20日に新しいライセンスとして「IPAフォントライセンス Ver.1.0」を適用した「IPAフォントVer.3」が公開されたことで<a href="https://xtech.nikkei.com/it/article/NEWS/20090420/328804/" target="_blank">改変フォントの再配布が可能</a>となった。<br>
-              <br>
-              IPAフォントのもとの一つである「さざなみフォント」は前述の渡邊フォントおよび東風フォントに関する問題以降、これを代替する目的で「和田研フォント」を元に開発されたものだ。もともと名称は<a href="https://www.gentoo.gr.jp/ml/users/msg00381.html" target="_blank">「kochi-alternative」、「kochi-substitute」</a>だった。<br>
-              <br>
-              もともとAA表示用のフォントとして開発されたIPAモナーフォントだったが、MS ゴシックおよびMS 明朝と文字幅が同じであるため、Windowsとの互換性を意識した代替フォントとして利用されることになった。
+            </p>
+            <h5>AA用フォントの系譜 その1 Mona Font</h5>
+            <br>
+            <a href="/txt/photo/zakki/2025-10-03/monafont.png" target="_blank"><img src="/txt/photo/zakki/2025-10-03/monafont.png" alt="cleartype screenshot example img" class="pixelated"></a>
+            <cite>画像引用：<a href="https://monafont.sourceforge.net/index.html" target="_blank">Mona Font</a></cite>
+            <p class="caption">
+              Mona Font使用時のスクリーンショット。公式サイトにある「OpenOffice.org 1.0.1 + モナーフォント TTF版」のスクリーンショットから引用。東風フォント代用品（のち「さざなみフォント」と命名）を元にアウトラインした旨が記載されている。
             </p>
             <p>
-              長くなってしまったが、AA表示用フォントの開発には長い歴史があり、こうした経緯によって生まれたフォントが、実際にはAA表示という当初想定していた用途にとどまらない利用がされることもあった。<br>
+              少し時を遡るが、AA用フォントの元祖である<a href="https://monafont.sourceforge.net/981805118.html" target="_blank">「Mona Font」が発表されたのは、2001年02月10日</a>のことだ。<br>
               <br>
-              2006年にWindows Vistaが発売される。Windows Vista 日本語版には、新しくシステム用フォントとして開発された「メイリオ」が標準搭載された。<br>
+              2ちゃんねるのUnix板に作られた「<a href="https://kako.5ch.net/test/read.cgi/unix/981805118/" target="_blank">2ちゃんねる用フォント「モナー」</a>」の>>1で、Mona fontのサイトが告知された。Unix板で発表されたことからもわかるように、X Window SystemおよびUnix系の環境でAAを正しく閲覧することを目的として開発されている。<br>
+              <br>
+              Mona Fontは古川泰之による日本語ビットマップフォント「東雲フォント」を基盤としている。東雲フォントの文字幅をMS P ゴシックに合わせることでAAの表示に最適化して作成された。<br>
+              <br>
+              <a href="https://web.archive.org/web/20040804082649/http://www.on.cs.keio.ac.jp/~yasu/linuxjapan_kochi_200202.pdf" target="_blank">東雲フォント自体も豊かな系譜を持つ</a>。古川のLinux Japanno記事をみると、要町フォントやk14フォント、jiskan16を基礎として、MS ゴシックやSolaris/SunOSのsunフォントを参考に開発されたものだという。<br>
+              <br>
+              すでに見たように、時代はすでにアウトラインフォントが普及していた。Linux Japanの記事によると、古川本人はステップアップとしてアウトラインフォントの制作に取り掛かる。こうして、古川はビットマップの<ruby>東雲<rt>しののめ</rt></ruby>フォントから、アウトラインフォントの<ruby>東風<rt>こち</rt></ruby>フォントを制作し発表した。しかし、東風フォントは事故に巻き込まれることになる。<br>
+              <br>
+              2003年、東風フォントを作成する際に元にした、いわゆる「渡邊フォント」が<a href="https://web.archive.org/web/20191216064514/https://mag.osdn.jp/03/09/29/1416204" target="_blank">市販フォントと酷似しているとして問題</a>（<a href="https://web.archive.org/web/20030801083403/http://khdd.net/kanou/fonts/stolenbitmap.html" target="_blank">2003年06月18日に狩野宏樹が取り上げ</a>、<a href="https://web.archive.org/web/20080325233625/http://slashdot.jp:80/articles/03/06/18/1054209.shtml" target="_blank">スラッシュドット・ジャパンで話題</a>）になったのだ。<br>
+              <br>
+              <a href="/txt/photo/zakki/2025-10-03/slashdotjp-watanabefont.webp" target="_blank"><img src="/txt/photo/zakki/2025-10-03/slashdotjp-watanabefont.webp" alt="slashdotjp-watanabefont example image" class="pixelated"></a>
+            <cite>画像引用：<a href="https://web.archive.org/web/20030714191322/http://slashdot.jp/articles/03/06/18/1054209.shtml" target="_blank">slashdot.jp | Wayback Machine</a></cite>
+              <br>
+              東風フォント自体にライセンスの問題はなかったものの、問題の煽りを受け、古川は東風フォントを<a href="https://web.archive.org/web/20040725082551/http://www.on.cs.keio.ac.jp:80/~yasu/jp_fonts.html" target="_blank">公開停止</a>してしまう。さらに、すでに渡邊フォントは広く利用されていたため、この事件はフリーフォントコミュニティ全体に打撃を与えた。<br>
+              <br>
+              Mona Fontは2ちゃんねるのスレッド上で質問や要望を受け付け、コミュニティとの交流を通じてメンテナンスが続けられていた。コミュニティの協力もあり、2003年前半には東風フォントを元にアウトライン化された。<br>
+              <br>
+              しかし、渡邊フォント問題の影響を受け、一時的にアップデートを取り消す事態となってしまう。こうした一連の経緯もあり、Mona Fontは2003年09月09日を最後に更新が行われなくなった。<br>
+            </p>
+            <h5>AA用フォントの系譜 その2 IPAモナーフォント</h5>
+            <br>
+            <a href="/txt/photo/zakki/2025-10-03/ipamona.png" target="_blank"><img src="/txt/photo/zakki/2025-10-03/ipamona.png" alt="ipamona example image" class="pixelated"></a>
+            <cite>画像引用：<a href="https://www.wdic.org/w/TECH/IPA%E3%83%A2%E3%83%8A%E3%83%BC%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88" target="_blank">IPAモナーフォント | 通信用語の基礎知識</a></cite>
+            <br>
+            <p>
+              Mona Fontのプロジェクトを引き継ぐ形で生まれたのが「<a href="https://web.archive.org/web/20190326123924/http://www.geocities.jp/ipa_mona/" target="_blank">IPAモナーフォント</a>」だ。<a href="https://web.archive.org/web/20190314172243/http://www.junkobayashi.jp//" target="_blank">小林準</a>の手によって2005年04月30日に最初のリリースが行われた。<br>
+              <br>
+              IPAモナーフォントの元になったのは、情報処理推進機構が配布する「IPAフォント」である。このフォントは、2003年度「オープンソースソフトウェア活用基盤整備事業」採択事業の一環として、株式会社オークニーの「<a href="https://warp.da.ndl.go.jp/info:ndljp/pid/8198317/www.ipa.go.jp/software/open/2003/saitaku/orkney.html">オープンソースGISプラットフォームの開発</a>」プロジェクトの<a href="https://grass-japan.org/FOSS4G/index.php?newlang=japanese" target="_blank">成果物</a>の一つとして開発された。こうした経緯もあり、当初はオープンソース地理空間プロジェクトの<a href="https://web.archive.org/web/20080204161620/http://www.grass-japan.org/FOSS4G/readme-grass-i18n-ipafonts.eucjp.htm" target="_blank">GRASS GIS、MapServer、PostGISに同梱される形で配布</a>されていた。<br>
+              <br>
+              2004年前半に公開されたIPAフォントが高品質な日本語フォントとして広く注目されたのは、<a href="https://web.archive.org/web/20080105212525/http://slashdot.jp/articles/04/07/16/0624235.shtml?topic=36" target="_blank">2004年07月16日頃</a>からのことだ。2004年07月16日に<a href="https://web.archive.org/web/20080105212525/http://slashdot.jp/articles/04/07/16/0624235.shtml?topic=36" target="_blank">スラッシュドット・ジャパンで取り上げられ</a>、07月20日から「電子書体オープンラボ」の<a href="https://web.archive.org/web/20070416120953/http://lists.sourceforge.jp/mailman/archives/efont-devel/2004-July/thread.html" target="_blank">メーリングリスト上</a>で単独再配布が可能かどうかや、具体的にどんなライセンスなのかについて確認するやり取りが行われている。<br>
+              <br>
+              IPAモナーフォントも、Mona Fontと同様に字間を「MS P ゴシック」と同じ状態に調整することでAAの正確な表示を目指している。IPAフォントを基盤に、「さざなみフォント」、「モナーフォント」、「M+フォント」を組み合わせている。<br>
+              <br>
+              IPAフォントの当初のライセンスでは、フォント単独での再配布は認められず、ソフトウェアに同梱する場合のみ再配布が可能であった。これはIPAファイルの派生物にも適用されたため、IPAモナーフォントも「HP Vector Driver」に同梱する形でして配布していた。<br>
+              <br>
+              IPAフォントの単独配布が開始されたのは2007年10月01日だが、時点では派生物の単独配布はいまだライセンス上認められていなかった。2009年04月20日に状況が変わり、新しいライセンスとして「IPAフォントライセンス Ver.1.0」を適用した「IPAフォントVer.3」が公開されたことで、<a href="https://xtech.nikkei.com/it/article/NEWS/20090420/328804/" target="_blank">改変フォントの再配布が可能</a>となった。<br>
+              <br>
+              IPAモナーフォントの構成要素の一つである「さざなみフォント」は、前述の渡邊フォントおよび東風フォントに関する問題以降、これを代替する目的で開発されたものだ。「和田研フォント」を元にして、当初は<a href="https://www.gentoo.gr.jp/ml/users/msg00381.html" target="_blank">「kochi-alternative」、「kochi-substitute」</a>という名称で呼ばれていた。<br>
+              <br>
+              もともとAA表示用のフォントとして開発されたIPAモナーフォントだったが、MS ゴシックおよびMS 明朝と文字幅が同じであるため、Windowsとの互換性を意識した代替フォントとして利用されることもあった。<br>
+              <br>
+              これまでAA表示用フォントの歴史をみてきた。調べてみると開発には長い歴史があり、複雑な経緯をもって、様々なフォントと交流するなかでAA表示用フォントが生まれていることがわかる。さらにいえば、こうして生まれたフォントはAA表示という当初の用途にとどまらない利用をされることもあった。<br>
+            </p>
+            <h5>徐々に消えるMS P ゴシック</h5>
+            <p>
+              2006年には、Windows Vistaが発売される。Windows Vista 日本語版には、新しくシステム用フォントとして開発された「メイリオ」が標準搭載された。<br>
               <br>
               低解像度ディスプレイ向けにビットマップフォントを内蔵していたMS ゴシックやMS 明朝とは違い、メイリオはビットマップを持たない。ClearTypeを前提に開発されていることもあり、ある程度高い解像度のディスプレイを使用することが前提となっている。<br>
               <br>
@@ -389,6 +488,7 @@
               <br>
               しかし、<a href="https://blog.oyasu.info/2015/12/02/4737/" target="_blank">12月のChrome 47でMS P ゴシックに戻され</a>、再びメイリオに変更されるのは2017年01月25日の<a href="https://blog.oyasu.info/2017/01/27/5614/" target="_blank">Chrome 56から</a>であった。2024年08月にはデフォルトフォントがメイリオからNoto Sans JPに変更されている。<br>
             </p>
+            <h5>振り返ってみて その1</h5>
             <p>
               話が長くなってしまった。<br>
               <br>
@@ -400,6 +500,7 @@
               <br>
               今回こうしてフォントの使用環境や歴史を調べてみて、あの時感じていたのはある種の喪失感だったのだと気づいた。気づけば無くなってしまっていたインターネットのあの質感。確かにノスタルジーではある。しかし、遊離したアナクロニズムとは少し違う。<br>
             </p>
+            <h5>振り返ってみて その2</h5>
             <P>
               結局、フォントはsaitamaarを使い続けることにした。調べてみて愛着が湧いたからだ。<br>
               <br>
@@ -415,9 +516,10 @@
               <br>
               ここでは深く書くことはしない。茶道具について知りたい人は過去の分を読んでほしい。わたしはこのフォントについて、今、茶道具をみる目で見ている。見ざるを得ない。<br>
               <br>
-              そんな感じで、フォントについて調べてみたという話ですた。ノシ<br>
-              <br>
-              <br>
+              そんな感じで、フォントについて調べてみたという話ですた。ノシ
+            </p>
+            <h5>AA用フォントの系譜......?</h5>
+            <p>
               AA表示用フォントについては「<a href="https://fonts.aahub.org" target="_blank">AAHub Fonts</a>」がカタログ化していて見やすい。<br>
               <br>
               AAHub Fontsの掲載フォントの略歴もある程度調べてみたが、じつはgiko2の詳細がわからなかった。<br>
@@ -426,9 +528,8 @@
               <br>
               がすべては憶測なのでよくわからん。だれか教えて。<br>
             </P>
+            <h5>最後に</h5>
             <p>
-              最後に<br>
-              <br>
               途中、この文章を書いていて公開しないほうがいいんじゃないかっていう気持ちになってしまった。<br>
               <br>
               saitamaarのライセンスはパブリックドメインだ。一方で、MS P ゴシックのビットマップフォントと似すぎているという話も目にする。<br>
@@ -442,6 +543,20 @@
               自分で書くのも何だけど、要するにこの文章はインターネットへの愛が溢れてしまったようなもんだ。<br>
               <br>
               というわけで、最後に言いたいことはひとつだけだ。<strong>許してくれよな</strong>。
+            </p>
+          </section>
+          <section>
+            <h4>更新履歴</h4>
+            <p>
+              2025/10/03 04:20
+              2025年10月03日深夜（2時頃）に更新して、改めて読み直してみると、日本語がブロークンが部分が多くて読みづらいと思った。<br>
+              <br>
+              あまり推敲せずにアップしたからなのだが、文字ばかりだし、AA用フォントで字間も開けてないしで形式的な読みづらさもある。気に入らない表現はもう一度改めて書き直すが、とりあえず見出しを細かくつけてみた。<br>
+              <br>
+              書きっぱなしもよくないし、どうせならもう少しましな文章にしたい。画像を挿入してもいいな。とりあえずはここまで。<br>
+              <br>
+              2025/10/06 14:40
+              画像を挿入してみた。一気にweb記事っぽくなってよかった。
             </p>
           </section>
           <section style="margin-top: 100px;">

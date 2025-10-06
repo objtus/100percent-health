@@ -19,6 +19,15 @@ h3 {
 	margin-bottom: 1em;
 }
 
+img{
+	image-rendering: auto!important;
+}
+.pixelated{
+	img{
+		image-rendering: pixelated!important;
+	}
+}
+
 article {
 	margin-bottom: 40px;
 
@@ -45,22 +54,27 @@ article {
 		border-left: solid 2px #bbb;
 		padding-left: 1rem;
 		color: #888;
+	}
+	cite {
+		font-size: 0.8em;
+		display: block;
+		text-align: right;
+		color: #888;
+	}
+	cite a {
+		color: #888;
+		text-decoration: none;
+	}
 
-		cite {
-			display: block;
-			text-align: right;
-			color: #888;
-		}
-		cite a {
-			color: #888;
-			text-decoration: none;
-		}
-
-		cite a:hover {
-			color: #888;
-			background-color: #fff;
-			text-decoration: none;
-		}
+	cite a:hover {
+		color: #888;
+		background-color: #fff;
+		text-decoration: none;
+	}
+	.caption {
+		font-size: 0.8em;
+		display: block;
+		margin-left: 2px;
 	}
 	ul.timeline_md {
 		text-indent: -4.3em;
@@ -90,6 +104,11 @@ article {
 		content: "*****";
 		letter-spacing: 1em;
 		padding-left: 1em;
+	}
+	a{
+		&:has(img)&:hover {
+			background-color: transparent;
+		}
 	}
 }
 @media screen and (max-width: 900px) {
