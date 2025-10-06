@@ -77,7 +77,8 @@ function updateFooterStats() {
           <h2>♥ secret found! ♥</h2>
           <p>you found the hidden contents ... but, not yet ...</p>
           <div class="secret-link-and-button">
-            <a href="">go to the secret page →... under construction ///</a>
+            <a href="/txt/secret_diary.html">go to the secret page... secret_diary ///</a>
+            <a href="">go to the secret page 2 ... under construction ///</a>
             <button id="close-secret-modal">close</button>
           </div>
         </div>
