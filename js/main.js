@@ -14,6 +14,14 @@ $(function() {
   $("#changelogmodalhtml").load("/include/changelog.html");
   $("#texthtml").load("/include/text.html");
   $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+  
+  // サイドバー読み込み（1column.cssを使用するページのみ）
+  if (document.querySelector('link[href*="1column.css"]')) {
+    $("body").append('<div id="sidebarhtml"></div>');
+    $("#sidebarhtml").load("/include/sidebar.html", function() {
+      initSidebar();
+    });
+  }
 
   // トップへ戻るボタン
   $(document).on('click', '#back_to_top, #logo_to_top', function() {
@@ -40,6 +48,34 @@ $(function() {
     }, 100);
   });
 });
+
+// サイドバー初期化関数
+function initSidebar() {
+  // サイドバーのスクロールボタンイベント
+  $(document).on('click', '#sidebar-scroll-to-top', function() {
+    const wrapper = document.querySelector('#wrapper') || document.documentElement;
+    wrapper.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+
+  $(document).on('click', '#sidebar-scroll-to-bottom', function() {
+    const wrapper = document.querySelector('#wrapper') || document.body;
+    
+    wrapper.scrollTo({
+      top: wrapper.scrollHeight,
+      behavior: 'smooth'
+    });
+    
+    setTimeout(function() {
+      const bottomElement = wrapper.lastElementChild;
+      if (bottomElement) {
+        bottomElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  });
+}
 
 // フッター統計情報更新関数
 function updateFooterStats() {

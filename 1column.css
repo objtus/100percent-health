@@ -870,3 +870,60 @@ nav {
     width: 90%;
   }
 }
+
+/*===================
+  サイドバー
+===================*/
+.sidebar {
+  position: fixed;
+  top: 100px;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  .sidebar-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+    .sidebar-item {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(0, 0, 0, 0.9);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-family: "saitamaar", 'PikoA', "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+      font-size: 16px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #fff;
+        color: #000;
+      }
+    }
+
+    .sidebar-icon {
+      display: block;
+      line-height: 1;
+      transition: transform 0.2s ease;
+
+      transform: rotate(90deg);
+    }
+  }
+}
+
+
+/* レスポンシブ対応 */
+@media screen and (max-width: 768px) {
+}
+
+@media screen and (max-width: 576px) {
+  .sidebar {
+    display: none;
+  }
+}
