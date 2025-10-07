@@ -11,7 +11,7 @@
         "groundpolis_paint",
         "groundpolis_paint_1",
         "original",
-        "drawing",
+        "rakugaki",
         "colored",
         "1girl",
         "glasses",
@@ -28,7 +28,7 @@
         "groundpolis_paint",
         "groundpolis_paint_1",
         "original",
-        "drawing",
+        "rakugaki",
         "colored",
         "1girl",
         "fediverse"
@@ -44,7 +44,7 @@
         "groundpolis_paint",
         "groundpolis_paint_2",
         "original",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "2girls",
         "fediverse"
@@ -60,7 +60,7 @@
         "groundpolis_paint",
         "groundpolis_paint_2",
         "original",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "1girl",
         "fediverse"
@@ -77,7 +77,7 @@
         "groundpolis_paint_2",
         "fanart",
         "music",
-        "drawing",
+        "rakugaki",
         "colored",
         "1girl",
         "fediverse",
@@ -95,7 +95,7 @@
         "groundpolis_paint_2",
         "fanart",
         "music",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "1girl",
         "fediverse"
@@ -112,7 +112,7 @@
         "groundpolis_paint_2",
         "fanart",
         "music",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "1girl",
         "fediverse"
@@ -129,7 +129,7 @@
         "groundpolis_paint_2",
         "fanart",
         "music",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "1girl",
         "fediverse"
@@ -146,7 +146,7 @@
         "groundpolis_paint_2",
         "fanart",
         "music",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "1girl",
         "glasses",
@@ -164,7 +164,7 @@
         "groundpolis_paint_2",
         "fanart",
         "torotsub-san",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "1girl",
         "fediverse",
@@ -182,7 +182,7 @@
         "groundpolis_paint_2",
         "fanart",
         "muuque-san",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "1girl",
         "fediverse",
@@ -201,7 +201,7 @@
         "fanart",
         "semikura_helve",
         "sesese-san",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "1girl",
         "fediverse",
@@ -220,7 +220,7 @@
         "fanart",
         "techno-san",
         "taniguchi-chan",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "1girl",
         "fediverse",
@@ -237,11 +237,325 @@
         "groundpolis_paint",
         "groundpolis_paint_2",
         "original",
-        "drawing",
+        "rakugaki",
         "monochrome",
         "1girl",
         "fediverse"
       ]
-    }
+      },
+      {
+        "id": "gprip1",
+        "path": "/gallery/image-page/gprip1.html",
+        "image_path": "/img/original/gp_shikako.png",
+        "date": "2020-06-04",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip2",
+        "path": "/gallery/image-page/gprip2.html",
+        "image_path": "/img/original/gp_rakugaki3.png",
+        "date": "2020-12-22",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "rakugaki",
+          "colored",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip3",
+        "path": "/gallery/image-page/gprip3.html",
+        "image_path": "/img/original/gp_dai.png",
+        "date": "2021-10-30",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip4",
+        "path": "/gallery/image-page/gprip4.html",
+        "image_path": "/img/original/gp_rakugaki2.png",
+        "date": "2021-11-01",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "rakugaki",
+          "colored",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip5",
+        "path": "/gallery/image-page/gprip5.html",
+        "image_path": "/img/fanart/gp_tenten.png",
+        "date": "2021-11-03",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "fanart",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip6",
+        "path": "/gallery/image-page/gprip6.html",
+        "image_path": "/img/fanart/gp_rakugaki.png",
+        "date": "2021-11-06",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "fanart",
+          "hatsune_miku",
+          "vocaloid",
+          "rakugaki",
+          "monochrome",
+          "glasses",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip7",
+        "path": "/gallery/image-page/gprip7.html",
+        "image_path": "/img/original/gp_crossfall.png",
+        "date": "2021-11-05",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip8",
+        "path": "/gallery/image-page/gprip8.html",
+        "image_path": "/img/original/gp_floor.png",
+        "date": "2021-11-05",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "rakugaki",
+          "monochrome",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip9",
+        "path": "/gallery/image-page/gprip9.html",
+        "image_path": "/img/fanart/gp_gomamayo.png",
+        "date": "2021-11-05",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "fanart",
+          "music",
+          "thinaticsystem-san",
+          "rakugaki",
+          "monochrome",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip10",
+        "path": "/gallery/image-page/gprip10.html",
+        "image_path": "/img/original/gp_kana.png",
+        "date": "2021-11-23",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip11",
+        "path": "/gallery/image-page/gprip11.html",
+        "image_path": "/img/original/gp_p1.png",
+        "date": "2021-11-23",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "request",
+          "glasses",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip12",
+        "path": "/gallery/image-page/gprip12.html",
+        "image_path": "/img/original/gp_p2.png",
+        "date": "2021-11-23",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "request",
+          "glasses",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip13",
+        "path": "/gallery/image-page/gprip13.html",
+        "image_path": "/img/fanart/gp_neko.png",
+        "date": "2021-12-03",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "fanart",
+          "kusaneko-san",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip14",
+        "path": "/gallery/image-page/gprip14.html",
+        "image_path": "/img/fanart/gp_helve.png",
+        "date": "2021-12-06",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "fanart",
+          "sesese-san",
+          "semikura_helve",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip15",
+        "path": "/gallery/image-page/gprip15.html",
+        "image_path": "/img/fanart/gp_ruchika.png",
+        "date": "2021-12-06",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "fanart",
+          "lutica-san",
+          "rakugaki",
+          "glasses",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip16",
+        "path": "/gallery/image-page/gprip16.html",
+        "image_path": "/img/original/gp_aanoshi.png",
+        "date": "2022-03-31",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "rakugaki",
+          "monochrome",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip17",
+        "path": "/gallery/image-page/gprip17.html",
+        "image_path": "/img/fanart/gp_sukigirlz.png",
+        "date": "2022-05-06",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "fanart",
+          "music",
+          "james_ferraro",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip18",
+        "path": "/gallery/image-page/gprip18.html",
+        "image_path": "/img/original/gp_mirrorroom.png",
+        "date": "2022-05-06",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      },
+      {
+        "id": "gprip19",
+        "path": "/gallery/image-page/gprip19.html",
+        "image_path": "/img/original/gp_kema.png",
+        "date": "2022-03-31",
+        "series": "groundpolis_paint_rip",
+        "tags": [
+          "groundpolis_paint",
+          "groundpolis_paint_rip",
+          "original",
+          "rakugaki",
+          "monochrome",
+          "1girl",
+          "fediverse"
+        ]
+      }
   ]
 }

@@ -5,9 +5,17 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Thu, 02 Oct 2025 16:36:47 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 06 Oct 2025 11:24:48 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>タグ機能を追加してから見られなくなっていたgroundpolis_paint_ripを追加</title>
+      <link>https://yuinoid.neocities.org/gallery/tag-page/groundpolis_paint_rip.html</link>
+      <description>galleryにタグ機能を追加してから見ることができなかったgroundpolis_paint_ripを追加しました。また、イラスト個別のページを作成しました。変なところがあったら教えてください。</description>
+      <pubDate>Mon, 06 Oct 2025 11:24:48 GMT</pubDate>
+      <category>gallery</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#6734gk-20251006</guid>
+    </item>
     <item>
       <title>雑記ページを更新&amp;リンクページを更新&amp;もろもろ修正など</title>
       <link>https://yuinoid.neocities.org/txt/zakki/2025/10/days/2025-10-03.html</link>
@@ -39,14 +47,6 @@
       <pubDate>Fri, 12 Sep 2025 00:07:34 GMT</pubDate>
       <category>links</category>
       <guid isPermaLink="false">https://yuinoid.neocities.org/rss#hx0rbk-20250912</guid>
-    </item>
-    <item>
-      <title>アクティビティまとめページ「planet yuinoid」を追加</title>
-      <link>https://yuinoid.neocities.org/planet/planet_main.html</link>
-      <description>eniehackさんのPlanetを参考に、「planet yuinoid」を作成しました。個人サイトの更新履歴とSNSのアクティビティの近況をまとめて閲覧することができます。misskeyとmastodonはAPIを使用して投稿を取得します。むやみに更新したりアクセスするとなんとなくやばそうなのでやめてください。機能はバイブコーディングで作りました。私はコーディングをしてないので、正確に言えば「バイブ」です。</description>
-      <pubDate>Thu, 04 Sep 2025 18:00:24 GMT</pubDate>
-      <category>system</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#mb18feka8x946ekus4345</guid>
     </item>
   </channel>
 </rss>

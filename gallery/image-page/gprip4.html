@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>gprip4 - 100%health</title>
+		<link rel="stylesheet" href="../related-content.css" />
+		<link rel="stylesheet" href="../../1column.css" />
+		<script src="../../js/jquery-3.6.0.min.js"></script>
+		<script src="../../js/main.js"></script>
+		<script src="/js/mouse.js" defer=""></script>
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<header id="header">
+				<div id="header-flex">
+					<nav id="back" aria-label="戻るナビゲーション">
+						<a id="backicon" href="../index.html">&lt;</a>
+					</nav>
+					<nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+						<a class="addressbar" href="/index.html">100%health</a>&nbsp;/
+						<a class="addressbar" href="/gallery/gallery_main.html">gallery</a>&nbsp;/
+						<a class="addressbar" href="/gallery/tag-page/groundpolis_paint_rip.html">groundpolis_paint_rip</a>&nbsp;/
+						<a class="addressbar" href="/gallery/image-page/gprip4.html">gprip4</a>
+					</nav>
+				</div>
+			</header>
+			<main id="main">
+				<div id="galleryspace">
+					<h1 class="title" style="display: none;">gprip4</h1>
+					<div class="card">
+						<div class="piccard">
+							<h2 style="display: none;">作品"gprip4"について</h2>
+							<h3 style="display: none;">アートワーク</h3>
+							<a href="../../img/original/gp_rakugaki2.png"><img src="../../img/original/gp_rakugaki2.png" alt="gp illust" /></a>
+							<h3 style="display: none;">キャプション</h3>
+							<p class="title"></p>
+							<div class="caption">rakugaki groundpolis paint</div>
+							<p class="date">&gt;2021-11-01</p>
+							<h3 style="display: none;">タグ</h3>
+							<nav class="tags-section" aria-label="作品タグ">
+								<div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
+								<div class="tags-list" data-tags-container="">
+									<span class="loading-placeholder">タグ読み込み中...</span>
+								</div>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</main>
+			<!-- テンプレート定義 -->
+			<template id="related-item-template">
+				<div class="related-item" data-id="">
+					<a href="" class="image-link">
+						<img src="" alt="" loading="lazy" />
+					</a>
+					<a href="" class="title-link">
+						<span></span>
+					</a>
+				</div>
+			</template>
+
+			<template id="text-link-template">
+				<a href="" class="text-item-link"></a>
+			</template>
+
+			<template id="tag-link-template">
+				<a href="" class="tag-link"></a>
+			</template>
+
+			<footer id="main-footer">
+				<section id="galleryhtml" class="view-mode-text" aria-label="関連作品">
+					<!-- 表示切り替えボタン -->
+					<div class="view-toggle" role="tablist" aria-label="表示切り替え">
+						<button role="tab" aria-selected="true" aria-controls="related-content" id="text-view-btn">テキスト表示</button>
+						<button role="tab" aria-selected="false" aria-controls="related-content" id="image-view-btn">画像表示</button>
+					</div>
+
+					<div id="related-content" role="tabpanel">
+						<div class="related-container">
+							<!-- 同シリーズ -->
+							<section class="related-section" aria-labelledby="same-series-heading" data-category="same-series">
+								<h3 id="same-series-heading" class="related-title gallery_summary">
+									&gt; 同シリーズ (
+									<a href="#" data-series-link="">#fanart</a>
+									)
+								</h3>
+								<div class="related-grid" data-state="loading" data-grid-container="same-series">
+									<div class="loading-placeholder">読み込み中...</div>
+									<div class="error-placeholder" style="display: none">読み込みに失敗しました</div>
+									<div class="empty-placeholder" style="display: none">関連する作品がありません</div>
+								</div>
+								<span class="tags-info" data-count-info="same-series"><!-- 動的生成 --></span>
+								<div class="text-links summary_boxes" data-state="loading" data-text-container="same-series">
+									<span class="loading-placeholder">読み込み中...</span>
+									<span class="error-placeholder" style="display: none">読み込みに失敗しました</span>
+									<span class="empty-placeholder" style="display: none">関連する作品がありません</span>
+								</div>
+							</section>
+
+							<!-- 同時期 -->
+							<section class="related-section" aria-labelledby="same-period-heading" data-category="same-period">
+								<h3 id="same-period-heading" class="related-title gallery_summary">
+									&gt; 同時期 (
+									<span data-period-info=""><!-- 動的生成 --></span>
+									)
+								</h3>
+								<div class="related-grid" data-state="loading" data-grid-container="same-period">
+									<div class="loading-placeholder">読み込み中...</div>
+									<div class="error-placeholder" style="display: none">読み込みに失敗しました</div>
+									<div class="empty-placeholder" style="display: none">関連する作品がありません</div>
+								</div>
+								<span class="tags-info" data-count-info="same-period"><!-- 動的生成 --></span>
+								<div class="text-links summary_boxes" data-state="loading" data-text-container="same-period">
+									<span class="loading-placeholder">読み込み中...</span>
+									<span class="error-placeholder" style="display: none">読み込みに失敗しました</span>
+									<span class="empty-placeholder" style="display: none">関連する作品がありません</span>
+								</div>
+							</section>
+
+							<!-- 共通タグ1 -->
+							<section class="related-section" aria-labelledby="common-tags-1-heading" data-category="common-tags-1">
+								<h3 id="common-tags-1-heading" class="related-title gallery_summary">
+									&gt;
+									<a href="#" data-tag-link-1=""><!-- 動的生成 --></a>
+								</h3>
+								<div class="related-grid" data-state="loading" data-grid-container="common-tags-1">
+									<div class="loading-placeholder">読み込み中...</div>
+									<div class="error-placeholder" style="display: none">読み込みに失敗しました</div>
+									<div class="empty-placeholder" style="display: none">関連する作品がありません</div>
+								</div>
+								<span class="tags-info" data-count-info="common-tags-1"><!-- 動的生成 --></span>
+								<div class="text-links summary_boxes" data-state="loading" data-text-container="common-tags-1">
+									<span class="loading-placeholder">読み込み中...</span>
+									<span class="error-placeholder" style="display: none">読み込みに失敗しました</span>
+									<span class="empty-placeholder" style="display: none">関連する作品がありません</span>
+								</div>
+							</section>
+
+							<!-- 共通タグ2 -->
+							<section class="related-section" aria-labelledby="common-tags-2-heading" data-category="common-tags-2">
+								<h3 id="common-tags-2-heading" class="related-title gallery_summary">
+									&gt;
+									<a href="#" data-tag-link-2=""><!-- 動的生成 --></a>
+								</h3>
+								<div class="related-grid" data-state="loading" data-grid-container="common-tags-2">
+									<div class="loading-placeholder">読み込み中...</div>
+									<div class="error-placeholder" style="display: none">読み込みに失敗しました</div>
+									<div class="empty-placeholder" style="display: none">関連する作品がありません</div>
+								</div>
+								<span class="tags-info" data-count-info="common-tags-2"><!-- 動的生成 --></span>
+								<div class="text-links summary_boxes" data-state="loading" data-text-container="common-tags-2">
+									<span class="loading-placeholder">読み込み中...</span>
+									<span class="error-placeholder" style="display: none">読み込みに失敗しました</span>
+									<span class="empty-placeholder" style="display: none">関連する作品がありません</span>
+								</div>
+							</section>
+						</div>
+					</div>
+				</section>
+				<div id="gallerymaphtml" class="gallery-collapsed"></div>
+				<div id="footerhtml"></div>
+			</footer>
+			<div id="lightbox">
+				<link rel="stylesheet" href="../../luminous-basic.min.css" />
+				<script src="../../Luminous.min.js"></script>
+				<script>
+					new LuminousGallery(document.querySelectorAll("a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]"));
+				</script>
+			</div>
+		</div>
+
+		<script src="../gallery-system.js"></script>
+		<script>
+			// このページ固有の設定
+			window.GalleryPageConfig = {
+				currentSeries: "groundpolis_paint",
+				currentId: "gprip4",
+				debug: false, // 本番環境ではfalse
+			};
+		</script>
+	</body>
+</html>
