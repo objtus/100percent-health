@@ -147,13 +147,13 @@ document.addEventListener('DOMContentLoaded', function() {
         revealedImages.add(img.src),
         (l = img.closest(nsfwSel).querySelector(aSel)) && (l.style.pointerEvents = 'auto')
       ));
-      // 未表示カード
-      (node.querySelectorAll?.(nsfwSel + ':not(' + revSel + ') ' + aSel) || []).forEach(link => 
+      // 未表示カード（画像リンクのみ）
+      (node.querySelectorAll?.(nsfwSel + ':not(' + revSel + ') a[href$=".jpg"], ' + nsfwSel + ':not(' + revSel + ') a[href$=".png"], ' + nsfwSel + ':not(' + revSel + ') a[href$=".gif"], ' + nsfwSel + ':not(' + revSel + ') a[href$=".webp"]') || []).forEach(link => 
         link.style.pointerEvents = 'none'
       );
-      // ノード自体がNSFWカードの場合
+      // ノード自体がNSFWカードの場合（画像リンクのみ）
       node.classList?.contains?.('nsfw') && !node.classList.contains('revealed') && 
-        (l = node.querySelector(aSel)) && (l.style.pointerEvents = 'none');
+        (l = node.querySelector('a[href$=".jpg"], a[href$=".png"], a[href$=".gif"], a[href$=".webp"]')) && (l.style.pointerEvents = 'none');
     }
   });
 
