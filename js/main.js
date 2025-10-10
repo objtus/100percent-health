@@ -75,6 +75,9 @@ function initSidebar() {
       }
     }, 100);
   });
+
+  // 見出し関連機能の初期化
+  initHeadingFeatures();
 }
 
 // フッター統計情報更新関数
@@ -358,6 +361,412 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   })).observe(document.body, {attributes:1, attributeFilter:['src','class'], childList:1, subtree:1});
 });
+
+// 見出し関連機能の統合初期化
+function initHeadingFeatures() {
+  // 既存のクリーンアップ
+  window.headingFeaturesCleanup?.();
+  
+  // 状態管理オブジェクト
+  const state = {
+    tocVisible: false,
+    currentHeadingVisible: false,
+    headings: [],
+    currentActiveIndex: -1,
+    isTagPage: false,
+    scrollHandler: null,
+    wrapper: null,
+    tocClickHandlers: []
+  };
+
+  // ページ情報を初期化
+  const initializePageInfo = () => {
+    // ページタイトルを設定
+    const pageTitle = document.querySelector('head > title')?.textContent;
+    const titleValue = document.getElementById('sidebar-page-title-value');
+    if (pageTitle && titleValue) {
+      titleValue.textContent = pageTitle;
+    }
+
+    // 最終更新日時を設定
+    const lastModified = document.lastModified;
+    const lastModifiedValue = document.getElementById('sidebar-last-modified-value');
+    if (lastModified && lastModifiedValue) {
+      const date = new Date(lastModified);
+      const formattedDate = `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+      lastModifiedValue.textContent = formattedDate;
+    }
+
+    // スクロール進捗バーを初期化
+    initializeScrollProgress();
+
+    // ページ統計情報を初期化
+    initializePageStats();
+  };
+
+  // ページ統計情報を計算して表示
+  const initializePageStats = () => {
+    const stats = calculatePageStats();
+
+    // 見出し数と文字数を設定
+    const structureValue = document.getElementById('sidebar-page-structure-value');
+    if (structureValue) {
+      structureValue.textContent = `${stats.headingCount}個 | ${stats.charCount.toLocaleString()}字`;
+    }
+
+    // リンク数を設定
+    const linksValue = document.getElementById('sidebar-page-links-value');
+    if (linksValue) {
+      linksValue.textContent = `内部: ${stats.internalLinks} | 外部: ${stats.externalLinks}`;
+    }
+  };
+
+  // ページ統計情報を計算
+  const calculatePageStats = () => {
+    // 見出し数
+    const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    const headingCount = headings.length;
+
+    // 文字数（本文のみ）
+    const contentElement = document.querySelector('#wrapper, article, main, body');
+    let charCount = 0;
+    if (contentElement) {
+      const clone = contentElement.cloneNode(true);
+      clone.querySelectorAll('script, style, noscript, iframe').forEach(el => el.remove());
+      const text = clone.textContent || clone.innerText || '';
+      charCount = text.replace(/\s+/g, '').length;
+    }
+
+    // リンク数（内部・外部）
+    const links = document.querySelectorAll('a[href]');
+    let internalLinks = 0;
+    let externalLinks = 0;
+    const currentDomain = window.location.hostname;
+
+    links.forEach(link => {
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      if (href.startsWith('/') || 
+          href.startsWith('#') || 
+          href.startsWith('./') || 
+          href.startsWith('../') ||
+          href.includes(currentDomain)) {
+        internalLinks++;
+      } else if (href.startsWith('http://') || href.startsWith('https://')) {
+        externalLinks++;
+      } else {
+        internalLinks++;
+      }
+    });
+
+    return { headingCount, charCount, internalLinks, externalLinks };
+  };
+
+  // ページタイプを判定
+  const determinePageType = (headings) => {
+    const h3Count = headings.filter(h => h.tagName === 'H3').length;
+    return window.location.pathname.includes('/tag-page/') || h3Count > 5;
+  };
+
+  // 閾値計算
+  const getScrollThreshold = (wrapper, isTagPage) => {
+    const viewportHeight = wrapper.clientHeight;
+    return isTagPage ? viewportHeight * 0.90 : viewportHeight * 0.25;
+  };
+
+  // スクロール検出のセットアップ
+  const setupHeadingDetection = () => {
+    state.wrapper = document.querySelector('#wrapper') || document.documentElement;
+    if (!state.wrapper) {
+      console.error('Scroll wrapper not found');
+      return;
+    }
+
+    let scrollTimeout;
+    state.scrollHandler = () => {
+      if (!state.currentHeadingVisible && !state.tocVisible) return;
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(updateActiveIndexByScroll, 16);
+    };
+    
+    state.wrapper.addEventListener('scroll', state.scrollHandler, { passive: true });
+  };
+
+  // アクティブな見出しの判定
+  const updateActiveIndexByScroll = () => {
+    if (!state.wrapper) return;
+    
+    const scrollTop = state.wrapper.scrollTop;
+    const scrollHeight = state.wrapper.scrollHeight;
+    const clientHeight = state.wrapper.clientHeight;
+    
+    // ページ最上部の処理
+    if (scrollTop < 50) {
+      if (state.currentActiveIndex !== 0 && state.headings.length > 0) {
+        state.currentActiveIndex = 0;
+        updateCurrentPosition();
+      }
+      return;
+    }
+    
+    // ページ最下部の処理
+    if (scrollTop + clientHeight >= scrollHeight - 10 && state.headings.length > 0) {
+      const lastIndex = state.headings.length - 1;
+      if (state.currentActiveIndex !== lastIndex) {
+        state.currentActiveIndex = lastIndex;
+        updateCurrentPosition();
+      }
+      return;
+    }
+    
+    const threshold = getScrollThreshold(state.wrapper, state.isTagPage);
+    
+    // 閾値を超えた最も下の見出しを検索
+    let newActiveIndex = -1;
+    for (let i = state.headings.length - 1; i >= 0; i--) {
+      if (state.headings[i].getBoundingClientRect().top <= threshold) {
+        newActiveIndex = i;
+        break;
+      }
+    }
+    
+    // 該当なしの場合は最初の見出しを選択
+    if (newActiveIndex === -1 && state.headings.length > 0) newActiveIndex = 0;
+    
+    // インデックスが変更された場合のみ更新
+    if (newActiveIndex !== -1 && newActiveIndex !== state.currentActiveIndex) {
+      state.currentActiveIndex = newActiveIndex;
+      updateCurrentPosition();
+    }
+  };
+
+  // 見出し要素の初期化
+  const initializeHeadings = () => {
+    if (state.headings.length > 0) return true;
+
+    const headingElements = document.querySelectorAll('h2, h3, h4, h5, h6');
+    state.headings = Array.from(headingElements);
+    
+    if (state.headings.length === 0) {
+      $('#sidebar-toggle-toc, #sidebar-current-heading').hide();
+      return false;
+    }
+    
+    state.isTagPage = determinePageType(state.headings);
+    
+    // 見出しにIDを付与
+    state.headings.forEach((heading, index) => {
+      if (!heading.id) heading.id = `heading-${index}`;
+    });
+    
+    $('#sidebar-toggle-toc, #sidebar-current-heading').show();
+    state.currentHeadingVisible = true;
+    setupHeadingDetection();
+    
+    return true;
+  };
+
+  // 目次の生成
+  const generateTOC = () => {
+    const tocContent = document.getElementById('sidebar-toc-content');
+    if (!tocContent) return;
+
+    // 古いイベントリスナーをクリーンアップ
+    state.tocClickHandlers.forEach(({ element, handler }) => {
+      element.removeEventListener('click', handler);
+    });
+    state.tocClickHandlers = [];
+    tocContent.innerHTML = '';
+
+    state.headings.forEach((heading, index) => {
+      const tocItem = document.createElement('button');
+      tocItem.className = `sidebar-toc-item level-${heading.tagName.toLowerCase().charAt(1)}`;
+      tocItem.textContent = heading.textContent.trim();
+      tocItem.setAttribute('data-target', heading.id);
+      tocItem.setAttribute('data-index', index);
+
+      const clickHandler = function() {
+        const targetElement = document.getElementById(this.getAttribute('data-target'));
+        if (targetElement && state.wrapper) {
+          state.wrapper.scrollTo({
+            top: targetElement.offsetTop,
+            behavior: 'smooth'
+          });
+        }
+      };
+
+      tocItem.addEventListener('click', clickHandler);
+      state.tocClickHandlers.push({ element: tocItem, handler: clickHandler });
+      tocContent.appendChild(tocItem);
+    });
+  };
+
+  // 現在位置の表示更新
+  const updateCurrentPosition = () => {
+    const activeIndex = state.currentActiveIndex;
+    if (activeIndex < 0) return;
+
+    // 目次のハイライト更新
+    if (state.tocVisible) {
+      document.querySelectorAll('.sidebar-toc-item.active').forEach(item => {
+        item.classList.remove('active');
+      });
+      document.querySelector(`[data-index="${activeIndex}"]`)?.classList.add('active');
+    }
+
+    // 現在の見出し表示更新
+    if (state.currentHeadingVisible) {
+      const contentValue = document.getElementById('sidebar-current-heading-value');
+      
+      if (contentValue && state.headings[activeIndex]) {
+        let displayText = getHeadingTextWithoutRuby(state.headings[activeIndex]);
+        
+        // 文字数を切り詰め
+        if (displayText.length > 20) {
+          displayText = displayText.substring(0, 17) + '...';
+        }
+        
+        contentValue.textContent = displayText;
+        contentValue.setAttribute('title', displayText);
+        contentValue.style.opacity = '0';
+        setTimeout(() => contentValue.style.opacity = '1', 50);
+      }
+    }
+  };
+
+  // イベントハンドラ: 目次表示切り替え
+  $(document).on('click', '#sidebar-toggle-toc', function() {
+    const tocElement = document.getElementById('sidebar-toc');
+    if (!tocElement) return;
+
+    if (state.tocVisible) {
+      tocElement.style.display = 'none';
+      state.tocVisible = false;
+    } else {
+      if (!initializeHeadings()) return;
+      generateTOC();
+      tocElement.style.display = 'flex';
+      state.tocVisible = true;
+      updateCurrentPosition();
+    }
+  });
+
+  // イベントハンドラ: 目次を閉じる
+  $(document).on('click', '#sidebar-toc-close', () => {
+    const tocElement = document.getElementById('sidebar-toc');
+    if (tocElement) {
+      tocElement.style.display = 'none';
+      state.tocVisible = false;
+    }
+  });
+
+  // 初期化実行
+  const initialize = () => {
+    initializePageInfo();
+    if (initializeHeadings()) {
+      updateActiveIndexByScroll();
+      updateCurrentPosition();
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialize);
+  } else {
+    setTimeout(initialize, 100);
+  }
+  
+  // クリーンアップ関数
+  window.headingFeaturesCleanup = () => {
+    if (state.scrollHandler && state.wrapper) {
+      state.wrapper.removeEventListener('scroll', state.scrollHandler);
+    }
+
+    state.tocClickHandlers.forEach(({ element, handler }) => {
+      element.removeEventListener('click', handler);
+    });
+        
+    $('#sidebar-toc').hide();
+    
+    Object.assign(state, {
+      tocVisible: false,
+      currentHeadingVisible: false,
+      headings: [],
+      currentActiveIndex: -1,
+      scrollHandler: null,
+      wrapper: null,
+      tocClickHandlers: []
+    });
+  };
+
+  return { updateActiveIndexByScroll, getState: () => ({ ...state }) };
+}
+
+// スクロール進捗バーの初期化と更新
+function initializeScrollProgress() {
+  const progressValue = document.getElementById('sidebar-scroll-progress-value');
+  if (!progressValue) return;
+
+  // 初期表示
+  updateScrollProgress();
+
+  // スクロールイベントリスナーを追加
+  const wrapper = document.querySelector('#wrapper') || document.documentElement;
+  if (wrapper) {
+    let scrollTimeout;
+    const scrollHandler = () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(updateScrollProgress, 16);
+    };
+    wrapper.addEventListener('scroll', scrollHandler, { passive: true });
+    
+    // クリーンアップ関数に追加
+    const originalCleanup = window.headingFeaturesCleanup;
+    window.headingFeaturesCleanup = () => {
+      if (originalCleanup) originalCleanup();
+      wrapper.removeEventListener('scroll', scrollHandler);
+    };
+  }
+}
+
+// スクロール進捗バーの更新
+function updateScrollProgress() {
+  const progressValue = document.getElementById('sidebar-scroll-progress-value');
+  if (!progressValue) return;
+
+  const wrapper = document.querySelector('#wrapper') || document.documentElement;
+  if (!wrapper) return;
+
+  const scrollTop = wrapper.scrollTop;
+  const scrollHeight = wrapper.scrollHeight;
+  const clientHeight = wrapper.clientHeight;
+  
+  const maxScroll = scrollHeight - clientHeight;
+  const progress = maxScroll <= 0 ? 100 : Math.min(100, Math.max(0, (scrollTop / maxScroll) * 100));
+  
+  const barLength = 6;
+  const filledLength = Math.floor((progress / 100) * barLength);
+  const progressBar = '#'.repeat(filledLength) + '-'.repeat(barLength - filledLength);
+  
+  const percentStr = Math.floor(progress).toString();
+  const paddedPercent = percentStr.padStart(3, '0') + '%';
+  const formattedProgress = `${paddedPercent}: [${progressBar}]`;
+  
+  progressValue.textContent = formattedProgress;
+}
+
+// グローバルAPI
+window.initHeadingFeatures = initHeadingFeatures;
+
+// ユーティリティ: 見出しテキストを取得（rtタグ内のテキストは除外）
+function getHeadingTextWithoutRuby(element) {
+  const clone = element.cloneNode(true);
+  
+  // すべてのrtタグを削除
+  clone.querySelectorAll('rt').forEach(rt => rt.remove());
+  
+  return clone.textContent.trim();
+}
 
 // Google Analytics初期化
 !window.gtag && ((s = document.createElement('script')) => (

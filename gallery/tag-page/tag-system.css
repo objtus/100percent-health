@@ -12,10 +12,13 @@ div.card {
     padding: 15px;
     padding-bottom: 40px;
 }
-p.title{
+h3.title{
     display: inline-block;
     color: white;
     background-color: #888;
+    font-size: 1em;
+    font-weight: normal;
+    margin: 0;
     a{
         color: white;
         text-decoration: none;

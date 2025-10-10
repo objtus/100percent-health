@@ -6,5 +6,47 @@
     <button class="sidebar-item" id="sidebar-scroll-to-bottom" title="ページ下部へ" aria-label="ページ下部へスクロール">
       <span class="sidebar-icon">&gt;</span>
     </button>
+    <button class="sidebar-item" id="sidebar-toggle-toc" title="目次表示切り替え" aria-label="目次表示切り替え">
+      <span class="sidebar-icon">≡</span>
+    </button>
+  </div>
+
+  <!-- 目次表示エリア -->
+  <div class="sidebar-toc" id="sidebar-toc" style="display: none;">
+    <div class="sidebar-toc-header">
+      <span class="sidebar-toc-title">目次</span>
+      <button class="sidebar-toc-close" id="sidebar-toc-close" title="目次を閉じる" aria-label="目次を閉じる">×</button>
+    </div>
+    <div class="sidebar-toc-content" id="sidebar-toc-content">
+      <!-- 目次項目が動的に生成される -->
+    </div>
+  </div>
+
+  <!-- ページ情報表示エリア -->
+  <div id="sidebar-page-info-wrapper" class="sidebar-page-info">
+    <div id="sidebar-scroll-progress" class="sidebar-page-info-item">
+      <span class="sidebar-info-label">▓▓スクロール : </span>
+      <span class="sidebar-info-value" id="sidebar-scroll-progress-value"></span>
+    </div>
+    <div id="sidebar-page-structure" class="sidebar-page-info-item">
+      <span class="sidebar-info-label">▓▓見出しと文字数 : </span>
+      <span class="sidebar-info-value" id="sidebar-page-structure-value"></span>
+    </div>
+    <div id="sidebar-page-links" class="sidebar-page-info-item">
+      <span class="sidebar-info-label">▓▓リンク数 : </span>
+      <span class="sidebar-info-value" id="sidebar-page-links-value"></span>
+    </div>
+    <div id="sidebar-page-title" class="sidebar-page-info-item">
+      <span class="sidebar-info-label">▓▓ページタイトル : </span>
+      <span class="sidebar-info-value" id="sidebar-page-title-value"></span>
+    </div>
+    <div id="sidebar-last-modified" class="sidebar-page-info-item">
+      <span class="sidebar-info-label">▓▓最終更新日 : </span>
+      <span class="sidebar-info-value" id="sidebar-last-modified-value"></span>
+    </div>
+    <div class="sidebar-current-heading" id="sidebar-current-heading" style="display: none;">
+      <span class="sidebar-info-label">▓▓現在 : </span>
+      <span class="sidebar-info-value" id="sidebar-current-heading-value"></span>
+    </div>
   </div>
 </aside>

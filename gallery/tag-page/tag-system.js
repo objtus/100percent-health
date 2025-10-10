@@ -7,6 +7,7 @@ class TagPageSystem {
         this.currentSort = 'date-desc';
         this.currentSeriesFilter = '';
         this.currentTagFilter = '';
+        this.headingFeaturesInitialized = false;
     }
     
     async initialize(targetTag) {
@@ -216,6 +217,12 @@ class TagPageSystem {
         
         // ライトボックスを再初期化
         this.initializeLightbox();
+        
+        // フィルター変更時は初期化フラグをリセット
+        this.headingFeaturesInitialized = false;
+        
+        // サイドバーの見出し機能を再初期化（動的コンテンツ生成後）
+        this.reinitializeHeadingFeatures();
     }
     
     initializeLightbox() {
@@ -259,9 +266,9 @@ class TagPageSystem {
                 <a href="${work.image_path}">
                     <img src="${work.image_path}" alt="${work.id}" loading="lazy">
                 </a>
-                <p class="title">
+                <h3 class="title">
                     <a href="${work.path}">${work.id}</a>
-                </p>
+                </h3>
                 <p class="date">&gt;${work.date}</p>
                 <div class="series-info">${work.series}</div>
                 
@@ -508,6 +515,36 @@ class TagPageSystem {
         }
         
         console.log(`Loading: ${message} ${percentage ? `(${percentage}%)` : ''}`);
+    }
+    
+    // サイドバーの見出し機能を再初期化
+    reinitializeHeadingFeatures() {
+        // 一度だけ実行するように制御
+        if (this.headingFeaturesInitialized) {
+            return;
+        }
+        
+        // DOM更新とNSFWフィルター処理の完了を待つ
+        setTimeout(() => {
+            // 現在のh3要素数を確認
+            const h3Elements = document.querySelectorAll('h3');
+            console.log(`Reinitializing sidebar features for ${h3Elements.length} headings`);
+            
+            // グローバルな見出し機能の再初期化を呼び出し
+            if (window.initHeadingFeatures && typeof window.initHeadingFeatures === 'function') {
+                window.initHeadingFeatures();
+                this.headingFeaturesInitialized = true;
+                
+                // 初期位置を正確に設定（動的コンテンツ用）
+                setTimeout(() => {
+                    if (window.updateActiveIndexByScroll && typeof window.updateActiveIndexByScroll === 'function') {
+                        window.updateActiveIndexByScroll();
+                    }
+                }, 100);
+            } else {
+                console.warn('initHeadingFeatures function not available');
+            }
+        }, 500); // NSFWフィルター処理完了を待つ時間を延長
     }
 }
 
