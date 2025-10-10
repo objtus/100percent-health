@@ -5,9 +5,17 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 06 Oct 2025 11:24:48 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 10 Oct 2025 12:26:31 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>サイドバー機能を追加しました</title>
+      <link>https://yuinoid.neocities.org/aboutme.html</link>
+      <description>サイドバー機能を追加しました。トップページ以外の1カラムのページで、サイドバーを表示するようにしました。上下の移動ボタンと目次表示ボタンともろもろの情報（ページタイトル、ページの変更日時、現在表示している見出しタイトル、スクロール進捗バー、見出し数と文字数、リンク数）が掲示されています。情報の部分は装飾的な意図で作っていて、実用的な意味はあんまりありません。かっこいいかと思って。</description>
+      <pubDate>Fri, 10 Oct 2025 12:26:31 GMT</pubDate>
+      <category>system</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#qt2lkw-20251010</guid>
+    </item>
     <item>
       <title>タグ機能を追加してから見られなくなっていたgroundpolis_paint_ripを追加</title>
       <link>https://yuinoid.neocities.org/gallery/tag-page/groundpolis_paint_rip.html</link>
@@ -39,14 +47,6 @@
       <pubDate>Mon, 15 Sep 2025 13:49:57 GMT</pubDate>
       <category>system</category>
       <guid isPermaLink="false">https://yuinoid.neocities.org/rss#rxs3gv-20250915</guid>
-    </item>
-    <item>
-      <title>リンクページにgabrielさんのサイトを追加しました</title>
-      <link>https://yuinoid.neocities.org/links/links_main.html#crosslinks</link>
-      <description>リンクしていただいていました。ありがとうございます。gabrielさんの存在は以前から知っていて、時々サイトを見に行ったりしてました。音楽と好きなもののセンスが近くて共感しています。</description>
-      <pubDate>Fri, 12 Sep 2025 00:07:34 GMT</pubDate>
-      <category>links</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#hx0rbk-20250912</guid>
     </item>
   </channel>
 </rss>
