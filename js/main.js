@@ -364,10 +364,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 見出し関連機能の統合初期化
 function initHeadingFeatures() {
-  // 既存のクリーンアップ
   window.headingFeaturesCleanup?.();
   
-  // 状態管理オブジェクト
   const state = {
     tocVisible: false,
     currentHeadingVisible: false,
@@ -381,53 +379,36 @@ function initHeadingFeatures() {
 
   // ページ情報を初期化
   const initializePageInfo = () => {
-    // ページタイトルを設定
     const pageTitle = document.querySelector('head > title')?.textContent;
     const titleValue = document.getElementById('sidebar-page-title-value');
-    if (pageTitle && titleValue) {
-      titleValue.textContent = pageTitle;
-    }
+    if (pageTitle && titleValue) titleValue.textContent = pageTitle;
 
-    // 最終更新日時を設定
     const lastModified = document.lastModified;
     const lastModifiedValue = document.getElementById('sidebar-last-modified-value');
     if (lastModified && lastModifiedValue) {
       const date = new Date(lastModified);
-      const formattedDate = `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
-      lastModifiedValue.textContent = formattedDate;
+      lastModifiedValue.textContent = `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
     }
 
-    // スクロール進捗バーを初期化
     initializeScrollProgress();
-
-    // ページ統計情報を初期化
     initializePageStats();
   };
 
   // ページ統計情報を計算して表示
   const initializePageStats = () => {
     const stats = calculatePageStats();
-
-    // 見出し数と文字数を設定
     const structureValue = document.getElementById('sidebar-page-structure-value');
-    if (structureValue) {
-      structureValue.textContent = `${stats.headingCount}個 | ${stats.charCount.toLocaleString()}字`;
-    }
-
-    // リンク数を設定
+    if (structureValue) structureValue.textContent = `${stats.headingCount}個 | ${stats.charCount.toLocaleString()}字`;
+    
     const linksValue = document.getElementById('sidebar-page-links-value');
-    if (linksValue) {
-      linksValue.textContent = `内部: ${stats.internalLinks} | 外部: ${stats.externalLinks}`;
-    }
+    if (linksValue) linksValue.textContent = `内部: ${stats.internalLinks} | 外部: ${stats.externalLinks}`;
   };
 
   // ページ統計情報を計算
   const calculatePageStats = () => {
-    // 見出し数
     const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
     const headingCount = headings.length;
 
-    // 文字数（本文のみ）
     const contentElement = document.querySelector('#wrapper, article, main, body');
     let charCount = 0;
     if (contentElement) {
@@ -437,7 +418,6 @@ function initHeadingFeatures() {
       charCount = text.replace(/\s+/g, '').length;
     }
 
-    // リンク数（内部・外部）
     const links = document.querySelectorAll('a[href]');
     let internalLinks = 0;
     let externalLinks = 0;
@@ -446,30 +426,24 @@ function initHeadingFeatures() {
     links.forEach(link => {
       const href = link.getAttribute('href');
       if (!href) return;
-
-      if (href.startsWith('/') || 
-          href.startsWith('#') || 
-          href.startsWith('./') || 
-          href.startsWith('../') ||
-          href.includes(currentDomain)) {
+      
+      if (href.startsWith('/') || href.startsWith('#') || href.startsWith('./') || 
+          href.startsWith('../') || href.includes(currentDomain) || 
+          (!href.startsWith('http://') && !href.startsWith('https://'))) {
         internalLinks++;
-      } else if (href.startsWith('http://') || href.startsWith('https://')) {
-        externalLinks++;
       } else {
-        internalLinks++;
+        externalLinks++;
       }
     });
 
     return { headingCount, charCount, internalLinks, externalLinks };
   };
 
-  // ページタイプを判定
   const determinePageType = (headings) => {
     const h3Count = headings.filter(h => h.tagName === 'H3').length;
     return window.location.pathname.includes('/tag-page/') || h3Count > 5;
   };
 
-  // 閾値計算
   const getScrollThreshold = (wrapper, isTagPage) => {
     const viewportHeight = wrapper.clientHeight;
     return isTagPage ? viewportHeight * 0.90 : viewportHeight * 0.25;
@@ -501,7 +475,7 @@ function initHeadingFeatures() {
     const scrollHeight = state.wrapper.scrollHeight;
     const clientHeight = state.wrapper.clientHeight;
     
-    // ページ最上部の処理
+    // ページ最上部・最下部の処理
     if (scrollTop < 50) {
       if (state.currentActiveIndex !== 0 && state.headings.length > 0) {
         state.currentActiveIndex = 0;
@@ -510,7 +484,6 @@ function initHeadingFeatures() {
       return;
     }
     
-    // ページ最下部の処理
     if (scrollTop + clientHeight >= scrollHeight - 10 && state.headings.length > 0) {
       const lastIndex = state.headings.length - 1;
       if (state.currentActiveIndex !== lastIndex) {
@@ -531,10 +504,8 @@ function initHeadingFeatures() {
       }
     }
     
-    // 該当なしの場合は最初の見出しを選択
     if (newActiveIndex === -1 && state.headings.length > 0) newActiveIndex = 0;
     
-    // インデックスが変更された場合のみ更新
     if (newActiveIndex !== -1 && newActiveIndex !== state.currentActiveIndex) {
       state.currentActiveIndex = newActiveIndex;
       updateCurrentPosition();
@@ -554,8 +525,6 @@ function initHeadingFeatures() {
     }
     
     state.isTagPage = determinePageType(state.headings);
-    
-    // 見出しにIDを付与
     state.headings.forEach((heading, index) => {
       if (!heading.id) heading.id = `heading-${index}`;
     });
@@ -563,7 +532,6 @@ function initHeadingFeatures() {
     $('#sidebar-toggle-toc, #sidebar-current-heading').show();
     state.currentHeadingVisible = true;
     setupHeadingDetection();
-    
     return true;
   };
 
@@ -572,7 +540,6 @@ function initHeadingFeatures() {
     const tocContent = document.getElementById('sidebar-toc-content');
     if (!tocContent) return;
 
-    // 古いイベントリスナーをクリーンアップ
     state.tocClickHandlers.forEach(({ element, handler }) => {
       element.removeEventListener('click', handler);
     });
@@ -607,7 +574,6 @@ function initHeadingFeatures() {
     const activeIndex = state.currentActiveIndex;
     if (activeIndex < 0) return;
 
-    // 目次のハイライト更新
     if (state.tocVisible) {
       document.querySelectorAll('.sidebar-toc-item.active').forEach(item => {
         item.classList.remove('active');
@@ -615,17 +581,11 @@ function initHeadingFeatures() {
       document.querySelector(`[data-index="${activeIndex}"]`)?.classList.add('active');
     }
 
-    // 現在の見出し表示更新
     if (state.currentHeadingVisible) {
       const contentValue = document.getElementById('sidebar-current-heading-value');
-      
       if (contentValue && state.headings[activeIndex]) {
         let displayText = getHeadingTextWithoutRuby(state.headings[activeIndex]);
-        
-        // 文字数を切り詰め
-        if (displayText.length > 20) {
-          displayText = displayText.substring(0, 17) + '...';
-        }
+        if (displayText.length > 20) displayText = displayText.substring(0, 17) + '...';
         
         contentValue.textContent = displayText;
         contentValue.setAttribute('title', displayText);
@@ -635,7 +595,7 @@ function initHeadingFeatures() {
     }
   };
 
-  // イベントハンドラ: 目次表示切り替え
+  // イベントハンドラ
   $(document).on('click', '#sidebar-toggle-toc', function() {
     const tocElement = document.getElementById('sidebar-toc');
     if (!tocElement) return;
@@ -652,7 +612,6 @@ function initHeadingFeatures() {
     }
   });
 
-  // イベントハンドラ: 目次を閉じる
   $(document).on('click', '#sidebar-toc-close', () => {
     const tocElement = document.getElementById('sidebar-toc');
     if (tocElement) {
@@ -707,10 +666,8 @@ function initializeScrollProgress() {
   const progressValue = document.getElementById('sidebar-scroll-progress-value');
   if (!progressValue) return;
 
-  // 初期表示
   updateScrollProgress();
 
-  // スクロールイベントリスナーを追加
   const wrapper = document.querySelector('#wrapper') || document.documentElement;
   if (wrapper) {
     let scrollTimeout;
@@ -720,7 +677,6 @@ function initializeScrollProgress() {
     };
     wrapper.addEventListener('scroll', scrollHandler, { passive: true });
     
-    // クリーンアップ関数に追加
     const originalCleanup = window.headingFeaturesCleanup;
     window.headingFeaturesCleanup = () => {
       if (originalCleanup) originalCleanup();
@@ -729,7 +685,6 @@ function initializeScrollProgress() {
   }
 }
 
-// スクロール進捗バーの更新
 function updateScrollProgress() {
   const progressValue = document.getElementById('sidebar-scroll-progress-value');
   if (!progressValue) return;
@@ -740,31 +695,23 @@ function updateScrollProgress() {
   const scrollTop = wrapper.scrollTop;
   const scrollHeight = wrapper.scrollHeight;
   const clientHeight = wrapper.clientHeight;
-  
   const maxScroll = scrollHeight - clientHeight;
   const progress = maxScroll <= 0 ? 100 : Math.min(100, Math.max(0, (scrollTop / maxScroll) * 100));
   
   const barLength = 6;
   const filledLength = Math.floor((progress / 100) * barLength);
   const progressBar = '#'.repeat(filledLength) + '-'.repeat(barLength - filledLength);
-  
   const percentStr = Math.floor(progress).toString();
   const paddedPercent = percentStr.padStart(3, '0') + '%';
-  const formattedProgress = `${paddedPercent}: [${progressBar}]`;
   
-  progressValue.textContent = formattedProgress;
+  progressValue.textContent = `${paddedPercent}: [${progressBar}]`;
 }
 
-// グローバルAPI
 window.initHeadingFeatures = initHeadingFeatures;
 
-// ユーティリティ: 見出しテキストを取得（rtタグ内のテキストは除外）
 function getHeadingTextWithoutRuby(element) {
   const clone = element.cloneNode(true);
-  
-  // すべてのrtタグを削除
   clone.querySelectorAll('rt').forEach(rt => rt.remove());
-  
   return clone.textContent.trim();
 }
 
