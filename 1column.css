@@ -928,7 +928,7 @@ nav {
   border: 1px solid #000;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 99;
+  z-index: 200;
   font-family: "saitamaar", 'PikoA', "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   font-size: 12px;
   overflow: hidden;
