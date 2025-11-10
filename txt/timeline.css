@@ -382,11 +382,11 @@ em{
 }
 
 /*===================
-  サイドバー
+  年表サイドバー
 ===================*/
-#sidebar-toggle {
+#timeline-sidebar-toggle {
   position: fixed;
-  top: 100px;
+  top: 220px;
   left: 0px;
   height: 80px;
   width: 80px;
@@ -394,8 +394,8 @@ em{
   color: white;
   padding: 20px;
   border: none;
-  z-index: 2000;
-  transition: background-color 0.3s ease, border 0.3s ease;
+  z-index: 100;
+  transition: background-color 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -404,25 +404,42 @@ em{
 }
 
 /* フィルタリング中の状態 */
-#sidebar-toggle.filtering-active {
-  background-color: #444444;
-  border: 2px solid #666666;
+#timeline-sidebar-toggle.filtering-active {
+  background-color: white;
+  color: black;
+
 }
 
 /* ボタン内のテキスト用 */
-#sidebar-toggle .filter-status {
+#timeline-sidebar-toggle .filter-status {
   font-size: 0.7em;
   margin-top: 2px;
   display: block;
 }
 
-#sidebar {
+/* クイックリセットボタン */
+#timeline-quick-reset {
+  position: fixed;
+  top: 310px;
+  left: 0px;
+  height: 40px;
+  width: 80px;
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border: none;
+  z-index: 100;
+  cursor: pointer;
+  display: none;
+}
+
+#timeline-sidebar {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   position: fixed;
   top: 180px;
-  left: 0px;
+  left: -10px;
   width: 260px;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
@@ -439,7 +456,7 @@ em{
   }
 }
 
-#sidebar.active {
+#timeline-sidebar.timeline-sidebar-active {
   transform: translateX(0);
 }
 
@@ -541,7 +558,7 @@ em{
     }
   }
 
-  #sidebar-toggle {
+  #timeline-sidebar-toggle {
     position: fixed;
     top: 80vh;
     left: 0px;
@@ -556,17 +573,27 @@ em{
   }
 
   /* モバイル版フィルタリング中の状態 */
-  #sidebar-toggle.filtering-active {
+  #timeline-sidebar-toggle.filtering-active {
     background-color: rgba(68, 68, 68, 0.8);
     border: 2px solid rgba(102, 102, 102, 0.8);
   }
 
-  #sidebar-toggle .filter-status {
+  #timeline-sidebar-toggle .filter-status {
     font-size: 0.65em;
     margin-top: 1px;
   }
 
-  #sidebar {
+  /* モバイル版クイックリセットボタン */
+  #timeline-quick-reset {
+    top: calc(80vh + 60px);
+    left: 0px;
+    height: 40px;
+    width: 80px;
+    font-size: 0.75rem;
+    padding: 8px;
+  }
+
+  #timeline-sidebar {
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
@@ -628,7 +655,7 @@ em{
 }
 
 @media screen and (max-height: 670px) {
-  #sidebar {
+  #timeline-sidebar {
     top: 0px;
     left: 0px;
     width: 260px;

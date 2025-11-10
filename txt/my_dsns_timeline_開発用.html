@@ -572,8 +572,9 @@
         </details>
       </div>
 
-      <button id="sidebar-toggle" aria-label="メニュー">menu</button>
-      <div id="sidebar">
+      <button id="timeline-sidebar-toggle" aria-label="メニュー">menu</button>
+      <button id="timeline-quick-reset" aria-label="フィルターをリセット" style="display: none;">reset</button>
+      <div id="timeline-sidebar">
         <div id="sidebar_flex_1">
           <div id="sidebar_jump">
             <button id="back_to_top" class="sidebar-button">↑to top</button>
@@ -658,20 +659,20 @@
         </div>
       </div>
       <script>
-        // サイドバーのトグルボタンがクリックされたら、サイドバーを表示または非表示にする
-        const sidebar = document.getElementById('sidebar'); // サイドバーの要素を取得
-        const toggleButton = document.getElementById('sidebar-toggle'); // トグルボタンの要素を取得
+        // 年表サイドバーのトグルボタンがクリックされたら、サイドバーを表示または非表示にする
+        const timelineSidebar = document.getElementById('timeline-sidebar'); // サイドバーの要素を取得
+        const timelineToggleButton = document.getElementById('timeline-sidebar-toggle'); // トグルボタンの要素を取得
         const body = document.getElementsByTagName('body')[0]; // body要素を取得
 
-        toggleButton.addEventListener('click', (event) => {
+        timelineToggleButton.addEventListener('click', (event) => {
           event.stopPropagation(); // トグルボタンクリック時にイベントが親要素に伝播しないようにする
-          sidebar.classList.toggle('active');
+          timelineSidebar.classList.toggle('timeline-sidebar-active');
         });
 
         body.addEventListener('click', (event) => {
-          if (event.target !== sidebar && !sidebar.contains(event.target)) {
+          if (event.target !== timelineSidebar && !timelineSidebar.contains(event.target)) {
             // クリックされた要素がサイドバーでなく、サイドバー内の要素でもない場合、サイドバーを閉じる
-            sidebar.classList.remove('active');
+            timelineSidebar.classList.remove('timeline-sidebar-active');
           }
         });
 
@@ -691,14 +692,14 @@
     <script src="dtimeline.js"></script>
 
     <script>
-      const sidebarHtml = document.getElementById('sidebar');
-      const dragButton = document.getElementById('sidebar-toggle');
+      const timelineSidebarHtml = document.getElementById('timeline-sidebar');
+      const timelineDragButton = document.getElementById('timeline-sidebar-toggle');
       let isDragging = false;
       let startY;
       let startTop;
 
-      dragButton.addEventListener('mousedown', startDragging);
-      dragButton.addEventListener('touchstart', startDragging);
+      timelineDragButton.addEventListener('mousedown', startDragging);
+      timelineDragButton.addEventListener('touchstart', startDragging);
       document.addEventListener('mousemove', drag);
       document.addEventListener('touchmove', drag);
       document.addEventListener('mouseup', stopDragging);
@@ -708,24 +709,24 @@
       function startDragging(event) {
         isDragging = true;
         startY = event.type === 'mousedown' ? event.clientY : event.touches[0].clientY;
-        startTop = dragButton.offsetTop;
+        startTop = timelineDragButton.offsetTop;
       }
 
       function drag(event) {
         if (!isDragging) return;
         const deltaY = (event.type === 'mousemove' ? event.clientY : event.touches[0].clientY) - startY;
         const newTop = startTop + deltaY;
-        const sidebarHeight = sidebarHtml.offsetHeight;
-        const buttonHeight = dragButton.offsetHeight;
+        const sidebarHeight = timelineSidebarHtml.offsetHeight;
+        const buttonHeight = timelineDragButton.offsetHeight;
         const minTop = 0;
         const maxTop = sidebarHeight - buttonHeight;
 
         if (newTop < minTop) {
-          dragButton.style.top = minTop + 'px';
+          timelineDragButton.style.top = minTop + 'px';
         } else if (newTop > maxTop) {
-          dragButton.style.top = maxTop + 'px';
+          timelineDragButton.style.top = maxTop + 'px';
         } else {
-          dragButton.style.top = newTop + 'px';
+          timelineDragButton.style.top = newTop + 'px';
         }
       }
 
@@ -733,10 +734,10 @@
         isDragging = false;
       }
 
-      dragButton.addEventListener('click', toggleSidebar);
+      timelineDragButton.addEventListener('click', toggleTimelineSidebar);
 
-      function toggleSidebar() {
-        sidebarHtml.classList.toggle('open');
+      function toggleTimelineSidebar() {
+        timelineSidebarHtml.classList.toggle('open');
       }
     </script>
 

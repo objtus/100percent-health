@@ -76,14 +76,15 @@
           
           // DOM要素のキャッシュ（パフォーマンス最適化）
           this.cachedElements = {
-            body: null,           // body要素
-            searchInput: null,    // 検索入力フィールド
-            timelineLayout: null, // タイムラインコンテナ
-            checkboxes: null,     // 全チェックボックス
-            radioButtons: null,   // 全ラジオボタン
-            resetButton: null,    // リセットボタン
-            clearButton: null,    // クリアボタン
-            sidebarToggle: null   // サイドバートグルボタン
+            body: null,                    // body要素
+            searchInput: null,             // 検索入力フィールド
+            timelineLayout: null,          // タイムラインコンテナ
+            checkboxes: null,              // 全チェックボックス
+            radioButtons: null,            // 全ラジオボタン
+            resetButton: null,             // リセットボタン（サイドバー内）
+            clearButton: null,             // クリアボタン
+            timelineSidebarToggle: null,   // 年表サイドバートグルボタン
+            timelineQuickReset: null       // クイックリセットボタン
           };
         }
 
@@ -130,11 +131,12 @@
         }
 
         /**
-         * サイドバートグルボタンの表示を更新
+         * 年表サイドバートグルボタンの表示を更新
          * フィルタリング状態に応じてボタンの見た目とテキストを変更
          */
         updateSidebarToggleButton() {
-          const $toggle = this.getCachedElement('sidebarToggle');
+          const $toggle = this.getCachedElement('timelineSidebarToggle');
+          const $quickReset = this.getCachedElement('timelineQuickReset');
           
           if (!$toggle || $toggle.length === 0) {
             return;
@@ -147,11 +149,21 @@
             $toggle.addClass('filtering-active');
             $toggle.html('menu<span class="filter-status">(filtered)</span>');
             $toggle.attr('aria-label', 'メニュー - フィルタリング中');
+            
+            // クイックリセットボタンを表示
+            if ($quickReset && $quickReset.length > 0) {
+              $quickReset.show();
+            }
           } else {
             // デフォルト状態
             $toggle.removeClass('filtering-active');
             $toggle.html('menu');
             $toggle.attr('aria-label', 'メニュー');
+            
+            // クイックリセットボタンを非表示
+            if ($quickReset && $quickReset.length > 0) {
+              $quickReset.hide();
+            }
           }
         }
 
@@ -171,7 +183,8 @@
           this.cachedElements.radioButtons = $('input[name="class"]');
           this.cachedElements.resetButton = $('#reset-all');
           this.cachedElements.clearButton = $('#clearButton');
-          this.cachedElements.sidebarToggle = $('#sidebar-toggle');
+          this.cachedElements.timelineSidebarToggle = $('#timeline-sidebar-toggle');
+          this.cachedElements.timelineQuickReset = $('#timeline-quick-reset');
         }
 
         /**
@@ -890,6 +903,13 @@
               this.onFilterEvent('clear_click', e);
             });
           }
+
+          const $quickResetButton = this.getCachedElement('timelineQuickReset');
+          if ($quickResetButton.length) {
+            $quickResetButton.on('click.timelineFilter', (e) => {
+              this.onFilterEvent('reset_click', e);
+            });
+          }
         }
 
         /**
@@ -1071,6 +1091,9 @@
           }
           if (this.cachedElements.resetButton) {
             this.cachedElements.resetButton.off('.timelineFilter');
+          }
+          if (this.cachedElements.timelineQuickReset) {
+            this.cachedElements.timelineQuickReset.off('.timelineFilter');
           }
 
           // タイムアウトのクリア
