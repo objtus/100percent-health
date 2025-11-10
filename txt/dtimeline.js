@@ -1,52 +1,202 @@
       // =============================================================================
-      // メインシステム初期化
+      // TimelineFilter モジュール
+      // =============================================================================
+      // タイムライン表示のフィルタリング機能を提供するモジュール
+      //
+      // 主な機能:
+      // - カテゴリ別フィルタリング（ラジオボタン・チェックボックス）
+      // - テキスト検索
+      // - URL パラメータによる状態管理
+      // - テキスト選択からの検索
+      // - DOM要素のキャッシュによるパフォーマンス最適化
+      //
+      // アーキテクチャ:
+      // - IIFE でカプセル化し、グローバルスコープの汚染を防止
+      // - 状態管理の一元化
+      // - CSS駆動による効率的な表示制御
       // =============================================================================
 
-      // メイン初期化関数
-      function initializeTimelineFilter() {
-        // TimelineFilterシステムを有効化
-        window.timelineFilter.enable();
-      }
+      (function(global) {
+        'use strict';
+
+      // =============================================================================
+      // 定数定義
+      // =============================================================================
+
+      const CONSTANTS = {
+        // UI関連
+        SEARCH_BUTTON: {
+          WIDTH: 50,
+          HEIGHT: 28,
+          MARGIN: 8,
+          Z_INDEX_BASE: 9999,
+          Z_INDEX_ACTIVE: 10000
+        },
+        
+        // タイミング関連
+        DELAYS: {
+          TEXT_SELECTION: 50,        // テキスト選択検出の遅延
+          SEARCH_DEBOUNCE: 300,      // 検索入力のデバウンス
+          UI_UPDATE: 10,             // UI更新の遅延
+          SYSTEM_INIT: 50            // システム初期化の遅延
+        },
+        
+        // デフォルト値
+        DEFAULTS: {
+          SELECTED_CLASS: 'mixed',
+          FALLBACK_CATEGORIES: ['d', 'sns', 'web', 'tech', 'culture']
+        }
+      };
 
       // =============================================================================
       // TimelineFilter 基盤クラス
       // =============================================================================
 
       class TimelineFilter {
+        /**
+         * TimelineFilter コンストラクタ
+         * フィルタリングシステムの初期状態を設定
+         */
         constructor() {
-          // 基本状態の初期化
+          // フィルタリング状態の初期化
           this.state = {
-            searchText: '',
-            selectedClass: 'mixed',
-            selectedCheckboxes: new Set()
+            searchText: '',                                    // 検索テキスト
+            selectedClass: CONSTANTS.DEFAULTS.SELECTED_CLASS,  // 選択されたラジオボタン値
+            selectedCheckboxes: new Set()                      // 選択されたチェックボックスのSet
           };
+          
+          // 年の表示状態キャッシュ（yearId -> boolean）
           this.yearCache = new Map();
+          
+          // テキスト選択用検索ボタン
           this.searchButton = null;
           
-          // Phase 1: カテゴリ管理機能の追加
-          this.categoryCache = null; // カテゴリキャッシュ
+          // カテゴリ情報のキャッシュ
+          this.categoryCache = null;
+          
+          // DOM要素のキャッシュ（パフォーマンス最適化）
+          this.cachedElements = {
+            body: null,           // body要素
+            searchInput: null,    // 検索入力フィールド
+            timelineLayout: null, // タイムラインコンテナ
+            checkboxes: null,     // 全チェックボックス
+            radioButtons: null,   // 全ラジオボタン
+            resetButton: null,    // リセットボタン
+            clearButton: null,    // クリアボタン
+            sidebarToggle: null   // サイドバートグルボタン
+          };
         }
 
-        // システムを有効化
-        enable() {
-          // 文字選択機能の初期化
-          if (!this.searchButton) {
-            this.initializeTextSelection();
-          }
-        }
+        // =============================================================================
+        // 状態管理
+        // =============================================================================
 
-        // 基本的な状態管理メソッド
+        /**
+         * 状態を更新する
+         * @param {Object} changes - 更新する状態のオブジェクト
+         */
         updateState(changes) {
           const oldState = { ...this.state };
           Object.assign(this.state, changes);
-          // URLパラメータの更新は必要に応じて実装
+        }
+
+        /**
+         * フィルタリングが適用されているかを判定
+         * @returns {boolean} フィルタリング中の場合true
+         */
+        isFilteringActive() {
+          // 検索テキストが入力されている
+          if (this.state.searchText && this.state.searchText.trim() !== '') {
+            return true;
+          }
+
+          // ラジオボタンが "mixed" 以外
+          if (this.state.selectedClass !== CONSTANTS.DEFAULTS.SELECTED_CLASS) {
+            return true;
+          }
+
+          // チェックボックスが全選択でない
+          const allCategories = this.getAvailableCategories();
+          if (this.state.selectedCheckboxes.size !== allCategories.length) {
+            return true;
+          }
+
+          // 全てのカテゴリがチェックされているか確認
+          const allChecked = allCategories.every(category => 
+            this.state.selectedCheckboxes.has(category)
+          );
+
+          return !allChecked;
+        }
+
+        /**
+         * サイドバートグルボタンの表示を更新
+         * フィルタリング状態に応じてボタンの見た目とテキストを変更
+         */
+        updateSidebarToggleButton() {
+          const $toggle = this.getCachedElement('sidebarToggle');
+          
+          if (!$toggle || $toggle.length === 0) {
+            return;
+          }
+
+          const isFiltering = this.isFilteringActive();
+
+          if (isFiltering) {
+            // フィルタリング中
+            $toggle.addClass('filtering-active');
+            $toggle.html('menu<span class="filter-status">(filtered)</span>');
+            $toggle.attr('aria-label', 'メニュー - フィルタリング中');
+          } else {
+            // デフォルト状態
+            $toggle.removeClass('filtering-active');
+            $toggle.html('menu');
+            $toggle.attr('aria-label', 'メニュー');
+          }
         }
 
         // =============================================================================
-        // Phase 1: カテゴリ管理機能
+        // DOM要素キャッシュ管理（パフォーマンス最適化）
         // =============================================================================
 
-        // HTMLからカテゴリを動的取得
+        /**
+         * DOM要素をキャッシュに保存
+         * 頻繁にアクセスする要素を事前に取得してパフォーマンスを向上
+         */
+        initializeCachedElements() {
+          this.cachedElements.body = $('body');
+          this.cachedElements.searchInput = $('#searchInput');
+          this.cachedElements.timelineLayout = $('#timeline_layout');
+          this.cachedElements.checkboxes = $('input[type="checkbox"]');
+          this.cachedElements.radioButtons = $('input[name="class"]');
+          this.cachedElements.resetButton = $('#reset-all');
+          this.cachedElements.clearButton = $('#clearButton');
+          this.cachedElements.sidebarToggle = $('#sidebar-toggle');
+        }
+
+        /**
+         * キャッシュされたDOM要素を取得
+         * キャッシュが無効な場合は自動的に再取得
+         * @param {string} key - 要素のキー名
+         * @returns {jQuery} キャッシュされたjQueryオブジェクト
+         */
+        getCachedElement(key) {
+          if (!this.cachedElements[key] || this.cachedElements[key].length === 0) {
+            // キャッシュが無効な場合は再取得
+            this.initializeCachedElements();
+          }
+          return this.cachedElements[key];
+        }
+
+        // =============================================================================
+        // カテゴリ管理機能
+        // =============================================================================
+
+        /**
+         * HTMLからカテゴリを動的に取得
+         * チェックボックスのvalue属性から利用可能なカテゴリを抽出
+         * @returns {Array<string>} カテゴリ名の配列
+         */
         getAvailableCategories() {
           if (this.categoryCache) {
             return this.categoryCache; // キャッシュがあれば使用
@@ -84,25 +234,42 @@
           }
         }
 
-        // フォールバック用最小限カテゴリ
+        /**
+         * フォールバック用の最小限カテゴリを返す
+         * カテゴリ取得に失敗した場合に使用
+         * @returns {Array<string>} フォールバックカテゴリの配列
+         */
         getFallbackCategories() {
-          return ['d', 'sns', 'web', 'tech', 'culture']; // 確実に存在するもののみ
+          return CONSTANTS.DEFAULTS.FALLBACK_CATEGORIES;
         }
 
-        // 動的なデフォルト状態生成
+        /**
+         * デフォルト状態を動的に生成
+         * @returns {Object} デフォルト状態オブジェクト
+         */
         getDefaultState() {
           return {
-            class: 'mixed',
+            class: CONSTANTS.DEFAULTS.SELECTED_CLASS,
             checkboxes: this.getAvailableCategories()
           };
         }
 
-        // URLパラメータ管理で使用
+        /**
+         * デフォルトチェックボックス選択をSetとして返す
+         * @returns {Set<string>} カテゴリ名のSet
+         */
         getDefaultCheckboxesSet() {
           return new Set(this.getAvailableCategories());
         }
 
-        // 文字選択機能の初期化
+        // =============================================================================
+        // テキスト選択機能
+        // =============================================================================
+
+        /**
+         * テキスト選択機能を初期化
+         * ユーザーがテキストを選択した際に検索ボタンを表示する機能を設定
+         */
         initializeTextSelection() {
 
           // 検索ボタンを作成
@@ -141,38 +308,7 @@
 
           this.searchButton = $('<button>')
             .text('検索')
-            .addClass('timeline-text-selection-button')
-            .css({
-              'position': 'absolute',
-              'z-index': '9999',
-              'display': 'none',
-              'background': '#ffffffaa',
-              'backdrop-filter': 'blur(2px)',
-              '-webkit-backdrop-filter': 'blur(2px)',
-              'color': 'black',
-              'border': 'none',
-              'padding': '5px 10px',
-              'border-radius': '2px',
-              'cursor': 'pointer',
-              'font-size': '14px',
-              'transition': 'all 0.2s ease'
-            });
-
-          // ホバー効果
-          this.searchButton.hover(
-            function () {
-              $(this).css({
-                'background': '#f0f0f0',
-                'transform': 'scale(1.05)'
-              });
-            },
-            function () {
-              $(this).css({
-                'background': '#ffffffaa',
-                'transform': 'scale(1)'
-              });
-            }
-          );
+            .addClass('timeline-text-selection-button');
 
           $('body').append(this.searchButton);
         }
@@ -197,7 +333,7 @@
             } else {
               this.hideTextSelectionSearchButton();
             }
-          }, 50);
+          }, CONSTANTS.DELAYS.TEXT_SELECTION);
         }
 
         // 文字選択用検索ボタンを表示
@@ -213,7 +349,7 @@
             e.stopPropagation();
 
             // 検索フィールドに選択テキストを設定
-            $('#searchInput').val(selectedText);
+            this.getCachedElement('searchInput').val(selectedText);
 
             // 検索ボタンを非表示
             this.hideTextSelectionSearchButton();
@@ -226,9 +362,9 @@
           });
 
           // 改良された位置計算
-          const buttonWidth = 50;
-          const buttonHeight = 28;
-          const margin = 8;
+          const buttonWidth = CONSTANTS.SEARCH_BUTTON.WIDTH;
+          const buttonHeight = CONSTANTS.SEARCH_BUTTON.HEIGHT;
+          const margin = CONSTANTS.SEARCH_BUTTON.MARGIN;
 
           // 基本位置：選択範囲の右上
           let left = rect.right + margin;
@@ -268,16 +404,17 @@
           left = Math.max(scrollX + 5, Math.min(left, viewportWidth + scrollX - buttonWidth - 5));
           top = Math.max(scrollY + 5, Math.min(top, viewportHeight + scrollY - buttonHeight - 5));
 
+          // 位置とz-indexのみをJavaScriptで動的に設定
           this.searchButton.css({
-            display: 'block',
-            position: 'absolute',
             top: top + 'px',
             left: left + 'px',
-            'z-index': '10000'
-          });
+            'z-index': CONSTANTS.SEARCH_BUTTON.Z_INDEX_ACTIVE
+          }).show();
         }
 
-        // 文字選択用検索ボタンを非表示
+        /**
+         * 文字選択用検索ボタンを非表示
+         */
         hideTextSelectionSearchButton() {
           if (this.searchButton) {
             this.searchButton.hide();
@@ -285,39 +422,26 @@
           }
         }
 
-        // 基本的な検索機能（Phase 3改良版：addYearControl相当の処理を統合）
+        /**
+         * テキスト選択からの検索を実行
+         * @param {string} searchText - 検索テキスト
+         */
         performBasicSearch(searchText) {
           // 状態を更新
           this.updateState({ searchText: searchText });
 
-          // 既存の検索イベントを発火してフィルタリングをトリガー
-          const searchInput = $('#searchInput');
-          if (searchInput.length) {
-            // 各種イベントを発火（既存システムが何に反応するか不明なため）
-            searchInput.trigger('input');
-            searchInput.trigger('keyup');
-            searchInput.trigger('change');
-
-            // 少し遅延しても一度発火（非同期処理への対応）
-            setTimeout(() => {
-              searchInput.trigger('input');
-            }, 10);
-          }
-
-          // Phase 3改良: 既存の検索機能に加えて年単位制御も実行
-          if (typeof window.performSearch === 'function') {
-            window.performSearch();
-          }
-          
-          // addYearControl相当の処理を直接実行
-          this.addYearControl();
+          // 統合されたフィルタリングロジックを実行
+          this.performSearch();
         }
 
         // =============================================================================
-        // Phase 2: URL パラメータ管理機能
+        // URLパラメータ管理
         // =============================================================================
 
-        // URLパラメータの更新（既存のupdateUrlParams関数を移植）
+        /**
+         * 現在の状態をURLパラメータに反映
+         * デフォルト状態と異なる場合のみパラメータを追加
+         */
         updateUrlParams() {
 
           const urlParams = new URLSearchParams();
@@ -347,7 +471,11 @@
           window.history.replaceState(null, null, newUrl);
         }
 
-        // URLからの状態復元（既存のrestoreSelectionFromUrlParams関数を移植）
+        /**
+         * URLパラメータから状態を復元
+         * ページ読み込み時やURL変更時にフィルタ状態を復元
+         * パラメータ例: ?class=d&checkboxes=d,sns&search=mastodon
+         */
         restoreFromUrl() {
           const urlParams = new URLSearchParams(window.location.search);
           const selectedClass = urlParams.get('class');
@@ -355,31 +483,38 @@
           const searchQuery = urlParams.get('search');
 
           // 状態オブジェクトの更新
+          const updates = {};
+
           if (selectedClass) {
-            this.state.selectedClass = selectedClass;
+            updates.selectedClass = selectedClass;
           }
 
           if (selectedCheckboxes) {
             const checkboxValues = selectedCheckboxes.split(',');
-            this.state.selectedCheckboxes = new Set(checkboxValues);
+            updates.selectedCheckboxes = new Set(checkboxValues);
           } else {
-            // 【修正】デフォルトチェックボックス選択を動的取得に変更
-            this.state.selectedCheckboxes = this.getDefaultCheckboxesSet();
+            // デフォルトチェックボックス選択を動的取得
+            updates.selectedCheckboxes = this.getDefaultCheckboxesSet();
           }
 
           if (searchQuery) {
-            this.state.searchText = searchQuery;
+            updates.searchText = searchQuery;
           }
 
-          // 既存のフォーム要素にも反映（Phase 2では参考実装のみ）
+          // 状態を一括更新
+          this.updateState(updates);
+
+          // フォーム要素にも反映
           this.syncStateToForm();
         }
 
-        // 状態をフォーム要素に同期
+        /**
+         * 内部状態をフォーム要素に同期
+         * 状態オブジェクトの内容をUIに反映（URLから復元時などに使用）
+         */
         syncStateToForm() {
-
           // 検索フィールドの同期
-          const $searchInput = $('#searchInput');
+          const $searchInput = this.getCachedElement('searchInput');
           if ($searchInput.length && $searchInput.val() !== this.state.searchText) {
             $searchInput.val(this.state.searchText);
           }
@@ -391,7 +526,8 @@
           }
 
           // チェックボックスの同期
-          $('input[type="checkbox"]').each((index, checkbox) => {
+          const $checkboxes = this.getCachedElement('checkboxes');
+          $checkboxes.each((index, checkbox) => {
             const $checkbox = $(checkbox);
             const value = $checkbox.val();
             const shouldBeChecked = this.state.selectedCheckboxes.has(value);
@@ -400,16 +536,19 @@
               $checkbox.prop('checked', shouldBeChecked);
             }
           });
-
         }
 
-        // フォーム要素から状態を読み取り
+        /**
+         * フォーム要素から現在の状態を読み取る
+         * UIの状態を内部状態オブジェクトに変換
+         * @returns {Object} 状態オブジェクト
+         */
         readStateFromForm() {
-          const searchText = $('#searchInput').val() || '';
-          const selectedClass = $('input[name="class"]:checked').val() || 'all';
+          const searchText = this.getCachedElement('searchInput').val() || '';
+          const selectedClass = this.getCachedElement('radioButtons').filter(':checked').val() || 'all';
           const selectedCheckboxes = new Set();
 
-          $('input[type="checkbox"]:checked').each((index, checkbox) => {
+          this.getCachedElement('checkboxes').filter(':checked').each((index, checkbox) => {
             selectedCheckboxes.add($(checkbox).val());
           });
 
@@ -422,25 +561,45 @@
           return newState;
         }
 
-        // 年キャッシュの基本操作
+        /**
+         * 年の表示状態をキャッシュに設定
+         * @param {string} yearId - 年のID
+         * @param {boolean} isVisible - 表示状態
+         * @note 現在は直接yearCache.setを使用しているため未使用（将来の拡張用）
+         */
         setYearVisibility(yearId, isVisible) {
           this.yearCache.set(yearId, isVisible);
         }
 
+        /**
+         * 年の表示状態をキャッシュから取得
+         * @param {string} yearId - 年のID
+         * @returns {boolean} 表示状態
+         * @note 現在は未使用（将来の拡張用）
+         */
         getYearVisibility(yearId) {
           return this.yearCache.get(yearId);
         }
 
-        // Phase 1では何もしないプレースホルダーメソッド
+        /**
+         * フィルタリングを実行（メインエントリーポイント）
+         * 内部的にrecalculateAffectedYearsを呼び出す
+         */
         performSearch() {
           this.recalculateAffectedYears();
         }
 
         // =============================================================================
-        // Phase 3: フィルタリングロジック
+        // フィルタリングロジック
         // =============================================================================
 
-        // 影響を受ける年の再計算（メインフィルタリングロジック）
+        /**
+         * タイムラインの全項目をフィルタリングして表示を更新
+         * - 各項目の表示/非表示を判定
+         * - 年ごとの表示項目数を集計
+         * - 統計情報をbody要素のdata属性に保存
+         * - パフォーマンス測定を実施
+         */
         recalculateAffectedYears() {
 
           const startTime = performance.now();
@@ -449,8 +608,10 @@
           let totalItems = 0;
           let visibleItems = 0;
 
-          // Phase 4: CSS駆動による効率的な表示制御
-          $('#timeline_layout > div').each((index, yearDiv) => {
+          // CSS駆動による効率的な表示制御
+          // CSSクラスを使用してDOM操作を最小限に抑え、パフォーマンスを向上
+          const $timelineLayout = this.getCachedElement('timelineLayout');
+          $timelineLayout.children('div').each((index, yearDiv) => {
             const $yearDiv = $(yearDiv);
             const yearId = $yearDiv.attr('id');
             processedYears++;
@@ -466,7 +627,7 @@
               const $item = $(item);
               const shouldShow = this.shouldShowItem($item);
 
-              // Phase 4: CSS クラスによる表示制御
+              // CSSクラスによる表示制御（display プロパティは CSS で管理）
               $item.toggleClass('timeline-visible', shouldShow);
               $item.toggleClass('timeline-hidden', !shouldShow);
 
@@ -482,7 +643,7 @@
             // 年の表示状態をキャッシュに保存
             this.yearCache.set(yearId, shouldShowYear);
 
-            // Phase 4: CSS classで年の表示制御
+            // CSSクラスで年の表示制御（display プロパティは CSS で管理）
             $yearDiv.toggleClass('has-visible-items', shouldShowYear);
             $yearDiv.toggleClass('no-visible-items', !shouldShowYear);
 
@@ -495,16 +656,19 @@
             }
           });
 
-          // Phase 4: 全体の統計情報をbody要素のデータ属性に設定
-          $('body').attr('data-timeline-visible-years', visibleYears);
-          $('body').attr('data-timeline-total-years', processedYears);
-          $('body').attr('data-timeline-visible-items', visibleItems);
-          $('body').attr('data-timeline-total-items', totalItems);
+          // 全体の統計情報をbody要素のデータ属性に設定
+          // CSSセレクタや外部スクリプトから統計情報を参照可能にする
+          const $body = this.getCachedElement('body');
+          $body.attr('data-timeline-visible-years', visibleYears);
+          $body.attr('data-timeline-total-years', processedYears);
+          $body.attr('data-timeline-visible-items', visibleItems);
+          $body.attr('data-timeline-total-items', totalItems);
 
           const endTime = performance.now();
           const duration = endTime - startTime;
 
-          // Phase 4: フィルタリング完了イベントの発火
+          // フィルタリング完了イベントの発火
+          // 統計情報と処理時間を含むカスタムイベントを発火
           this.triggerFilteringComplete({
             visibleYears,
             totalYears: processedYears,
@@ -514,26 +678,41 @@
           });
         }
 
-        // Phase 4: フィルタリング完了イベントの発火
+        /**
+         * フィルタリング完了イベントを発火
+         * @param {Object} stats - フィルタリング統計情報
+         * @param {number} stats.visibleYears - 表示されている年の数
+         * @param {number} stats.totalYears - 全年の数
+         * @param {number} stats.visibleItems - 表示されている項目の数
+         * @param {number} stats.totalItems - 全項目の数
+         * @param {number} stats.duration - 処理時間（ミリ秒）
+         */
         triggerFilteringComplete(stats) {
           const event = new CustomEvent('timelineFilteringComplete', {
             detail: stats
           });
           document.dispatchEvent(event);
 
-          // Phase 4: JavaScript による項目数表示の更新
+          // 項目数表示を更新（年ごとの表示項目数を表示）
           this.updateItemCountsDisplay();
+
+          // サイドバートグルボタンの表示を更新
+          this.updateSidebarToggleButton();
         }
 
-        // JavaScript による項目数表示の実装
+        /**
+         * 年ごとの項目数表示を更新
+         * 各年の見出しに「(表示数/全体数)」形式で項目数を追加
+         * CSSスタイルは timeline.css の .timeline-item-count で管理
+         */
         updateItemCountsDisplay() {
-
           // 既存の項目数表示を削除
           $('.timeline-item-count').remove();
 
           let updatedCount = 0;
 
-          $('#timeline_layout > div').each((index, div) => {
+          const $timelineLayout = this.getCachedElement('timelineLayout');
+          $timelineLayout.children('div').each((index, div) => {
             const $div = $(div);
             const $h2 = $div.find('h2.year');
 
@@ -544,48 +723,70 @@
               // 表示される年のみに項目数を追加
               if ($div.hasClass('has-visible-items') && totalCount > 0) {
                 const countText = ` (${visibleCount}/${totalCount})`;
-                $h2.append(`<span class="timeline-item-count" style="font-size: 0.8em; color: #666; font-weight: normal;">${countText}</span>`);
+                $h2.append(`<span class="timeline-item-count">${countText}</span>`);
                 updatedCount++;
               }
             }
           });
         }
 
-        // 個別項目の表示判定
+        /**
+         * 個別項目の表示判定
+         * ラジオボタン、チェックボックス、検索テキストの3つの条件を評価
+         * @param {jQuery} $item - 判定対象のli要素
+         * @returns {boolean} 表示すべきかどうか
+         */
         shouldShowItem($item) {
           const classMatch = this.checkClassMatch($item);
           const checkboxMatch = this.checkCheckboxMatch($item);
           const searchMatch = this.checkSearchMatch($item);
 
-          const result = classMatch && checkboxMatch && searchMatch;
-
-          return result;
+          // 全ての条件を満たす場合のみ表示
+          return classMatch && checkboxMatch && searchMatch;
         }
 
-        // クラスマッチングの判定
+        /**
+         * ラジオボタン選択によるクラスマッチング判定
+         * @param {jQuery} $item - 判定対象のli要素
+         * @returns {boolean} マッチするかどうか
+         */
         checkClassMatch($item) {
-          if (this.state.selectedClass === 'mixed') {
+          // "mixed" モードの場合は全て表示
+          if (this.state.selectedClass === CONSTANTS.DEFAULTS.SELECTED_CLASS) {
             return true;
           }
 
           return $item.hasClass(this.state.selectedClass);
         }
 
-        // チェックボックスマッチングの判定
+        /**
+         * チェックボックス選択によるマッチング判定
+         * 項目が選択されたカテゴリのいずれかに属するかを判定
+         * @param {jQuery} $item - 判定対象のli要素
+         * @returns {boolean} マッチするかどうか
+         */
         checkCheckboxMatch($item) {
+          // チェックボックスが1つも選択されていない場合は非表示
           if (this.state.selectedCheckboxes.size === 0) {
             return false;
           }
 
           const itemClasses = $item.attr('class') ? $item.attr('class').split(' ') : [];
 
+          // 項目のクラスのいずれかが選択されたカテゴリに含まれるか
           return itemClasses.some(className =>
             this.state.selectedCheckboxes.has(className)
           );
         }
 
-        // 検索マッチングの判定
+        /**
+         * 検索テキストによるマッチング判定
+         * 項目のテキストに検索文字列が含まれるかを判定（大文字小文字を区別しない）
+         * @param {jQuery} $item - 判定対象のli要素
+         * @returns {boolean} マッチするかどうか
+         */
         checkSearchMatch($item) {
+          // 検索テキストが空の場合は全て表示
           if (!this.state.searchText || this.state.searchText.trim() === '') {
             return true;
           }
@@ -596,69 +797,41 @@
           return itemText.includes(searchText);
         }
 
-        // 既存のフィルタリング結果に年単位制御を追加（文字選択→検索ボタン用）
-        addYearControl() {
-          let visibleYears = 0;
-
-          $('#timeline_layout > div').each((index, yearDiv) => {
-            const $yearDiv = $(yearDiv);
-            const yearId = $yearDiv.attr('id');
-
-            // その年に表示されているli要素があるかチェック
-            const $allItems = $yearDiv.find('li');
-            const $visibleItems = $yearDiv.find('li:visible');
-            const totalItemsInYear = $allItems.length;
-            const visibleItemsInYear = $visibleItems.length;
-            const shouldShowYear = visibleItemsInYear > 0;
-
-            // 年の表示状態をキャッシュに保存
-            this.yearCache.set(yearId, shouldShowYear);
-
-            // Phase 4: CSS classで年の表示制御（統一）
-            $yearDiv.toggleClass('has-visible-items', shouldShowYear);
-            $yearDiv.toggleClass('no-visible-items', !shouldShowYear);
-
-            // データ属性の更新（修正版）
-            $yearDiv.attr('data-visible-count', visibleItemsInYear);
-            $yearDiv.attr('data-total-count', totalItemsInYear);
-
-            if (shouldShowYear) {
-              visibleYears++;
-            }
-
-          });
-
-          // 統計情報の更新
-          $('body').attr('data-timeline-visible-years', visibleYears);
-
-          // イベント発火（項目数表示も含む）
-          this.triggerFilteringComplete({
-            visibleYears,
-            method: 'addYearControl'
-          });
-        }
-
         // =============================================================================
-        // フィルタリング状態管理機能
+        // イベント管理
         // =============================================================================
 
-        // フィルタリング状態の視覚的フィードバック
+        /**
+         * フィルタリング状態をbodyのCSSクラスに反映
+         * - timeline-filtered: フィルタリング中
+         * - timeline-no-results: 結果なし
+         * - timeline-partial-results: 部分的な結果
+         * - timeline-all-results: 全て表示
+         */
         updateFilteringStatus() {
-          const visibleYears = parseInt($('body').attr('data-timeline-visible-years') || '0');
-          const totalYears = parseInt($('body').attr('data-timeline-total-years') || '0');
-          const visibleItems = parseInt($('body').attr('data-timeline-visible-items') || '0');
-          const totalItems = parseInt($('body').attr('data-timeline-total-items') || '0');
+          const $body = this.getCachedElement('body');
+          const visibleYears = parseInt($body.attr('data-timeline-visible-years') || '0');
+          const totalYears = parseInt($body.attr('data-timeline-total-years') || '0');
+          const visibleItems = parseInt($body.attr('data-timeline-visible-items') || '0');
+          const totalItems = parseInt($body.attr('data-timeline-total-items') || '0');
 
           // フィルタリング状態のCSSクラスを body に適用
-          $('body').toggleClass('timeline-filtered', visibleItems < totalItems);
-          $('body').toggleClass('timeline-no-results', visibleItems === 0);
-          $('body').toggleClass('timeline-partial-results', visibleItems > 0 && visibleItems < totalItems);
-          $('body').toggleClass('timeline-all-results', visibleItems === totalItems);
+          $body.toggleClass('timeline-filtered', visibleItems < totalItems);
+          $body.toggleClass('timeline-no-results', visibleItems === 0);
+          $body.toggleClass('timeline-partial-results', visibleItems > 0 && visibleItems < totalItems);
+          $body.toggleClass('timeline-all-results', visibleItems === totalItems);
         }
 
-        // フィルタ関連イベントのインターセプト
+        /**
+         * フィルタ関連のイベントリスナーを設定
+         * - 検索入力（デバウンス、IME対応）
+         * - ラジオボタン変更
+         * - チェックボックス変更
+         * - リセットボタン
+         * - クリアボタン
+         */
         interceptFilterEvents() {
-          const $searchInput = $('#searchInput');
+          const $searchInput = this.getCachedElement('searchInput');
           if ($searchInput.length) {
             let isComposing = false;
 
@@ -670,7 +843,7 @@
               isComposing = false;
               setTimeout(() => {
                 this.onFilterEvent('search_input', { type: 'compositionend' });
-              }, 10);
+              }, CONSTANTS.DELAYS.UI_UPDATE);
             });
 
             $searchInput.on('input.timelineFilter', (e) => {
@@ -678,7 +851,7 @@
                 clearTimeout(this.searchTimeout);
                 this.searchTimeout = setTimeout(() => {
                   this.onFilterEvent('search_input', e);
-                }, 300);
+                }, CONSTANTS.DELAYS.SEARCH_DEBOUNCE);
               }
             });
 
@@ -689,37 +862,42 @@
             });
           }
 
-          const $radioButtons = $('input[name="class"]');
+          const $radioButtons = this.getCachedElement('radioButtons');
           if ($radioButtons.length) {
             $radioButtons.on('change.timelineFilter', (e) => {
               this.onFilterEvent('radio_change', e);
             });
           }
 
-          const $checkboxes = $('input[type="checkbox"]');
+          const $checkboxes = this.getCachedElement('checkboxes');
           if ($checkboxes.length) {
             $checkboxes.on('change.timelineFilter', (e) => {
               this.onFilterEvent('checkbox_change', e);
             });
           }
 
-          const $resetButton = $('#reset-all');
+          const $resetButton = this.getCachedElement('resetButton');
           if ($resetButton.length) {
             $resetButton.on('click.timelineFilter', (e) => {
               this.onFilterEvent('reset_click', e);
             });
           }
 
-          const $clearButton = $('#clearButton');
+          const $clearButton = this.getCachedElement('clearButton');
           if ($clearButton.length) {
             $clearButton.on('click.timelineFilter', (e) => {
-              $('#searchInput').val('');
+              this.getCachedElement('searchInput').val('');
               this.onFilterEvent('clear_click', e);
             });
           }
         }
 
-        // フィルタイベントハンドラ
+        /**
+         * フィルタイベントの統一ハンドラ
+         * 各種フィルタリング操作（検索、ラジオボタン、チェックボックス）を処理
+         * @param {string} eventType - イベントタイプ（'search_input', 'radio_change', 'checkbox_change', etc.）
+         * @param {Event} event - jQueryイベントオブジェクト
+         */
         onFilterEvent(eventType, event) {
           // リセットの場合は特別処理
           if (eventType === 'reset_click') {
@@ -737,57 +915,71 @@
             this.syncRadioButtons();
           }
 
-          // Phase 2: フォームからの状態読み取りとURL更新
+          // フォームからの状態読み取りと更新
           const newState = this.readStateFromForm();
-          this.state.searchText = newState.searchText;
-          this.state.selectedClass = newState.selectedClass;
-          this.state.selectedCheckboxes = newState.selectedCheckboxes;
+          this.updateState({
+            searchText: newState.searchText,
+            selectedClass: newState.selectedClass,
+            selectedCheckboxes: newState.selectedCheckboxes
+          });
 
           // URL パラメータの更新
           this.updateUrlParams();
 
-          // Phase 3: フィルタリング実行
+          // フィルタリング実行
           this.performSearch();
 
-          // Phase 4: フィルタリング完了後の処理
+          // フィルタリング完了後の処理
           setTimeout(() => {
             this.updateFilteringStatus();
-          }, 10);
+          }, CONSTANTS.DELAYS.UI_UPDATE);
         }
 
-        // ラジオボタンに応じてチェックボックスを同期（既存ロジック移植）
+        /**
+         * ラジオボタンに応じてチェックボックスを同期
+         * ラジオボタンで特定のカテゴリが選択された場合、対応するチェックボックスのみをチェック
+         */
         syncCheckboxes() {
-          const selectedClass = $('input[name="class"]:checked').val();
+          const selectedClass = this.getCachedElement('radioButtons').filter(':checked').val();
 
-          if (selectedClass !== "mixed") {
+          if (selectedClass !== CONSTANTS.DEFAULTS.SELECTED_CLASS) {
             // 特定のクラスが選択された場合、そのクラスのみチェック
-            $('input[type="checkbox"]').prop('checked', false);
-            $(`input[type="checkbox"][value="${selectedClass}"]`).prop('checked', true);
+            const $checkboxes = this.getCachedElement('checkboxes');
+            $checkboxes.prop('checked', false);
+            $checkboxes.filter(`[value="${selectedClass}"]`).prop('checked', true);
             console.log(`[TimelineFilter] チェックボックス同期: ${selectedClass} のみ選択`);
           }
           // "mixed" の場合は何もしない（現在の状態を維持）
         }
 
-        // チェックボックス変更時にラジオボタンを同期（既存ロジック移植）
+        /**
+         * チェックボックス変更時にラジオボタンを "mixed" に同期
+         * チェックボックスが手動で変更された場合、ラジオボタンを "mixed" モードに設定
+         */
         syncRadioButtons() {
           // チェックボックスが変更された場合、ラジオボタンを "mixed" に設定
-          const $mixedRadio = $('input[name="class"][value="mixed"]');
+          const $mixedRadio = this.getCachedElement('radioButtons').filter(`[value="${CONSTANTS.DEFAULTS.SELECTED_CLASS}"]`);
           if (!$mixedRadio.prop('checked')) {
             $mixedRadio.prop('checked', true);
           }
         }
 
-        // リセット処理の専用ハンドラ
+        /**
+         * リセット処理の専用ハンドラ
+         * フィルタ状態をデフォルトにリセット（全カテゴリ選択、検索クリア、URLパラメータクリア）
+         */
         handleReset() {
-          // 【修正】デフォルト状態を動的取得に変更
-          this.state.searchText = '';
-          this.state.selectedClass = 'mixed';
-          this.state.selectedCheckboxes = this.getDefaultCheckboxesSet();
+          // デフォルト状態に戻す
+          this.updateState({
+            searchText: '',
+            selectedClass: CONSTANTS.DEFAULTS.SELECTED_CLASS,
+            selectedCheckboxes: this.getDefaultCheckboxesSet()
+          });
 
           // フォームを更新
-          $('#searchInput').val('');
-          $('input[name="class"][value="mixed"]').prop('checked', true);
-          $('input[type="checkbox"]').prop('checked', true);
+          this.getCachedElement('searchInput').val('');
+          this.getCachedElement('radioButtons').filter(`[value="${CONSTANTS.DEFAULTS.SELECTED_CLASS}"]`).prop('checked', true);
+          this.getCachedElement('checkboxes').prop('checked', true);
 
           // URLをクリア
           const newUrl = window.location.origin + window.location.pathname;
@@ -795,17 +987,36 @@
 
           // フィルタリング実行
           this.performSearch();
+
+          // サイドバートグルボタンの表示を更新
+          this.updateSidebarToggleButton();
         }
 
-        // 有効化メソッド（統合版）
+        // =============================================================================
+        // ライフサイクル管理
+        // =============================================================================
+
+        /**
+         * TimelineFilterシステムを有効化
+         * 初期化の流れ:
+         * 1. DOM要素のキャッシュ
+         * 2. カテゴリ情報の取得
+         * 3. テキスト選択機能の初期化
+         * 4. イベントリスナーの設定
+         * 5. URLからの状態復元とフィルタリング実行
+         */
         enable() {
           console.log('[TimelineFilter] システム有効化');
 
-          // Phase 1: カテゴリ情報を事前に取得・キャッシュ
+          // DOM要素のキャッシュ初期化
+          this.initializeCachedElements();
+          console.log('[TimelineFilter] DOM要素キャッシュ完了');
+
+          // カテゴリ情報を事前に取得・キャッシュ
           this.getAvailableCategories();
           console.log('[TimelineFilter] カテゴリキャッシュ完了');
 
-          // 文字選択機能の初期化
+          // テキスト選択機能の初期化
           if (!this.searchButton) {
             this.initializeTextSelection();
           }
@@ -818,21 +1029,49 @@
             this.restoreFromUrl();
             this.syncStateToForm();
             this.performSearch();
+
+            // 初期状態でのボタン表示更新
+            this.updateSidebarToggleButton();
             
             console.log('[TimelineFilter] 初期化完了');
-          }, 50);
+          }, CONSTANTS.DELAYS.SYSTEM_INIT);
         }
 
+        /**
+         * システムを無効化
+         * イベントリスナーやリソースを削除してシステムを停止する
+         * @note 現在は未実装（将来の拡張用）
+         * @see cleanup() - リソースのクリーンアップには cleanup() を使用
+         */
         disable() {
+          // 将来の実装用プレースホルダー
+          // 必要に応じて以下を実装:
+          // - イベントリスナーの削除
+          // - タイマーのクリア
+          // - キャッシュのクリア
+          // - 状態のリセット
         }
 
-        // クリーンアップメソッド
+        /**
+         * TimelineFilterのクリーンアップ
+         * - イベントリスナーの削除
+         * - タイマーのクリア
+         * - キャッシュのクリア
+         */
         cleanup() {
           // 追加したイベントリスナーを削除
-          $('#searchInput').off('.timelineFilter');
-          $('input[name="class"]').off('.timelineFilter');
-          $('input[type="checkbox"]').off('.timelineFilter');
-          $('#reset-all').off('.timelineFilter');
+          if (this.cachedElements.searchInput) {
+            this.cachedElements.searchInput.off('.timelineFilter');
+          }
+          if (this.cachedElements.radioButtons) {
+            this.cachedElements.radioButtons.off('.timelineFilter');
+          }
+          if (this.cachedElements.checkboxes) {
+            this.cachedElements.checkboxes.off('.timelineFilter');
+          }
+          if (this.cachedElements.resetButton) {
+            this.cachedElements.resetButton.off('.timelineFilter');
+          }
 
           // タイムアウトのクリア
           if (this.searchTimeout) {
@@ -846,38 +1085,73 @@
             this.searchButton.remove();
             this.searchButton = null;
           }
+
+          // キャッシュのクリア
+          this.cachedElements = {
+            body: null,
+            searchInput: null,
+            timelineLayout: null,
+            checkboxes: null,
+            radioButtons: null,
+            resetButton: null,
+            clearButton: null
+          };
         }
       }
 
-      // グローバルインスタンスの作成
-      window.timelineFilter = new TimelineFilter();
+      // =============================================================================
+      // モジュールの初期化とグローバル公開
+      // =============================================================================
 
-      // =============================================================================
-      // システム初期化とイベント管理
-      // =============================================================================
+      // TimelineFilterインスタンスの作成
+      const timelineFilter = new TimelineFilter();
 
       // フィルタリングイベントのリスナー設定
       document.addEventListener('timelineFilteringComplete', function (event) {
+        // 将来の拡張用（現在は空実装）
       });
 
-      // 新システムを有効化
-      window.timelineFilter.enable();
-      
+      // システムを有効化
+      timelineFilter.enable();
+
       // =============================================================================
-      // Phase 4: デバッグと検証機能
+      // グローバル公開 API
       // =============================================================================
-      
-      // コンソールで実行可能な検証関数
-      window.debugTimelineFilter = function() {
-        const filter = window.timelineFilter;
-        console.log('取得カテゴリ:', filter.getAvailableCategories());
-        console.log('デフォルト状態:', filter.getDefaultState());
-        console.log('現在の状態:', filter.state);
+      // 必要最小限のインターフェースのみをグローバルスコープに公開し、
+      // 内部実装の詳細を隠蔽
+
+      /**
+       * TimelineFilterインスタンス
+       * @type {TimelineFilter}
+       * @global
+       */
+      global.timelineFilter = timelineFilter;
+
+      /**
+       * TimelineFilterを初期化（再初期化）
+       * HTMLから直接呼び出し可能
+       * @global
+       * @function
+       */
+      global.initializeTimelineFilter = function() {
+        timelineFilter.enable();
+      };
+
+      /**
+       * デバッグ情報をコンソールに出力
+       * 開発環境では追加の整合性チェックを実行
+       * @global
+       * @function
+       */
+      global.debugTimelineFilter = function() {
+        console.log('取得カテゴリ:', timelineFilter.getAvailableCategories());
+        console.log('デフォルト状態:', timelineFilter.getDefaultState());
+        console.log('現在の状態:', timelineFilter.state);
         
-        // デバッグ用：カテゴリ整合性チェック（開発時のみ有効）
-        if (window.location.hostname === 'localhost') {
-          const htmlCategories = filter.getAvailableCategories();
-          const stateCategories = Array.from(filter.state.selectedCheckboxes);
+        // カテゴリ整合性チェック（開発環境のみ）
+        if (global.location.hostname === 'localhost') {
+          const htmlCategories = timelineFilter.getAvailableCategories();
+          const stateCategories = Array.from(timelineFilter.state.selectedCheckboxes);
           
           const missing = stateCategories.filter(cat => !htmlCategories.includes(cat));
           if (missing.length > 0) {
@@ -888,3 +1162,5 @@
           console.log('[Debug] 状態カテゴリ:', stateCategories);
         }
       };
+
+      })(window);

@@ -22,6 +22,10 @@
   border-bottom: 1px dashed;
 }
 
+div#today_event li {
+  list-style: none;
+}
+
 /*===================
   TextBlock
 ===================*/
@@ -391,6 +395,25 @@ em{
   padding: 20px;
   border: none;
   z-index: 2000;
+  transition: background-color 0.3s ease, border 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+/* フィルタリング中の状態 */
+#sidebar-toggle.filtering-active {
+  background-color: #444444;
+  border: 2px solid #666666;
+}
+
+/* ボタン内のテキスト用 */
+#sidebar-toggle .filter-status {
+  font-size: 0.7em;
+  margin-top: 2px;
+  display: block;
 }
 
 #sidebar {
@@ -526,8 +549,21 @@ em{
     height: 55px;
     background-color: rgba(0, 0, 0, 0.3);
     color: white;
-    padding: 20px;
+    padding: 10px;
     border: none;
+    font-size: 0.85rem;
+    line-height: 1.1;
+  }
+
+  /* モバイル版フィルタリング中の状態 */
+  #sidebar-toggle.filtering-active {
+    background-color: rgba(68, 68, 68, 0.8);
+    border: 2px solid rgba(102, 102, 102, 0.8);
+  }
+
+  #sidebar-toggle .filter-status {
+    font-size: 0.65em;
+    margin-top: 1px;
   }
 
   #sidebar {
@@ -597,5 +633,87 @@ em{
     left: 0px;
     width: 260px;
     transform: translateX(-360px);
+  }
+}
+
+/*===================
+  テキスト選択検索ボタン
+===================*/
+.timeline-text-selection-button {
+  position: absolute;
+  display: none;
+  background: rgba(255, 255, 255, 0.67);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.timeline-text-selection-button:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.timeline-text-selection-button:not(:hover) {
+  background: rgba(255, 255, 255, 0.67);
+  transform: scale(1);
+}
+
+/*===================
+  フィルタリング表示制御
+===================*/
+/* 年単位の表示制御 */
+#timeline_layout>div:not(.has-visible-items),
+#timeline_layout>div.no-visible-items {
+  display: none !important;
+}
+
+#timeline_layout>div.has-visible-items {
+  display: block !important;
+}
+
+/* 項目レベルの表示制御 */
+#timeline_layout li.timeline-hidden {
+  display: none !important;
+}
+
+#timeline_layout li.timeline-visible {
+  display: list-item !important;
+}
+
+/* 検索結果なしの場合のメッセージ */
+body.timeline-no-results #timeline_layout::after {
+  content: "該当する項目が見つかりませんでした";
+  display: block;
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-style: italic;
+  background: #f9f9f9;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+/* JavaScript追加の項目数表示のスタイル */
+.timeline-item-count {
+  font-size: 0.8em !important;
+  color: #666 !important;
+  font-weight: normal !important;
+  margin-left: 8px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .timeline-item-count {
+    font-size: 0.6em !important;
+    margin-top: 5px;
+    margin-left: 0;
   }
 }

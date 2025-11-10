@@ -56,59 +56,6 @@
     });
 
   </script>
-
-  <style>
-    /* 年単位の表示制御 */
-    #timeline_layout>div:not(.has-visible-items),
-    #timeline_layout>div.no-visible-items {
-      display: none !important;
-    }
-
-    #timeline_layout>div.has-visible-items {
-      display: block !important;
-    }
-
-    /* 項目レベルの表示制御 */
-    #timeline_layout li.timeline-hidden {
-      display: none !important;
-    }
-
-    #timeline_layout li.timeline-visible {
-      display: list-item !important;
-    }
-
-    /* 検索結果なしの場合のメッセージ */
-    body.timeline-no-results #timeline_layout::after {
-      content: "該当する項目が見つかりませんでした";
-      display: block;
-      text-align: center;
-      padding: 40px 20px;
-      color: #666;
-      font-style: italic;
-      background: #f9f9f9;
-      border: 2px dashed #ccc;
-      border-radius: 8px;
-      margin: 20px 0;
-      font-size: 1.1em;
-    }
-
-    /* JavaScript追加の項目数表示のスタイル */
-    .timeline-item-count {
-      font-size: 0.8em !important;
-      color: #666 !important;
-      font-weight: normal !important;
-      margin-left: 8px;
-    }
-
-    /* レスポンシブ対応 */
-    @media (max-width: 768px) {
-      .timeline-item-count {
-        font-size: 0.6em !important;
-        margin-top: 5px;
-        margin-left: 0;
-      }
-    }
-  </style>
 </head>
 
 <body>
@@ -159,11 +106,6 @@
 
         <h2>今日はなんの日？</h2>
         <div class="today-event-wrapper">
-          <style>
-            div#today_event li {
-              list-style: none;
-            }
-          </style>
           今日は、<br>
           <div id="today_event">
             <ul></ul>
@@ -630,7 +572,7 @@
         </details>
       </div>
 
-      <button id="sidebar-toggle">menu</button>
+      <button id="sidebar-toggle" aria-label="メニュー">menu</button>
       <div id="sidebar">
         <div id="sidebar_flex_1">
           <div id="sidebar_jump">
@@ -733,14 +675,11 @@
           }
         });
 
-        // DOM読み込み後に初期化実行
-        $(document).ready(() => {
-          // TimelineFilterインスタンスを作成
-          window.timelineFilter = new TimelineFilter();
-
-          // 初期化実行
-          initializeTimelineFilter();
-        });
+        // dtimeline.jsで自動初期化されるため、このスクリプトは不要
+        // 必要に応じて以下でカスタマイズ可能：
+        // $(document).ready(() => {
+        //   window.timelineFilter.performSearch();
+        // });
       </script>
     </main>
 
