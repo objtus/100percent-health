@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>popular_culture_timeline - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="../../js/jquery-3.6.0.min.js" defer></script>
+  <script src="../../js/main.js" defer></script>
+  <script src="/js/mouse.js" defer></script>
+  <style>
+    p {
+      margin-bottom: 1rem;
+      margin-left: 1rem;
+    }
+  
+    #change_log ul {
+      list-style-type: none;
+      font-size: 10pt;
+    }
+  
+    #linklist {
+      font-size: 11pt;
+      margin-left: 1rem;
+  
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+  
+      li {
+        margin: 10px 0;
+        display: flex;
+      }
+  
+      li a {
+        display: inline-block;
+        min-width: 130px;
+        margin-right: 10px;
+      }
+    }
+  
+    #textblock {
+  
+      h2 {
+        display: inline-block;
+        border-bottom: dotted 3px;
+        margin-bottom: 0.5rem;
+        line-height: 18px;
+      }
+  
+      h1 {
+        text-align: right;
+        line-height: 24px;
+      }
+    
+      .smalltext {
+        font-size: 11pt;
+      }
+  
+      p {
+        margin-bottom: 1rem;
+      }
+  
+      hr {
+        border: none;
+        text-align: center;
+        font-size: 1em;
+        margin-right: 40px;
+      }
+  
+      hr::before {
+        content: '*****';
+        letter-spacing: 1em;
+        padding-left: 1em;
+      }
+  
+      a img {
+        width: calc(100% - 1rem);
+        max-width: calc(100% - 1rem);
+        margin-left: 1rem;
+      }
+  
+      a:has(img):hover {
+        text-decoration: none;
+        background-color: #00000000;
+      }
+    }
+  
+    #texthtml ol {
+      list-style-type: none;
+    }
+  
+    /* ページ説明のスタイル */
+    .page-description {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 1px;
+  
+      p {
+        font-size: 11pt;
+        margin: 0;
+        color: #555;
+      }
+    }
+  
+    section.controls {
+      margin-bottom: 100px;
+    }
+  
+  
+    /* 動画プレーヤー関連 */
+    .video-toggle-btn {
+      background-color: #f8f8f8;
+      border: 1px solid #ccc;
+      padding: 2px 8px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 0.5rem;
+    }
+
+    .video-toggle-btn:hover {
+      background-color: #eee;
+    }
+
+    .video-player-container {
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+    }
+
+    .video-embed {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%;
+    }
+
+    .video-embed iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  
+  
+  
+    /* 年表セクションのスタイル */
+    .year-section {
+      margin-bottom: 2rem;
+      padding: 1rem;
+    }
+
+    .year-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 0.25rem;
+    }
+
+    .category-section {
+      margin-bottom: 1rem;
+    }
+
+    .category-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .song-list, .trend-list {
+      font-size: 0.9rem;
+      margin-left: 1rem;
+      margin-bottom: 0;
+      .str{
+        font-weight: bold;
+      }
+      li{
+        margin-bottom: 0.5rem;
+      }
+      button{
+        background-color: #fff;
+        color: black;
+        border: 1px solid black;
+        padding: 2px 6px 0px 6px;
+        border-radius: 4px;
+        margin-right: 0.5rem;
+        cursor: pointer;
+        font-size: 12px;
+        font-family: 'saitamaar', 'PikoA', 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
+        vertical-align: text-bottom;
+        &:hover{
+          background-color: #f0f0f0;
+        }
+      }
+    }
+    .trend-list{
+      list-style: '・ ';
+    }
+    .song-list{
+      list-style: none;
+      li{
+        text-indent: -7.4em;
+        margin-left: 6.2em;
+        &::before{
+          content: '♪ ';
+        }
+      }
+    }
+    .social-events-list,.video-works-list{
+      list-style: none;
+      li{
+        text-indent: -5.5em;
+        margin-left: 4.5em;
+        &::before{
+          content: '・ ';
+        }
+      }
+      .date{
+        margin-right: 0.5rem;
+      }
+    }
+
+    @media screen and (max-width: 576px) {
+      /* ページ説明のスタイル */
+      .page-description {
+        p {
+          font-size: 10pt;
+          line-height: 16px;
+        }
+      }
+  
+      .tracklist td {
+        padding: 2px;
+      }
+  
+      .tracklist thead th {
+        font-size: 0.8rem;
+      }
+  
+      .track-number {
+        width: 0px;
+      }
+  
+      .track-time {
+        width: 45px;
+        font-size: 0.85rem;
+      }
+  
+      .track-artist {
+        width: 28%;
+      }
+  
+      .tracklist td:last-child {
+        width: 45px;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="../index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <a class="addressbar" href="../index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="/txt/txt_main.html">
+            txt
+          </a>/
+          <a href="/txt/popular_culture_timeline.html" class="addressbar">popular_culture_timeline</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <article id="textblock">
+        <h1 class="title">popular_culture_timeline</h1>
+        <section>
+          <h2 style="font-size: 1.2rem;">このページについて</h2>
+
+          <section class="page-description">
+            <h3 style="font-size: 1rem;margin-bottom: 0.5rem;">概要説明</h3>
+             <p>
+               このページでは、popular cultureのタイムラインを紹介しています。
+             </p>
+             <p>
+               曲に関してはできる限りyoutubeの公式リンクを埋め込むようにしていますが、公式のものがない場合と、公式がpremium限定および埋め込み禁止にしている場合のみ非公式の動画をリンクに設定しています。
+             </p>
+          </section>
+
+        </section>
+
+        <section>
+          <h2 style="font-size: 1.2rem;">年表</h2>
+
+          <article>
+            <h3>1980年代</h3>
+            <section class="year-section" data-year="1980">
+              <h3 class="year-title">1980年（昭和55年）</h3>
+              <div>
+                <p>
+                  wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1980%E5%B9%B4" target="_blank">1980年</a>」<br>
+                  wikipedia: 「<a href="https://ja.wikipedia.org/wiki/%E7%AC%AC31%E5%9B%9ENHK%E7%B4%85%E7%99%BD%E6%AD%8C%E5%90%88%E6%88%A6" target="_blank">第31回NHK紅白歌合戦</a>」<br>
+                  wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1980%E5%B9%B4%E3%81%AE%E9%9F%B3%E6%A5%BD" target="_blank">1980年の音楽</a>」<br>
+                  wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1980%E5%B9%B4%E3%81%AE%E6%98%A0%E7%94%BB" target="_blank">1980年の映画</a>」<br>
+                  JOYSOUND.com: <a href="https://www.joysound.com/web/s/karaoke/memories/1980" target="_blank">あの日、あの時、あの音楽。[1980年]</a>
+                </p>
+              </div>
+
+              <!-- 流行歌 -->
+              <div class="category-section">
+                <h4 class="category-title">流行歌</h4>
+                <ul class="song-list">
+                  <li><a href="https://www.youtube.com/watch?v=noBcbcg9rQk" target="_blank">シャネルズ（83年から「ラッツ&スター」） - 「<span class="str">ランナウェイ</span>」 [EPIC / ソニー]</a>リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=nFN3iZ2yrNM" target="_blank">五輪真弓 - 「<span class="str">恋人よ</span>」 [CBS / ソニー]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=73KR26Zupyg" target="_blank">海援隊 - 「<span class="str">贈る言葉</span>」 [ポリドール・レコード]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=wo5n7Y5YRGE" target="_blank">都はるみ - 「<span class="str">大阪しぐれ</span>」 [日本コロムビア]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=Fh8y8qillEQ" target="_blank">もんた&ブラザーズ - 「<span class="str">ダンシング・オールナイト</span>」 [フィリップス・レコード / 日本フォノグラム]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=1tSp7Ftm4es" target="_blank">クリスタルキング - 「<span class="str">大都会</span>」 [キャニオン・レコード / AARD-VARK]</a></li>
+                </ul>
+              </div>
+
+              <!-- 映画&テレビ -->
+              <div class="category-section">
+                <h4 class="category-title">映画&テレビ</h4>
+                <ul class="video-works-list trend-list">
+                  <li><span class="date">04月05日</span>映画「<span class="str">クレイマー、クレイマー</span>」アメリカ（ロバート・ベントン監督）</li>
+                  <li><span class="date">04月26日</span>映画「<span class="str">影武者</span>」（黒澤明監督）</li>
+                  <li><span class="date">06月28日</span>映画「<span class="str">スター・ウォーズ/帝国の逆襲</span>」アメリカ（ジョージ・ルーカス監督）</li>
+                  <li><span class="date">12月13日</span>映画「<span class="str">シャイニング</span>」アメリカ（スタンリー・キューブリック監督）</li>
+                </ul>
+              </div>
+
+              <!-- 出版 -->
+              <div class="category-section">
+                <h4 class="category-title">出版</h4>
+                <ul class="trend-list">
+                  <li>「<span class="str">悪魔の選択 上・下</span>」F・フォーサイス（角川書店）</li>
+                  <li>「<span class="str">シルクロード</span>」（NHK取材班編）（日本放送出版）</li>
+                </ul>
+              </div>
+              
+              <!-- 流行語 -->
+              <div class="category-section">
+                <h4 class="category-title">流行語</h4>
+                <ul class="trend-list">
+                  <li><a href="https://ja.wikipedia.org/wiki/%E4%B8%83%E3%81%A4%E3%81%AE%E5%AD%90#:~:text=%E3%81%AA%E3%81%9C%E9%B3%B4%E3%81%8F%E3%81%AE-,%E3%82%AB%E3%83%A9%E3%82%B9%E3%81%AE%E5%8B%9D%E6%89%8B%E3%81%A7%E3%81%97%E3%82%87,-%E3%80%9C%E3%80%8D%E3%81%A8%E3%81%84%E3%81%86%E6%9B%BF%E3%81%88%E6%AD%8C" target="_blank"><span class="str">カラスの勝手でしょ</span></a>（志村けん・8時だョ!全員集合）</li>
+                  <li><span class="str">クレーマー家族</span></li>
+                  <li><a href="https://ja.wikipedia.org/wiki/%E3%81%97%E3%82%89%E3%81%91%E4%B8%96%E4%BB%A3#:~:text=%E3%82%92%E5%8A%A0%E3%81%88%E3%81%A6-,%E4%BA%94%E7%84%A1%E4%B8%BB%E7%BE%A9,-%E3%81%A8%E3%82%82%E3%81%84%E3%82%8F%E3%82%8C%E3%81%9F" target="_blank"><span class="str">五無主義</span></a>（しらけ世代「無気力・無関心・無責任・無感動・無作法」）</li>
+                  <li><span class="str">昭和一けた病</span>（昭和ヒトケタ短命説）</li>
+                  <li><a href="https://ja.wikipedia.org/wiki/%E7%AB%B9%E3%81%AE%E5%AD%90%E6%97%8F" target="_blank"><span class="str">竹の子族</span></a>（原宿・歩行者天国）</li>
+                  <li>それなりに（<a href="https://www.youtube.com/watch?v=GChoLC8bhpk" target="_blank">フジカラープリントCM [youtube]）</a></li>
+                  <li><a href="https://ja.wikipedia.org/wiki/%E3%81%AA%E3%82%93%E3%81%A8%E3%81%AA%E3%81%8F%E3%80%81%E3%82%AF%E3%83%AA%E3%82%B9%E3%82%BF%E3%83%AB#:~:text=%E7%94%9F%E3%81%AF%E4%B8%80%E6%99%82%E6%9C%9F%E3%80%8C-,%E3%82%AF%E3%83%AA%E3%82%B9%E3%82%BF%E3%83%AB%E6%97%8F,-%E3%80%8D%E3%81%A8%E3%82%82%E5%91%BC%E3%81%B0" target="_blank"><span class="str">クリスタル族</span></a>（なんとなく、クリスタル）</li>
+                  <li><span class="str">低成長</span></li>
+                  <li><a href="https://ja.wikipedia.org/wiki/%E8%B5%A4%E4%BF%A1%E5%8F%B7%E3%81%BF%E3%82%93%E3%81%AA%E3%81%A7%E6%B8%A1%E3%82%8C%E3%81%B0%E6%80%96%E3%81%8F%E3%81%AA%E3%81%84" target="_blank"><span class="str">赤信号みんなで渡れば怖くない</span></a>（ツービート・ビートたけし）</li>
+                </ul>
+              </div>
+
+              <!-- ブーム -->
+              <div class="category-section">
+                <h4 class="category-title">ブーム</h4>
+                <ul class="trend-list">
+                  <li>肩パット入りTシャツ</li>
+                  <li>磁気ネックレス</li>
+                  <li>マイコン</li>
+                  <li>パンチパーマ</li>
+                  <li>室内用ブーツ</li>
+                  <li>高級磁器</li>
+                  <li>漫才（THE MANZAI）</li>
+                  <li>テレビショッピング</li>
+                </ul>
+              </div>
+
+               <!-- 社会・文化のできごと -->
+              <div class="category-section">
+                 <h4 class="category-title">社会・文化のできごと</h4>
+                <ul class="social-events-list trend-list">
+                  <li>01月16日&ensp;ポール・マッカトニー来日するが大麻所持のため成田空港で逮捕、全公演中止</li>
+                  <li>03月07日&ensp;山口百恵、三浦友和と婚約発表し<a href="https://ja.wikipedia.org/wiki/%E5%B1%B1%E5%8F%A3%E7%99%BE%E6%81%B5#:~:text=%E8%AA%9E%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E3%80%82-,%E5%A9%9A%E7%B4%84%E3%80%81%E8%8A%B8%E8%83%BD%E6%B4%BB%E5%8B%95%E3%82%92%E5%AE%8C%E5%85%A8%E5%BC%95%E9%80%80,-%5B%E7%B7%A8%E9%9B%86%5D" target="_blank">芸能活動を引退</a></li>
+                  <li>05月18日&ensp;<a href="https://ja.wikipedia.org/wiki/1980%E5%B9%B4%E3%81%AE%E3%82%BB%E3%83%B3%E3%83%88%E3%83%BB%E3%83%98%E3%83%AC%E3%83%B3%E3%82%BA%E5%B1%B1%E5%99%B4%E7%81%AB" target="_blank">アメリカ・セントヘレンズ火山噴火</a></li>
+                  <li>07月19日-08月03日&ensp;<a href="https://ja.wikipedia.org/wiki/1980%E5%B9%B4%E3%83%A2%E3%82%B9%E3%82%AF%E3%83%AF%E3%82%AA%E3%83%AA%E3%83%B3%E3%83%94%E3%83%83%E3%82%AF" target="_blank">モスクワオリンピック開催</a>（1979年末のソ連アフガン侵攻に抗議して日本は西側諸国とともにボイコット）</li>
+                  <li>09月22日&ensp;<a href="https://ja.wikipedia.org/wiki/%E3%82%A4%E3%83%A9%E3%83%B3%E3%83%BB%E3%82%A4%E3%83%A9%E3%82%AF%E6%88%A6%E4%BA%89" target="_blank">イラン・イラク戦争勃発（1988年08月20日まで）</a></li>
+                  <li>11月29日&ensp;<a href="https://ja.wikipedia.org/wiki/%E7%A5%9E%E5%A5%88%E5%B7%9D%E9%87%91%E5%B1%9E%E3%83%90%E3%83%83%E3%83%88%E4%B8%A1%E8%A6%AA%E6%AE%BA%E5%AE%B3%E4%BA%8B%E4%BB%B6" target="_blank">神奈川金属バット両親殺人事件（受験戦争）</a></li>
+                  <li>12月08日&ensp;<a href="https://ja.wikipedia.org/wiki/%E3%82%B8%E3%83%A7%E3%83%B3%E3%83%BB%E3%83%AC%E3%83%8E%E3%83%B3%E3%81%AE%E6%AE%BA%E5%AE%B3" target="_blank">ジョン・レノン撃たれ死亡</a></li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="year-section" data-year="1981">
+              <h3 class="year-title">1981年（昭和56年）</h3>
+               <div>
+                 <p>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1981%E5%B9%B4" target="_blank">1981年</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/%E7%AC%AC32%E5%9B%9ENHK%E7%B4%85%E7%99%BD%E6%AD%8C%E5%90%88%E6%88%A6" target="_blank">第32回NHK紅白歌合戦</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1981%E5%B9%B4%E3%81%AE%E9%9F%B3%E6%A5%BD" target="_blank">1981年の音楽</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1981%E5%B9%B4%E3%81%AE%E6%98%A0%E7%94%BB" target="_blank">1981年の映画</a>」<br>
+                   JOYSOUND.com: <a href="https://www.joysound.com/web/s/karaoke/memories/1981" target="_blank">あの日、あの時、あの音楽。[1981年]</a>
+                 </p>
+               </div>
+
+              <!-- 流行歌 -->
+              <div class="category-section">
+                <h4 class="category-title">流行歌</h4>
+                <ul class="song-list">
+                  <li><a href="https://www.youtube.com/watch?v=ZYeVfKtIH4c" target="_blank">寺尾聡 - 「<span class="str">ルビーの指輪</span>」 [	東芝EMI / EXPRESS]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=c_qKXOFVOI0" target="_blank">竜鉄也 - 「<span class="str">奥飛騨慕情</span>」 [トリオレコード]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=j-iiyp2e5wc" target="_blank">近藤真彦 - 「<span class="str">スニーカーぶる～す</span>」 [RCA / RVC]</a>（発売は1980年12月12日）リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=-_NaRPkaKdw" target="_blank">イモ欽トリオ - 「<span class="str">ハイスクールララバイ</span>」 [フォーライフ・レコード]</a>（作詞・松本隆、作曲・細野晴臣）</li>
+                  <li><a href="https://www.youtube.com/watch?v=lqOVap4FzFs" target="_blank">松山千春 - 「<span class="str">長い夜</span>」 [NEWSレコード]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=ziuo1VA58t8" target="_blank">横浜銀蝿 - 「<span class="str">ツッパリHigh School Rock'n Roll (登校編)</span>」 [CRAZY RIDER RECORDS / KING RECORDS]</a>リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=NDUNVQwW_bo" target="_blank">山本譲二 - 「<span class="str">みちのくひとり旅</span>」 [キャニオン・レコード]</a>（発売は1980年08月05日、81年06月29日『夜のヒットスタジオ』で話題に）</li>
+                  <li><a href="https://www.youtube.com/watch?v=4A-yde8-Zxc" target="_blank">チャゲ&飛鳥（89年から「CHAGE&ASUKA」） - 「<span class="str">万里の河</span>」 [ワーナー・パイオニア]</a></li>
+                </ul>
+              </div>
+              
+              <!-- 映画&テレビ -->
+              <div class="category-section">
+                <h4 class="category-title">映画&テレビ</h4>
+                <ul class="video-works-list trend-list">
+                  <li><span class="date">02月14日</span>映画「<span class="str">レイジング・ブル</span>」アメリカ（マーティン・スコセッシ監督）</li>
+                  <li><span class="date">03月14日</span>映画「<span class="str">機動戦士ガンダム</span>」（富野喜幸総監督）TVアニメ再編集の1作目</li>
+                  <li><span class="date">04月11日</span>映画「<span class="str">じゃりン子チエ</span>」（高畑勲監督）</li>
+                  <li><span class="date">05月23日</span>映画「<span class="str">エレファント・マン</span>」アメリカ（デヴィッド・リンチ監督）</li>
+                  <li><span class="date">07月11日</span>映画「<span class="str">機動戦士ガンダムⅡ 哀・戦士編</span>」（富野喜幸総監督）TVアニメ再編集の2作目</li>
+                  <li><span class="date">07月11日</span>映画「<span class="str">ブルージーンズメモリー</span>」（河崎義祐監督）</li>
+                  <li><span class="date">12月05日</span>映画「<span class="str">レイダース/失われたアーク《聖櫃》</span>」アメリカ（スティーブン・スピルバーグ監督）</li>
+                  <li><span class="date">12月26日</span>映画「<span class="str">マッドマックス2</span>」オーストラリア（ジョージ・ミラー監督）</li>
+                </ul>
+              </div>
+
+              <!-- 出版 -->
+              <div class="category-section">
+                <h4 class="category-title">出版</h4>
+                <ul class="trend-list">
+                  <li>「<span class="str">窓ぎわのトットちゃん</span>」黒柳徹子（講談社）</li>
+                  <li>「<span class="str">なんとなく、クリスタル</span>」田中康夫（河出書房新社）</li>
+                </ul>
+              </div>
+              
+              <!-- 流行語 -->
+              <div class="category-section">
+                <h4 class="category-title">流行語</h4>
+                <ul class="trend-list">
+                  <li><a href="https://muuseo.com/05258373/articles/318" target="_blank"><span class="str">デリーシャス</span>（竹村健一出演のデリシャスソースCM）</a></li>
+                  <li><span class="str">フルムーン</span></li>
+                  <li><span class="str">ウッソー・ホント・カワイイ</span>（<a href="https://ja.wikipedia.org/wiki/%E4%B8%89%E8%AA%9E%E6%97%8F" target="_blank">三語族</a>）</li>
+                  <li><span class="str">ロリコン</span></li>
+                  <li><span class="str">ぶりっ子</span></li>
+                  <li><span class="str">エレファントマン</span></li>
+                  <li><span class="str">なめんなよ</span></li>
+                  <li><span class="str">バイチャ</span></li>
+                  <li><span class="str">えぐい</span></li>
+                  <li><span class="str">人寄せパンダ</span>（田中角栄）</li>
+                  <li><span class="str">蜂の一刺し</span>（ロッキード裁判）</li>
+                  <li><span class="str">カラス族</span>（山本耀司・川久保玲）</li>
+                </ul>
+              </div>
+
+              <!-- ブーム -->
+              <div class="category-section">
+                <h4 class="category-title">ブーム</h4>
+                <ul class="trend-list">
+                  <li>マリンルック</li>
+                  <li>風船ガム</li>
+                  <li>カップ入りみそ汁</li>
+                  <li>金貨</li>
+                  <li>ストレッチング体操</li>
+                  <li>なめネコ</li>
+                  <li>ウルフ（大相撲・千代の富士の異名）</li>
+                </ul>
+              </div>
+
+               <!-- 社会・文化のできごと -->
+              <div class="category-section">
+                 <h4 class="category-title">社会・文化のできごと</h4>
+                <ul class="social-events-list trend-list">
+                  <li>01月20日&ensp;第40代アメリカ大統領にロナルド・レーガンが就任。ジミー・カーターの後継。02月18日「レーガノミクス」発表。03月30日<a href="https://ja.wikipedia.org/wiki/%E3%83%AC%E3%83%BC%E3%82%AC%E3%83%B3%E5%A4%A7%E7%B5%B1%E9%A0%98%E6%9A%97%E6%AE%BA%E6%9C%AA%E9%81%82%E4%BA%8B%E4%BB%B6" target="_blank">銃撃</a>。</li>
+                  <li>03月20日&ensp;神戸でポートピア'81が開催。</li>
+                  <li>05月01日&ensp;自動車の対米輸出自主規制開始。</li>
+                  <li>05月17日&ensp;ライシャワー元駐日大使が昭和35年から核搭載艦が日本に寄港していたと証言。</li>
+                  <li>06月15日&ensp;日本人留学生の佐川一政が逮捕され「パリ人肉事件」が発覚。1983年佐川との手紙を元にした唐十郎『佐川君からの手紙』が第88回芥川賞を受賞。</li>
+                  <li>07月03日&ensp;ニューヨーク・タイムズ、<a href="http://loveactf.jp/history/history1981.html#:~:text=%E3%83%8B%E3%83%A5%E3%83%BC%E3%83%A8%E3%83%BC%E3%82%AF%E3%83%BB%E3%82%BF%E3%82%A4%E3%83%A0%E3%82%BA%E7%B4%99%E3%81%8C%E3%80%8C41%E4%BA%BA%E3%81%AE%E5%90%8C%E6%80%A7%E6%84%9B%E8%80%85%E3%81%AB%E8%A6%8B%E3%82%89%E3%82%8C%E3%82%8B%E7%A8%80%E3%81%AA%E7%99%8C%E3%80%8D%E3%82%92%E5%A0%B1%E9%81%93" target="_blank">同性愛者に見られる原因不明の癌</a>を報道。のちのAIDS。</li>
+                  <li>08月22日&ensp;遠東航空103便墜落事故が発生、乗員乗客全110名が死亡。そのうちの一人が作家の向田邦子。</li>
+                  <li>11月18日&ensp;三浦和義とその妻がロサンゼルスで銃撃事件に遭遇。のちロス疑惑へ。</li>
+                  <li></li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="year-section" data-year="1982">
+              <h3 class="year-title">1982年（昭和57年）</h3>
+               <div>
+                 <p>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1982%E5%B9%B4" target="_blank">1982年</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/%E7%AC%AC33%E5%9B%9ENHK%E7%B4%85%E7%99%BD%E6%AD%8C%E5%90%88%E6%88%A6" target="_blank">第33回NHK紅白歌合戦</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1982%E5%B9%B4%E3%81%AE%E9%9F%B3%E6%A5%BD" target="_blank">1982年の音楽</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1982%E5%B9%B4%E3%81%AE%E6%98%A0%E7%94%BB" target="_blank">1982年の映画</a>」<br>
+                   JOYSOUND.com: <a href="https://www.joysound.com/web/s/karaoke/memories/1982" target="_blank">あの日、あの時、あの音楽。[1982年]</a>
+                 </p>
+               </div>
+              
+              <!-- 流行歌 -->
+              <div class="category-section">
+                <h4 class="category-title">流行歌</h4>
+                <ul class="song-list">
+                  <li><a href="https://www.youtube.com/watch?v=a7WhrI0Bbnk" target="_blank">あみん - 「<span class="str">待つわ</span>」 [PHILIPS RECORDS / 日本フォノグラム]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=HaqiC3y-VAM" target="_blank">岩崎宏美 - 「<span class="str">聖母たちのララバイ</span>」 [ビクター音楽産業]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=w2UzVC9fYhQ" target="_blank">薬師丸ひろ子 - 「<span class="str">セーラー服と機関銃</span>」 [キティ・レコード]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=gaXlqJfGi3A" target="_blank">中村雅俊 - 「<span class="str">心の色</span>」 [日本コロムビア / BLOW UP]</a>（TVドラマ『われら動物家族』主題歌、発売は1981年11月25日）</li>
+                  <li><a href="https://www.youtube.com/watch?v=V7E3kn1Y64A" target="_blank">細川たかし - 「<span class="str">北酒場</span>」 [日本コロムビア]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=ZkyCrUolctw" target="_blank">中島みゆき - 「<span class="str">悪女</span>」 [キャニオン・レコード]</a>（発売は1981年10月21日）</li>
+                  <li><a href="https://www.youtube.com/watch?v=YchxloFUhMs" target="_blank">近藤真彦 - 「<span class="str">ハイティーン・ブギ</span>」 [RCA / RVC]</a>（東宝映画『ハイティーン・ブギ』主題歌、作詞・松本隆、作曲・山下達郎）</li>
+                </ul>
+              </div>
+              
+              <!-- 映画&テレビ -->
+              <div class="category-section">
+                <h4 class="category-title">映画&テレビ</h4>
+                <ul class="video-works-list trend-list">
+                  <li><span class="date">03月13日</span>映画「<span class="str">機動戦士ガンダムⅢ めぐりあい宇宙編</span>」（富野喜幸総監督）TVアニメ再編集の3作目</li>
+                  <li><span class="date">07月10日</span>映画「<span class="str">伝説巨神イデオン 接触編</span>」（富野喜幸監督）</li>
+                  <li><span class="date">07月10日</span>映画「<span class="str">伝説巨人イデオン 発動篇</span>」（富野喜幸監督）</li>
+                  <li><span class="date">07月10日</span>映画「<span class="str">ブレードランナー</span>」アメリカ（リドリー・スコット監督）</li>
+                  <li><span class="date">12月04日</span>映画「<span class="str">E・T</span>」アメリカ（スティーヴン・スピルバーグ監督）</li>
+                  <li><span class="date">12月18日</span>映画「<span class="str">ランボー</span>」アメリカ（テッド・コッチェフ監督）</li>
+                  <li><span class="date">12月19日</span>映画「<span class="str">セーラー服と機関銃</span>」（相米慎二監督）原作・赤川次郎</li>
+                </ul>
+              </div>
+
+              <!-- 出版 -->
+              <div class="category-section">
+                <h4 class="category-title">出版</h4>
+                <ul class="trend-list">
+                  <li>「<span class="str">プロ野球を10倍楽しく見る方法</span>」江本孟紀（ベストセラーズ）</li>
+                  <li>「<span class="str">吉里吉里人</span>」井上ひさし（新潮社）</li>
+                </ul>
+              </div>
+              
+              <!-- 流行語 -->
+              <div class="category-section">
+                <h4 class="category-title">流行語</h4>
+                <ul class="trend-list">
+                  <li><a href="https://muuseo.com/05258373/articles/318" target="_blank"><span class="str">デリーシャス</span>（竹村健一出演のデリシャスソースCM）</a></li>
+                  <li><span class="str">フルムーン</span>（<a href="https://www.youtube.com/watch?v=w5mi1XlYXo0" target="_blank">フルムーン夫婦グリーンパスCM</a>）</li>
+                  <li><span class="str">ウッソー・ホント・カワイイ</span>（<a href="https://ja.wikipedia.org/wiki/%E4%B8%89%E8%AA%9E%E6%97%8F" target="_blank">三語族</a>）</li>
+                  <li><span class="str">ロリコン</span></li>
+                  <li><span class="str">ぶりっ子</span></li>
+                  <li><span class="str">エレファントマン</span></li>
+                  <li><span class="str">なめんなよ</span></li>
+                  <li><span class="str">バイチャ</span></li>
+                  <li><span class="str">えぐい</span></li>
+                  <li><span class="str">人寄せパンダ</span>（田中角栄の発言）</li>
+                </ul>
+              </div>
+
+              <!-- ブーム -->
+              <div class="category-section">
+                <h4 class="category-title">ブーム</h4>
+                <ul class="trend-list">
+                  <li>マリンルック</li>
+                  <li>風船ガム</li>
+                  <li>カップ入りみそ汁</li>
+                  <li>金貨</li>
+                  <li>ストレッチング体操</li>
+                  <li>なめネコ</li>
+                  <li>ウルフ（大相撲・千代の富士）</li>
+                </ul>
+              </div>
+
+               <!-- 社会・文化のできごと -->
+              <div class="category-section">
+                 <h4 class="category-title">社会・文化のできごと</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                  <li>この年&emsp;&ensp;&thinsp;欧米との貿易摩擦が激化。</li>
+                  <li>02月08日&ensp;ホテルニュージャパン火災発生。</li>
+                  <li>02月09日&ensp;日本航空350便墜落事故発生。乗員乗客174人中24人死亡。機長が統合失調症異常行動を取ったことが原因。「逆噴射」、「心身症」、「キャプテン、やめてください!」が流行語に。</li>
+                  <li>05月28日&ensp;カトリックと英国国教会が449年目に和解。</li>
+                  <li>07月27日&ensp;「AIDS」が正式に命名。</li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="year-section" data-year="1983">
+              <h3 class="year-title">1983年（昭和58年）</h3>
+               <div>
+                 <p>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1983%E5%B9%B4" target="_blank">1983年</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/%E7%AC%AC34%E5%9B%9ENHK%E7%B4%85%E7%99%BD%E6%AD%8C%E5%90%88%E6%88%A6" target="_blank">第34回NHK紅白歌合戦</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1983%E5%B9%B4%E3%81%AE%E9%9F%B3%E6%A5%BD" target="_blank">1983年の音楽</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1983%E5%B9%B4%E3%81%AE%E6%98%A0%E7%94%BB" target="_blank">1983年の映画</a>」<br>
+                   JOYSOUND.com: <a href="https://www.joysound.com/web/s/karaoke/memories/1983" target="_blank">あの日、あの時、あの音楽。[1983年]</a>
+                 </p>
+               </div>
+              
+              <!-- 流行歌 -->
+              <div class="category-section">
+                <h4 class="category-title">流行歌</h4>
+                <ul class="song-list">
+                  <li><a href="https://www.youtube.com/watch?v=cfHYDqadvlQ" target="_blank">細川たかし - 「<span class="str">矢切の渡し</span>」 [PHILIPS RECORDS / 日本フォノグラム]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=yj8mrNsryn4" target="_blank">大川栄策 - 「<span class="str">さざんかの宿</span>」 [ビクター音楽産業]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=0QqWbVNOeI0" target="_blank">わらべ - 「<span class="str">めだかの兄妹</span>」 [フォーライフ・レコード]</a>（TV番組『欽ちゃんのどこまでやるの！』1982年10月13日エンディング、発売は1982年12月21日、編曲・坂本龍一）</li>
+                  <li><a href="https://www.youtube.com/watch?v=AAe09wOhIL4" target="_blank">薬師丸ひろ子 - 「<span class="str">探偵物語/すこしだけやさしく</span>」 [EASTWORLD / 東芝EMI]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=3VMVxDQW1zY" target="_blank">佳山明生 - 「<span class="str">氷雨</span>」 [日本コロムビア]</a>リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=yiUuVRBaCy0" target="_blank">杏里 - 「<span class="str">CAT'S EYE</span>」 [フォーライフ・レコード]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=ZB0qwcGFYIM" target="_blank">松田聖子 - 「<span class="str">ガラスの林檎/Sweet Memories</span>」 [CBS / ソニー]</a>（作詞・松本隆、#1作曲・細野晴臣、#2作曲・大村雅朗）リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=hTgU11h-2Ik" target="_blank">中森明菜 - 「<span class="str">セカンド・ラブ</span>」 [ワーナー・パイオニア / リプリーズ・レコード]</a>（発売は1982年11月10日）</li>
+                  <li><a href="https://www.youtube.com/watch?v=xuHwv07G3qE" target="_blank">アイリーン・キャラ - 「<span class="str">フラッシュダンス…ホワット・ア・フィーリング</span>」 [カサブランカ・レコード]</a>（映画『フラッシュダンス』主題歌、作曲・ジョルジョ・モロダー）</li>
+                  <li><a href="https://www.youtube.com/watch?v=Jw9uo1xKOKA" target="_blank">ラッツ&スター - 「<span class="str">め組のひと</span>」 [EPIC / ソニー]</a>（83年夏 資生堂キャンペーンソング）リンク先非公式</li>
+                </ul>
+              </div>
+              
+              <!-- 映画&テレビ -->
+              <div class="category-section">
+                <h4 class="category-title">映画&テレビ</h4>
+                <ul class="video-works-list trend-list">
+                  <li><span class="date">02月11日</span>映画「<span class="str">うる星やつら オンリー・ユー</span>」（押井守監督）</li>
+                  <li><span class="date">02月15日</span>TVドラマ「<span class="str">積木くずし・親と子の200日戦争</span>」TBS、83年03月29日まで全7回で放送。（主演・高部知子、視聴率は関東地区で45.3%）</li>
+                  <li><span class="date">03月12日</span>映画「<span class="str">幻魔大戦</span>」（りん・たろう監督）</li>
+                  <li><span class="date">03月19日</span>映画「<span class="str">宇宙戦艦ヤマト 完結編</span>」（西崎義展・勝間田具治監督）</li>
+                  <li><span class="date">04月04日</span>TVドラマ「<span class="str">おしん</span>」（NHK連続テレビ小説）、翌84年03月31日まで放送。</li>
+                  <li><span class="date">06月04日</span>映画「<span class="str">家族ゲーム</span>」（森田芳光監督）主演・松田優作</li>
+                  <li><span class="date">07月23日</span>映画「<span class="str">南極物語</span>」（蔵原惟繕監督）主演・高倉健、音楽・ヴァンゲリス</li>
+                  <li><span class="date">07月30日</span>映画「<span class="str">フラッシュダンス</span>」アメリカ（エイドリアン・ライン監督）</li>
+                </ul>
+              </div>
+
+              <!-- 出版 -->
+              <div class="category-section">
+                <h4 class="category-title">出版</h4>
+                <ul class="books-list trend-list">
+                  <li>「<span class="str">気くばりのすすめ</span>」鈴木健二（講談社）</li>
+                  <li>「<span class="str">積木くずし</span>」穂積隆信（桐原書店）</li>
+                  <li>「<span class="str">探偵物語</span>」赤川次郎（角川書店）</li>
+                </ul>
+              </div>
+              
+              <!-- 流行語 -->
+              <div class="category-section">
+                <h4 class="category-title">流行語</h4>
+                <ul class="trend-list">
+                  <li><span class="str">いいとも</span>（TV番組『森田一義アワー 笑っていいとも！』の略称および決めゼリフから。1982年10月04日から放送開始。）</li>
+                  <li><span class="str">おしん</span></li>
+                  <li><span class="str">タコがいうのよ</span>（<a href="https://www.youtube.com/watch?v=568wGVC3thU" target="_blank">サントリーの甲類焼酎（マイルドウォッカ）「樹氷」CM</a>中、田中裕子のセリフから。このコピーの流行から、樹氷を炭酸で割った「サントリータコハイ」生まれる。）</li>
+                  <li><span class="str">知恵の輪</span>（1983年に株式会社ハナヤマが「キャストパズル」を発売したところから。）</li>
+                  <li><span class="str">発展途上人</span></li>
+                  <li><span class="str">不沈空母</span>（訪米した際の中曽根康弘の発言から。日本列島を西側支援のため太平洋の「不沈空母」にするという内容。）</li>
+                  <li><span class="str">平常心</span></li>
+                  <li><span class="str">やるっきゃない</span></li>
+                  <li><span class="str">ニャンニャン</span>（1983年06月に写真週刊誌に掲載された「わらべ」高部知子のスクープ「ベッドで二人仲良くニャンニャンしちゃった後一服」から。いわゆる「<a href="https://ja.wikipedia.org/wiki/%E3%83%8B%E3%83%A3%E3%83%B3%E3%83%8B%E3%83%A3%E3%83%B3%E4%BA%8B%E4%BB%B6" target="_blank">ニャンニャン事件</a>」。由来はわらべの楽曲「めだかの兄妹」歌詞から。）</li>
+                  <li><span class="str">軽薄短小</span>（1982年の雑誌「日経ビジネス 2月8日号」の特集「<a href="https://share.google/images/tnO3GUFIauiESvL6A" target="_blank">産業構造 軽薄短小化の衝撃</a>」から。）</li>
+                  <li><span class="str">義理チョコ</span>（<a href="https://ja.wikipedia.org/wiki/%E6%88%B8%E5%A1%9A%E3%83%A8%E3%83%83%E3%83%88%E3%82%B9%E3%82%AF%E3%83%BC%E3%83%AB%E4%BA%8B%E4%BB%B6" target="_blank">戸塚ヨットスクール事件</a>から）</li>
+                  <li><span class="str">いわゆる、ひとつの</span>（長嶋茂雄の口癖）</li>
+                  <li><span class="str">いかにも一般大衆の喜びそうな</span>（サントリーの<a href="https://www.youtube.com/watch?v=RbpPJZ6mdG8" target="_blank">生ビール「ナマ樽」のCM</a>中、新しいジョッキ「アワミクロン」に対するレオナルド熊のセリフから。</li>
+                  <li><span class="str">ダサイタマ</span>（「笑っていいとも！」内で<a href="https://ja.wikipedia.org/wiki/%E3%83%80%E5%9F%BC%E7%8E%89" target="_blank">「竹の子族」に対するタモリの発言</a>から。タモリは竹の子族を「ダサい」と表し、埼玉県や千葉県出身者が多いとする調査結果があったため。）</li>
+                  <li><span class="str">積木くずし</span>（TBS系TVドラマ『積木くずし・親と子の200日戦争』から。）</li>
+                </ul>
+              </div>
+
+              <!-- ブーム -->
+              <div class="category-section">
+                <h4 class="category-title">ブーム</h4>
+                <ul class="trend-list">
+                  <li>ミネラルウォーター</li>
+                  <li>DCブランド</li>
+                  <li>テクノカット</li>
+                  <li>自然化粧品</li>
+                  <li>アイスクリーム製造機</li>
+                  <li>ワカメラーメン</li>
+                  <li>カフェバー</li>
+                  <li>ラグビー</li>
+                  <li>北斗の拳ごっこ</li>
+                </ul>
+              </div>
+
+               <!-- 社会・文化のできごと -->
+              <div class="category-section">
+                 <h4 class="category-title">社会・文化のできごと</h4>
+                <ul class="social-events-list trend-list">
+                  <li>この年&ensp;パソコンの普及台数が100万台を突破。</li>
+                  <li>02月12日&ensp;「横浜浮浪者襲撃殺人事件」の少年グループが逮捕される。「恐舞連合」を名乗る未成年10人。「浮浪者狩り」が話題に。</li>
+                  <li>04月04日&ensp;NHK連続テレビ小説「おしん」放送開始。</li>
+                  <li>04月15日&ensp;東京ディズニーランドが開園。</li>
+                  <li>09月01日&ensp;大韓航空機がソ連領で撃墜、「大韓航空機爆破事件」が発生。</li>
+                  <li>10月12日&ensp;東京地裁、ロッキード事件の田中角栄前首相に懲役4年・追徴金5億年の実刑判決。</li>
+                  <li>12月18日&ensp;第37回衆議院議員総選挙が行われる。ロッキード事件に関して、首相の中曽根康弘が野党に対し「倫理、倫理とスズムシのように騒ぐばかりで」と発言、「鈴虫発言」と話題になる。1984年新語・流行語大賞の新語部門銀賞。</li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="year-section" data-year="1984">
+              <h3 class="year-title">1984年（昭和59年）</h3>
+               <div>
+                 <p>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1984%E5%B9%B4" target="_blank">1984年</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/%E7%AC%AC35%E5%9B%9ENHK%E7%B4%85%E7%99%BD%E6%AD%8C%E5%90%88%E6%88%A6" target="_blank">第35回NHK紅白歌合戦</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1984%E5%B9%B4%E3%81%AE%E9%9F%B3%E6%A5%BD" target="_blank">1984年の音楽</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1984%E5%B9%B4%E3%81%AE%E6%98%A0%E7%94%BB" target="_blank">1984年の映画</a>」<br>
+                   JOYSOUND.com: <a href="https://www.joysound.com/web/s/karaoke/memories/1984" target="_blank">あの日、あの時、あの音楽。[1984年]</a>
+                 </p>
+               </div>
+              
+              <!-- 流行歌 -->
+              <div class="category-section">
+                <h4 class="category-title">流行歌</h4>
+                <ul class="song-list">
+                  <li><a href="https://www.youtube.com/watch?v=HwmMU9HCoc0" target="_blank">チェッカーズ - 「<span class="str">涙のリクエスト</span>」 [キャニオン・レコード]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=RDSmUypimu4" target="_blank">木村友衛 他 - 「<span class="str">浪花節だよ人生は</span>」 [ビクター音楽産業]</a></li>
+                </ul>
+              </div>
+              
+              <!-- 映画&テレビ -->
+              <div class="category-section">
+                <h4 class="category-title">映画&テレビ</h4>
+                <ul class="video-works-list trend-list">
+                  <li><span class="date">02月11日</span>映画「<span class="str">うる星やつら2 ビューティフル・ドリーマー</span>」（押井守監督）</li>
+                  <li><span class="date">03月11日</span>映画「<span class="str">風の谷のナウシカ</span>」（宮崎駿監督）</li>
+                  <li><span class="date">07月07日</span>映画「<span class="str">インディ・ジョーンズ 魔宮の伝説</span>」アメリカ（スティーブン・スピルバーグ監督）</li>
+                  <li><span class="date">07月21日</span>映画「<span class="str">超時空要塞マクロス 愛・おぼえてますか</span>」（石黒昇・河森正治監督）</li>
+                  <li><span class="date">11月17日</span>映画「<span class="str">お葬式</span>」（伊丹十三監督）</li>
+                  <li><span class="date">12月02日</span>映画「<span class="str">ゴーストバスターズ</span>」アメリカ（アイヴァン・ライトマン監督）</li>
+                  <li><span class="date">12月08日</span>映画「<span class="str">グレムリン</span>」アメリカ（ジョー・ダンテ監督）</li>
+                  <li><span class="date">12月15日</span>映画「<span class="str">ゴジラ</span>」（橋本幸治監督）</li>
+                </ul>
+              </div>
+
+              <!-- 出版 -->
+              <div class="category-section">
+                <h4 class="category-title">出版</h4>
+                <ul class="trend-list">
+                  <li>「<span class="str">見栄講座</span>」ホイチョイ・プロダクション（小学館）</li>
+                  <li>「<span class="str">三毛猫ホームズのびっくり箱</span>」赤川次郎（光文社）</li>
+                </ul>
+              </div>
+              
+              <!-- 流行語 -->
+              <div class="category-section">
+                <h4 class="category-title">流行語</h4>
+                <ul class="trend-list">
+                  <li><span class="str">イッキイッキ</span>（学生の飲み会コール）</li>
+                  <li><span class="str">パフォーマンス</span></li>
+                  <li><span class="str">まるきん、まるび</span>（イラストレーター渡辺和博の著書『金魂巻』で用いた造語。第1回新語・流行語大賞金賞。）</li>
+                  <li><span class="str">教官！</span>（TBS系ドラマ『スチュワーデス物語』堀ちえみのセリフ。）</li>
+                  <li><span class="str">ちゃっぷいちゃっぷい</span>（1983年から放映された<a href="https://www.youtube.com/watch?v=1OnblLpMPw8&t=338s" target="_blank">金鳥使い捨てカイロ「どんと」のCM</a>中のセリフ。ぼんちおさむと桂文珍が出演し、<a href="http://kotobakai.seesaa.net/article/8187001.html" target="_blank">弥生時代の日本語の発言を再現したとされる</a>セリフ）</li>
+                  <li><span class="str">ホンネチョコ</span></li>
+                  <li><span class="str">キャピキャピ</span></li>
+                  <li><a href="https://ja.wikipedia.org/wiki/%E6%B5%85%E7%94%B0%E5%BD%B0#:~:text=%E3%80%81%E3%81%93%E3%82%8C%E3%81%AF%E3%80%8C-,%E3%83%91%E3%83%A9%E3%83%8E%E3%81%8B%E3%82%89%E3%82%B9%E3%82%AD%E3%82%BE%E3%81%B8,-%E3%80%8D%E3%81%A8%E3%81%84%E3%81%86%E3%82%AD%E3%83%A3%E3%83%83%E3%83%81%E3%83%95%E3%83%AC%E3%83%BC%E3%82%BA%E3%81%A8%E3%81%97%E3%81%A6" target="_blank"><span class="str">スキゾ、パラノ</span></a>（浅田彰『逃走論』、「<a href="https://ja.wikipedia.org/wiki/%E3%83%8B%E3%83%A5%E3%83%BC%E3%83%BB%E3%82%A2%E3%82%AB%E3%83%87%E3%83%9F%E3%82%BA%E3%83%A0" target="_blank">ニューアカ</a>」ブーム）</li>
+                  <li><span class="str">疑惑の銃弾</span>（<a href="https://ja.wikipedia.org/wiki/%E3%83%AD%E3%82%B9%E7%96%91%E6%83%91" target="_blank">ロス疑惑</a>）</li>
+                  <li><span class="str">かい人21面相</span>（グリコ・森永事件）</li>
+                  <li><span class="str">くれない族</span>（TBS系ドラマ『くれない族の反乱』から生まれた言葉。）</li>
+                  <li><span class="str">ピーターパン・シンドローム</span>（1983年アメリカの心理学者ダン・カイリーの著作『<a href="https://ja.wikipedia.org/wiki/%E3%83%94%E3%83%BC%E3%82%BF%E3%83%BC%E3%83%91%E3%83%B3%E7%97%87%E5%80%99%E7%BE%A4" target="_blank">ピーターパン症候群</a>』から。）</li>
+                  <li><a href="https://ja.wikipedia.org/wiki/%E7%A7%81%E5%A4%A7%E3%83%90%E3%83%96%E3%83%AB#:~:text=%E3%81%AA%E3%82%89%E5%B0%82%E9%96%80%E5%AD%A6%E6%A0%A1%EF%BD%A3%E3%80%81%EF%BD%A2-,%E5%9B%BD%E6%98%93%E7%A7%81%E9%9B%A3,-%EF%BD%A3%E7%AD%89%E3%80%85%E3%81%AE%E8%A8%80%E8%91%89" target="_blank"><span class="str">国易私難</span></a>（大学受験で<a href="https://ja.wikipedia.org/wiki/%E7%A7%81%E5%A4%A7%E3%83%90%E3%83%96%E3%83%AB" target="_blank">私大バブル</a>を表した言葉。国公立大学の受験は科目数が多く受験者数が少ないため倍率が低かった。一方で私立大学の倍率が高くなっていたところから。）</li>
+                </ul>
+              </div>
+
+              <!-- ブーム -->
+              <div class="category-section">
+                <h4 class="category-title">ブーム</h4>
+                <ul class="trend-list">
+                  <li><a href="https://hominis.media/category/musician/post13247/" target="_blank">チェッカーズカット</a>（10代）</li>
+                  <li>商品のラッピング</li>
+                  <li>一人前パック食品</li>
+                  <li>チキンナゲット（日本マクドナルドが「チキンマックナゲット（<a href="https://www.youtube.com/watch?v=l7QezrHHgZ8" target="_blank">CM</a>）」を発売）</li>
+                  <li>ハーブ</li>
+                  <li>焼酎の一気飲み</li>
+                  <li>石油ファンヒーター</li>
+                  <li>キン肉マン消しゴム（通称「キン消し」。1983年に発売開始。）</li>
+                  <li>温泉旅行</li>
+                  <li>エリマキトカゲ（<a href="https://www.youtube.com/watch?v=qkXQOs3n2IM" target="_blank">三菱ミラージュのCM</a>、TBS系列のTV番組『わくわく動物ランド』で取り上げられたため流行。）</li>
+                </ul>
+              </div>
+
+               <!-- 社会・文化のできごと -->
+              <div class="category-section">
+                 <h4 class="category-title">社会・文化のできごと</h4>
+                <ul class="social-events-list trend-list">
+                  <li>04月12日&ensp;3月18日から続く「グリコ・森永事件」が警視庁広域重要指定事件に指定。</li>
+                  <li>09月06日&ensp;全斗煥韓国大統領が訪日し、宮中晩餐会で天皇が「不幸な過去があったことは遺憾」と表明。</li>
+                  <li>12月19日&ensp;1981年頃からトルコ人留学生ヌスレット・サンジャクリがはじめた改名運動の結果、性風俗店の形態の名称「トルコ風呂」が「ソープランド」に改称。</li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="year-section" data-year="1985">
+              <h3 class="year-title">1985年（昭和60年）</h3>
+               <div>
+                 <p>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1985%E5%B9%B4" target="_blank">1985年</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/%E7%AC%AC36%E5%9B%9ENHK%E7%B4%85%E7%99%BD%E6%AD%8C%E5%90%88%E6%88%A6" target="_blank">第36回NHK紅白歌合戦</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1985%E5%B9%B4%E3%81%AE%E9%9F%B3%E6%A5%BD" target="_blank">1985年の音楽</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1985%E5%B9%B4%E3%81%AE%E6%98%A0%E7%94%BB" target="_blank">1985年の映画</a>」<br>
+                   JOYSOUND.com: <a href="https://www.joysound.com/web/s/karaoke/memories/1985" target="_blank">あの日、あの時、あの音楽。[1985年]</a>
+                 </p>
+               </div>
+              
+              <!-- 流行歌 -->
+              <div class="category-section">
+                <h4 class="category-title">流行歌</h4>
+                <ul class="song-list">
+                  <li><a href="https://www.youtube.com/watch?v=0NGpNhJfHAE" target="_blank">小林明子 - 「<span class="str">恋におちて -Fall in love-</span>」 [ファンハウス]</a>リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=9wVv5swx-x0" target="_blank">中森明菜 - 「<span class="str">飾りじゃないのよ涙は</span>」 [	ワーナー・パイオニア / リプリーズ・レコード]</a></li>
+                </ul>
+              </div>
+              
+              <!-- 映画&テレビ -->
+              <div class="category-section">
+                <h4 class="category-title">映画&テレビ</h4>
+                <ul class="video-works-list trend-list">
+                  <li><span class="date">01月13日</span>映画「<span class="str">ネバーエンディング・ストーリー</span>」ドイツ・アメリカ（ウォルフガング・ペーターゼン監督）</li>
+                  <li><span class="date">04月27日</span>映画「<span class="str">ビバリーヒルズ・コップ</span>」アメリカ（マーティン・ブレスト監督）</li>
+                  <li><span class="date">06月01日</span>映画「<span class="str">乱</span>」日本・フランス（黒澤明監督）</li>
+                  <li><span class="date">07月20日</span>映画「<span class="str">ビルマの竪琴</span>」（市川崑監督）</li>
+                  <li><span class="date">08月03日</span>映画「<span class="str">ランボー/怒りの脱出</span>」（ジョージ・P・コスマトス監督）</li>
+                  <li><span class="date">08月23日</span>映画「<span class="str">それから</span>」（森田芳光監督）原作・夏目漱石、主演・松田優作</li>
+                  <li><span class="date">12月07日</span>映画「<span class="str">バック・トゥ・ザ・フューチャー</span>」アメリカ（ロバート・ゼメキス監督）</li>
+                  <li><span class="date">12月07日</span>映画「<span class="str">グーニーズ</span>」アメリカ（リチャード・ドナー監督）</li>
+                  <li><span class="date">12月13日</span>映画「<span class="str">野蛮人のように</span>」（川島透監督）主演・薬師丸ひろ子、柴田恭兵</li>
+                  <li><span class="date">12月14日</span>映画「<span class="str">ビー・バップ・ハイスクール</span>」（那須博之監督）原作・きうちかずひろ、主演・仲村トオル、清水宏次朗、中山美穂</li>
+                </ul>
+              </div>
+
+              <!-- 出版 -->
+              <div class="category-section">
+                <h4 class="category-title">出版</h4>
+                <ul class="trend-list">
+                  <li>「<span class="str">アイアコッカ</span>」リー・アイアコッカ（ダイヤモンド社）</li>
+                  <li>「<span class="str">女の器量はことばしだい</span>」広瀬久美子（リヨン社）</li>
+                </ul>
+              </div>
+              
+              <!-- 流行語 -->
+              <div class="category-section">
+                <h4 class="category-title">流行語</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+
+              <!-- ブーム -->
+              <div class="category-section">
+                <h4 class="category-title">ブーム</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+
+               <!-- 社会・文化のできごと -->
+              <div class="category-section">
+                 <h4 class="category-title">社会・文化のできごと</h4>
+                <ul class="social-events-list trend-list">
+                  <li>11月13日&ensp;コロンビア・アルメラで火山が噴火し2万5000人が死亡。</li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="year-section" data-year="1986">
+              <h3 class="year-title">1986年（昭和61年）</h3>
+               <div>
+                 <p>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1986%E5%B9%B4" target="_blank">1986年</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/%E7%AC%AC37%E5%9B%9ENHK%E7%B4%85%E7%99%BD%E6%AD%8C%E5%90%88%E6%88%A6" target="_blank">第37回NHK紅白歌合戦</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1986%E5%B9%B4%E3%81%AE%E9%9F%B3%E6%A5%BD" target="_blank">1986年の音楽</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1986%E5%B9%B4%E3%81%AE%E6%98%A0%E7%94%BB" target="_blank">1986年の映画</a>」<br>
+                   JOYSOUND.com: <a href="https://www.joysound.com/web/s/karaoke/memories/1986" target="_blank">あの日、あの時、あの音楽。[1986年]</a>
+                 </p>
+               </div>
+              
+              <!-- 流行歌 -->
+              <div class="category-section">
+                <h4 class="category-title">流行歌</h4>
+                <ul class="song-list">
+                  <li><a href="https://www.youtube.com/watch?v=lhzUjy30jdY" target="_blank">石井明美 - 「<span class="str">CHA-CHA-CHA</span>」 [CBS / ソニー]</a>リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=O9NIxNlRs8U" target="_blank">少年隊 - 「<span class="str">仮面舞踏会</span>」 [	ワーナー・パイオニア]</a> リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=zfcO3Y58m24" target="_blank">渡辺美里 - 「<span class="str">My Revolution</span>」 [EPIC / ソニー]</a>（作曲・小室哲哉）</li>
+                </ul>
+              </div>
+              
+              <!-- 映画&テレビ -->
+              <div class="category-section">
+                <h4 class="category-title">映画&テレビ</h4>
+                <ul class="video-works-list trend-list">
+                  <li><span class="date">03月15日</span>映画「<span class="str">愛と哀しみの果て</span>」アメリカ（シドニー・ポラック監督）</li>
+                  <li><span class="date">05月03日</span>映画「<span class="str">ブレックファスト・クラブ</span>」アメリカ（ジョン・ヒューズ監督）</li>
+                  <li><span class="date">06月06日</span>映画「<span class="str">アフター・アワーズ</span>」アメリカ（マーティン・スコセッシ監督）</li>
+                  <li><span class="date">06月07日</span>映画「<span class="str">ロッキー4/炎の友情</span>」アメリカ（シルヴェスター・スタローン監督）</li>
+                  <li><span class="date">07月12日</span>映画「<span class="str">子猫物語</span>」（畑正憲監督、市川崑協力監督）</li>
+                  <li><span class="date">08月02日</span>映画「<span class="str">天空の城ラピュタ</span>」（宮崎駿監督）</li>
+                  <li><span class="date">08月09日</span>映画「<span class="str">コブラ</span>」アメリカ（シルヴェスター・スタローン監督）</li>
+                  <li><span class="date">08月30日</span>映画「<span class="str">エイリアン2</span>」アメリカ（ジェームズ・キャメロン監督）</li>
+                  <li><span class="date">10月05日</span>TVドラマ「<span class="str">あぶない刑事</span>」日本テレビ、翌87年09月27日まで放送。</li>
+                  <li><span class="date">10月17日</span>映画「<span class="str">海と毒薬</span>」（熊井啓監督）原作・遠藤周作</li>
+                  <li><span class="date">12月06日</span>映画「<span class="str">トップガン</span>」（トニー・スコット監督）主演・トム・クルーズ</li>
+                </ul>
+              </div>
+
+              <!-- 出版 -->
+              <div class="category-section">
+                <h4 class="category-title">出版</h4>
+                <ul class="trend-list">
+                  <li>「<span class="str">自分を活かす相性・殺す相性</span>」細木数子（祥伝社）</li>
+                  <li>「<span class="str">大前研一の新・国富論</span>」大前研一（講談社）</li>
+                </ul>
+              </div>
+              
+              <!-- 流行語 -->
+              <div class="category-section">
+                <h4 class="category-title">流行語</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+
+              <!-- ブーム -->
+              <div class="category-section">
+                <h4 class="category-title">ブーム</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+
+               <!-- 社会・文化のできごと -->
+              <div class="category-section">
+                 <h4 class="category-title">社会・文化のできごと</h4>
+                <ul class="social-events-list trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="year-section" data-year="1987">
+              <h3 class="year-title">1987年（昭和62年）</h3>
+               <div>
+                 <p>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1987%E5%B9%B4" target="_blank">1987年</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/%E7%AC%AC38%E5%9B%9ENHK%E7%B4%85%E7%99%BD%E6%AD%8C%E5%90%88%E6%88%A6" target="_blank">第38回NHK紅白歌合戦</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1987%E5%B9%B4%E3%81%AE%E9%9F%B3%E6%A5%BD" target="_blank">1987年の音楽</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1987%E5%B9%B4%E3%81%AE%E6%98%A0%E7%94%BB" target="_blank">1987年の映画</a>」<br>
+                   JOYSOUND.com: <a href="https://www.joysound.com/web/s/karaoke/memories/1987" target="_blank">あの日、あの時、あの音楽。[1987年]</a>
+                 </p>
+               </div>
+              
+              <!-- 流行歌 -->
+              <div class="category-section">
+                <h4 class="category-title">流行歌</h4>
+                <ul class="song-list">
+                  <li><a href="https://www.youtube.com/watch?v=bO6K6fdjdn0" target="_blank">瀬川瑛子 - 「<span class="str">命くれない</span>」 [日本クラウン]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=PHaKapbUbvs" target="_blank">中森明菜 - 「<span class="str">TANGO NOIR</span>」 [ワーナー・パイオニア / リプリーズ・レコード]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=jOWp3cCjBAM" target="_blank">吉幾三 - 「<span class="str">雪国</span>」 [キャッツタウンレコード]</a> リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=r107W1YXrSM" target="_blank">TM NETWORK - 「<span class="str">Get Wild</span>」 [EPIC / ソニー]</a>（TVアニメ『シティーハンター』主題歌）</li>
+                  <li><a href="https://www.youtube.com/watch?v=tPLBxLHM_MA" target="_blank">森川由加里 - 「<span class="str">SHOW ME</span>」 [ファンハウス]</a>（TVドラマ『男女7人秋物語』主題歌）</li>
+                  <li><a href="https://www.youtube.com/watch?v=Yv9jGydDsjQ" target="_blank">BOØWY - 「<span class="str">Marionette</span>」 [東芝EMI / EASTWORLD]</a></li>
+                </ul>
+              </div>
+              
+              <!-- 映画&テレビ -->
+              <div class="category-section">
+                <h4 class="category-title">映画&テレビ</h4>
+                <ul class="video-works-list trend-list">
+                  <li><span class="date">02月07日</span>映画「<span class="str">マルサの女</span>」（伊丹十三監督）主演・宮本信子</li>
+                  <li><span class="date">03月14日</span>映画「<span class="str">王立宇宙軍 オネアミスの翼</span>」（山賀博之監督）</li>
+                  <li><span class="date">03月14日</span>映画「<span class="str">ドラえもん のび太と竜の騎士</span>」（芝山努監督）、「<span class="str">プロゴルファー猿 甲賀秘境！影の忍法ゴルファー参上！</span>」（監督・西村純二）、「<span class="str">オバケのQ太郎・とびだせ!1/100大作戦</span>」（短編、総監督・笹川ひろし）と同時上映。</li>
+                  <li><span class="date">03月21日</span>映画「<span class="str">愛は静けさの中に</span>」（ランダ・ヘインズ監督）</li>
+                  <li><span class="date">04月18日</span>映画「<span class="str">スタンド・バイ・ミー</span>」アメリカ（ロブ・ライナー監督）</li>
+                  <li><span class="date">04月29日</span>映画「<span class="str">プラトーン</span>」アメリカ（オリバー・ストーン監督）</li>
+                  <li><span class="date">05月02日</span>映画「<span class="str">ブルーベルベット</span>」アメリカ（デヴィッド・リンチ監督）</li>
+                  <li><span class="date">08月01日</span>映画「<span class="str">ハチ公物語</span>」（神山征二郎監督）主演・仲代達矢</li>
+                  <li><span class="date">08月01日</span>映画「<span class="str">ゆきゆきて、神軍</span>」（原一男監督）出演・奥崎謙三</li>
+                  <li><span class="date">08月13日</span>映画「<span class="str">スリーメン&ベビー</span>」（レナード・ニモイ監督）</li>
+                  <li><span class="date">09月26日</span>映画「<span class="str">竹取物語</span>」（市川崑監督）主演・沢口靖子、三船敏郎</li>
+                  <li><span class="date">10月03日</span>映画「<span class="str">アンタッチャブル</span>」アメリカ（ブライアン・デ・パルマ監督）主演・ケビン・コスナー</li>
+                  <li><span class="date">10月23日</span>映画「<span class="str">ラストエンペラー</span>」アメリカ・イギリス・フランス・イタリア・中国合作（ベルナルド・ベルトルッチ監督）主演・ジョン・ローン、音楽・デヴィッド・バーン、坂本龍一、蘇聡</li>
+                  <li><span class="date">12月12日</span>映画「<span class="str">あぶない刑事</span>」（長谷部安春監督）ドラマの映画化1作目。映画「<span class="str">七福星</span>」香港（サモ・ハン・キンポー監督）主演・サモ・ハン・キンポー、ジャッキー・チェンと同時上映。</li>
+                </ul>
+              </div>
+
+              <!-- 出版 -->
+              <div class="category-section">
+                <h4 class="category-title">出版</h4>
+                <ul class="trend-list">
+                  <li>「<span class="str">サラダ記念日</span>」俵万智（河出書房新社）</li>
+                  <li>「<span class="str">ビジネスマンの父より息子へ30通の手紙</span>」G・キングスレイ・ウォード（新潮社）</li>
+                </ul>
+              </div>
+              
+              <!-- 流行語 -->
+              <div class="category-section">
+                <h4 class="category-title">流行語</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+
+              <!-- ブーム -->
+              <div class="category-section">
+                <h4 class="category-title">ブーム</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+
+               <!-- 社会・文化のできごと -->
+              <div class="category-section">
+                 <h4 class="category-title">社会・文化のできごと</h4>
+                <ul class="social-events-list trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="year-section" data-year="1988">
+              <h3 class="year-title">1988年（昭和63年）</h3>
+               <div>
+                 <p>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1988%E5%B9%B4" target="_blank">1988年</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/%E7%AC%AC39%E5%9B%9ENHK%E7%B4%85%E7%99%BD%E6%AD%8C%E5%90%88%E6%88%A6" target="_blank">第39回NHK紅白歌合戦</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1988%E5%B9%B4%E3%81%AE%E9%9F%B3%E6%A5%BD" target="_blank">1988年の音楽</a>」<br>
+                   wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1988%E5%B9%B4%E3%81%AE%E6%98%A0%E7%94%BB" target="_blank">1988年の映画</a>」<br>
+                   JOYSOUND.com: <a href="https://www.joysound.com/web/s/karaoke/memories/1988" target="_blank">あの日、あの時、あの音楽。[1988年]</a>
+                 </p>
+               </div>
+              
+              <!-- 流行歌 -->
+              <div class="category-section">
+                <h4 class="category-title">流行歌</h4>
+                <ul class="song-list">
+                  <li><a href="https://www.youtube.com/watch?v=XFGWYi_cAx4" target="_blank">光GENJI - 「<span class="str">パラダイス銀河</span>」 [ポニーキャニオン]</a>（作詞作曲・飛鳥涼）リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=JZS26k76Ncw" target="_blank">光GENJI - 「<span class="str">ガラスの十代</span>」 [ポニーキャニオン]</a>（作詞作曲・飛鳥涼）リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=-Ch-ilTDBnw" target="_blank">長渕剛 - 「<span class="str">乾杯 -NEW RECORDING VERSION-</span>」 [東芝EMI / エキスプレス]</a> リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=VT1GnjxcwZc" target="_blank">工藤静香 - 「<span class="str">MUGO・ん…色っぽい</span>」 [ポニーキャニオン]</a> （作詞・中島みゆき、作曲・後藤次利）</li>
+                  <li><a href="https://www.youtube.com/watch?v=9ZXfyLl9OWs" target="_blank">男闘呼組 - 「<span class="str">DAYBREAK</span>」 [BMGビクター / RCA]</a> （作詞・大津あきら、作曲・Mark Davis（馬飼野康二））リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=EEGYy-wMhI8" target="_blank">氷室京介 - 「<span class="str">ANGEL</span>」 [東芝EMI / EASTWORLD]</a> （作詞作曲・氷室京介）</li>
+                  <li><a href="https://www.youtube.com/watch?v=hnsCQfm76bs" target="_blank">中山美穂 - 「<span class="str">人魚姫 mermaid</span>」 [キングレコード]</a>（TVドラマ『若奥さまは腕まくり！』主題歌）</li>
+                  <li><a href="https://www.youtube.com/watch?v=d147hoF339k" target="_blank">南野陽子 - 「<span class="str">吐息でネット。</span>」 [CBS / ソニー]</a>（CM「カネボウ '88 春のイメージソング」使用）</li>
+                  <li><a href="https://www.youtube.com/watch?v=InPGzqxwlFg" target="_blank">TM NETWORK - 「<span class="str">BEYOND THE TIME（メビウスの輪を越えて）</span>」 [EPIC / ソニー]</a>（映画『機動戦士ガンダム 逆襲のシャア』主題歌）リンク先「2025 Version」</li>
+                </ul>
+              </div>
+              
+              <!-- 映画&テレビ -->
+              <div class="category-section">
+                <h4 class="category-title">映画&テレビ</h4>
+                <ul class="video-works-list trend-list">
+                  <li><span class="date">02月11日</span>映画「<span class="str">危険な情事</span>」アメリカ（エイドリアン・ライン監督）主演・マイケル・ダグラス、グレン・クローズ</li>
+                  <li><span class="date">03月12日</span>映画「<span class="str">機動戦士ガンダム 逆襲のシャア</span>」（富野由悠季監督）</li>
+                  <li><span class="date">04月16日</span>映画「<span class="str">となりのトトロ</span>」（宮崎駿監督）、「<span class="str">火垂るの墓</span>」（高畑勲監督、原作・野坂昭如）と同時上映。</li>
+                  <li><span class="date">06月11日</span>映画「<span class="str">ランボー3/怒りのアフガン</span>」アメリカ（ピーター・マクドナルド監督）</li>
+                  <li><span class="date">06月17日</span>映画「<span class="str">ベルリン・天使の詩</span>」フランス・西ドイツ合作（ヴィム・ヴェンダース監督）主演・ブルーノ・ガンツ</li>
+                  <li><span class="date">06月25日</span>映画「<span class="str">敦煌</span>」日本・中国合作（佐藤純彌監督）主演・西田敏行、佐藤浩市、原作・井上靖</li>
+                  <li><span class="date">07月16日</span>映画「<span class="str">AKIRA</span>」（大友克洋監督）</li>
+                  <li><span class="date">07月23日</span>映画「<span class="str">優駿 ORACIÓN</span>」（杉田成道監督）原作・宮本輝、主演・斉藤由貴</li>
+                  <li><span class="date">08月20日</span>映画「<span class="str">いこかもどろか</span>」（生野慈朗監督）主演・明石家さんま、大竹しのぶ</li>
+                  <li><span class="date">10月07日</span>TVドラマ「<span class="str">とんぼ</span>」主演・長渕剛。11月25日まで放送</li>
+                  <li><span class="date">12月03日</span>映画「<span class="str">ロジャーラビット</span>」アメリカ（ロバート・ゼメキス監督）</li>
+                  <li><span class="date">12月17日</span>映画「<span class="str">星の王子 ニューヨークへ行く</span>」（ジョン・ランディス監督）主演・エディ・マーフィ</li>
+                  <li><span class="date">12月26日</span>映画「<span class="str">ウィロー</span>」アメリカ（ロン・ハワード監督）原案、製作総指揮・ジョージ・ルーカス、主演・ワーウィック・デイヴィス</li>
+                </ul>
+              </div>
+
+              <!-- 出版 -->
+              <div class="category-section">
+                <h4 class="category-title">出版</h4>
+                <ul class="trend-list">
+                  <li>「<span class="str">ノルウェイの森 上・下</span>」村上春樹（講談社）</li>
+                  <li>「<span class="str">こんなにヤセていいかしら</span>」河津祐介（青春出版社）</li>
+                </ul>
+              </div>
+              
+              <!-- 流行語 -->
+              <div class="category-section">
+                <h4 class="category-title">流行語</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+
+              <!-- ブーム -->
+              <div class="category-section">
+                <h4 class="category-title">ブーム</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+
+              <!-- 社会・文化のできごと -->
+              <div class="category-section">
+                <h4 class="category-title">社会・文化のできごと</h4>
+                <ul class="social-events-list trend-list">
+                  <li>under construction</li>
+                  <li>08月20日&ensp;<a href="https://ja.wikipedia.org/wiki/%E3%82%A4%E3%83%A9%E3%83%B3%E3%83%BB%E3%82%A4%E3%83%A9%E3%82%AF%E6%88%A6%E4%BA%89#:~:text=%E3%82%92%E8%A1%A8%E6%98%8E%E3%81%97%E3%80%81-,8%E6%9C%8820%E6%97%A5%E3%81%AB%E5%81%9C%E6%88%A6%E3%81%8C%E7%99%BA%E5%8A%B9,-%E3%81%97%E3%81%9F%E3%80%82" target="_blank">イラン・イラク戦争</a>停戦</li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="year-section" data-year="1989">
+              <h3 class="year-title">1989年（平成元年）</h3>
+                <div>
+                  <p>
+                    wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1989%E5%B9%B4" target="_blank">1989年</a>」<br>
+                    wikipedia: 「<a href="https://ja.wikipedia.org/wiki/%E7%AC%AC40%E5%9B%9ENHK%E7%B4%85%E7%99%BD%E6%AD%8C%E5%90%88%E6%88%A6" target="_blank">第40回NHK紅白歌合戦</a>」<br>
+                    wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1989%E5%B9%B4%E3%81%AE%E9%9F%B3%E6%A5%BD" target="_blank">1989年の音楽</a>」<br>
+                    wikipedia: 「<a href="https://ja.wikipedia.org/wiki/1989%E5%B9%B4%E3%81%AE%E6%98%A0%E7%94%BB" target="_blank">1989年の映画</a>」<br>
+                    JOYSOUND.com: <a href="https://www.joysound.com/web/s/karaoke/memories/1989" target="_blank">あの日、あの時、あの音楽。[1989年]</a>
+                  </p>
+                </div>
+              
+              <!-- 流行歌 -->
+              <div class="category-section">
+                <h4 class="category-title">流行歌</h4>
+                <ul class="song-list">
+                  <li><a href="https://www.youtube.com/watch?v=IKjRLKQo7O0" target="_blank">プリンセス・プリンセス - 「<span class="str">Diamonds</span>」 [CBS / ソニー]</a></li>
+                  <li><a href="https://www.youtube.com/watch?v=FF9TkfBS7_8" target="_blank">長渕剛 - 「<span class="str">とんぼ</span>」 [東芝EMI / エキスプレス]</a> リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=1S5zcW0gEZ8" target="_blank">THE BLUE HEARTS - 「<span class="str">TRAIN-TRAIN</span>」 [メルダック]</a>（1988年11月リリース、89年01月開始のドラマ『はいすくーる落書』主題歌としてヒット）リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=SOCjkXBeKRs" target="_blank">美空ひばり - 「<span class="str">川の流れのように</span>」 [日本コロムビア]</a>（作詞・秋元康、作曲・見岳章）</li>
+                  <li><a href="https://www.youtube.com/watch?v=FSPEhXjQpWk" target="_blank">Wink - 「<span class="str">淋しい熱帯魚</span>」 [ポリスター]</a>（作詞・及川眠子）</li>
+                  <li><a href="https://www.youtube.com/watch?v=aqZcA-6nne8" target="_blank">中山美穂 - 「<span class="str">Virgin Eyes</span>」 [キングレコード]</a>（作詞・吉元由美、作曲・杏里。映画『どっちにするの。』主題歌）</li>
+                  <li><a href="https://www.youtube.com/watch?v=mEeSJ1k0XKE" target="_blank">光GENJI - 「<span class="str">太陽がいっぱい</span>」 [ポニーキャニオン]</a>（作詞作曲・大江千里）リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=p4P9WRr6lus" target="_blank">工藤静香 - 「<span class="str">恋一夜</span>」 [ポニーキャニオン]</a>（1988年12月リリース）</li>
+                  <li><a href="https://www.youtube.com/watch?v=PihNqg8VRUM" target="_blank">爆風スランプ - 「<span class="str">Runner</span>」 [CBS / ソニー]</a>（1988年10月リリース）リンク先非公式</li>
+                  <li><a href="https://www.youtube.com/watch?v=i1FQX--FeNg" target="_blank">COMPLEX - 「<span class="str">BE MY BABY</span>」 [東芝EMI / EASTWORLD]</a></li>
+                </ul>
+              </div>
+              
+              <!-- 映画&テレビ -->
+              <div class="category-section">
+                <h4 class="category-title">映画&テレビ</h4>
+                <ul class="video-works-list trend-list">
+                  <li><span class="date">02月04日</span>映画「<span class="str">ダイ・ハード</span>」アメリカ（ジョン・マクティアナン監督）主演・ブルース・ウィリス</li>
+                  <li><span class="date">02月25日</span>映画「<span class="str">レインマン</span>」アメリカ（バリー・レヴィンソン監督）主演・ダスティン・ホフマン、トム・クルーズ</li>
+                  <li><span class="date">03月11日</span>映画「<span class="str">それいけ！アンパンマン キラキラ星の涙</span>」（永丘昭典監督）シリーズ初の劇場版。「<span class="str">おねがい！サミアどん</span>」、「<span class="str">ロボタン</span>」と同時上映。</li>
+                  <li><span class="date">03月11日</span>映画「<span class="str">ドラえもん のび太の日本誕生</span>」（芝山努監督）</li>
+                  <li><span class="date">03月11日</span>映画「<span class="str">オルゴール</span>」（黒土三男監督）主演・長渕剛</li>
+                  <li><span class="date">03月25日</span>映画「<span class="str">カクテル</span>」アメリカ（ロジャー・ドナルドソン監督）主演・トム・クルーズ</li>
+                  <li><span class="date">05月13日</span>映画「<span class="str">黒い雨</span>」（今村昌平監督）原作・井伏鱒二、主演・田中好子</li>
+                  <li><span class="date">07月08日</span>映画「<span class="str">インディ・ジョーンズ/最後の聖戦</span>」（スティーブン・スピルバーグ監督）主演・ハリソン・フォード</li>
+                  <li><span class="date">07月15日</span>映画「<span class="str">機動警察パトレイバー the Movie</span>」（押井守監督）</li>
+                  <li><span class="date">07月29日</span>映画「<span class="str">魔女の宅急便</span>」（宮崎駿監督）</li>
+                  <li><span class="date">10月07日</span>映画「<span class="str">ブラック・レイン</span>」アメリカ（リドリー・スコット監督）主演・マイケル・ダグラス、高倉健、松田優作（遺作）</li>
+                  <li><span class="date">12月02日</span>映画「<span class="str">バットマン</span>」アメリカ（ティム・バートン監督）主演・マイケル・キートン、ジャック・ニコルソン</li>
+                </ul>
+              </div>
+
+              <!-- 出版 -->
+              <div class="category-section">
+                <h4 class="category-title">出版</h4>
+                <ul class="trend-list">
+                  <li>「<span class="str">キッチン</span>」吉本ばなな（福武書店）</li>
+                  <li>「<span class="str">ドラゴンクエストⅢ公式ガイドブック</span>」エニックス編集部（エニックス）</li>
+                </ul>
+              </div>
+              
+              <!-- 流行語 -->
+              <div class="category-section">
+                <h4 class="category-title">流行語</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+
+              <!-- ブーム -->
+              <div class="category-section">
+                <h4 class="category-title">ブーム</h4>
+                <ul class="trend-list">
+                  <li>under construction</li>
+                </ul>
+              </div>
+
+              <!-- 社会・文化のできごと -->
+              <div class="category-section">
+                <h4 class="category-title">社会・文化のできごと</h4>
+                <ul class="social-events-list trend-list">
+                  <li>under construction</li>
+                  <li>01月07日&ensp;裕仁天皇が崩御（享年87歳）し、新天皇に皇太子明仁が即位、年号を「平成」に改元。</li>
+                  <li>04月01日&ensp;消費税（3%）スタート。</li>
+                  <li>06月24日&ensp;美空ひばりが死去（享年52歳）。</li>
+                  <li>07月23日&ensp;東京・埼玉連続幼女誘拐殺人事件犯人の宮崎勤が<a href="https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E3%83%BB%E5%9F%BC%E7%8E%89%E9%80%A3%E7%B6%9A%E5%B9%BC%E5%A5%B3%E8%AA%98%E6%8B%90%E6%AE%BA%E4%BA%BA%E4%BA%8B%E4%BB%B6#%E7%8A%AF%E4%BA%BA%E3%81%AE%E9%80%AE%E6%8D%95" target="_blank">現行犯逮捕</a>。08月11日再逮捕。（オタクバッシング）</li>
+                  <li>11月09日&ensp;ベルリンの壁が崩壊。</li>
+                  <li>12月03日&ensp;米ソ首脳が冷戦終結を宣言。</li>
+                </ul>
+              </div>
+            </section>
+
+
+
+          </article>
+        </section>
+        <section id="reference">
+          <h2 style="font-size: 1.2rem;">参考文献</h2>
+          <ul>
+            <li>wikipedia - 各年、各年の音楽、各年の紅白歌合戦のページ</li>
+            <li>下川耿史監修・家庭総合研究会編 - 『<a href="https://www.kawade.co.jp/np/isbn/9784309223704/" target="_blank">昭和・平成家庭史年表 増補改訂新版</a>』 - 河出書房新社</li>
+            <li>JOYSOUND.com - 「<a href="https://www.joysound.com/web/s/karaoke/memories" target="_blank">あの日、あの時、あの音楽。</a>」</li>
+          </ul>
+        </section>
+        <section id="change_log">
+          <h2 style="font-size: 1.2rem;">更新履歴</h2>
+          <ul>
+            <li>2024年12月16日初版公開</li>
+          </ul>
+        </section>
+      </article>
+
+    </main>
+    <footer id="main-footer">
+      <div id="texthtml"></div>
+      <!-- main.jsからsitenav.htmlの挿入 -->
+      <div id="sitenavhtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="/luminous-basic.min.css">
+    <script src="/Luminous.min.js" defer></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+    </script>
+    
+    <!-- YouTube動画埋め込み機能 -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // song-list内のYouTubeリンクを処理
+        document.querySelectorAll('.song-list li a[href*="youtube.com"]').forEach(link => {
+          const li = link.parentElement;
+          
+          // YouTubeのビデオIDを抽出
+          const url = new URL(link.href);
+          const videoId = url.searchParams.get('v');
+          
+          if (videoId) {
+            // ボタンを作成
+            const button = document.createElement('button');
+            button.className = 'video-toggle-btn';
+            button.textContent = '動画を表示';
+            button.setAttribute('data-video-id', videoId);
+            
+            // 動画プレーヤーコンテナを作成
+            const playerContainer = document.createElement('div');
+            playerContainer.className = 'video-player-container';
+            playerContainer.style.display = 'none';
+            
+            const videoEmbed = document.createElement('div');
+            videoEmbed.className = 'video-embed';
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = '';
+            iframe.title = 'YouTube動画';
+            iframe.loading = 'lazy';
+            iframe.allowFullscreen = true;
+            
+            videoEmbed.appendChild(iframe);
+            playerContainer.appendChild(videoEmbed);
+            
+            // リンクの前にボタンを追加、プレーヤーは後に追加
+            li.insertBefore(button, link);
+            li.appendChild(playerContainer);
+            
+            // ボタンのクリックイベント
+            button.addEventListener('click', function() {
+              if (playerContainer.style.display === 'none') {
+                // 動画を表示
+                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
+                playerContainer.style.display = 'block';
+                this.textContent = '動画を非表示';
+                this.classList.add('active');
+              } else {
+                // 動画を非表示
+                iframe.src = '';
+                playerContainer.style.display = 'none';
+                this.textContent = '動画を表示';
+                this.classList.remove('active');
+              }
+            });
+          }
+        });
+      });
+    </script>
+  </div>
+</body>
+
+</html>

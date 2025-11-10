@@ -223,7 +223,7 @@ summary {
   }
 }
 
-@media screen and (max-width: 920px) {
+@media screen and (max-width: 850px) {
   #item2 {
     display: block;
   }
@@ -416,7 +416,7 @@ h2 {
   changelog and text
 ===================*/
 #changelogcontainer, #texthtml{
-  width: 235px;
+  width: 220px;
   line-height: 1.2rem;
   padding-left: 5.6em;
   text-indent: -5.6em;

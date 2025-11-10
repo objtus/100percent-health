@@ -76,6 +76,34 @@
         border-bottom: none;
       }
     }
+
+    /* 外部リンクアイコンのスタイル */
+    a[href^="http"]::after {
+      content: '';
+      display: inline-block;
+      background-image: url(/external_link-icon1x2.png);
+      image-rendering: auto;
+      margin-left: 3px;
+      vertical-align: middle;
+      transform: translateY(-2px);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: inherit;
+    }
+    
+    #galleryspace a[href^="http"]::after {
+      width: 12px;
+      height: 20px;
+    }
+    
+    #footerhtml a[href^="http"]::after {
+      width: 10px;
+      height: 14px;
+    }
+    
+    a[href^="http"]:hover::after {
+      filter: invert(1);
+    }
   
     div#site_introduction,
     table.profile-table {
