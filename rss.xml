@@ -5,9 +5,17 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 10 Oct 2025 12:26:31 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 14 Nov 2025 13:58:02 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>worksにgirls chronicle (2020-2024)を追加</title>
+      <link>https://yuinoid.neocities.org/gallery/image-page/girls-chronicle_2020-2024</link>
+      <description>ex. happyender girlのアルバム、『girls chronicle (2020-2024)』にアルバムアートを提供しました。初音ミクさんをちゃんと描いたのは実はこれが初めてです。このアルバムは、ex. happyender girlが2020年から2024年にかけて発表した楽曲のコンピレーションアルバムです。ベストアルバム「girls chronicle (2013-2019)」の後編的な位置づけで、アルバムジャケットもそれに準じたものになっています。</description>
+      <pubDate>Fri, 14 Nov 2025 13:58:02 GMT</pubDate>
+      <category>works</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#1vgtc2-20251114</guid>
+    </item>
     <item>
       <title>サイドバー機能を追加しました</title>
       <link>https://yuinoid.neocities.org/aboutme.html</link>
@@ -39,14 +47,6 @@
       <pubDate>Thu, 18 Sep 2025 01:00:54 GMT</pubDate>
       <category>zakki</category>
       <guid isPermaLink="false">https://yuinoid.neocities.org/rss#2nbe8x-20250918</guid>
-    </item>
-    <item>
-      <title>アクティビティまとめページ「planet yuinoid」に機能を追加</title>
-      <link>https://yuinoid.neocities.org/planet/planet_main.html</link>
-      <description>planet yuinoidにLast.fmの音楽再生履歴を追加しました。github actionsで自動更新しています。github actionsってはじめて使ったけどすごいですね。いろいろなことができそう。あと、last.fmのapiで取得できるリミットを考慮して100件取得するようにしているので、古いものは表示できません。</description>
-      <pubDate>Mon, 15 Sep 2025 13:49:57 GMT</pubDate>
-      <category>system</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#rxs3gv-20250915</guid>
     </item>
   </channel>
 </rss>

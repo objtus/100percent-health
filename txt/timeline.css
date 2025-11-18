@@ -664,6 +664,45 @@ em{
 }
 
 /*===================
+  カテゴリタグ（控えめ表示）
+===================*/
+.category-tags-subtle {
+  font-size: 0.8em;
+  text-align: right;
+  margin-top: 6px;
+  margin-bottom: 4px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  line-height: 1.4;
+  &:hover {
+    opacity: 1;
+  }
+  .category-tag {
+    background: transparent;
+    color: #888;
+    padding: 2px 6px;
+    margin-left: 6px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+    &::before {
+      content: "#";
+    }
+    &:hover {
+      background-color: #f5f5f5;
+      color: #333;
+      border-color: #ddd;
+    }
+    &:active {
+      background: #e8e8e8;
+      transform: scale(0.95);
+    }
+  }
+}
+
+
+/*===================
   テキスト選択検索ボタン
 ===================*/
 .timeline-text-selection-button {

@@ -8,7 +8,6 @@
       "date": "2020-07-23",
       "series": "works",
       "tags": [
-        "nofederation",
         "works",
         "collaboration",
         "music",
@@ -25,7 +24,6 @@
       "date": "2021-05-07",
       "series": "works",
       "tags": [
-        "stilldreaminghour0",
         "works",
         "music",
         "ex_happyender_girl",
@@ -40,7 +38,6 @@
       "date": "2022-01-30",
       "series": "works",
       "tags": [
-        "littlegirlisdead",
         "works",
         "music",
         "ex_happyender_girl",
@@ -56,7 +53,6 @@
       "date": "2022-04-26",
       "series": "works",
       "tags": [
-        "remain_in",
         "works",
         "music",
         "ex_happyender_girl",
@@ -87,7 +83,6 @@
       "date": "2023-01-14",
       "series": "works",
       "tags": [
-        "a_perfect_day_to_eat_pancakes",
         "works",
         "music",
         "ex_happyender_girl",
@@ -103,7 +98,6 @@
       "date": "2023-12-24",
       "series": "works",
       "tags": [
-        "23.11.18",
         "works",
         "music",
         "ex_happyender_girl",
@@ -120,7 +114,6 @@
       "date": "2024-07-21",
       "series": "works",
       "tags": [
-        "tiny-lo",
         "works",
         "music",
         "ex_happyender_girl",
@@ -135,7 +128,6 @@
       "date": "2024-08-30",
       "series": "works",
       "tags": [
-        "this-years-loid",
         "works",
         "music",
         "ex_happyender_girl",
@@ -151,10 +143,24 @@
       "date": "2025-01-27",
       "series": "works",
       "tags": [
-        "re-summer(never)ends",
         "works",
         "music",
         "ex_happyender_girl",
+        "1girl"
+      ]
+    },
+    {
+      "id": "girls-chronicle_2020-2024",
+      "path": "/gallery/image-page/girls-chronicle_2020-2024.html",
+      "image_path": "../../img/original/girls-chronicle_2020-2024.webp",
+      "date": "2025-11-14",
+      "series": "works",
+      "tags": [
+        "works",
+        "music",
+        "ex_happyender_girl",
+        "hatsune_miku",
+        "colored",
         "1girl"
       ]
     }

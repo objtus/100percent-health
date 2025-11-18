@@ -202,6 +202,103 @@
         }
 
         // =============================================================================
+        // カテゴリタグ表示機能
+        // =============================================================================
+
+        /**
+         * 全てのli要素にカテゴリタグを追加
+         * 各項目の下部に控えめなカテゴリタグを表示
+         */
+        initializeCategoryTags() {
+          const $timelineLayout = this.getCachedElement('timelineLayout');
+          if (!$timelineLayout || $timelineLayout.length === 0) {
+            return;
+          }
+
+          const availableCategories = this.getAvailableCategories();
+          
+          $timelineLayout.find('li').each((index, item) => {
+            const $item = $(item);
+            
+            // 既にタグが追加されている場合はスキップ
+            if ($item.find('.category-tags-subtle').length > 0) {
+              return;
+            }
+
+            // li要素のクラスを取得
+            const classes = $item.attr('class');
+            if (!classes) {
+              return;
+            }
+
+            // カテゴリのみを抽出
+            const itemClasses = classes.split(' ');
+            const categories = itemClasses.filter(cls => 
+              availableCategories.includes(cls)
+            );
+
+            if (categories.length === 0) {
+              return;
+            }
+
+            // カテゴリタグのコンテナを作成
+            const $tagsContainer = $('<div class="category-tags-subtle"></div>');
+            
+            // 各カテゴリのタグを作成
+            categories.forEach(category => {
+              const $tag = $('<span class="category-tag"></span>')
+                .text(category)
+                .attr('data-category', category);
+              $tagsContainer.append($tag);
+            });
+
+            // li要素の末尾に追加
+            $item.append($tagsContainer);
+          });
+
+          console.log('[TimelineFilter] カテゴリタグ初期化完了');
+        }
+
+        /**
+         * カテゴリタグのクリックイベントを設定
+         * タグをクリックすると、そのカテゴリでフィルタリング
+         */
+        setupCategoryTagEvents() {
+          // イベント委譲を使用してパフォーマンスを最適化
+          const $timelineLayout = this.getCachedElement('timelineLayout');
+          if (!$timelineLayout || $timelineLayout.length === 0) {
+            return;
+          }
+
+          // 既存のイベントを削除
+          $timelineLayout.off('click.categoryTag');
+
+          // カテゴリタグのクリックイベント
+          $timelineLayout.on('click.categoryTag', '.category-tag', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const category = $(e.target).attr('data-category');
+            if (!category) {
+              return;
+            }
+
+            console.log(`[TimelineFilter] カテゴリタグクリック: ${category}`);
+
+            // ラジオボタンを選択
+            const $radioButton = $(`input[name="class"][value="${category}"]`);
+            if ($radioButton.length > 0) {
+              $radioButton.prop('checked', true);
+              
+              // フィルタリング実行
+              this.onFilterEvent('radio_change', e);
+            }
+          });
+
+          console.log('[TimelineFilter] カテゴリタグイベント設定完了');
+        }
+
+        // =============================================================================
         // カテゴリ管理機能
         // =============================================================================
 
@@ -1052,6 +1149,10 @@
 
             // 初期状態でのボタン表示更新
             this.updateSidebarToggleButton();
+
+            // カテゴリタグの初期化
+            this.initializeCategoryTags();
+            this.setupCategoryTagEvents();
             
             console.log('[TimelineFilter] 初期化完了');
           }, CONSTANTS.DELAYS.SYSTEM_INIT);
@@ -1107,6 +1208,11 @@
           if (this.searchButton) {
             this.searchButton.remove();
             this.searchButton = null;
+          }
+
+          // カテゴリタグイベントのクリーンアップ
+          if (this.cachedElements.timelineLayout) {
+            this.cachedElements.timelineLayout.off('.categoryTag');
           }
 
           // キャッシュのクリア
