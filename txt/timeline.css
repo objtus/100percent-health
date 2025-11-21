@@ -699,6 +699,11 @@ em{
       transform: scale(0.95);
     }
   }
+  .category-tag-keyword {
+    &::before {
+      content: "⌕ ";
+    }
+  }
 }
 
 

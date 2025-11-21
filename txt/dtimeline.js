@@ -231,25 +231,38 @@
               return;
             }
 
-            // カテゴリのみを抽出
+            // カテゴリと検索キーワードを抽出
             const itemClasses = classes.split(' ');
-            const categories = itemClasses.filter(cls => 
-              availableCategories.includes(cls)
-            );
+            const tags = itemClasses.filter(cls => {
+              // 空文字列やシステムクラスを除外
+              if (!cls || cls.trim() === '') return false;
+              
+              // timeline-visible, timeline-hidden などのシステムクラスを除外
+              if (cls.startsWith('timeline-')) return false;
+              
+              // それ以外はすべて表示
+              return true;
+            });
 
-            if (categories.length === 0) {
+            if (tags.length === 0) {
               return;
             }
 
             // カテゴリタグのコンテナを作成
             const $tagsContainer = $('<div class="category-tags-subtle"></div>');
             
-            // 各カテゴリのタグを作成
-            categories.forEach(category => {
-              const $tag = $('<span class="category-tag"></span>')
-                .text(category)
-                .attr('data-category', category);
-              $tagsContainer.append($tag);
+            // 各タグを作成
+            tags.forEach(tag => {
+              const $tagElement = $('<span class="category-tag"></span>')
+                .text(tag)
+                .attr('data-category', tag);
+              
+              // ラジオボタンカテゴリ以外は検索キーワードとして扱う
+              if (!this.isRadioCategory(tag)) {
+                $tagElement.addClass('category-tag-keyword');
+              }
+              
+              $tagsContainer.append($tagElement);
             });
 
             // li要素の末尾に追加
@@ -285,17 +298,149 @@
 
             console.log(`[TimelineFilter] カテゴリタグクリック: ${category}`);
 
-            // ラジオボタンを選択
-            const $radioButton = $(`input[name="class"][value="${category}"]`);
-            if ($radioButton.length > 0) {
-              $radioButton.prop('checked', true);
-              
-              // フィルタリング実行
-              this.onFilterEvent('radio_change', e);
-            }
+            // カテゴリの種類に応じて処理を分岐
+            this.handleCategoryTagClick(category);
           });
 
           console.log('[TimelineFilter] カテゴリタグイベント設定完了');
+        }
+
+        /**
+         * カテゴリタグクリック時の処理を振り分け
+         * @param {string} category - クリックされたカテゴリ名
+         */
+        handleCategoryTagClick(category) {
+          // 1. ラジオボタンカテゴリ
+          if (this.isRadioCategory(category)) {
+            this.performRadioFilterByCategory(category);
+            return;
+          }
+          
+          // 2. 明示的検索キーワード（--付き）
+          if (this.isSearchKeyword(category)) {
+            this.performSearchByKeyword(category);
+            return;
+          }
+          
+          // 3. 暗黙的検索キーワード（それ以外）
+          this.performSearchByText(category);
+        }
+
+        /**
+         * 検索キーワードかどうか判定
+         * @param {string} category - カテゴリ名
+         * @returns {boolean}
+         */
+        isSearchKeyword(category) {
+          return category.startsWith('--');
+        }
+
+        /**
+         * ラジオボタンカテゴリかどうか判定
+         * @param {string} category - カテゴリ名
+         * @returns {boolean}
+         */
+        isRadioCategory(category) {
+          const availableCategories = this.getAvailableCategories();
+          return availableCategories.includes(category);
+        }
+
+        /**
+         * キーワードで検索フィルタリング
+         * @param {string} keyword - 検索キーワード（--を含む）
+         */
+        performSearchByKeyword(keyword) {
+          // フィルタリングをリセット
+          console.log(`[TimelineFilter] 検索フィルタリング前にリセット実行`);
+          
+          // 1. ラジオボタンを「mixed」にリセット
+          this.getCachedElement('radioButtons')
+            .filter(`[value="${CONSTANTS.DEFAULTS.SELECTED_CLASS}"]`)
+            .prop('checked', true);
+          
+          // 2. すべてのチェックボックスをチェック
+          this.getCachedElement('checkboxes').prop('checked', true);
+          
+          // -- プレフィックスを除去
+          const searchTerm = keyword.substring(2);
+          
+          // 3. 検索入力欄に設定
+          this.getCachedElement('searchInput').val(searchTerm);
+          
+          // 4. 状態を更新
+          this.updateState({
+            searchText: searchTerm,
+            selectedClass: CONSTANTS.DEFAULTS.SELECTED_CLASS,
+            selectedCheckboxes: this.getDefaultCheckboxesSet()
+          });
+          
+          // URL パラメータの更新
+          this.updateUrlParams();
+          
+          // フィルタリング実行
+          this.performSearch();
+          
+          console.log(`[TimelineFilter] 検索キーワードでフィルタリング: ${searchTerm}`);
+        }
+
+        /**
+         * テキストで検索フィルタリング（プレフィックスなし）
+         * @param {string} text - 検索テキスト
+         */
+        performSearchByText(text) {
+          // フィルタリングをリセット
+          console.log(`[TimelineFilter] テキスト検索前にリセット実行`);
+          
+          // 1. ラジオボタンを「mixed」にリセット
+          this.getCachedElement('radioButtons')
+            .filter(`[value="${CONSTANTS.DEFAULTS.SELECTED_CLASS}"]`)
+            .prop('checked', true);
+          
+          // 2. すべてのチェックボックスをチェック
+          this.getCachedElement('checkboxes').prop('checked', true);
+          
+          // 3. 検索入力欄に設定
+          this.getCachedElement('searchInput').val(text);
+          
+          // 4. 状態を更新
+          this.updateState({
+            searchText: text,
+            selectedClass: CONSTANTS.DEFAULTS.SELECTED_CLASS,
+            selectedCheckboxes: this.getDefaultCheckboxesSet()
+          });
+          
+          // URL パラメータの更新
+          this.updateUrlParams();
+          
+          // フィルタリング実行
+          this.performSearch();
+          
+          console.log(`[TimelineFilter] テキスト検索でフィルタリング: ${text}`);
+        }
+
+        /**
+         * カテゴリでラジオボタンフィルタリング
+         * @param {string} category - カテゴリ名
+         */
+        performRadioFilterByCategory(category) {
+          // フィルタリングをリセット
+          console.log(`[TimelineFilter] ラジオフィルタリング前にリセット実行`);
+          
+          // 1. 検索欄をクリア
+          this.getCachedElement('searchInput').val('');
+          
+          const $radioButton = $(`input[name="class"][value="${category}"]`);
+          if ($radioButton.length > 0) {
+            // 2. ラジオボタンを選択
+            $radioButton.prop('checked', true);
+            
+            // フィルタリング実行
+            this.onFilterEvent('radio_change', event);
+            
+            console.log(`[TimelineFilter] ラジオボタンでフィルタリング: ${category}`);
+          } else {
+            console.warn(`[TimelineFilter] ラジオボタンが見つかりません: ${category}`);
+          }
         }
 
         // =============================================================================
@@ -305,7 +450,7 @@
         /**
          * HTMLからカテゴリを動的に取得
          * チェックボックスのvalue属性から利用可能なカテゴリを抽出
-         * @returns {Array<string>} カテゴリ名の配列
+         * @returns {Array<string>} カテゴリ名の配列（検索キーワードを除く）
          */
         getAvailableCategories() {
           if (this.categoryCache) {
@@ -322,7 +467,8 @@
 
             $checkboxes.each((index, checkbox) => {
               const value = $(checkbox).val();
-              if (value && value.trim()) {
+              if (value && value.trim() && !this.isSearchKeyword(value.trim())) {
+                // 検索キーワード（--で始まる）を除外
                 categories.push(value.trim());
               }
             });
@@ -891,7 +1037,7 @@
 
         /**
          * 検索テキストによるマッチング判定
-         * 項目のテキストに検索文字列が含まれるかを判定（大文字小文字を区別しない）
+         * 項目のテキストまたはクラス名に検索文字列が含まれるかを判定（大文字小文字を区別しない）
          * @param {jQuery} $item - 判定対象のli要素
          * @returns {boolean} マッチするかどうか
          */
@@ -902,9 +1048,25 @@
           }
 
           const searchText = this.state.searchText.toLowerCase();
+          
+          // 1. テキスト内容で検索
           const itemText = $item.text().toLowerCase();
+          if (itemText.includes(searchText)) {
+            return true;
+          }
 
-          return itemText.includes(searchText);
+          // 2. クラス名でも検索
+          const classes = $item.attr('class');
+          if (classes) {
+            const itemClasses = classes.split(' ');
+            for (let cls of itemClasses) {
+              if (cls.toLowerCase().includes(searchText)) {
+                return true;
+              }
+            }
+          }
+
+          return false;
         }
 
         // =============================================================================
