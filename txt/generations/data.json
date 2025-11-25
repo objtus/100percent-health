@@ -10576,5 +10576,885 @@
       "uncertain": false
     },
     "death": null
+  },
+  {
+    "name": "池井戸潤",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1963-06-16",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "石田衣良",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1960-03-28",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "海野十三",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1897-12-26",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1949-05-17",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "乙一",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1978-10-21",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "小野不由美",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1960-12-24",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "恩田陸",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1964-10-25",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "北方謙三",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1947-10-26",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "大高正人",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1923-09-08",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2010-08-20",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "榮久庵憲司",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1929-09-11",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2015-02-08",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "槇文彦",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1928-09-06",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2024-06-06",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "フレデリック・ポール",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1919-11-26",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2013-09-02",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ブライアン・オールディス",
+    "countries": [
+      "イギリス"
+    ],
+    "birth": {
+      "date": "1925-08-18",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2017-08-19",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "メアリー・シェリー",
+    "countries": [
+      "イギリス"
+    ],
+    "birth": {
+      "date": "1797-08-30",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1851-02-01",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "小森健太朗",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1965-01-01",
+      "uncertain": true
+    },
+    "death": null
+  },
+  {
+    "name": "今野敏",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1955-09-27",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "桜庭一樹",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1971-07-26",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "志茂田景樹",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1940-03-25",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "山本寛斎",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1944-02-08",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2020-07-21",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "菅浩江",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1963-04-21",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "武田康廣",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1957-09-12",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "田中芳樹",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1952-10-22",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "大森望",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1961-02-02",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "谷山浩子",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1956-08-29",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "辻真先",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1932-03-23",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "與那覇潤",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1979-01-01",
+      "uncertain": true
+    },
+    "death": null
+  },
+  {
+    "name": "小津安二郎",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1903-12-12",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1963-12-12",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "西村京太郎",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1930-09-06",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2022-03-03",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "山村美紗",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1931-08-25",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1996-09-05",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "法月綸太郎",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1964-10-15",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "トマス・ピンチョン",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1937-05-08",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "カート・ヴォネガット",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1922-11-11",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2007-04-11",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ジョン・アーヴィング",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1942-03-02",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "マーク・トウェイン",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1835-11-30",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1910-04-21",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "アーネスト・ヘミングウェイ",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1899-07-21",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1961-07-02",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "F・スコット・フィッツジェラルド",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1896-09-24",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1940-12-21",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "シオドア・スタージョン",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1918-02-26",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1985-05-08",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "レイ・ブラッドベリ",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1920-08-22",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2012-06-05",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ハーマン・メルヴィル",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1819-08-01",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1891-09-28",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "堤清二",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1927-03-30",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2013-11-25",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "堤康次郎",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1889-03-07",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1964-04-26",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "五島慶太",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1882-04-18",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1959-08-14",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "小林一三",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1873-01-03",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1957-01-25",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "増田俊也",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1965-11-08",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "ミラン・クンデラ",
+    "countries": [
+      "チェコスロバキア",
+      "チェコ",
+      "フランス"
+    ],
+    "birth": {
+      "date": "1929-04-01",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2023-07-11",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "長谷川町子",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1920-01-30",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1992-05-27",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "道尾秀介",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1975-05-19",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "宮部みゆき",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1960-12-23",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "山田正紀",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1950-01-16",
+      "uncertain": false
+    },
+    "death": null
+  },
+  {
+    "name": "米澤穂信",
+    "countries": [
+      "日本"
+    ],
+    "birth": {
+      "date": "1978-01-01",
+      "uncertain": true
+    },
+    "death": null
+  },
+  {
+    "name": "ジョン・ディクスン・カー",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1906-11-30",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1977-02-27",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "アーサー・コナン・ドイル",
+    "countries": [
+      "イギリス"
+    ],
+    "birth": {
+      "date": "1859-05-22",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1930-07-07",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "G・K・チェスタトン",
+    "countries": [
+      "イギリス"
+    ],
+    "birth": {
+      "date": "1874-05-29",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1936-06-14",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "T・S・エリオット",
+    "countries": [
+      "アメリカ",
+      "イギリス"
+    ],
+    "birth": {
+      "date": "1888-09-26",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1965-01-04",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ヴァージニア・ウルフ",
+    "countries": [
+      "イギリス"
+    ],
+    "birth": {
+      "date": "1882-01-25",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1941-03-28",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "アガサ・クリスティ",
+    "countries": [
+      "イギリス"
+    ],
+    "birth": {
+      "date": "1890-09-15",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1976-01-12",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "エドガー・アラン・ポー",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1809-01-19",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1849-10-07",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ジュール・ヴェルヌ",
+    "countries": [
+      "フランス"
+    ],
+    "birth": {
+      "date": "1828-02-08",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1905-03-24",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ヒューゴー・ガーンズバック",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1884-08-16",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1967-08-19",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ウンベルト・エーコ",
+    "countries": [
+      "イタリア"
+    ],
+    "birth": {
+      "date": "1932-01-05",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2016-02-19",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "カレル・チャペック",
+    "countries": [
+      "チェコ"
+    ],
+    "birth": {
+      "date": "1890-01-09",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1938-12-25",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "エヴゲーニイ・ザミャーチン",
+    "countries": [
+      "ロシア"
+    ],
+    "birth": {
+      "date": "1884-02-01",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1937-03-10",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ジャン・リュック・ゴダール",
+    "countries": [
+      "フランス"
+    ],
+    "birth": {
+      "date": "1930-12-03",
+      "uncertain": false
+    },
+    "death": {
+      "date": "2022-09-13",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "フランソワ・トリュフォー",
+    "countries": [
+      "フランス"
+    ],
+    "birth": {
+      "date": "1932-02-06",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1984-10-21",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ココ・シャネル",
+    "countries": [
+      "フランス"
+    ],
+    "birth": {
+      "date": "1883-08-19",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1971-01-10",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ジャン・コクトー",
+    "countries": [
+      "フランス"
+    ],
+    "birth": {
+      "date": "1889-07-05",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1963-10-11",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "イーゴリ・ストラヴィンスキー",
+    "countries": [
+      "ロシア"
+    ],
+    "birth": {
+      "date": "1882-06-17",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1971-04-06",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "ウォルト・ディズニー",
+    "countries": [
+      "アメリカ"
+    ],
+    "birth": {
+      "date": "1901-12-05",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1966-12-15",
+      "uncertain": false
+    }
+  },
+  {
+    "name": "チャールズ・チャップリン",
+    "countries": [
+      "イギリス"
+    ],
+    "birth": {
+      "date": "1889-04-16",
+      "uncertain": false
+    },
+    "death": {
+      "date": "1977-12-25",
+      "uncertain": false
+    }
   }
 ]
