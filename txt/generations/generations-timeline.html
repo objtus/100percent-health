@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人物世代早見表 - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="../../js/jquery-3.6.0.min.js" defer></script>
+  <script src="../../js/main.js" defer></script>
+  <script src="/js/mouse.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="../txt_main.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <a class="addressbar" href="../../index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="../txt_main.html">
+            txt
+          </a>/
+          <a href="generations-timeline.html" class="addressbar">generations-timeline</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <article id="textblock">
+        <h1 class="title">人物世代早見表</h1>
+        
+        <section>
+          <h2 style="font-size: 1.2rem;">このページについて</h2>
+          <section class="page-description">
+            <p>
+              このページは、著名人の生年・没年を一覧できる世代早見表です。<br>
+              以前notion pagesで公開していたものを移行し、フィルタリング機能を整備したものです。<br>
+            </p>
+            <p>
+              ♥ テーブルのヘッダーをクリックすることで、各列の昇順・降順でソートできます。<br>
+              ♥ 年齢列のボタンをクリックすると「実年齢」（死没時/現在の年齢）と「経過年数」（生誕から現在まで）を切り替えられます。
+            </p>
+            <p>
+              ♥ 生年・没年に「（詳細不明）」と表示されている場合、年のみが判明していることを表しています。<br>
+              ♥ 享年に「※」が付いている場合、詳細不明のため推定値であることを表しています。
+            </p>
+            <p>
+                世代分けについては以下を参照。<br>
+                <a href="https://en.wikipedia.org/wiki/Strauss%E2%80%93Howe_generational_theory#Progressive_Generation" target="_blank">Wikipedia "Strauss–Howe generational theory"</a><br>
+                <a href="https://ja.wikipedia.org/wiki/%E4%B8%96%E4%BB%A3" target="_blank">Wikipedia 「世代」</a><br>
+                <br>
+                また、人物の生没年はそれぞれのwikipediaページを参照しています。
+            </p>
+          </section>
+        </section>
+
+        <section id="table-section">
+          <h2 style="font-size: 1.2rem;">人物一覧</h2>
+          
+          <div id="loading">
+            <p>データを読み込み中...</p>
+          </div>
+          
+          <div id="filter-section" style="display: none;">
+            <h3 style="font-size: 1rem; margin-bottom: 0.75rem;">フィルター</h3>
+            
+            <div class="filter-row">
+              <label class="filter-label">国:</label>
+              <div class="filter-control">
+                <div class="dropdown-container">
+                  <button id="country-dropdown-btn" class="dropdown-btn">
+                    <span>国を選択</span>
+                    <span class="dropdown-arrow">▼</span>
+                  </button>
+                  <div id="country-dropdown-menu" class="dropdown-menu" style="display: none;">
+                    <!-- JavaScriptで動的に生成 -->
+                  </div>
+                </div>
+                <div id="selected-countries" class="selected-tags">
+                  <!-- 選択中の国タグをJavaScriptで動的に生成 -->
+                </div>
+                <button id="clear-countries-btn" class="clear-btn" style="display: none;">すべてクリア</button>
+              </div>
+            </div>
+            
+            <div class="filter-row">
+              <label class="filter-label">生年:</label>
+              <div class="filter-control">
+                <div class="dropdown-container">
+                  <button id="year-preset-dropdown-btn" class="dropdown-btn">
+                    <span id="year-preset-label">プリセットを選択</span>
+                    <span class="dropdown-arrow">▼</span>
+                  </button>
+                  <div id="year-preset-dropdown-menu" class="dropdown-menu" style="display: none;">
+                    <!-- JavaScriptで動的に生成 -->
+                  </div>
+                </div>
+                <div class="year-range-inputs">
+                  <input type="number" id="year-start" class="year-input" placeholder="開始年" min="1000" max="2100">
+                  <span class="year-separator">〜</span>
+                  <input type="number" id="year-end" class="year-input" placeholder="終了年" min="1000" max="2100">
+                </div>
+                <button id="clear-year-btn" class="clear-btn" style="display: none;">クリア</button>
+              </div>
+            </div>
+            
+            <div class="filter-row filter-option-row">
+              <label class="filter-label"></label>
+              <div class="filter-control">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="show-reference-years" checked>
+                  <span>前後5年を参考表示</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="filter-row">
+              <label class="filter-label">状態:</label>
+              <div class="filter-control">
+                <label class="radio-label">
+                  <input type="radio" name="status-filter" value="all" checked>
+                  <span>すべて</span>
+                </label>
+                <label class="radio-label">
+                  <input type="radio" name="status-filter" value="alive">
+                  <span>存命のみ</span>
+                </label>
+                <label class="radio-label">
+                  <input type="radio" name="status-filter" value="deceased">
+                  <span>死没のみ</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="filter-stats">
+              表示中: <span id="filtered-count">0</span>件<span id="reference-count-display" style="display: none;">（参考: <span id="reference-count">0</span>件）</span> / <span id="total-count">0</span>件
+            </div>
+          </div>
+          
+          <div id="table-container" style="display: none;">
+            <h3 style="font-size: 1rem;padding-left: 1rem;">人物リスト</h3>
+            <table id="people-table">
+              <thead>
+                <tr>
+                  <th data-sort="name">名前</th>
+                  <th data-sort="countries">国</th>
+                  <th data-sort="birth">生誕年月日</th>
+                  <th data-sort="death">死没年月日</th>
+                  <th data-sort="age">
+                    年齢
+                    <button id="age-mode-toggle" class="age-mode-toggle" title="表示モード切り替え">
+                      <span id="age-mode-label">実年齢</span>
+                    </button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="people-tbody" role="row">
+                <!-- JavaScriptで動的に生成 -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="change_log">
+          <h2 style="font-size: 1.2rem;">更新履歴</h2>
+          <ul>
+            <li>2025年11月25日 初版公開</li>
+          </ul>
+        </section>
+      </article>
+    </main>
+    <footer id="main-footer">
+      <div id="texthtml"></div>
+      <!-- main.jsからsitenav.htmlの挿入 -->
+      <div id="sitenavhtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+</body>
+
+</html>

@@ -5,12 +5,20 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 14 Nov 2025 13:58:02 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 25 Nov 2025 13:36:19 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
     <item>
-      <title>worksにgirls chronicle (2020-2024)を追加</title>
-      <link>https://yuinoid.neocities.org/gallery/image-page/girls-chronicle_2020-2024</link>
+      <title>人物世代早見表</title>
+      <link>https://yuinoid.neocities.org/txt/generations/generations-timeline.html</link>
+      <description>人物世代早見表を作成しました。人物の生年・没年を一覧できる世代早見表です。以前notion pagesで公開していたものを移行し、フィルタリング機能を整備したものです。結構やっつけ。</description>
+      <pubDate>Tue, 25 Nov 2025 13:36:19 GMT</pubDate>
+      <category>txt</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#iiw4a2-20251125</guid>
+    </item>
+    <item>
+      <title>works</title>
+      <link>https://yuinoid.neocities.org/works/works_main.html</link>
       <description>ex. happyender girlのアルバム、『girls chronicle (2020-2024)』にアルバムアートを提供しました。初音ミクさんをちゃんと描いたのは実はこれが初めてです。このアルバムは、ex. happyender girlが2020年から2024年にかけて発表した楽曲のコンピレーションアルバムです。ベストアルバム「girls chronicle (2013-2019)」の後編的な位置づけで、アルバムジャケットもそれに準じたものになっています。</description>
       <pubDate>Fri, 14 Nov 2025 13:58:02 GMT</pubDate>
       <category>works</category>
@@ -39,14 +47,6 @@
       <pubDate>Thu, 02 Oct 2025 16:36:47 GMT</pubDate>
       <category>zakki</category>
       <guid isPermaLink="false">https://yuinoid.neocities.org/rss#km6uw7-20251003</guid>
-    </item>
-    <item>
-      <title>雑記ページを更新</title>
-      <link>https://yuinoid.neocities.org/txt/zakki/2025/09/days/2025-09-18.html</link>
-      <description>新たなソリューションとして、執筆時間を25分しばりにして、その中で書くことも全部考えるっていうのを導入してみたぞ！ その分内容が希薄になってしまった。結局まとめの時間を5分取ったので、合計30分で書いたのが今回の雑記です。タイピング速度遅い&amp;精度が悪い問題が深刻。</description>
-      <pubDate>Thu, 18 Sep 2025 01:00:54 GMT</pubDate>
-      <category>zakki</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#2nbe8x-20250918</guid>
     </item>
   </channel>
 </rss>

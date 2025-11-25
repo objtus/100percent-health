@@ -1,0 +1,612 @@
+/* ページ説明のスタイル */
+.page-description {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 1px;
+  }
+  
+  .page-description p {
+    font-size: 11pt;
+    margin: 1.5rem 0;
+    margin-left: 0;
+    color: #555;
+  }
+  
+  /* セクションのスタイル */
+  #table-section {
+    margin-bottom: 2rem;
+  }
+  
+  #table-section h2 {
+    display: inline-block;
+    border-bottom: dotted 3px;
+    margin-bottom: 0.5rem;
+    line-height: 18px;
+  }
+  
+  /* ローディング表示 */
+  #loading {
+    text-align: center;
+    padding: 2rem;
+    font-size: 11pt;
+    color: #666;
+  }
+  
+  /* フィルターセクション */
+  #filter-section {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 2px;
+  }
+  
+  #filter-section h3 {
+    margin: 0 0 0.75rem 0;
+    font-weight: 600;
+  }
+  
+  .filter-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+  
+  .filter-label {
+    font-size: 11pt;
+    font-weight: 600;
+    min-width: 50px;
+    padding-top: 0.5rem;
+  }
+  
+  .filter-control {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  /* ドロップダウン */
+  .dropdown-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 11pt;
+    transition: background-color 0.0s ease;
+    font-family: 'saitamaar';
+  }
+  
+  .dropdown-btn:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .dropdown-arrow {
+    font-size: 9pt;
+    transition: transform 0.2s ease;
+  }
+  
+  .dropdown-btn.active .dropdown-arrow {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    padding: 0.25rem 0;
+  }
+  
+  .dropdown-menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    font-size: 11pt;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+  
+  .dropdown-menu-item:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .dropdown-menu-item.selected {
+    background-color: #e3f2fd;
+  }
+  
+  .dropdown-menu-item.selected:hover {
+    background-color: #bbdefb;
+  }
+  
+  .country-count {
+    font-size: 10pt;
+    color: #666;
+    margin-left: 0.5rem;
+  }
+  
+  /* 選択中のタグ */
+  .selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .selected-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    background-color: #e3f2fd;
+    border: 1px solid #90caf9;
+    border-radius: 2px;
+    font-size: 10pt;
+  }
+  
+  .selected-tag-remove {
+    cursor: pointer;
+    font-weight: bold;
+    color: #1976d2;
+    transition: color 0.15s ease;
+  }
+  
+  .selected-tag-remove:hover {
+    color: #d32f2f;
+  }
+  
+  /* クリアボタン */
+  .clear-btn {
+    padding: 0.4rem 0.75rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 10pt;
+    transition: background-color 0.15s ease;
+  }
+  
+  .clear-btn:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* 年代入力フィールド */
+  .year-range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .year-input {
+    width: 90px;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    font-size: 11pt;
+    transition: border-color 0.15s ease;
+  }
+  
+  .year-input:focus {
+    outline: none;
+    border-color: #1976d2;
+  }
+  
+  .year-input.pending {
+    border-color: #ff9800;
+    background-color: #fff3e0;
+  }
+  
+  .year-separator {
+    font-size: 11pt;
+    color: #666;
+  }
+  
+  /* チェックボックス */
+  .filter-option-row {
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 10pt;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  
+  .checkbox-label span {
+    color: #555;
+  }
+  
+  /* ラジオボタン */
+  .radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 10pt;
+    cursor: pointer;
+    user-select: none;
+    margin-right: 1rem;
+  }
+  
+  .radio-label input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  
+  .radio-label span {
+    color: #555;
+  }
+  
+  /* 参考範囲の行スタイル */
+  #people-table tbody tr.reference-row {
+    opacity: 0.5;
+    background-color: #f9f9f9;
+  }
+  
+  #people-table tbody tr.reference-row:hover {
+    opacity: 0.7;
+    background-color: #f0f0f0;
+  }
+  
+  /* ドロップダウンメニューのセクション */
+  .dropdown-section {
+    padding: 0.25rem 0;
+  }
+  
+  .dropdown-section-title {
+    padding: 0.5rem 1rem;
+    font-size: 10pt;
+    font-weight: 600;
+    color: #666;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  .dropdown-section:first-child .dropdown-section-title {
+    border-top: none;
+  }
+  
+  /* フィルター統計 */
+  .filter-stats {
+    font-size: 10pt;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+  
+  .filter-stats span {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  /* ローディング表示 */
+  #loading {
+    text-align: center;
+    padding: 2rem;
+    font-size: 11pt;
+    color: #666;
+  }
+  
+  /* テーブルコンテナ */
+  #table-container {
+    overflow-x: auto;
+    margin-top: 1rem;
+  }
+  
+  /* テーブルのスタイル */
+  #people-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11pt;
+    margin-bottom: 2rem;
+  }
+  
+  /* テーブルヘッダー */
+  #people-table thead {
+    background-color: #f5f5f5;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  #people-table thead th {
+    padding: 0.75rem 0.5rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #333;
+    user-select: none;
+    position: relative;
+  }
+  
+  #people-table thead th[data-sort] {
+    cursor: pointer;
+  }
+  
+  #people-table thead th[data-sort]:hover {
+    background-color: #e8e8e8;
+  }
+  
+  /* 年齢モード切り替えボタン */
+  .age-mode-toggle {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 9pt;
+    background-color: #e3f2fd;
+    border: 1px solid #90caf9;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    vertical-align: middle;
+  }
+  
+  .age-mode-toggle:hover {
+    background-color: #bbdefb;
+  }
+  
+  .age-mode-toggle:active {
+    background-color: #90caf9;
+  }
+  
+  #age-mode-label {
+    font-weight: normal;
+    color: #1976d2;
+  }
+  
+  /* ソートインジケーター */
+  #people-table thead th[data-sort]::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    opacity: 0.3;
+  }
+  
+  #people-table thead th.sort-asc::after {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 6px solid #333;
+    opacity: 1;
+  }
+  
+  #people-table thead th.sort-desc::after {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #333;
+    opacity: 1;
+  }
+  
+  /* テーブルボディ */
+  #people-table tbody tr {
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.15s ease;
+  }
+  
+  #people-table tbody tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  #people-table tbody td {
+    padding: 0.2rem 0.1rem;
+    vertical-align: middle;
+  }
+  
+  /* 各列の幅調整 */
+  #people-table thead th:nth-child(1),
+  #people-table tbody td:nth-child(1) {
+    /* 名前 */
+    min-width: 150px;
+  }
+  
+  /* 名前のリンクスタイル */
+  #people-table tbody td:nth-child(1) a {
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  
+  #people-table tbody td:nth-child(1) a:hover {
+    color: #000000;
+    background-color: transparent;
+    text-decoration: underline;
+  }
+  
+  #people-table thead th:nth-child(2),
+  #people-table tbody td:nth-child(2) {
+    /* 国 */
+    min-width: 80px;
+  }
+  
+  /* 国名のクリック可能スタイル */
+  .country-tag {
+    display: inline-block;
+    cursor: pointer;
+    padding: 0.15rem 0.4rem;
+    margin: 0.1rem;
+    background-color: #f0f0f0;
+    border-radius: 2px;
+    transition: background-color 0.15s ease;
+  }
+  
+  .country-tag:hover {
+    background-color: #e3f2fd;
+    text-decoration: underline;
+  }
+  
+  #people-table thead th:nth-child(3),
+  #people-table tbody td:nth-child(3) {
+    /* 生誕年月日 */
+    min-width: 100px;
+  }
+  
+  #people-table thead th:nth-child(4),
+  #people-table tbody td:nth-child(4) {
+    /* 死没年月日 */
+    min-width: 100px;
+  }
+  
+  #people-table thead th:nth-child(5),
+  #people-table tbody td:nth-child(5) {
+    /* 年齢 */
+    min-width: 70px;
+    text-align: right;
+  }
+  
+  /* 更新履歴のスタイル */
+  #change_log h2 {
+    display: inline-block;
+    border-bottom: dotted 3px;
+    margin-bottom: 0.5rem;
+    line-height: 18px;
+  }
+  
+  #change_log ul {
+    list-style-type: none;
+    font-size: 10pt;
+    padding-left: 0;
+  }
+  
+  #change_log li {
+    margin: 0.5rem 0;
+    margin-left: 1rem;
+  }
+
+  /* フッターのスタイル */
+  #texthtml, ol{
+    list-style-type: none;
+  }
+  
+  /* レスポンシブ対応 */
+  @media screen and (max-width: 768px) {
+    #filter-section {
+      padding: 0.75rem;
+    }
+  
+    .filter-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  
+    .filter-label {
+      padding-top: 0;
+    }
+  
+    .filter-control {
+      width: 100%;
+    }
+  
+    .dropdown-menu {
+      max-width: calc(100vw - 2rem);
+    }
+  
+    .year-range-inputs {
+      flex-wrap: wrap;
+    }
+  
+    .year-input {
+      width: 80px;
+    }
+  
+    #people-table {
+      font-size: 10pt;
+    }
+  
+    #people-table thead th,
+    #people-table tbody td {
+      padding: 0.5rem 0.3rem;
+    }
+  
+    #people-table thead th:nth-child(1),
+    #people-table tbody td:nth-child(1) {
+      min-width: 90px;
+    }
+  
+    #people-table thead th:nth-child(2),
+    #people-table tbody td:nth-child(2) {
+      min-width: 70px;
+    }
+  
+    #people-table thead th:nth-child(3),
+    #people-table tbody td:nth-child(3) {
+      min-width: 110px;
+    }
+  
+    #people-table thead th:nth-child(4),
+    #people-table tbody td:nth-child(4) {
+      min-width: 110px;
+    }
+  
+    #people-table thead th:nth-child(5),
+    #people-table tbody td:nth-child(5) {
+      min-width: 55px;
+    }
+  }
+  
+  @media screen and (max-width: 576px) {
+    .page-description p {
+      font-size: 10pt;
+      line-height: 16px;
+    }
+  
+    #filter-section {
+      padding: 0.5rem;
+    }
+  
+    .dropdown-btn, .dropdown-menu-item {
+      font-size: 10pt;
+    }
+  
+    .selected-tag {
+      font-size: 9pt;
+      padding: 0.3rem 0.5rem;
+    }
+  
+    .year-input {
+      width: 70px;
+      font-size: 10pt;
+    }
+  
+    .age-mode-toggle {
+      font-size: 8pt;
+      padding: 0.15rem 0.4rem;
+    }
+  
+    #people-table {
+      font-size: 9pt;
+    }
+  
+    #people-table thead th,
+    #people-table tbody td {
+      padding: 0.4rem 0.2rem;
+    }
+  }

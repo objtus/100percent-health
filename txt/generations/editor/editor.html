@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>世代早見表 データ編集ツール</title>
+  <link rel="stylesheet" href="editor.css">
+</head>
+
+<body>
+  <div id="app">
+    <header>
+      <h1>世代早見表 データ編集ツール</h1>
+      <p class="subtitle">ローカル環境でJSONファイルを編集できます</p>
+    </header>
+
+    <main>
+      <!-- ファイル読み込みセクション -->
+      <section id="file-section">
+        <div class="file-input-container">
+          <label for="file-input" class="file-label">
+            <span class="file-button">ファイルを選択</span>
+            <span id="file-name" class="file-name">ファイルが選択されていません</span>
+          </label>
+          <input type="file" id="file-input" accept=".json" style="display: none;">
+        </div>
+        <div id="file-info" class="file-info" style="display: none;">
+          読み込み: <span id="data-count">0</span>件
+        </div>
+      </section>
+
+      <!-- 操作ボタンセクション -->
+      <section id="actions-section" style="display: none;">
+        <button id="add-btn" class="primary-btn">+ 新規追加</button>
+        <button id="download-btn" class="secondary-btn">JSONをダウンロード</button>
+        <div class="search-container">
+          <input type="text" id="search-input" placeholder="名前で検索..." class="search-input">
+        </div>
+      </section>
+
+      <!-- データテーブルセクション -->
+      <section id="table-section" style="display: none;">
+        <div class="table-container">
+          <table id="data-table">
+            <thead>
+              <tr>
+                <th>名前</th>
+                <th>国</th>
+                <th>生年月日</th>
+                <th>死没年月日</th>
+                <th>詳細不明</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="data-tbody">
+              <!-- JavaScriptで動的に生成 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- 編集モーダル -->
+    <div id="edit-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-title">人物を編集</h2>
+          <button class="modal-close" id="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="edit-form">
+            <div class="form-group">
+              <label for="edit-name">名前 <span class="required">*</span></label>
+              <input type="text" id="edit-name" required>
+            </div>
+
+            <div class="form-group">
+              <label>国 <span class="required">*</span></label>
+              <div id="countries-container" class="countries-container">
+                <!-- 動的に生成 -->
+              </div>
+              <div class="country-input-group">
+                <input type="text" id="new-country-input" placeholder="国名を入力">
+                <button type="button" id="add-country-btn" class="small-btn">+ 追加</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-birth-date">生年月日</label>
+              <input type="date" id="edit-birth-date">
+              <label class="checkbox-inline">
+                <input type="checkbox" id="edit-birth-uncertain">
+                <span>詳細不明（年のみ確定）</span>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-death-date">死没年月日</label>
+              <input type="date" id="edit-death-date">
+              <label class="checkbox-inline">
+                <input type="checkbox" id="edit-death-uncertain">
+                <span>詳細不明（年のみ確定）</span>
+              </label>
+              <button type="button" id="clear-death-btn" class="small-btn">クリア</button>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="primary-btn">保存</button>
+              <button type="button" id="cancel-btn" class="secondary-btn">キャンセル</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 削除確認モーダル -->
+    <div id="delete-modal" class="modal" style="display: none;">
+      <div class="modal-content modal-small">
+        <div class="modal-header">
+          <h2>削除の確認</h2>
+          <button class="modal-close" id="delete-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p><strong id="delete-person-name"></strong> を削除してもよろしいですか？</p>
+          <p class="warning-text">この操作は取り消せません。</p>
+          <div class="form-actions">
+            <button id="confirm-delete-btn" class="danger-btn">削除</button>
+            <button id="cancel-delete-btn" class="secondary-btn">キャンセル</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="editor.js"></script>
+</body>
+
+</html>
