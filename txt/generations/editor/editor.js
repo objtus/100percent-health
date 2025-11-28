@@ -16,11 +16,17 @@ function setupEventListeners() {
   // 新規追加ボタン
   document.getElementById('add-btn').addEventListener('click', openAddModal);
 
+  // 検索テキストから新規追加ボタン
+  document.getElementById('add-from-search-btn').addEventListener('click', openAddModalWithSearchText);
+
   // ダウンロードボタン
   document.getElementById('download-btn').addEventListener('click', downloadJSON);
 
   // 検索入力
   document.getElementById('search-input').addEventListener('input', handleSearch);
+
+  // キーボードショートカット
+  document.addEventListener('keydown', handleKeyboardShortcut);
 
   // モーダルの閉じるボタン
   document.getElementById('modal-close').addEventListener('click', closeEditModal);
@@ -185,12 +191,87 @@ function handleSearch(event) {
   renderTable();
 }
 
+// キーボードショートカット処理
+function handleKeyboardShortcut(event) {
+  // ESCキーでモーダルを閉じる
+  if (event.key === 'Escape') {
+    if (document.getElementById('edit-modal').style.display === 'flex') {
+      closeEditModal();
+      return;
+    }
+    if (document.getElementById('delete-modal').style.display === 'flex') {
+      closeDeleteModal();
+      return;
+    }
+  }
+  
+  // Ctrl+Enterで検索テキストを名前に入れて新規追加
+  if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+    event.preventDefault();
+    openAddModalWithSearchText();
+    return;
+  }
+  
+  // モーダルが開いている場合は以降の処理を無視
+  if (document.getElementById('edit-modal').style.display === 'flex' ||
+      document.getElementById('delete-modal').style.display === 'flex') {
+    return;
+  }
+  
+  // input要素やtextarea要素にフォーカスがある場合は無視
+  const activeElement = document.activeElement;
+  if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
+    return;
+  }
+  
+  // 'n'キーで新規追加モーダルを開く
+  if (event.key === 'n' || event.key === 'N') {
+    event.preventDefault();
+    openAddModal();
+  }
+  
+  // 's'キーで検索ボックスにフォーカス
+  if (event.key === 's' || event.key === 'S') {
+    event.preventDefault();
+    document.getElementById('search-input').focus();
+  }
+}
+
 // 新規追加モーダルを開く
 function openAddModal() {
   editingIndex = null;
   document.getElementById('modal-title').textContent = '新規人物を追加';
   clearForm();
   document.getElementById('edit-modal').style.display = 'flex';
+  
+  // 名前フィールドにフォーカス
+  setTimeout(() => {
+    document.getElementById('edit-name').focus();
+  }, 100);
+}
+
+// 検索テキストを名前に入れて新規追加モーダルを開く
+function openAddModalWithSearchText() {
+  const searchText = document.getElementById('search-input').value.trim();
+  
+  editingIndex = null;
+  document.getElementById('modal-title').textContent = '新規人物を追加';
+  clearForm();
+  
+  // 検索テキストを名前フィールドに設定
+  if (searchText) {
+    document.getElementById('edit-name').value = searchText;
+  }
+  
+  document.getElementById('edit-modal').style.display = 'flex';
+  
+  // 名前フィールドにフォーカス
+  setTimeout(() => {
+    document.getElementById('edit-name').focus();
+    // カーソルを末尾に移動
+    const nameInput = document.getElementById('edit-name');
+    nameInput.setSelectionRange(nameInput.value.length, nameInput.value.length);
+  }, 100);
 }
 
 // 編集モーダルを開く

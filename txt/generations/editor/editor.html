@@ -13,6 +13,13 @@
     <header>
       <h1>世代早見表 データ編集ツール</h1>
       <p class="subtitle">ローカル環境でJSONファイルを編集できます</p>
+      <div class="shortcuts-guide">
+        <span class="shortcuts-title">ショートカットキー:</span>
+        <span class="shortcut-item"><kbd>S</kbd> 検索</span>
+        <span class="shortcut-item"><kbd>N</kbd> 新規追加</span>
+        <span class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> 検索から追加</span>
+        <span class="shortcut-item"><kbd>ESC</kbd> 閉じる</span>
+      </div>
     </header>
 
     <main>
@@ -36,6 +43,7 @@
         <button id="download-btn" class="secondary-btn">JSONをダウンロード</button>
         <div class="search-container">
           <input type="text" id="search-input" placeholder="名前で検索..." class="search-input">
+          <button id="add-from-search-btn" class="small-btn" title="Ctrl+Enter">この名前で追加</button>
         </div>
       </section>
 

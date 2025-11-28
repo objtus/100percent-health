@@ -1141,7 +1141,10 @@
       "date": "1931-12-15",
       "uncertain": false
     },
-    "death": null
+    "death": {
+      "date": "2024-11-13",
+      "uncertain": false
+    }
   },
   {
     "name": "寺山修司",
@@ -1987,7 +1990,10 @@
       "date": "1940-02-11",
       "uncertain": false
     },
-    "death": null
+    "death": {
+      "date": "2024-05-04",
+      "uncertain": false
+    }
   },
   {
     "name": "巖谷國士",
@@ -2779,7 +2785,10 @@
       "date": "1942-02-26",
       "uncertain": false
     },
-    "death": null
+    "death": {
+      "date": "2007-05-05",
+      "uncertain": false
+    }
   },
   {
     "name": "大庭健",
@@ -5582,7 +5591,10 @@
       "date": "1932-07-31",
       "uncertain": false
     },
-    "death": null
+    "death": {
+      "date": "2025-09-17",
+      "uncertain": false
+    }
   },
   {
     "name": "ピエール・ブルデュー",
@@ -5881,7 +5893,10 @@
       "date": "1942-03-28",
       "uncertain": false
     },
-    "death": null
+    "death": {
+      "date": "2024-04-19",
+      "uncertain": false
+    }
   },
   {
     "name": "フレッド・ドレツキ",
@@ -7900,7 +7915,10 @@
       "date": "1935-07-20",
       "uncertain": false
     },
-    "death": null
+    "death": {
+      "date": "2024-11-01",
+      "uncertain": false
+    }
   },
   {
     "name": "セーレン・キェルケゴール",
@@ -7964,7 +7982,10 @@
       "date": "1938-11-02",
       "uncertain": false
     },
-    "death": null
+    "death": {
+      "date": "2024-03-26",
+      "uncertain": false
+    }
   },
   {
     "name": "アンゼルム・キーファー",
@@ -8048,7 +8069,10 @@
       "date": "1936-09-03",
       "uncertain": false
     },
-    "death": null
+    "death": {
+      "date": "2024-10-28",
+      "uncertain": false
+    }
   },
   {
     "name": "松本零士",
@@ -8365,7 +8389,10 @@
       "date": "1944-01-25",
       "uncertain": false
     },
-    "death": null
+    "death": {
+      "date": "2024-08-12",
+      "uncertain": false
+    }
   },
   {
     "name": "向坂逸郎",
@@ -9578,7 +9605,8 @@
   {
     "name": "ラファエル・フォン・ケーベル",
     "countries": [
-      "ロシア"
+      "ロシア",
+      "日本"
     ],
     "birth": {
       "date": "1848-01-15",
