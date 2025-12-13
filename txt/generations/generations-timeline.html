@@ -141,6 +141,17 @@
               </div>
             </div>
             
+            <div class="filter-row">
+              <label class="filter-label">特定の日付:</label>
+              <div class="filter-control">
+                <input type="text" id="historical-date-input" class="historical-date-input" placeholder="例: 2001 / 2001-09 / 2001-09-11">
+                <button id="apply-historical-date-btn" class="apply-btn">表示</button>
+                <button id="clear-historical-date-btn" class="clear-btn" style="display: none;">解除</button>
+                <div id="historical-date-error" class="error-message" style="display: none;"></div>
+                <div id="historical-date-status" class="status-message" style="display: none;"></div>
+              </div>
+            </div>
+            
             <div class="filter-stats">
               表示中: <span id="filtered-count">0</span>件<span id="reference-count-display" style="display: none;">（参考: <span id="reference-count">0</span>件）</span> / <span id="total-count">0</span>件
             </div>
@@ -163,7 +174,7 @@
                   </th>
                 </tr>
               </thead>
-              <tbody id="people-tbody" role="row">
+              <tbody id="people-tbody">
                 <!-- JavaScriptで動的に生成 -->
               </tbody>
             </table>
@@ -174,6 +185,7 @@
           <h2 style="font-size: 1.2rem;">更新履歴</h2>
           <ul>
             <li>2025年11月25日 初版公開</li>
+            <li>2025年11月29日 特定の日付フィルターを追加, 人物の追加</li>
           </ul>
         </section>
       </article>

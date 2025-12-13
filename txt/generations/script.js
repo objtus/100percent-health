@@ -8,6 +8,11 @@ let showReferenceYears = true; // 前後5年の参考表示
 let statusFilter = 'all'; // 'all' = すべて, 'alive' = 存命のみ, 'deceased' = 死没のみ
 let ageDisplayMode = 'actual'; // 'actual' = 実年齢, 'elapsed' = 経過年数
 let currentSort = { column: 'birth', order: 'asc' };
+let historicalDate = {
+  date: null,              // Date オブジェクト
+  inputGranularity: null,  // 'year' / 'month' / 'day'
+  inputString: null        // 元の入力文字列（表示用）
+};
 
 // 年代プリセット定義
 const yearPresets = {
@@ -73,6 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
     setupFilterEventListeners();
     setupYearFilterEventListeners();
+    setupHistoricalDateEventListeners();
     
     // ローディング表示を隠し、フィルターとテーブルを表示
     document.getElementById('loading').style.display = 'none';
@@ -121,6 +127,138 @@ function calculateElapsedYears(birthDate) {
   }
   
   return years;
+}
+
+// 特定日付の入力をパース
+function parseHistoricalDateInput(input) {
+  const trimmed = input.trim();
+  
+  // YYYY形式
+  const yearPattern = /^(\d{4})$/;
+  // YYYY-MM形式
+  const yearMonthPattern = /^(\d{4})-(\d{2})$/;
+  // YYYY-MM-DD形式
+  const fullDatePattern = /^(\d{4})-(\d{2})-(\d{2})$/;
+  
+  let year, month, day, granularity;
+  
+  if (yearPattern.test(trimmed)) {
+    const match = trimmed.match(yearPattern);
+    year = parseInt(match[1]);
+    month = 1;
+    day = 1;
+    granularity = 'year';
+  } else if (yearMonthPattern.test(trimmed)) {
+    const match = trimmed.match(yearMonthPattern);
+    year = parseInt(match[1]);
+    month = parseInt(match[2]);
+    day = 1;
+    granularity = 'month';
+  } else if (fullDatePattern.test(trimmed)) {
+    const match = trimmed.match(fullDatePattern);
+    year = parseInt(match[1]);
+    month = parseInt(match[2]);
+    day = parseInt(match[3]);
+    granularity = 'day';
+  } else {
+    return { error: '正しい形式で入力してください（例: 2001 / 2001-09 / 2001-09-11）' };
+  }
+  
+  // バリデーション
+  const validation = validateHistoricalDate(year, month, day);
+  if (validation.error) {
+    return validation;
+  }
+  
+  const date = new Date(year, month - 1, day);
+  
+  return {
+    date,
+    granularity,
+    inputString: trimmed,
+    year,
+    month,
+    day
+  };
+}
+
+// 特定日付のバリデーション
+function validateHistoricalDate(year, month, day) {
+  // 未来の日付チェック
+  const now = new Date();
+  const inputDate = new Date(year, month - 1, day);
+  
+  if (inputDate > now) {
+    return { error: '未来の日付は指定できません' };
+  }
+  
+  // 月の範囲チェック
+  if (month < 1 || month > 12) {
+    return { error: '月は1-12の範囲で入力してください' };
+  }
+  
+  // 日付の妥当性チェック
+  const testDate = new Date(year, month - 1, day);
+  if (testDate.getFullYear() !== year || 
+      testDate.getMonth() !== month - 1 || 
+      testDate.getDate() !== day) {
+    return { error: `${year}年${month}月${day}日は存在しません` };
+  }
+  
+  return { valid: true };
+}
+
+// 特定日付時点での年齢を計算
+function calculateAgeAtHistoricalDate(person) {
+  if (!person.birth || !historicalDate.date) {
+    return null;
+  }
+  
+  const birthDate = new Date(person.birth.date);
+  const targetDate = historicalDate.date;
+  
+  // 生年のみ判明の場合
+  if (person.birth.uncertain) {
+    if (historicalDate.inputGranularity === 'year') {
+      // 年のみ指定: 「XX歳前後」
+      const age = targetDate.getFullYear() - birthDate.getFullYear();
+      return {
+        display: `${age}歳前後`,
+        note: '※ 生年月日詳細不明のため推定',
+        value: age
+      };
+    } else {
+      // 年月日指定: 「XX-YY歳」
+      // 誕生日が1月1日〜12月31日のどこかにあるため、誕生日前後で1歳差が出る
+      const birthYear = birthDate.getFullYear();
+      const targetYear = targetDate.getFullYear();
+      
+      // まだ誕生日を迎えていない場合の年齢
+      const ageBeforeBirthday = targetYear - birthYear - 1;
+      // すでに誕生日を迎えた場合の年齢
+      const ageAfterBirthday = targetYear - birthYear;
+      
+      return {
+        display: `${ageBeforeBirthday}-${ageAfterBirthday}歳`,
+        note: '※ 誕生日不明のため幅を持った表示',
+        value: ageBeforeBirthday
+      };
+    }
+  }
+  
+  // 通常の年齢計算
+  let age = targetDate.getFullYear() - birthDate.getFullYear();
+  const monthDiff = targetDate.getMonth() - birthDate.getMonth();
+  
+  if (monthDiff < 0 || (monthDiff === 0 && targetDate.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  
+  return {
+    display: `${age}歳`,
+    note: null,
+    value: age
+  };
 }
 
 // WikipediaのURLを生成
@@ -219,7 +357,19 @@ function renderTable() {
     // 年齢（モードに応じて切り替え）
     const ageCell = document.createElement('td');
     if (person.birth) {
-      if (ageDisplayMode === 'actual') {
+      if (historicalDate.date) {
+        // 特定日付モード：指定日時点の年齢
+        const ageInfo = calculateAgeAtHistoricalDate(person);
+        if (ageInfo) {
+          ageCell.textContent = ageInfo.display;
+          if (ageInfo.note) {
+            ageCell.title = ageInfo.note;
+            ageCell.style.cursor = 'help';
+          }
+        } else {
+          ageCell.textContent = '－';
+        }
+      } else if (ageDisplayMode === 'actual') {
         // 実年齢モード：死没時の年齢 / 現在の年齢
         const age = calculateAge(person.birth.date, person.death?.date);
         ageCell.textContent = `${age}歳`;
@@ -277,7 +427,13 @@ function getSortedData() {
         break;
       
       case 'age':
-        if (ageDisplayMode === 'actual') {
+        if (historicalDate.date) {
+          // 特定日付モード
+          const aAgeInfo = calculateAgeAtHistoricalDate(a.person);
+          const bAgeInfo = calculateAgeAtHistoricalDate(b.person);
+          aValue = aAgeInfo ? aAgeInfo.value : -1;
+          bValue = bAgeInfo ? bAgeInfo.value : -1;
+        } else if (ageDisplayMode === 'actual') {
           // 実年齢モード
           aValue = a.person.birth ? calculateAge(a.person.birth.date, a.person.death?.date) : -1;
           bValue = b.person.birth ? calculateAge(b.person.birth.date, b.person.death?.date) : -1;
@@ -432,7 +588,35 @@ function applyFilters() {
       if (!matchesCountry) return;
     }
     
-    // 状態フィルター
+    // 特定日付フィルター（優先度高）
+    if (historicalDate.date) {
+      // 指定日時点で存命だった人物のみ表示
+      const birthDate = person.birth ? new Date(person.birth.date) : null;
+      const deathDate = person.death ? new Date(person.death.date) : null;
+      
+      // 生誕日が指定日より後 → 非表示
+      if (!birthDate || birthDate > historicalDate.date) {
+        return;
+      }
+      
+      // 死没日が指定日より前 → 非表示
+      if (deathDate && deathDate < historicalDate.date) {
+        return;
+      }
+      
+      // 状態フィルター（特定日付モード時は現在の存命状態でフィルタリング）
+      if (statusFilter === 'alive' && person.death !== null) {
+        return;
+      }
+      if (statusFilter === 'deceased' && person.death === null) {
+        return;
+      }
+      
+      mainData.push(person);
+      return;
+    }
+    
+    // 状態フィルター（通常モード）
     if (statusFilter === 'alive' && person.death !== null) {
       return; // 存命のみ表示で、死没している場合はスキップ
     }
@@ -570,17 +754,60 @@ function clearAllCountryFilters() {
 
 // フィルター統計を更新
 function updateFilterStats() {
-  document.getElementById('filtered-count').textContent = filteredData.main.length;
-  document.getElementById('total-count').textContent = peopleData.length;
-  
+  const filteredCountElem = document.getElementById('filtered-count');
+  const totalCountElem = document.getElementById('total-count');
   const referenceCountDisplay = document.getElementById('reference-count-display');
   const referenceCount = document.getElementById('reference-count');
   
-  if (filteredData.reference.length > 0) {
+  filteredCountElem.textContent = filteredData.main.length;
+  totalCountElem.textContent = peopleData.length;
+  
+  // 特定日付モード時の補足表示
+  if (historicalDate.date) {
+    const statsContainer = document.querySelector('.filter-stats');
+    const existingSupplement = statsContainer.querySelector('.historical-supplement');
+    
+    if (!existingSupplement) {
+      const supplement = document.createElement('span');
+      supplement.className = 'historical-supplement';
+      statsContainer.appendChild(supplement);
+    }
+    
+    const supplementElem = statsContainer.querySelector('.historical-supplement');
+    supplementElem.textContent = formatHistoricalDateLabel(historicalDate) + 'で存命';
+  } else {
+    const statsContainer = document.querySelector('.filter-stats');
+    const existingSupplement = statsContainer.querySelector('.historical-supplement');
+    if (existingSupplement) {
+      existingSupplement.remove();
+    }
+  }
+  
+  if (filteredData.reference.length > 0 && !historicalDate.date) {
     referenceCount.textContent = filteredData.reference.length;
     referenceCountDisplay.style.display = 'inline';
   } else {
     referenceCountDisplay.style.display = 'none';
+  }
+}
+
+// 特定日付のラベルをフォーマット
+function formatHistoricalDateLabel(dateInfo) {
+  if (!dateInfo || !dateInfo.date) return '';
+  
+  const year = dateInfo.year;
+  const month = dateInfo.month;
+  const day = dateInfo.day;
+  
+  switch (dateInfo.inputGranularity) {
+    case 'year':
+      return `${year}年(年初)時点`;
+    case 'month':
+      return `${year}年${month}月初旬時点`;
+    case 'day':
+      return `${year}年${month}月${day}日時点`;
+    default:
+      return '';
   }
 }
 
@@ -886,4 +1113,105 @@ function setupYearFilterEventListeners() {
       renderTable();
     });
   });
+}
+
+// 特定日付フィルターのイベントリスナーを設定
+function setupHistoricalDateEventListeners() {
+  const input = document.getElementById('historical-date-input');
+  const applyBtn = document.getElementById('apply-historical-date-btn');
+  const clearBtn = document.getElementById('clear-historical-date-btn');
+  const errorDiv = document.getElementById('historical-date-error');
+  const statusDiv = document.getElementById('historical-date-status');
+  
+  // 表示ボタンのクリック
+  applyBtn.addEventListener('click', () => {
+    applyHistoricalDate();
+  });
+  
+  // Enterキーで適用
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      applyHistoricalDate();
+    }
+  });
+  
+  // 解除ボタンのクリック
+  clearBtn.addEventListener('click', () => {
+    clearHistoricalDate();
+  });
+  
+  // 特定日付を適用
+  function applyHistoricalDate() {
+    const inputValue = input.value.trim();
+    
+    if (!inputValue) {
+      showHistoricalDateError('日付を入力してください');
+      return;
+    }
+    
+    const result = parseHistoricalDateInput(inputValue);
+    
+    if (result.error) {
+      showHistoricalDateError(result.error);
+      return;
+    }
+    
+    // 成功
+    historicalDate.date = result.date;
+    historicalDate.inputGranularity = result.granularity;
+    historicalDate.inputString = result.inputString;
+    historicalDate.year = result.year;
+    historicalDate.month = result.month;
+    historicalDate.day = result.day;
+    
+    // エラー表示をクリア
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+    
+    // 状態表示を更新
+    statusDiv.style.display = 'block';
+    statusDiv.textContent = formatHistoricalDateLabel(historicalDate) + 'の年齢を表示中';
+    
+    // 解除ボタンを表示
+    clearBtn.style.display = 'inline-block';
+    
+    // 実年齢モードに切り替え
+    ageDisplayMode = 'actual';
+    const label = document.getElementById('age-mode-label');
+    if (label) {
+      label.textContent = '実年齢';
+    }
+    
+    // フィルターを適用
+    applyFilters();
+    renderTable();
+  }
+  
+  // 特定日付をクリア
+  function clearHistoricalDate() {
+    historicalDate.date = null;
+    historicalDate.inputGranularity = null;
+    historicalDate.inputString = null;
+    historicalDate.year = null;
+    historicalDate.month = null;
+    historicalDate.day = null;
+    
+    input.value = '';
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+    statusDiv.style.display = 'none';
+    statusDiv.textContent = '';
+    clearBtn.style.display = 'none';
+    
+    // フィルターを適用
+    applyFilters();
+    renderTable();
+  }
+  
+  // エラーメッセージを表示
+  function showHistoricalDateError(message) {
+    errorDiv.style.display = 'block';
+    errorDiv.textContent = message;
+    statusDiv.style.display = 'none';
+  }
 }

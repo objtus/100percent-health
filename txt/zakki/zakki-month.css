@@ -64,13 +64,11 @@ article {
 	ul.timeline_md {
 		text-indent: -4.3em;
 		margin-left: 6em;
-		margin-right: 30px;
 		list-style: none;
 	}
 	ul.timeline_ymd {
 		text-indent: -7.3em;
 		margin-left: 9em;
-		margin-right: 30px;
 		list-style: none;
 	}
 	li {
@@ -107,15 +105,10 @@ article {
 		ul.timeline_md {
 			text-indent: -4.3em;
 			margin-left: 4.5em;
-			margin-right: 5px;
 		}
 		ul.timeline_ymd {
 			text-indent: -7.3em;
 			margin-left: 7.5em;
-			margin-right: 5px;
-		}
-		hr {
-			margin-right: 20px;
 		}
 		iframe {
 			width: 100%;
@@ -145,12 +138,10 @@ article {
 		ul.timeline_md {
 			text-indent: -4.3em;
 			margin-left: 4.5em;
-			margin-right: 5px;
 		}
 		ul.timeline_ymd {
 			text-indent: -7.3em;
 			margin-left: 8.5em;
-			margin-right: 5px;
 		}
 		hr {
 			margin-right: 0;
@@ -219,4 +210,18 @@ article {
 	background-repeat: repeat-y;
 	background-position: left bottom;
 	margin-bottom: 32px;
+}
+
+/* スマホサイズ */
+@media screen and (max-width: 576px) {
+	#zakkizone {
+		.monthlist {
+			font-size: 0.8rem;
+			margin-left: 0;
+			justify-content: space-evenly;
+		}
+		.month {
+			margin-right: 0;
+		}
+	}
 }

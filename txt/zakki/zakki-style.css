@@ -111,6 +111,22 @@ article {
 		}
 	}
 }
+
+#zakkizone,.monthlist,#taglist {
+	list-style-type: none;
+}
+.monthlist {
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: 20px;
+}
+.month {
+	margin-right: 20px;
+}
+#zakkihtml {
+	margin-top: 60px;
+}
+
 @media screen and (max-width: 900px) {
 	h1 {
 		font-size: 1.8em;
@@ -140,6 +156,19 @@ article {
 		}
 		iframe {
 			width: 100%;
+		}
+	}
+}
+/* スマホサイズ */
+@media screen and (max-width: 576px) {
+	#zakkizone {
+		.monthlist {
+			font-size: 0.8rem;
+			margin-left: 0;
+			justify-content: space-evenly;
+		}
+		.month {
+			margin-right: 0;
 		}
 	}
 }
@@ -178,17 +207,4 @@ article {
 		}
 	}
 }
-#zakkizone,.monthlist,#taglist {
-	list-style-type: none;
-}
-.monthlist {
-	display: flex;
-	flex-wrap: wrap;
-	margin-left: 20px;
-}
-.month {
-	margin-right: 20px;
-}
-#zakkihtml {
-	margin-top: 60px;
-}
+

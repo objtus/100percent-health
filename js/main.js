@@ -730,18 +730,17 @@ function getHeadingTextWithoutRuby(element) {
   return clone.textContent.trim();
 }
 
-// Google Analytics初期化
-!window.gtag && ((s = document.createElement('script')) => (
-  s.async = 1,
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-TSRT9G556F',
-  s.onerror = () => {}, // GA読み込み失敗時
-  s.onload = () => {
-    try {
-      window.dataLayer = window.dataLayer || [],
-      window.gtag = (...args) => window.dataLayer.push(args),
-      gtag('js', new Date()),
-      gtag('config', 'G-TSRT9G556F', {send_page_view:1, anonymize_ip:1})
-    } catch(e) {} // 初期化失敗時
-  },
-  document.head.appendChild(s)
-))();
+// GoatCounter アクセス解析
+!function() {
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = '//gc.zgo.at/count.js';
+  script.setAttribute('data-goatcounter', 'https://yuinoid.goatcounter.com/count');
+  script.onerror = (e) => {
+    console.error('[GoatCounter] スクリプトの読み込みに失敗:', e);
+  };
+  script.onload = () => {
+    console.log('[GoatCounter] 初期化成功');
+  };
+  document.head.appendChild(script);
+}();

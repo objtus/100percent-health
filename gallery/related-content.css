@@ -1,3 +1,7 @@
+:root {
+	color-scheme: light only;
+}
+
 /* テスト用スタイル追加 */
 
 /* 既存の個別ページスタイル */
@@ -114,23 +118,23 @@
 
 .view-toggle button {
 	background: none;
-	border: 1px solid #000;
+	border: 1px solid light-dark(#000, #fff);
 	padding: 5px 15px;
 	cursor: pointer;
 	font-family: inherit;
 	font-size: 12px;
-	color: #000;
+	color: light-dark(#000, #fff);
 	margin-left: 5px;
 }
 
 .view-toggle button:hover {
-	background-color: #000;
-	color: #fff;
+	background-color: light-dark(#000, #fff);
+	color: light-dark(#fff, #000);
 }
 
 .view-toggle button[aria-selected="true"] {
-	background-color: #000;
-	color: #fff;
+	background-color: light-dark(#000, #fff);
+	color: light-dark(#fff, #000);
 }
 
 /* 表示切り替え用クラス */

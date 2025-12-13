@@ -5,48 +5,48 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Tue, 25 Nov 2025 13:36:19 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 12 Dec 2025 07:47:22 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
     <item>
-      <title>人物世代早見表</title>
-      <link>https://yuinoid.neocities.org/txt/generations/generations-timeline.html</link>
-      <description>人物世代早見表を作成しました。人物の生年・没年を一覧できる世代早見表です。以前notion pagesで公開していたものを移行し、フィルタリング機能を整備したものです。結構やっつけ。</description>
-      <pubDate>Tue, 25 Nov 2025 13:36:19 GMT</pubDate>
-      <category>txt</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#iiw4a2-20251125</guid>
-    </item>
-    <item>
-      <title>works</title>
-      <link>https://yuinoid.neocities.org/works/works_main.html</link>
-      <description>ex. happyender girlのアルバム、『girls chronicle (2020-2024)』にアルバムアートを提供しました。初音ミクさんをちゃんと描いたのは実はこれが初めてです。このアルバムは、ex. happyender girlが2020年から2024年にかけて発表した楽曲のコンピレーションアルバムです。ベストアルバム「girls chronicle (2013-2019)」の後編的な位置づけで、アルバムジャケットもそれに準じたものになっています。</description>
-      <pubDate>Fri, 14 Nov 2025 13:58:02 GMT</pubDate>
-      <category>works</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#1vgtc2-20251114</guid>
-    </item>
-    <item>
-      <title>サイドバー機能を追加しました</title>
-      <link>https://yuinoid.neocities.org/aboutme.html</link>
-      <description>サイドバー機能を追加しました。トップページ以外の1カラムのページで、サイドバーを表示するようにしました。上下の移動ボタンと目次表示ボタンともろもろの情報（ページタイトル、ページの変更日時、現在表示している見出しタイトル、スクロール進捗バー、見出し数と文字数、リンク数）が掲示されています。情報の部分は装飾的な意図で作っていて、実用的な意味はあんまりありません。かっこいいかと思って。</description>
-      <pubDate>Fri, 10 Oct 2025 12:26:31 GMT</pubDate>
-      <category>system</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#qt2lkw-20251010</guid>
-    </item>
-    <item>
-      <title>タグ機能を追加してから見られなくなっていたgroundpolis_paint_ripを追加</title>
-      <link>https://yuinoid.neocities.org/gallery/tag-page/groundpolis_paint_rip.html</link>
-      <description>galleryにタグ機能を追加してから見ることができなかったgroundpolis_paint_ripを追加しました。また、イラスト個別のページを作成しました。変なところがあったら教えてください。</description>
-      <pubDate>Mon, 06 Oct 2025 11:24:48 GMT</pubDate>
-      <category>gallery</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#6734gk-20251006</guid>
-    </item>
-    <item>
-      <title>雑記ページを更新&amp;リンクページを更新&amp;もろもろ修正など</title>
-      <link>https://yuinoid.neocities.org/txt/zakki/2025/10/days/2025-10-03.html</link>
-      <description>雑記についてなんですが、謎の長文を書いてしまいました。変なテンションでした。あとリンクページを更新しています。相互リンクやお気に入りリンクの部分にいくつかのリンクを追加しています。みなさまいつもありがとうございます。あと、もろもろ修正とか追加をしています。フッターとかをいじった記憶があるけどもう覚えてない。</description>
-      <pubDate>Thu, 02 Oct 2025 16:36:47 GMT</pubDate>
+      <title>12月12日の雑記を追加</title>
+      <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-12.html</link>
+      <description>雑記更新。「えとねるん Advent Calendar 2025」用です。更新した分散SNS関連年表について簡単に解説しました。</description>
+      <pubDate>Fri, 12 Dec 2025 07:47:22 GMT</pubDate>
       <category>zakki</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#km6uw7-20251003</guid>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#hqvtcz-20251212</guid>
+    </item>
+    <item>
+      <title>分散SNS関連年表を更新</title>
+      <link>https://yuinoid.neocities.org/txt/my_dsns_timeline.html</link>
+      <description>年表を更新しました。できごとを追記・一部再編集したほか、フィルタリングシステムやカテゴリを変更しています。</description>
+      <pubDate>Fri, 12 Dec 2025 07:47:22 GMT</pubDate>
+      <category>txt</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#c4f802-20251212</guid>
+    </item>
+    <item>
+      <title>リンクページにcompasslinkのバナーを追加 &amp; google analyticsからgoatcounterへ移行</title>
+      <link>https://yuinoid.neocities.org/links/links_main.html#registered_services_header</link>
+      <description>リンクページにcompasslinkのバナーを追加しました。あと、これまでアクセス解析ツールにgoogle analyticsを使っていたのですが、goatcounterに移行しました。</description>
+      <pubDate>Mon, 08 Dec 2025 15:13:17 GMT</pubDate>
+      <category>links</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#6uwj4f-20251209</guid>
+    </item>
+    <item>
+      <title>雑記ページを更新</title>
+      <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-08.html</link>
+      <description>雑記ページを更新しました。近況報告としてまとめの表を更新しました。3ヶ月分くらい。</description>
+      <pubDate>Mon, 08 Dec 2025 15:13:17 GMT</pubDate>
+      <category>zakki</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#2nbe8x-20251208</guid>
+    </item>
+    <item>
+      <title>12月06日の雑記を更新</title>
+      <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-06.html</link>
+      <description>雑記更新。「個人サイトを語ろう Advent Calendar 2025」用です。1年を振り返る記事なのですが、ひじょーに適当な文章になってしまいました。</description>
+      <pubDate>Thu, 04 Dec 2025 23:40:15 GMT</pubDate>
+      <category>zakki</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#emovsf-20251206</guid>
     </item>
   </channel>
 </rss>

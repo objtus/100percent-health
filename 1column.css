@@ -5,6 +5,8 @@
 :root {
   --min-width768: 95%;
   --max-width768: 85%;
+
+  color-scheme: light only;
 }
 
 * {
@@ -48,12 +50,10 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   box-sizing: border-box;
-  background-color: white;
+  background-color: light-dark(white, #222);
   display: flex;
   flex-direction: column;
-  height: 100px;
-  min-height: 100%;
-  border: 40px solid;
+  border: 40px solid light-dark(black, #888);
   border-top: none;
   border-right: none;
   border-bottom: none;
@@ -68,12 +68,12 @@ img {
 
 ::-moz-selection {
   color: #ffffff;
-  background-color: rgb(0, 0, 255);
+  background-color: light-dark(rgb(0, 0, 255), #ccc);
 }
 
 ::selection {
   color: #ffffff;
-  background-color: rgb(0, 0, 255);
+  background-color: light-dark(rgb(0, 0, 255), #ccc);
 }
 
 h1, h2 {
@@ -87,16 +87,16 @@ h1.title {
 }
 
 a {
-  color: #000000;
+  color: light-dark(black, #fff);
   
   &:hover {
     color: #ffffff;
-    background-color: black;
+    background-color: light-dark(black, #888);
     
     img {
       font-size: 0pt;
-      color: rgba(0, 0, 0, 0);
-      background-color: rgba(0, 0, 0, 0);
+      color: none;
+      background-color: transparent;
     }
   }
 }
@@ -105,7 +105,48 @@ button {
   appearance: none;
   border: 0;
   border-radius: 0;
-  background: #00000000;
+  background: none;
+}
+
+/* 外部リンクアイコンのスタイル */
+a[href^="http"]::after {
+  content: '';
+  display: inline-block;
+  background-image: url(/external_link-icon1x2.png);
+  image-rendering: auto;
+  margin-left: 3px;
+  margin-right: 1px;
+  vertical-align: middle;
+  transform: translateY(-2px);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: inherit;
+}
+
+#galleryspace a[href^="http"]::after {
+  width: 12px;
+  height: 20px;
+  margin-left: 2px;
+}
+
+#textblock a[href^="http"]::after {
+  width: 12px;
+  height: 20px;
+}
+
+.article-body a[href^="http"]::after {
+  width: 12px;
+  height: 20px;
+  transform: translateY(-3px);
+}
+
+#footerhtml a[href^="http"]::after {
+  width: 10px;
+  height: 14px;
+}
+
+a[href^="http"]:hover::after {
+  filter: invert(1);
 }
 
 /*===================
@@ -121,7 +162,7 @@ button {
 
 a {
   &#backicon, &.addressbar {
-    color: #000000;
+    color: light-dark(black, #ddd);
     overflow: auto;
     text-decoration: none;
     
@@ -135,7 +176,7 @@ a {
   position: relative;
   top: -3px;
   font-size: large;
-  background-color: #ffffff44;
+  background-color: light-dark(transparent, #444);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   filter: grayscale(100%);
@@ -177,13 +218,13 @@ a {
 .piccard {
   a:hover {
     text-decoration: none;
-    background-color: #00000000;
+    background-color: transparent;
   }
 }
 
 .caption {
   a:hover {
-    background-color: #000000ff;
+    background-color: light-dark(black, #444);
   }
 }
 
@@ -201,7 +242,7 @@ p.date {
   display: block;
   text-align: right;
   font-size: 0.8em;
-  color: #aaa;
+  color: light-dark(#aaa, #aaa);
   white-space: nowrap;
   overflow: hidden;
 }
@@ -463,7 +504,7 @@ nav {
   
   &::before {
     content: "";
-    background-image: linear-gradient(to right, #000, #000 10px, transparent 3px, transparent 8px);
+    background-image: linear-gradient(to right, light-dark(#000, #fff), light-dark(#000, #fff) 10px, transparent 3px, transparent 8px);
     background-size: 20px 1px;
     background-repeat: repeat-x;
     position: absolute;
@@ -488,12 +529,12 @@ nav {
 }
 
 .gallery_summary {
-  color: #fff;
-  background-color: #000;
+  color: light-dark(#fff, #ccc);
+  background-color: light-dark(#000, #555);
   
   &:hover {
-    color: #000;
-    background-color: #fff;
+    color: light-dark(#000, #ddd);
+    background-color: light-dark(#fff, #444);
   }
 }
 
@@ -525,7 +566,7 @@ nav {
 .galleryhtml {
   summary {
     a {
-      color: #fff;
+      color: light-dark(#fff, #ccc);
     }
   }
 }
@@ -587,7 +628,7 @@ nav {
   position: relative;
   justify-content: space-between;
   width: 100%;
-  background-color: none;
+  background-color: transparent;
 }
 
 #foot_comment {
@@ -638,6 +679,11 @@ nav {
     image-rendering: pixelated;
     pointer-events: none;
   }
+  @media (prefers-color-scheme: dark) {
+    &::before {
+      filter: invert(1);
+    }
+  }
 }
 
 #logo_footer {
@@ -645,6 +691,13 @@ nav {
   min-width: 35px;
   padding: 0;
   image-rendering: pixelated;
+}
+@media (prefers-color-scheme: dark) {
+  #logo_footer {
+    filter: invert(1);
+    mix-blend-mode: lighten;
+
+  }
 }
 
 /*===================
@@ -672,7 +725,7 @@ nav {
   }
 
   &::backdrop {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.5));
     backdrop-filter: saturate(0);
     -webkit-backdrop-filter: saturate(0);
   }
@@ -780,19 +833,30 @@ nav {
     width: 80%;
   }
 }
-
+/* スマホサイズ */
 @media screen and (max-width: 576px) {
   body {
     font-size: 0.9rem;
     line-height: 25px;
   }
 
+  h1 {
+		font-size: 1.5rem;
+		font-weight: bold;
+		text-align: right;
+		background-image: linear-gradient(to bottom, #ccc);
+		background-size: 100% 1.5rem;
+		background-repeat: no-repeat;
+		background-position: 0 8px;
+		padding-top: 10px;
+	}
+
   #back{
     width: 0px;
   }
   
   #wrapper {
-    border: 5px solid;
+    border: 5px solid #000;
     border-top: none;
     border-right: none;
     border-bottom: none;
@@ -805,7 +869,7 @@ nav {
   
   #main, #main-footer {
     width: 90%;
-    margin-top: 20px;
+    margin-top: 45px;
   }
   
   #address {
@@ -816,6 +880,10 @@ nav {
     h1.title {
       background-color: #ccc;
     }
+  }
+
+  #foot_links {
+    margin-top: 0;
   }
 }
 
@@ -890,8 +958,8 @@ nav {
     .sidebar-item {
       width: 40px;
       height: 40px;
-      background-color: rgba(0, 0, 0, 0.9);
-      color: #fff;
+      background-color: light-dark(rgba(0, 0, 0, 0.9), transparent);
+      color: light-dark(#fff, transparent);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1008,7 +1076,7 @@ nav {
     text-indent: -18px;
     &::before {
       content: "h2:";
-      color: #ccc;
+      color: light-dark(#ccc, #aaa);
       margin-right: 4px;
     }
   }
@@ -1018,7 +1086,7 @@ nav {
     text-indent: -31px;
     &::before {
       content: "==h3:";
-      color: #ccc;
+      color: light-dark(#ccc, #aaa);
       margin-right: 4px;
     }
   }
@@ -1028,7 +1096,7 @@ nav {
     text-indent: -42px;
     &::before {
       content: "====h4:";
-      color: #ccc;
+      color: light-dark(#ccc, #aaa);
       margin-right: 4px;
     }
   }
@@ -1038,7 +1106,7 @@ nav {
     text-indent: -54px;
     &::before {
       content: "======h5:";
-      color: #ccc;
+      color: light-dark(#ccc, #aaa);
       margin-right: 4px;
     }
   }
@@ -1048,7 +1116,7 @@ nav {
     text-indent: -66px;
     &::before {
       content: "========h6:";
-      color: #ccc;
+      color: light-dark(#ccc, #aaa);
       margin-right: 4px;
     }
   }

@@ -15,7 +15,7 @@
 }
 
 #today_event li {
-  text-indent: -7.6em;
+  text-indent: -7.68em;
   padding-left: 7.6em;
   list-style: none;
   margin-bottom: 1em;
@@ -43,6 +43,16 @@ div#today_event li {
   line-height: 1.5em;
   background-color: #fff;
   z-index: 15;
+
+  a[href^="http"]::after {
+    filter:opacity(0.6);
+    margin-left: 2px;
+    margin-right: 2px;
+  }
+
+  a[href^="http"]:hover::after {
+    filter: invert(0),opacity(0.6);
+  }
 }
 
 #timeline_layout li {
@@ -79,6 +89,10 @@ em{
   font-size: 125%;
   /* 文字を大きくする        */
   color: black !important;
+
+  a[href^="http"]::after {
+    filter:opacity(1)!important;
+  }
 }
 
 .str2 {
@@ -115,7 +129,6 @@ em{
   backdrop-filter: blur(4px);
   z-index: 20;
 }
-
 
 /*===================
   liのclassごとに色を変えるやつ
@@ -374,6 +387,10 @@ em{
   color: black;
   background-color: #ffffff;
   border-right: black 2px solid;
+
+  a[href^="http"]::after {
+    filter:opacity(1)!important;
+  }
 }
 
 .d a {
@@ -386,7 +403,7 @@ em{
 ===================*/
 #timeline-sidebar-toggle {
   position: fixed;
-  top: 220px;
+  top: 260px;
   left: 0px;
   height: 80px;
   width: 80px;
@@ -420,7 +437,7 @@ em{
 /* クイックリセットボタン */
 #timeline-quick-reset {
   position: fixed;
-  top: 310px;
+  top: 350px;
   left: 0px;
   height: 40px;
   width: 80px;
@@ -774,10 +791,10 @@ body.timeline-no-results #timeline_layout::after {
 
 /* JavaScript追加の項目数表示のスタイル */
 .timeline-item-count {
-  font-size: 0.8em !important;
+  font-size: 0.6em !important;
   color: #666 !important;
   font-weight: normal !important;
-  margin-left: 8px;
+  margin-left: 4px;
 }
 
 /* レスポンシブ対応 */

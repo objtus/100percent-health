@@ -137,7 +137,7 @@ summary {
   display: flex;
   flex-direction: column;
   box-sizing:border-box;
-  border: 40px solid;
+  border: 40px solid #000;
   border-top: none;
   border-right: none;
   border-bottom: none;
@@ -249,7 +249,7 @@ summary {
 
   /* 576pxまでの幅の場合に適応される */
   #wrapper {
-    border: 20px solid;
+    border: 20px solid #000;
     border-top: none;
     border-right: none;
     border-bottom: none;
@@ -421,7 +421,7 @@ h2 {
   padding-left: 5.6em;
   text-indent: -5.6em;
 }
-#changeloghtml, #texthtml{
+#changeloghtml{
   ol{
     display: flex;
     flex-direction: column-reverse;
@@ -458,6 +458,13 @@ h2 {
 #changelogcontainer{
   a{
     text-decoration: underline;
+  }
+}
+#texthtml{
+  ol{
+    display: flex;
+    flex-direction: column-reverse;
+    list-style: none;
   }
 }
 

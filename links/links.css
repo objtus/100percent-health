@@ -20,6 +20,13 @@
     font-weight: bold;
     display: block;
     margin-bottom: -0.3em;
+    &::after{
+      display: contents!important;
+      background-image: none!important;
+      transform: translateY(0)!important;
+      height: 0!important;
+      width: 0!important;
+    }
   }
   
   .url {
@@ -27,6 +34,13 @@
     color: #666;
     text-decoration: none;
     word-break: break-all;
+    &::after{
+      display: contents!important;
+      background-image: none!important;
+      transform: translateY(0)!important;
+      height: 0!important;
+      width: 0!important;
+    }
   }
   
   /*----セクション全体のレイアウト----*/
@@ -79,6 +93,13 @@
       max-width: 120px;
       a:hover{
         background-color: #00000000 !important;
+      }
+      a::after{
+        display: contents!important;
+        background-image: none!important;
+        transform: translateY(0)!important;
+        height: 0!important;
+        width: 0!important;
       }
     }
 
@@ -168,6 +189,13 @@
       padding: 1em;
       background: #fbfbfb;
       border: 1px solid #ddd;
+      a::after{
+        display: contents!important;
+        background-image: none!important;
+        transform: translateY(0)!important;
+        height: 0!important;
+        width: 0!important;
+      }
     }
     p{
       font-size: 10pt;

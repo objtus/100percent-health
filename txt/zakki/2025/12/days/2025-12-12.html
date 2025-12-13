@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025-12-12 - 100%health</title>
+  <link rel="stylesheet" href="/1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+  <script>
+    $(function () {
+      $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+      $("#taghtml").load("/txt/txt_main.html #tag-list");
+    });
+  </script>
+  <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
+  <link rel="stylesheet" href="/txt/zakki/tag-style.css">
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="/index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <a class="addressbar" href="/index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="/txt/txt_main.html">
+            txt
+          </a>/
+          <a class="addressbar" href="../../2025.html">
+            2025
+          </a>/
+          <a class="addressbar" href="../2025-12.html">
+            2025-12
+          </a>/
+          <a class="addressbar" href="2025-12-12.html">
+            2025-12-12
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <br>
+      <h1>2025年12月12日の雑記</h1>
+      <nav class='arrow' aria-label="前後日へのリンク">
+        <div class='rowarrow'>
+          <a class="leftarrow" href="2025-12-08.html" style="" aria-label="前の日へ移動">&lt;</a>
+          <a class="uparrow" href="../2025-12.html" aria-label="月間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="" style="visibility: hidden;" aria-label="次の日へ移動">&gt;</a>
+        </div>
+      </nav>
+
+      <h2 style="display: none;">2025年12月12日の雑記</h2>
+      <article id="251212" class="daily-article">
+        <h3><a href="/txt/zakki/2025/12/days/2025-12-12.html">2025-12-12</a></h3>
+        <div class="article-body">
+          <section>
+            <h4>今回の主題</h4>
+            <iframe src="https://adventar.org/calendars/11303/embed" width="530" height="360" frameborder="0" loading="lazy"></iframe>
+            <p>
+              「<a href="https://adventar.org/calendars/11303" target="_blank">えとねるん Advent Calendar 2025</a>」の10日目の記事です。<br>
+              <br>
+              こんにちは。yuinoidです。2025年も残り5%となりました。みなさんはどんな1年を過ごしたでしょうか。<br>
+              <br>
+              ところで、今回の記事は、<a href="/txt/my_dsns_timeline.html">分散SNS関連年表</a>の更新を告知するのが本題です。年表の更新分も含めてアドベントカレンダーの記事ということです。
+            </p>
+          </section>
+          <section>
+            <h4>年表と今回の更新</h4>
+            <p>
+              わたしは「<a href="/txt/my_dsns_timeline.html">分散SNS関連年表</a>」という年表を2022年に公開し、定期的に更新しています。<br>
+              <br>
+              内容はその名の通り、「分散SNS」に関連した出来事をまとめた年表......といいたいところなのですが、個人的な興味がある出来事なども記入しており、（いささか偏った）インターネット関連年表のようなものになってきています。<br>
+              <br>
+              前回の更新は2025年04月13日。定期的な更新を心がけていたのですが、間が空いてしまいました。<br>
+              <br>
+              更新した内容については量が多く、ここに書くことはできません。ぜひ年表をみていただきたいです。<br>
+              <br>
+              年表はおおまかにいえば実質的に2つの区間に分けることができます。「2017年以前」と「2017年以後」です。2017年に起きたマストドンブーム以降、分散SNSに関する詳細な記述が多くなり、その分記述量も多くなります。<br>
+              <br>
+              2017年以前はというと、分散SNSの前史という位置づけで、インターネットの歴史を概観するために広い視点でできごとを記述しています。<br>
+              <br>
+              更新分もこの区分けを踏襲しており、2017年以後の、特に前回に更新した最新の日付（2025年03月18日）から今回までに起こった、分散SNSに関するできごとを追記しています。<br>
+              <br>
+              2017年以前（と2017年以降にもすこし）には、インターネットの歴史を概観するために、分散SNSとは直接関係ないできごとも追記しています。
+            </p>
+          </section>
+          <section>
+            <h4>システムの変更</h4>
+            <p>
+              今回更新するにあたり、年表のフィルタリングシステムを更新し、UIとUXを少し変更しました。<br>
+              <br>
+              まず特記すべきは、「<a href="/txt/my_dsns_timeline.html?class=draft&checkboxes=draft">draft</a>」カテゴリの追加です。これは、今回追記分についているタグを表示するためのカテゴリです。draftカテゴリでフィルタリングすることで、今回追記した分だけを表示させることができます。<br>
+              <br>
+              そして、フィルタリングシステムについてです。<br>
+              <br>
+              これまでフィルタリングするためには、一度サイドメニューを開かないといけませんでした。今回の更新では、各できごとの下部に、そのできごとに付けられたカテゴリ一覧を小さく表示させ、そのなかのカテゴリをクリックすることでフィルタリングできるようにしました。また、サイドメニューを開かずにフィルタリングをリセットすることができるようにしています。<br>
+              <br>
+              これで気軽にフィルタリング機能にアクセスできるはずです。少し前にサイドバーに装飾と細かい機能（上下に飛ぶのと見出しに飛べる機能）を載せたので、UXが多少改善した気がします。<br>
+              <br>
+              課題としては、URLパラメータでフィルタリング状態を共有したとき、時々なんか変な表示になることです。スクリプトの読み込み順とサイドバー機能とが衝突してレンダリングがおかしくなるっぽいのですが、何が原因なのかいまいちよくわからん。
+              <br>
+            </p>
+          </section>
+          <section>
+            <h4>おわりに</h4>
+            <p>
+              というわけで、みなさま、良いお年をお過ごしください。また来年もよろしくお願いします。
+            </p>
+          </section>
+          <hr><br>
+          <section>
+            <h4>追伸</h4>
+            <p>
+              更新作業をしているうちにもいろいろできごとがありました。2025年内にもう一度更新する予定です。
+            </p>
+            <p>
+              少なくとも次回更新分に書くやつ
+            </p>
+            <ul style="margin-left: 1rem;margin-top: -1.7rem;">
+              <li>twitter.new</li>
+              <li>オーストラリアで未成年のSNS使用が規制されたやつ</li>
+              <li>twitterのアカウントの所在が表示されるようになって色々トラブルになったやつ</li>
+              <li>チャーリー・カーク殺害事件とその余波</li>
+              <li>DIDsの歴史</li>
+              <li>FEPの歴史</li>
+              <li>ネバダちゃん事件</li>
+              <li>自殺サイト事件</li>
+              <li>加藤の乱で加藤紘一がなんかオフ会に参加したやつ</li>
+              <li>参考文献の本を年表の項目に追加する</li>
+              <li>この年表を年表に追加する</li>
+              <li>twitterのTLがアルゴリズム化していく流れ</li>
+            </ul>
+          </section>
+        </div>
+      </article>
+
+      <nav class='arrow' aria-label="前後日へのリンク">
+        <div class='rowarrow'>
+          <a class="leftarrow" href="2025-12-08.html" style="" aria-label="前の日へ移動">&lt;</a>
+          <a class="uparrow" href="../2025-12.html" aria-label="月間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="" style="visibility: hidden;" aria-label="次の日へ移動">&gt;</a>
+        </div>
+      </nav>
+
+    </main>
+    <footer id="main-footer">
+      <div id="zakkihtml"></div>
+      <div id="taghtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="/luminous-basic.min.css">
+    <script src="/Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+</body>
+
+</html>

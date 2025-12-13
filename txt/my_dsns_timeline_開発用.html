@@ -20,12 +20,17 @@
       var matchingEvents = [];
 
       $('#timeline_layout > div').each(function () {
-        var eventYear = $(this).find('.year').text();
+        // 年の見出しから年だけを取得（項目数表示を除外）
+        var $yearElement = $(this).find('.year');
+        var eventYear = $yearElement.clone().find('.timeline-item-count').remove().end().text();
         var events = $(this).find('li');
 
         events.each(function () {
           var $eventLi = $(this);
-          var eventHtml = $eventLi.html(); // イベントのHTML全体を取得
+          // カテゴリタグを除外してHTML取得
+          var $eventClone = $eventLi.clone();
+          $eventClone.find('.category-tags-subtle').remove();
+          var eventHtml = $eventClone.html(); // イベントのHTML全体を取得（カテゴリタグなし）
           var eventText = $eventLi.text();
           var eventDateMatch = eventText.match(/(\d{1,2}月\d{1,2}日)/);
 
@@ -624,6 +629,7 @@
                 <input type="radio" name="class" value="fire">flame<br>
                 <input type="radio" name="class" value="tool">tool<br>
                 <input type="radio" name="class" value="etc">etc<br>
+                <input type="radio" name="class" value="draft">draft<br>
               </div>
               <div id="flex_checkbox">
                 <input type="checkbox" name="class" value="d" checked><br>
@@ -649,6 +655,7 @@
                 <input type="checkbox" name="class" value="fire" checked><br>
                 <input type="checkbox" name="class" value="tool" checked><br>
                 <input type="checkbox" name="class" value="etc" checked><br>
+                <input type="checkbox" name="class" value="draft" checked><br>                
               </div>
             </div>
           </details>

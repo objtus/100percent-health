@@ -105,9 +105,7 @@ iframe {
   background-color: white;
   display: flex;
   flex-direction: column;
-  height: 100px;
-  min-height: 100%;
-  border: 40px solid;
+  border: 40px solid #000;
   border-top: none;
   border-right: none;
   border-bottom: none;
@@ -496,7 +494,7 @@ nav.rightarrow>a {
 @media screen and (max-width: 480px) {
   /* 480pxまでの幅の場合に適応される */
   #wrapper {
-    border: 5px solid;
+    border: 5px solid #000;
     border-top: none;
     border-right: none;
     border-bottom: none;
