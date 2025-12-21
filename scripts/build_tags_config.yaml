@@ -1,0 +1,22 @@
+# タグページ自動生成スクリプト設定ファイル
+
+# グローバル設定
+zakki_root: "../txt/zakki"
+output_dir: "../txt/zakki/tag"
+default_sort: "date-desc"
+
+# txt_main.html の更新設定
+txt_main_path: "../txt/txt_main.html"
+update_txt_main: true
+txt_main_tag_sort: "count-desc"  # count-desc, count-asc, name-asc, name-desc
+
+# タグ別設定
+tags:
+  timeline:
+    sort: "date-desc"
+    description: "個人史・活動のタイムライン"
+  
+  music:
+    sort: "relevance-desc"
+    description: "音楽に関する記事"
+

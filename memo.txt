@@ -1,9 +1,0 @@
-groundpolispaint
-  12 requests
-  309 kB transferred
-  387 kB resources
-  Finish: 2.33 s
-  DOMContentLoaded: 1.09 s
-  Load: 2.26 s
-
-groundpolispaint image webpize

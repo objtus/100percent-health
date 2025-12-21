@@ -19,16 +19,16 @@
       animation: fadeIn 0.5s ease-in;
     }
     
-    article.tag-article h2 {
+    article.tag-article h3 {
       margin-bottom: 0.5em;
       padding-bottom: 0.3em;
     }
     
-    article.tag-article h2 a:hover {
+    article.tag-article h3 a:hover {
       text-decoration: underline;
     }
     
-    article.tag-article h2 a:hover::after {
+    article.tag-article h3 a:hover::after {
       content: ' \2197'; /* 右上向き矢印 */
       font-size: 0.8em;
       position: relative;
@@ -39,42 +39,18 @@
       margin-bottom: 1em;
     }
 
-    h3 {
-      margin-left: 0;
+    article{
+      h3,
+      h4 {padding-top: 0.5em!important;margin-left: 0;}
     }
     
-    /* ローディング表示のスタイル */
-    #loading-indicator {
-      text-align: center;
-      padding: 20px;
-      margin: 20px 0;
-      font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
-    }
-    
-    .progress-container {
-      width: 100%;
-      height: 1px;
-      margin: 15px 0;
-      position: relative;
-      border-top: 1px dotted #000000;
-      overflow: visible;
-    }
-    
-    .progress-bar {
-      width: 10%;
-      height: 1px;
-      background-color: #000000;
-      position: relative;
-      transition: width 0.3s steps(20, end);
-      margin-top: -1px;
-    }
-    
-    #loading-status {
+    .tag-description {
       font-size: 1em;
-      color: #000000;
-      margin-top: 5px;
-      font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
-      letter-spacing: -0.05em;
+      color: #555;
+      margin: 1em 0;
+      padding: 0.8em 1.2em;
+
+      &::before { content: "♥"; }
     }
     
     @keyframes fadeIn {
@@ -120,15 +96,591 @@
     </header>
     <main id="main">
       <h1>music タグ一覧</h1>
-      <div class="tag-articles">
-        <!-- ここに動的に記事が挿入される -->
-        <div id="loading-indicator">
-          <p>♥ #music タグ付きセクションを読み込み中 ♥</p>
-          <div class="progress-container">
-            <div class="progress-bar"></div>
+      <p class="tag-description">音楽に関する記事</p>
+      
+      <!-- ソート・フィルターコントロール -->
+      <div class="tag-controls">
+        <h2 class="tag-controls-heading">表示とソートの設定</h2>
+        
+        <!-- ソートボタン行 -->
+        <div class="tag-controls-row">
+          <div class="tag-control-group">
+            <label>日付でソート:</label>
+            <div class="tag-control-buttons">
+              <button class="tag-sort-btn active" data-sort="date-desc">新しい順</button>
+              <button class="tag-sort-btn" data-sort="date-asc">古い順</button>
+            </div>
           </div>
-          <p id="loading-status">準備中...</p>
+          <div class="tag-control-group">
+            <label>関連度でソート:</label>
+            <div class="tag-control-buttons">
+              <button class="tag-sort-btn" data-sort="relevance-desc">関連度高い順</button>
+              <button class="tag-sort-btn" data-sort="relevance-asc">関連度低い順</button>
+            </div>
+          </div>
         </div>
+        
+        <!-- フィルター行 -->
+        <div class="tag-controls-row">
+          <div class="tag-control-group">
+            <label>最小関連度でフィルター:</label>
+            <div class="tag-slider-container">
+              <input type="range" min="0" max="100" step="10" value="0" class="tag-slider" id="relevance-slider">
+              <span class="tag-slider-value" id="slider-value">0%</span>
+            </div>
+          </div>
+          <div class="tag-control-group">
+            <label>設定をリセット:</label>
+            <button class="tag-reset-btn" id="reset-btn">リセット</button>
+          </div>
+        </div>
+        
+        <!-- 統計情報 -->
+        <p class="tag-stats" id="stats-display">全8件 | 最新: 2025-07-30 | 最古: 2025-02-06 | 平均関連度: 82%</p>
+      </div>
+      
+      <!-- タグ付きセクション一覧 -->
+      <h2>記事一覧</h2>
+      <div class="tag-articles" id="articles-container">
+        <article class="tag-article" data-date="2025-09-02" data-relevance="90">
+          <h3><a href="/txt/zakki/2025/09/days/2025-09-02.html">2025-09-02</a></h3>
+          <section data-tags="music=90">
+          <h4>作業用BGM</h4>
+          <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/videoseries?si=t4hfeB0RGcfFv6d_&amp;list=OLAK5uy_lFjjFnVVjAKhqhP1R0UEqCc0oN9bqphrc" title="YouTube video player" width="560"></iframe>
+          <p>
+                        Bjorkの公式のプレイリストを埋め込んでみたが、作業用BGMはBjorkのHomogenicです。<br/>
+          <br/>
+                        jógaが名曲。Michel GondryがディレクションしたMVも名作ですね。<br/>
+          <br/>
+                        あと好きなのはbacheloretteかなあ。そういえばこれもMVの監督がMichel Gondryか。<br/>
+          <br/>
+          <span class="hashtag"><a href="/txt/zakki/tag/music.html">#music</a></span>
+          </p>
+          </section>
+          <section data-tags="music=90">
+          <h4>新しく作った動画シリーズの紹介ページと「あり得た可能性」について</h4>
+          <p>
+                        08月30日、txtコーナーに「<a href="/txt/redcompass_compilation_series.html">redcompass_compilation_series</a>」ページを作成して追加した。<br/>
+          <br/>
+                        RedCompassさんが2009年から2012年にかけてニコニコ動画で投稿したコンピレーションシリーズを紹介しているページです。<br/>
+          <br/>
+                        実はこのコンピレーション動画シリーズ、中高生くらいの頃にニコニコ動画で作業用BGM動画を色々見ていて知って、ものすごい影響を受けたんだよね。<br/>
+          <br/>
+                        自分の音楽（視聴）遍歴を語るのって恥ずかしい気持ちになるんだけど、ちょっと書いてみる。
+                      </p>
+          <p>
+                        まじめに音楽を聴き始めたのっていつ頃くらいからだろう。正直覚えてない。<br/>
+          <br/>
+                        小学生の頃は親が車の中で流していたコブクロとか、ケツメイシとか、宇多田ヒカルとか、当時流行っていた（というより、当時にしてもちょっと古かった気がする）曲をなんの気なしに聴いていた記憶がある。<br/>
+          <br/>
+                        そこから、色々な音楽を聞くきっかけになったのが、ニコニコ動画だった。音楽に限らず、自分の世界を広げてくれたのがニコニコ動画だったんだよね。<br/>
+          <br/>
+                        時系列を覚えていないけど、家においてあったパソコンでインターネットをはじめたのが2007年くらい。はじめてすぐにflashを知って（初めて知ったのがMichel PolnareffのTout, tout pour ma chérieの空耳flash「<a href="https://w.atwiki.jp/aniwotawiki/pages/23219.html" target="_blank">ﾄｩｰﾄｩｰﾄｩﾏｼｪﾘｰﾏｰｼｪｰﾘｰ</a>」）、そのあとyoutubeを知って<a href="https://www.nicovideo.jp/watch/sm17806638" target="_blank"><ruby>バイオハザードのMAD<rt>多分ニコニコ動画からの転載動画だった。当時は知らなかった。</rt></ruby></a>を見ていた記憶がある。<br/>
+          <br/>
+                        そこから時間が経たないうちに知ったのがニコニコ動画だった。
+                      </p>
+          <p>
+                        自分の人生を振り返ってみると、2007年はいろいろなことを知って世界が広がるきっかけになった年だった。ニコニコ動画がそのひとつ。<br/>
+          <br/>
+                        そのころ定期的に親がレンタルビデオ店で<ruby>VHS<rt>ロストメディア</rt></ruby>を借りに連れて行ってくれて、そこで自分で背伸びをして、ちょっと硬派なSFアニメを借りはじめたのも同じくらいの時期だった。押井守の『<ruby>イノセンス<rt>小学生には厳しいアニメすぎる。</rt></ruby>』が<ruby>衝撃だった<rt><ruby>厨二病<rt>早めの</rt></ruby>にとってはよくわからないことがむしろかっこよかった。</rt></ruby>。<br/>
+          <br/>
+                        あともう一つ、親が昔使っていて、その当時はもう使われていなかったMDプレーヤーを（半ば勝手に）使い出したのも同じ時期だった。MDを焼いたりはしなかったけど、直接音楽を聴くきっかけになったのはこれがきっかけだったと思う。<br/>
+          </p>
+          <p>
+                        MDプレーヤーと親が焼いたMDカセットはあっても、MD自体を自分が<ruby>焼く<rt>CDからMDを作る</rt></ruby>ことはなかった。家においてあった、親が作ったMDを聴いていただけだった。<br/>
+          <br/>
+                        親が作ったMDはそこまで数があるわけではなく、そもそも自分が好きな曲が入っているわけでもないから、聴いているうちに飽きてくる。<br/>
+          <br/>
+                        イヤホンで音楽を「個人的に聴く」感覚に触れたのはMDプレーヤーが最初だった。<br/>
+          <br/>
+                        MDに飽きてきた、ちょうどそのときに知ったニコニコ動画は、まさしく自分の知らないいろいろな音楽を聞くことができる場所だったのだ。
+                      </p>
+          <p>
+                        ニコニコ動画はオタク文化の影響が色濃くあって、トップページにも当時の「萌え系」アニメのサムネイルが並んでいた。<br/>
+          <br/>
+                        ここでさっきのレンタルビデオ店の話とつながるのだが、当時小学生だった自分ははやめの中二病に罹患しており、ナヨナヨとした「萌え系」アニメは軟弱で避けていた。<br/>
+          <br/>
+                        正直、恥ずかしかったんだと思う。自分の気持ちに素直になれなかったとも言い換えられる。背伸びをして、大人な雰囲気のアニメを観るのがかっこいい気がしていた。<br/>
+          </p>
+          <p>
+                        ニコニコ動画、音楽、中二病。ここから必然的にたどり着くことになったのが、作業用BGM動画だった。<br/>
+          <br/>
+                        ニコニコ動画には、ユーザーが独自のチョイスで曲をまとめて動画にした「作業用BGM」というタグがあった。<br/>
+          <br/>
+                        しかし、ニコニコ動画はオタク文化が強い。【作業用BGM】タグにはアニソンやエロゲソングの動画ばかり。<br/>
+          <br/>
+                        そこで見つけたのが、「<a href="https://www.nicovideo.jp/tag/%EF%BD%B1%EF%BE%86%EF%BE%92%E8%89%B2%E3%81%AE%E3%81%AA%E3%81%84%E4%BD%9C%E6%A5%AD%E7%94%A8BGM" target="_blank">ｱﾆﾒ色のない作業用BGM</a>」タグだった。文字通りアニメ色がない作業用BGM。「大人な雰囲気のアニメ」からさらに背伸びをして、すこしずつ「サブカル」に入り込んでいく。<br/>
+          </p>
+          <p>
+                        そこからはいろいろな作業用BGM動画を聴いていた気がする。細かい記憶はないが、最初は映画のサウンドトラックを聴いていて、そのうちに電子音楽（当時は流行っていたフレンチエレクトロとか、90年代のテクノとか。そのうちにwarp系のIDMに進む）を聴いていった記憶がある。<br/>
+          <br/>
+                        作業用BGMというと思い出すのは、PSPだ。<br/>
+          <br/>
+                        ある種同世代の共通経験的なところがあると思う。PSPにはmp3プレーヤー的な音楽再生機能が備わっていた。<br/>
+          <br/>
+                        当時はサブスクサービスなんてものはなく、音楽が好きな小中学生はCDを買い集める金もない。どうするのかといえば、ニコニコ動画の違法ダウンロード（当時は適法。2010年の著作権法改正でダウンロード違法化がなされ、2012年に刑事罰化。）だった。<br/>
+          <br/>
+                        ともかく、そういう時代だったというしかない。当時ニコニコ動画のダウンロードサービスとしてよく使われていた「にこ☆さうんど」でニコニコ動画にアップロードされた音楽をダウンロードし、PSPに入れて聴く。当時、インターネットに触れていた小中学生はこうした経験をした人が多いのではないだろうか。<br/>
+          <br/>
+                        専用の携帯音楽プレーヤーを買うことができず、多機能なスマートフォンが（小中学生に親が買い与えるほど）普及していない時代。音楽ストリーミングサービスが普及していない時代。アップロードはともかく、著作物のダウンロードについて、法整備がなされていなかった時代。音楽再生機能がありMP3を再生することもできた携帯ゲーム機は、こうした使われかたをよくしていたはずだ。<br/>
+          <br/>
+                        自分自身も、そんな使い方をしていた。それ自体がいいか悪いかは置いておいたとして、少なくとも、こうしたインターネット（およびメディア・社会・経済的環境）の一側面が自分自身の人生のある部分を決定づけたことは疑いえない。
+                      </p>
+          <p>
+                        話を元に戻そう。そんなこんなで、ニコニコ動画でいろいろな動画をみているなかで見つけたのが、コンピレーション動画シリーズだった。<br/>
+          <br/>
+                        あらためてこのコンピレーション動画を眺めてみると、当時の雰囲気が分かってきておもしろい。<br/>
+          <br/>
+                        「chillwave」という音楽ジャンルがある。はじめてのインターネット発の音楽ジャンル、などとも呼ばれるchillwaveだが、流行したのは2009年頃。ちょうどこの動画シリーズが投稿された時期と重なる。<br/>
+          <br/>
+                        動画をみてみると、2009年12月26日投稿のVol.13ではじめて「Glo-fi」という言葉が出てくる。Glo-fiはchillwaveの別名で、chillwaveは当時、Glo-fiやhypnagogic popなどとも呼ばれていた。<br/>
+          <br/>
+                        Vol.14では動画説明欄に「Glo-fi(Hypnagogic Pop)と呼ばれるジャンルがUSで急成長しているそうです、Washed Outはその代表的な存在です。」と書かれている。
+                      </p>
+          <p>
+                        この動画シリーズを知った時期は正確には覚えていない。2007年からある程度時間が経って、すこしながら「サブカル的」リテラシーが育っていた頃だったと思う。少なくとも、ある程度動画が投稿されてから知った記憶がある。<br/>
+          <br/>
+                        考えてみると、シリーズを知ってから38と39が投稿された記憶があるため、多分、2011年初頭（37がアップされた2011年02月10日から38が投稿された04月18日の間？）に間に知ったということになる。<br/>
+          <br/>
+                        動画シリーズでよく取り上げられる音楽ジャンルはエレクトロニカやIDM、インディーロックやポストロックが中心だ。当時の自分は電子音楽が好きだったのでインディー系は眼中になかった（といっても、嫌いというほどではなかった。興味がないというほうが正しい）。<br/>
+          <br/>
+                        そして、注目したのが、当時流行っていたchillwaveだった。インターネット上で生まれる音楽のマイクロジャンルに興味を持ったきっかけがこの動画シリーズだった。
+                      </p>
+          <p>
+                        そもそも、なぜいまこの動画シリーズをまとめたページを作ったのかといえば、この動画シリーズが自分のその後の音楽の趣味を決定づけたことをあらためて自覚したからだった。<br/>
+          <br/>
+                        楽曲をみてみれば、意外といろんなジャンルをセレクトしていることがわかる。基調はフォークトロニカ、IDM、インディーロックのゆったりしたものが多いのだが、度々チップチューンをテーマにした動画やブレイクビーツの激しいテーマのものが挟まる。<br/>
+          <br/>
+                        セレクトされているアーティストで最多なのがBibio（11回）なのが性格を表している。一方で注目したいのがDJ Newtownやぐちょん、imoutoidなど日本のネットレーベル系からもセレクトされていることだ。<br/>
+          <br/>
+                        2010年代前半はネットレーベルが流行した時代でもあった。取り上げられているchillwaveもしかり、チップチューンとネットレーベルには深い関わりがあることを考えても、「ネット音楽」の割合が意外とたかいといえないこともない。
+                      </p>
+          <p>
+                        この動画シリーズに影響を受けたか受けていないかはともかく、その後自分は「ネット音楽」的なものをよく聴いていくことになる。chillwaveをはじめとして、マルチネなどのネットレーベルで注目されていくfuturebassやベース系音楽、chillwaveにもつよい影響を受けているvaporwaveなどなど。<br/>
+          <br/>
+                        動画シリーズをまとめていて、初めて気付いたことがある。<br/>
+          <br/>
+                        ニコニコ動画のマイリストは、マイリスト作者が各動画に説明書きのコメントをつけることができる。このコンピレーション動画の作者は、マイリストのコメントで、各動画に解説用のラベリングをしている。<br/>
+          <br/>
+                        ラベルはタグとサブタイトルの2つで構成されており、その動画の雰囲気を説明するようにつけられていた。タグは[Light]、[Dark]の2つ、[Dance]、[Relax]の2つから、それぞれ2つのタグを選んでタグ付けしている。また、サブタイトルは、英語の短文で表現したその動画のテーマだ。<br/>
+          <br/>
+                        マイリストそのものの説明文では、上記4つ、[Light]、[Dark]、[Dance]、[Relax]のタグの説明しかなされていない。ほとんどすべての動画はこの4つのタグだけでタグ付けされている。<br/>
+          <br/>
+                        気付いたことというのは、シリーズ最後の動画だけ、この4つ以外のタグがつけられているということだ。<br/>
+          <br/>
+                        それは[Holy]というもの。この動画のサブタイトルは、この動画では"RΛINRØMΛИÇÈR"というもの。これもほかの動画とは雰囲気がすこし違っている。<br/>
+          <br/>
+                        最後の動画の投稿日は2012年09月20日。その前の動画が2011年04月18日であり、期間としては1年以上空いている。
+                      </p>
+          <p>
+                        この最後の動画のラベルとサブタイトルから、当時の雰囲気を感じるのは自分だけだろうか。Zalgo風の文字装飾はwitchhouse界隈で流行った検索避けを彷彿とさせるし、Holyというタグも近いノリを感じる。動画の中身を見ても、それまでなかったベース系の曲が採用されている。つまり、なんだか「ネット音楽」っぽい。<br/>
+          <br/>
+                        2010年代前半はインターネット発のマイクロジャンルが<ruby>量産<rt>粗製濫造</rt></ruby>された時代でもあった。そのもっとも最初期の例がchillwaveだったし、witchhouseやvaporwave、あるいはfuturebassもこうした流れで生まれてきたものだ。<br/>
+          <br/>
+                        前述の通り、自分はこのコンピレーション動画シリーズを知ってから、「ネット音楽」を好んで聴いていくことになる。あらためて気づいたのだが、動画シリーズ最後の動画は、こうした「ネット音楽」の雰囲気をはらんでいるように見える。さらにいえば、なんとなく、自分のその後の趣味を予見していたようにも見える。
+                      </p>
+          <p>
+                        見出しの「あり得た可能性」についても少しは書いておかなければならない。<br/>
+          <br/>
+                        この動画コンピレーションシリーズに大きな<ruby>影響を受けた<rt>影響を受けたとか書くと偉そうだよね。なんというか、すごい好きだった。</rt></ruby>というのはすでに書いた。この動画シリーズがきっかけなのかはわからないが、その後「<ruby>ネット音楽<rt>これまでなんの説明もなく書いてきたけど、あらためて考えるとーーってなんやねん</rt></ruby>」を聴くようになっていった。<br/>
+          <br/>
+                        でも、この動画シリーズは「ネット音楽」的な部分がすべてなわけじゃない。「ネット音楽」に注目するとそればかり目に付くが、そうではないオルタナティブロックやポストロックもたくさん入っている。<br/>
+          <br/>
+                        この動画シリーズを見返していて最近思ったのは、自分の音楽の趣味がそれから「ネット音楽」ではなく、こちらの方向に進んでいく可能性もあったんじゃないかということだ。chillwaveにはゼロ年代前半のインディーロックの影響が強いし、影響関係を遡って、こちら側（つまり、「ネット音楽」ではない側）ばかり聴くようになっていくこともあり得たんじゃないか。<br/>
+          <br/>
+                        さらにいえば、インディーロックからオルタナティブロックやガレージロックリバイバル、ポストパンクリバイバルを経て「ロック」側をよく聴いていく可能性もあり得た気がする。<br/>
+          <br/>
+                        実は自分は、「ロック」というものになんとなく、距離感を感じる。正確に言うと、よくわからないものという印象が強い。<br/>
+          <br/>
+                        よくわからない「ロック」は<ruby>2017年<rt>マストドンブーム</rt></ruby>以降すこしずつ聴いていくことになるのだが、それでもどうしても趣味的に「遠い」感覚がある。<br/>
+          <br/>
+                        それは、もともと「電子音楽（とは？）」を好んで聴いていたからということや、「ネット音楽」的なものに惹かれてきたからということだ。<br/>
+          <br/>
+                        だからこそ、「ロック」を聴いていたかもしれない自分があり得たと想像できることは面白い。さらにいえば、妙な感慨を感じる。<br/>
+          <br/>
+                        前回の雑記の「まとめの表」で「インディーロックをいいなと思う」と書いたのは、実はこういう思考の流れがあったからなのだった。<br/>
+          </p>
+          <p>
+                        音楽遍歴というとこれまた偉そうだが、実際のところはその時々の興味で適当に聴いてきたにすぎない。<br/>
+          <br/>
+                        最近どうも昔の話ばかりしてしまって、「時には昔の話を」どころではない。しかし、今を考えるうえで、過去を振り返るのも大切なことのはずだ。これまでの人生を振り返ったうえで、趣味を広げていきたいものだなあと思う、晩夏のある日なのであった。
+                      </p>
+          <span class="hashtag"><a href="/txt/zakki/tag/music.html">#music</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-07-30" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/07/days/2025-07-30.html">2025-07-30</a></h3>
+          <section data-tags="music=100">
+          <h5>2ちゃんねると音楽</h5>
+          <p>
+                                6月20日の配信でもちょっと語ったんだけど、年表に追記するために、秋葉原無差別殺傷事件について調べていた。<br/>
+          <br/>
+                                2008年06月におきた事件。簡単にまとめておいたから、そのうち年表が更新されたときにでも読んでほしい。
+                              </p>
+          <p>
+                                その流れで、大澤真幸編『<a href="https://www.iwanami.co.jp/book/b262448.html" target="_blank">アキハバラ発 &lt;00年代&gt;への問い</a>』を読んた。<br/>
+          <br/>
+                                昔一度読んだことがあって本棚に置いてあったので、はじめて読んだわけではない。再読したというのが正確。執筆陣が豪華だし、事件が当時どんなふうに語られていたのかわかって面白い。<br/>
+          <br/>
+                                このなかに、濱野智史の「なぜKは『2ちゃんねる』ではなく『Mega-View』に書き込んだのか？――二〇〇〇年代のネット文化の変遷と臨界点をめぐって――」という論考がある。再読すると、内容がいまの自分の、2ちゃんねる文化について振り返りたいという気分と合っていてよかった。<br/>
+          <br/>
+                                この事件と論考について、簡単に前提知識と概要を書く。<br/>
+          <br/>
+                                まず、秋葉原無差別殺傷事件の犯人である加藤智大は、レンタル掲示板サイト「Mega-View」の掲示板に犯行前に書き込んでいた。これまでの経歴の中で「2ちゃんねる」でも書き込んでいたということが分かっているのだが、犯行の予告と当日の犯行までの実況は、「Mega-View」の掲示板で行っていた。<br/>
+          <br/>
+                                この論考は、当時世間で語られていたこの事件の背景にある問題（孤独、非モテ、労働問題など。『アキハバラ発』では労働問題に焦点があたった論考が多い）を認めたうえで、犯人の加藤の問題意識が2ch文化と親和性が高いことを示す（加藤智大の書き込みから日常的に2chを見ていたことが分かっている）。そして、それにも関わらず、なぜ加藤智大は2chではなくMega-Viewで書き込みを行っていたのか、という問いを取り上げる。<br/>
+          <br/>
+                                結論を要約すれば、2chの「ネタ的」コミュニケーションに満足できなかったのではないか、という推測になっている。Mega-Viewは「自分の話を「素直に」聞いてくれる誰かがいるかもしれない」という期待を抱くことができる場所だったのではないか、と。<br/>
+          <br/>
+                                2chの特徴について、2chのリンクが中間サーバを介すことで元サイトにリファラーを知らせない「覗き見」文化があること、ニュー速からVIPが誕生した経緯、ニコニコ動画にアップされたVIP替え唄を具体的に出して説明している。<br/>
+          <br/>
+                                この中で取り上げられているVIP替え歌が印象に残った。<a href="https://shamano.hatenadiary.org/entry/20081006/1223319379" target="_blank">歌詞まで引用して取り上げられていた</a>のが、「雌豚」閣下による浜崎あゆみ「BLUE BIRD」の替え歌、「BLUE NEET」だ。<br/>
+          </p>
+          <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+          <iframe allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture;" allowfullscreen="" scrolling="no" src="https://embed.nicovideo.jp/watch/sm42565622" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;"></iframe>
+          </div>
+          <br/>
+          <blockquote cite="https://w.atwiki.jp/blueneet/pages/13.html">
+                                  「キモいヲタをもうやめようよ<br/>
+                                  趣味はネットサーフィンKOOLになろう<br/>
+                                  もしも彼女できたその時は<br/>
+                                  僕はVIPをすぐにやめる」<br/>
+                                  それなんてエロゲ?少し泣いた<br/>
+          <br/>
+                                  親はそっと見守った<br/>
+                                  ニートの姿<br/>
+                                  働く季節を待って<br/>
+          <br/>
+                                  「キモいヲタを共にしようよ<br/>
+                                  広い秋葉原散歩しながら<br/>
+                                  難しい知識はいらない<br/>
+                                  メイド喫茶に入ればいい」<br/>
+          <br/>
+                                  「キモいヲタを共にしようよ<br/>
+                                  ニートに辿り着くんだとしても<br/>
+                                  もしも親が死んだその時は<br/>
+                                  飯を食うためムショで生きる」<br/>
+                                  そう言って僕は少し泣いた<br/>
+                                  こらえきれずに親も泣いた<br/>
+          <cite><a href="https://w.atwiki.jp/blueneet/pages/13.html" target="_blank">BLUE NEETな替え歌wiki - BLUE BIRD</a></cite>
+          </blockquote>
+          <br/>
+          <p>
+                                  作詞は「ホライゾソ先生」、歌唱が「<a href="https://dic.nicovideo.jp/a/%E9%9B%8C%E8%B1%9A" target="_blank">雌豚閣下</a>」。雌豚閣下は当時人気だったらしいが、知らなかった。2009年に一時動画をほとんど消したが復活し、2021年には「<a href="https://x.com/mesubutakakka" target="_blank">ローズパンナ</a>」として活動をはじめているようだ。<br/>
+          <br/>
+                                  論考では軽くながらも丁寧に解説しており、浜崎あゆみという「リア充」を象徴する歌手のヒット曲の歌詞を自虐的なネタで書き換え、それを本物そっくりに歌うアイロニー、などと表現していてとても良くわかる。
+                                </p>
+          <div class="youtube-16-9">
+          <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/ZJVyorAFeqg?si=FIF_3tYrxUY7egXc" title="YouTube video player" width="560"></iframe>
+          </div>
+          <p>
+                                  「本物」のほうのMVが、まさしくリア充感溢れていておもしろい。<br/>
+          <br/>
+                                  論考に話を戻すと、当時2008年までに2chについて語られた文献として、北田暁大の『<a href="https://www.nhk-book.co.jp/detail/000000910242005.html" target="_blank">嗤う日本の「ナショナリズム」</a>』と鈴木謙介の『<a href="https://www.kinokuniya.co.jp/f/dsg-01-9784872573022" target="_blank">暴走するインターネット</a>』が参照されている。<br/>
+          <br/>
+                                  『暴走するインターネット』のほうは2002年の本で、ちょっと前にさらりとだけ読んでいた。2chについての記述を雑にまとめると、アメリカ同時多発テロ事件で、2chの露悪的なコピペがアメリカの安否確認サイトに機械翻訳して添付された件を取り上げて、コピペの形式を、「ネタ的コミュニケーション」として分析していた。<br/>
+          <br/>
+                                  「ネタ的コミュニケーション」を、「すべてがネタであるかのように振る舞うコミュニケーションの形式」と規定している。話が一貫しているわけではない思いつきじみたレスの応酬や、テンプレートへの言及を重ねて行われるコミュニケーションは、すべてが「ネタ」として扱われているという。<br/>
+          <br/>
+                                  2005年の『嗤う日本の「ナショナリズム」』は端的に言えば、アイロニーの感性の系譜を描き、その現在形として2chを取り上げている。電車男的なベタな感動への志向とネトウヨのアイロニーの共存関係について、アイロニーが自己目的化したことが屈折したロマン主義を生み出したという。<br/>
+          <br/>
+                                  濱野智史は北田本について、2chのこうした「ロマン主義的シニシズム」は外部の敵（中国や韓国）をネタにすることでつながり、暴走するリスクを抱える、と整理している。一方で、VIP替え唄は、内向的に自己言及的な形でお互いをネタとして見出し、自虐的な笑いの対象にしていると指摘する。                   
+                                </p>
+          <p>
+                                  細かい話を書きすぎてしまった。この論考の筋を無理矢理整理してみる。<br/>
+          <br/>
+                                  まず、秋葉原無差別殺傷事件を語るにあたって、その犯人である加藤智大について、大澤真幸の論を引きながら理解しようとする。大澤真幸は『不可能性の時代』で1968年の連続ピストル射殺事件の犯人である永山則夫、1997年の神戸連続児童殺傷事件の少年Aとを比較した。<br/>
+          <br/>
+                                  永山則夫は他者からの評価という都市の「まなざしの地獄」に苦悩し、少年Aは郊外の誰からも見られない「まなざしの不在」に苦悩したという対称性があるという。ここから、加藤智大については、この両者の苦悩を抱えていたと図式化する。リアルでは容姿に関する苦悩を抱え、ネットでは無視される苦悩を抱えていた。<br/>
+          <br/>
+                                  そして、濱野お得意のアーキテクチャについての分析で2ちゃんねるとMega-Viewを比較する。2ちゃんねるは匿名性とリファラーを知らせないリンクという2つの構造で「覗き見」文化を生み出したが、VIP替え歌の例を挙げて、匿名のまま互いにお互いをネタにし合う自虐的（覗き見つつ、覗き見られる）な風潮に変容してきていると指摘する。<br/>
+          <br/>
+                                  そして、タイトルの問いに戻る。加藤智大はといえば、過去の書き込みにもあるように、2ちゃんねる文化との親和性が高かった。だが、事件前には2ちゃんねるではなく、Mega-Viewに書き込んだ。<br/>
+          <br/>
+                                  加藤が書き込んだのはMega-Viewの掲示板のひとつであるコテハンユーザーの多い「究極交流掲示板(改)」だった。Mega-Viewはレンタル掲示板サービスとして多くのユーザーを獲得していたが、カスタマイズ性や管理権限が高いため、それぞれの掲示板からMega-Viewというサービスは意識することなく利用できた。そのため、Mega-View自体のユーザー数は多くても、それぞれの掲示板はマイナーな存在であり、Mega-Viewの存在感も薄いものだった。<br/>
+          <br/>
+                                  タイトルの問いに答えるならば、2ちゃんねるという場は素直なコミュニケーションというよりも「ネタ」を中心にした場であり、「ネタ」に満足できない加藤がMega-Viewの掲示板に書き込んだのは、Mega-Viewの掲示板を自覚的に選択したかしていないかはともかく、マイナーかつコテハンの多い掲示板だからこそ「自分の話を素直に聞いてくれる誰かがいるかもしれない」という期待を抱かせる場所だったからなのではないか、というのだ。
+                                </p>
+          <p>
+                                  実際に読んで見ればわかるが、Mega-View論というより2ちゃんねる論という趣きが強い。「なぜMega-Viewに書き込んだのか」という問いではなく、「なぜ2ちゃんねるに書き込まなかったのか」という問いが中心になっている。<br/>
+          <br/>
+                                  「2000年代のネット文化の臨界点」という最後の節がこのことを表している。わかりやすい部分だけ引用してみる。
+                                </p>
+          <blockquote>
+                                    2ちゃんねる的なコミュニケーション作法や文化は、日本のインターネットにおいて、常に巨大な存在感を持ってきた。もちろん、多くの人々はそれに反感を示してきたが、その一方で、多くのネットユーザーたちをその文化圏に《包摂》してきたのもまた事実だった。しかしKは、いかにもその文化圏の住人にふさわしかったようにも思われたが、そこからは零れ落ちてしまったのである。
+                                  </blockquote>
+          <p>
+                                  この後、印象深い部分が続く。<br/>
+          <br/>
+                                  「想像を続けてみる」と断っておきながら、加藤智大が秋葉原を犯行現場に選んだ理由について書いている。すなわち、加藤智大にとって、2ちゃんねる文化的な自虐的な「ネタ」で満足できてしまう人々こそが、ある種「リア充」たちよりも羨望の的であり、憎しみの対象だったのかもしれない、というのだ。<br/>
+          <br/>
+                                  加藤智大は「キモいオタを共に」できなかった。
+                                </p>
+          <p>
+                                  長々と書いてきたが、ネット文化の年表を作っている中で、自分自身がどんなものに影響を受けてきたのか振り返る機会が度々あった。<br/>
+          <br/>
+                                  インターネットに入り浸り、インターネットのなかで人格を形成してきた自分にとって、2ちゃんねる文化から受けた影響を良くも悪くも自覚することが多いのだ。<br/>
+          <br/>
+                                  ここで「2ちゃんねる文化」というとき、2ちゃんねる上の文化だけを意図してはいない。特に2ちゃんねるの「まとめサイト」に影響を受けた文化も含んで使っている。<br/>
+          <br/>
+                                  まとめサイトと2ちゃんねるを同列に語るべきなのかについて、SNSで度々炎上しているところをみる。まとめサイトの記事をyoutubeで動画化したものが大量に再生数を稼いでいる現状をみるに、そうしたものだけをみて2ちゃんねるを語る人に批判的になる気持ちはよくわかる。まとめサイトだけを見て2ちゃんねるを語るのは違う。<br/>
+          <br/>
+                                  一方で、まとめサイトは2ちゃんねる文化と切り離して語れるようなものでもない。まとめサイトが生まれてきた経緯を考えても、まとめサイトから流入して定着したユーザーが多いだろうことを考えても、あるいはかつてもっていたまとめサイトの影響力の大きさについて考えても、2ちゃんねる文化とまとめサイトは切り離せないものだと思う。<br/>
+          <br/>
+                                  「2ちゃんねる文化」というものをどう考えるかにはいろんな考え方があるだろう。そもそも、2ちゃんねるといっても様々な掲示板やスレがあり、スレ単位でもノリが違うことは多々ある。2ちゃんねる文化として取り上げられるのはせいぜいニュー速、嫌儲、VIP、なんJで、それ以外の板はあまり挙げられない。<br/>
+          <br/>
+                                  特に最近、2ちゃんねる文化を意識したのは、オモコロチャンネルで「お世話になったインターネットについて語る」動画がアップされていて、それを見たからだった。<br/>
+          <br/>
+                                  正直なんとなくオモコロに対して距離感を感じていたので、この動画をみるのも抵抗があった。この動画を見たのは年表につかえるネタがないか探す義務感からだ。<br/>
+          <br/>
+                                  見てみると普通に面白かったのだが、自分がなぜオモコロに距離感を感じていたのかなんとなく分かった気がした。2ちゃんねる文化についてほとんど触れていないのだ。ニコニコ動画についてもそこまで触れていないのが面白い。<br/>
+          <br/>
+                                  まず、サイト名である「オモコロ」の屈託なさが気になる。サイトのデザインや「あたまゆるゆるインターネット」なるコピーについてもノリが気になってしまう。<br/>
+          <br/>
+                                  例の動画のタイトルは正確には「【懐古厨乙】お世話になったインターネットについて語るスレ」で、明確に2ちゃんねるを意識しているわりに、ほとんど2ちゃんねる文化に言及していないところも気になる。<br/>
+          <br/>
+                                  変に粗探しするようなことをしてもしょうがないし、自分がオモコロと距離をおいている一番の理由は単なる逆張り（人気だから）なので、2ちゃんねる云々は気のせいなのかもしれない。<br/>
+          <br/>
+                                  話をもとに戻してまとめていこう。『アキハバラ発』の濱野智史の論考は面白かった。この流れで『嗤う日本の「ナショナリズム」』や『暴走するインターネット』も少し読み返してみたが、両者とも2ちゃんねる文化の重要な要素として「ネタ」という言葉を挙げているのは納得感がある。<br/>
+          <br/>
+                                  振り返ってみれば、かつて自分が「ねらー」のノリのどの部分に魅力を感じていたのかというと、自身の境遇さえも笑い飛ばす暴力的なアイロニーだった気がする。<br/>
+          <br/>
+                                  それは確かに、傷を舐め合い互いに慰撫し合うホモソーシャルな露悪趣味だった。しかし、潜在的な10万人の加藤智大の一人として、そこに救われていた面があったことは覚えているべきだと思う。<br/>
+          <br/>
+                                  最後に恥を忍んで書いておくと、どっちかというと、2ちゃんねるそのものよりまとめサイトのほうばかりみてました。どうか嗤ってほしい。<br/>
+          <br/>
+          <span class="hashtag"><a href="/txt/zakki/tag/music.html">#music</a></span>
+          </p></section>
+        </article>
+        <article class="tag-article" data-date="2025-05-22" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/05/days/2025-05-22.html">2025-05-22</a></h3>
+          <section data-tags="music=100">
+          <h5><a href="https://tornhawk.bandcamp.com/album/union-and-return" target="_blank">Torn Hawk - "Union and Return"</a></h5>
+          <p>
+                            はい。正直がっつり聴いたわけじゃないんだけど、最近この作品を知ったので。<br/>
+          <br/>
+                            Torn Hawkを知っている人はどれくらいいるんだろう。<br/>
+          <br/>
+                            自分がTorn Hawkを知ったのは、<a href="https://themassage.jp/archives/1" target="_blank">2014年に発売された『MASSAGE』の第9号</a>のインタビュー記事でだった。『MASSAGE』の第9号はインターネット・カルチャーを特集した号で、vaporwaveやseapunkなどのサブカルチャーを扱っていた。<br/>
+          <br/>
+                            2014年発売といっても自分が手に入れたのは2019年か2020年くらい。SNS上じゃあインターネット文化に一家言ある風を装っているが、大体後追いなんだよね。<br/>
+          <br/>
+                            それはともかく、このなかで取り上げられ、インタビューされていたアーティストの一人にTorn Hawkがいた。<br/>
+          <br/>
+                            正確に書くとインタビューを受けていたのはTorn Hawkではない。「Luke Wyatt」としてだ。より正確にいえば、「Torn Hawk」はLuke Wyattの音楽活動の名義であり、雑誌では「Luke Wyatt」名義でのビデオアーティストとしての活動を紹介する目的でインタビューが組まれていたのだ。<br/>
+          <br/>
+                            Luke Wyattは「video mulch」という手法を用いたビデオアーティストとして紹介されていた。video mulchという手法は公に確立されているわけではなく、個人の技法を自分自身でそう名付けて、video mulchとしてカテゴライズしたものだ。<br/>
+          <br/>
+                            video mulchとは、VHSテープとその録画・再生環境がもつ特質的なビジュアルエフェクトを利用したデジタルコラージュといえるかもしれない。<br/>
+          <br/>
+                            その手順の一部はフィードバック的な構造をもつ。まず、そのときの気分でセレクトした映像が入ったVHSテープを用意する。それを録画・再生機器でわざとglitch化させる。glitch化した映像をデジタル化した後で編集してVHSテープに録画する。そして、それを再びglitch化させる。この手順を繰り返すことで、VHSテープとその録画・再生機（VCR）が生み出す映像の特徴が重なっていくことになる。<br/>
+          <br/>
+                            また、デジタル上での編集を挟むことで、複数の映像が溶け合うような効果が生じる。そして、最終的には複数のビデオクリップをコラージュする。この手順全体をvideo mulchと呼んでいる。<br/>
+          <br/>
+                            本人は「glitch」という言葉は好きじゃないと言っているが、ここではわかりやすくこの言葉を使いたい。<br/>
+          </p>
+          <div class="youtube-16-9">
+          <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/F4B8pyqHUdk?si=r89XhaBHd6AFq-bb" title="YouTube video player" width="560"></iframe>
+          </div>
+          <p>
+                            Luke Wyattの古い作品を遡っていくと面白い。上記のvideo mulch作品"Sad Stonewash"は2010年にAAVVというビデオレーベルからリリースされ、2011年にはValcrond Videoというビデオレーベルから再発されているようだ。<br/>
+          <br/>
+                            "Sad Stonewash"はLuke Wyattの代表作的な作品らしい。<br/>
+          <br/>
+                            ほかにvideo mulchの有名な作品としては、2010年にオブスキュアな音源を発掘し再発するレコードレーベル「<a href="https://ppudc.com" target="_blank">People Potential Unlimited</a>」とコラボレーションしてリリースされたビデオ作品「PPU VIDEO PARTY」がある。<br/>
+          <br/>
+                            さらにさかのぼれば、友だち同士で組んだユニットTeamFILOによるドラマ風映像作品（？）の"BLOWBACK"(<a href="https://www.youtube.com/watch?v=wdxIlJIjBaU" target="_blank">2006</a> - <a href="https://www.youtube.com/watch?v=_bXtoTWdC58" target="_blank">2010</a>？)や"Weenus Training Loop"(<a href="https://www.youtube.com/watch?v=E-zcty71dzU" target="_blank">2008</a> - <a href="https://www.youtube.com/watch?v=QVpYai8ZgHA" target="_blank">2010</a>？)がある。<br/>
+          <br/>
+                            MASSAGEのインタビューではTeamFILOは休眠中の友人グループとして紹介されている。<br/>
+          <br/>
+                            一方で<a href="https://www.normanrecords.com/records/160593-luke-wyatt-aka-torn-hawk-blowback-season-one-episode-12" target="_blank">"BLOWBACK"は「Luke Wyatt aka Torn Hawk」名義で発売</a>されており、<a href="http://teamfilo.org/allaboutfilo.html" target="_blank">TeamFILOのウェブサイト</a>では、TeamFILOのyoutubeチャンネルとして現在のLuke Wyattのyoutubeチャンネルへのリンクが貼られていることから、初期のLuke Wyattの活動において重要な位置を占め、このプロジェクトから出発したことがわかる。<br/>
+          </p>
+          <div class="youtube-16-9">
+          <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/78NSuDm2hHA?si=Sij1MNUVRNNjQdRg&amp;start=93" title="YouTube video player" width="560"></iframe>
+          </div>
+          <p>
+                            ↑音楽がかっこいいパート。<br/>
+          <br/>
+                            BLOWBACKは「かつての名作ドラマ」のパロディ的な側面があるのか、そういう体の概要が書かれているのが面白い。vaporwave的なセンスを感じる。<br/>
+          <br/>
+          <a href="https://mikiki.tokyo.jp/articles/-/25931" target="_blank">vaporwaveの原点としてchuck personの"Chuck Person’s Eccojams Vol. 1"</a>や<a href="https://www.youtube.com/watch?v=7pjFPQNvn64" target="_blank">OPNの"Nobody here"</a>が挙げられることは多い。<br/>
+          <br/>
+                            これらの作品はジャンルとしてのvaporwaveが大きくなっていくうえでそれに大きな影響を与えたことは事実だろうし、そういう意味で原点のひとつということもできる。<br/>
+          <br/>
+                            が、vaporwave的なセンスはこれらに限らず、様々な場所に存在していた。vaporwaveが"vaporwave"と名付けられるまでにはいろんな要素がさまざまに絡み合って存在していた、とも言いかえられる。<br/>
+          <br/>
+                            vaporwaveは今日ではアートスタイルとして紹介されることもあるが、インターネット発の音楽ジャンルとして紹介されることもある。<br/>
+          <br/>
+                            また、ネットミーム的な側面から"aesthetic"のひとつとして数え上げられることがある。<br/>
+          <br/>
+                            音楽ジャンルとしてvaporwaveが語られているのをみると、どうしてもvaporwaveのビジュアル的な側面やアティチュード的な側面、あるいは「雰囲気」が無視されているように感じてしまう。<br/>
+          <br/>
+                            そもそも、OPNの"Nobody Here"はビデオ作品"<a href="https://www.youtube.com/watch?v=G1flq8LKkzk" target="_blank">Memory Vague</a>"の一部を切り出したものだった。vaporwaveの原点にはこうしたビデオ作品が流通する文化的土壌があったことも無視できない。<br/>
+          <br/>
+                            2024年初頭に「新しいvaporwaveの原点」として話題になった、「Bars For You」（2008）は単に音楽作品として発掘されたのではなく、youtubeにアップされた動画として発掘された。なぜこの動画が「新しいvaporwaveの原点」だといわれたのか。それは動画そのものが掘り上げられた当時に理解されていたvaporwaveのaestheticなスタイルを持っていたからだ。<br/>
+          <br/>
+                            "vaporwave"という名前は2011年10月に生まれたとされている。ここに出した初期のvaporwave作品は、もし強引に括るのであればproto-vaporwaveということになる。<br/>
+          <br/>
+                            話が混乱してきた。Luke Wyattの作品はproto-vaporwaveと括られることはない。が、その雰囲気やテイストを音楽性以外の部分にも注目してみたとき、"vaporwave"以前の豊穣な土壌を感じることができるのではないか。
+                          </p>
+          <p>
+                            ごめん。なんかいい感じのことを書こうとして、どうにもならない感じになった。<br/>
+          <br/>
+                            みなさん。「<a href="https://dreamcatalogue.bandcamp.com/album/vaporwave-is-dead" target="_blank">vaporwaveは死んだ</a>」と言われてから今年で10年になります。vaporwaveは死んだとか死んでないとか、生まれる前から死んでるとか死に続けているとかいろいろな話はありますが、こういう不毛な話をネットでし続けるのもvaporwave的で良いのではないでしょうか。<br/>
+          <br/>
+                            Torn HawkのUnion and Returnの話をちょっとします。<br/>
+          <br/>
+                            このアルバム、Torn Hawkはギターを引いてるけど、それ以上にjames ferraro的なパチモン打ち込みクラシカル（ポスト・クラシカル）を感じられていいんだよね。<br/>
+          <br/>
+                            まずジャケがいい。<br/>
+          <br/>
+                            なにこの変にawesomeな感じ。こういうのあるよね。いまだと無限にAIで生成されてそうな、わざとらしいイメージ画像。<br/>
+          <br/>
+                            はじめに聴いたとき、まず思い出したのはjames ferraroの<a href="https://www.youtube.com/watch?v=_1NaR4jr-8k" target="_blank">human story 3</a>だった。そして次に思い出したのがgatekeeerの<a href="https://www.youtube.com/watch?v=m_n-tdmwtwY" target="_blank">exo</a>。<br/>
+          <br/>
+                            この路線の原点のひとつはjames ferraroの"far side virtual"だと思う。このアルバムはvaporwaveの記念碑的な作品であり、vaporwaveにutopian virtualていうサブジャンルを生んだ。そして、大雑把にいえばutopian virtualから影響を受けて出来たジャンルがmallsoftだ。<br/>
+          <br/>
+                            "vaporwave"が広まっていくきっかけとして重要なのが、<a href="https://dmy.co/news/adam-harper-vaporwave" target="_blank">Adam HarperによるDummy Magagineの記事</a>だと言われる。この記事は実は2部構成になっており、vaporwaveを取り上げたのは前半の第1部だった。<br/>
+          <br/>
+          <a href="https://dmy.co/features/distroid-gatekeeper-fatima-al-qadiri-adam-harper" target="_blank">第2部</a>で取り上げられているのは、より硬質で残虐なスタイルなものを独自に名付けた、"distroid"というジャンルだ。<br/>
+          <br/>
+                            distoroidはBODYGUARDやBebetune$が主要なアーティストとして取り上げられている。そしてこの2つ、james ferraroの別名義なのだ。<br/>
+          <br/>
+                            さらに、gatekeeperもまたdistroidのアーティストに数え上げられている。<br/>
+          <br/>
+                            とどのつまりさあ、結局distroidが好きなんじゃないかってことなんだよね。<br/>
+          <br/>
+                            いや、正確にはdistroidじゃない。コンセプチュアルで冷ややかな感じのやつっていうかさあ。<br/>
+          <br/>
+                            思い返してみれば、だいたいdistroidなんだよ。3月にコンテンツ感想コーナーで取り上げたjam cityも記事のなかで言及あるし(night slugs)、そのうち取り上げたいPC MUSICも記事のなかで取り上げられているDISの周辺にいた。<br/>
+          <br/>
+                            yung leanとかbladee、ecco2kもこの系統でしょ？まあdrain gangもsad boysもコンセプチュアルじゃないけどこのへんからの影響は大きいわけで。<br/>
+          <br/>
+                            distroidってジャンル名としては定着しなかったんだよね。そのかわりに一時期流行ったのがpost-internetで、定着したんだかしてないんだかわからないけどなんとなく定着した感のある呼び名が"diconstructed club"なんだと思う。<br/>
+          <br/>
+                            反消費主義的なコンセプチュアルな運動性が初期のvaporwaveにはあって、それがジャンルとして確固としたものになるとスタイルがクリシェになった、みたいな批判あるじゃん。<br/>
+          <br/>
+                            大雑把にいって、この傾向ってあるとおもうんよね。で、これはvaporwaveに限らず、distroid（じゃなくてdiconstructed clubでもなんでもいいけど）でもそうだった、と。<br/>
+          <br/>
+                            ネタがベタになる、って言い方もなんかつまんなくてあれだけど、そういうことなんだと思うんだよ。<br/>
+          <br/>
+                            コンセプチュアルならなんでもいいってわけじゃないよ。でも、vaporwaveでもhyperpopでもいいけどさ、昔あった傾向が無視されすぎじゃね、みたいな気持ちがないわけじゃないんだ。<br/>
+          <br/>
+                            そろそろ話を畳もう。何も考えずに書いてて恥ずかしい本音を書きすぎてる感じがするよ。<br/>
+          <br/>
+                            つまり何がいいたいかっていうと、まずひとつ。vaporwaveとかさ、なんかほっこりしたものになってるじゃん。癒やし的な。個人的には癒やしじゃなくて刺してきてほしい、ってこと。<br/>
+          <br/>
+                            ふたつめ。youtubeチャンネルでゆっくりcore解説だかなんだかあるけど、あれウザいってこと。<br/>
+          <br/>
+                            みっつめ。この文章全部がある意味でノスタルジーに支配されていて、ほっこりしているのではないかっていうのに今気づいたこと。<br/>
+          <br/>
+                            おあとがよろしいようで。
+                          </p>
+          <div class="youtube-16-9">
+          <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/N7CLUasvsGI?si=6A50HwrgIx1KwvxD" title="YouTube video player" width="560"></iframe>
+          </div>
+          <span class="hashtag"><a href="/txt/zakki/tag/music.html">#music</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-03-10" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/03/days/2025-03-10.html">2025-03-10</a></h3>
+          <section data-tags="music=100">
+          <h5><a href="https://humantetris.bandcamp.com/album/two-rooms" target="_blank">Human Tetris - "Two Rooms"</a></h5>
+          <p>
+                            2月初め頃きいてたアルバム。<br/>
+                            なんか当時Molchant Domaからはじまってrussian doomer musicっぽいアーティストの曲をyoutubeで垂れ流してたんだけど、その流れでHuman
+                            Tetrisのアルバム"Memorabillia"(2018年04月リリース)がアルゴリズムに推されてきて、そこからこのアルバムを知った。<br/>
+          <br/>
+                            russian doomer music系はどれもわりと直球のポストパンクで、Human Tetrisの"Memorabillia"もそうだったんだけど、この2023年04月リリースの"Two
+                            Rooms"はポストパンクのスタイルを保ちつつ、なんとなくさわやかなインディー感があるのがいいと思った。<br/>
+          <br/>
+                            厚くて重い東欧の曇り空からなぜかアメリカ西海岸のカラッとした青空が見えるような？印象を受けておもしろい。この印象が伝わるかどうかはよくわかんない。
+                          </p>
+          <span class="hashtag"><a href="/txt/zakki/tag/music.html">#music</a></span>
+          </section>
+          <section data-tags="music=100">
+          <h5><a href="https://youtube.com/playlist?list=OLAK5uy_nXu6mrxMK154nxJpm-Be84Gbg5UGnrNMs&amp;feature=shared" target="_blank">Clara La San - "Good Mourning"</a></h5>
+          <p>
+                            2月中旬頃聴いてたアルバム（ミックステープ？）。<br/>
+                            オルタナティブR&amp;B。このアルバムはJam cityが共同プロデュースしていて、Jam cityが好きなので知った。<br/>
+          <br/>
+                            Clara La Sanは2014年に活動を開始して、2014年内にSoundCloudで"Let You Go"と"In This Darkness"という曲が人気になったようだ。<br/>
+          <br/>
+                            この"Good Mourning"はもともと2017年11月24日に一度リリースされたのだが、「<a href="https://www.papermag.com/clara-la-san-mistakes#rebelltitem2" target="_blank">準備ができていなかった</a>」とかで2年後に削除していたらしい。<br/>
+          <br/>
+                            その後ほとんど活動していなかったがその間にカルト的に人気が高まり、再び活動をはじめて2024年06月07日にファーストアルバム"Made Mistakes"をリリース、その流れで「準備が整った」のか"Good
+                            Morning"が2024年12日13日に再リリースされたという流れらしい。<br/>
+          <br/>
+                            オリジナルから大きく変わっているわけではないが、再リリースにあたってGeoff Swanがミックスを担当し、ボーカルも新しくした様子。<br/>
+          <br/>
+                            このアルバムを聴いてうれしかったのは、個人的な理由がある。<br/>
+          <br/>
+                            まず、Jam Cityが好きで、さらにJam Cityのプロデュースによる<a href="https://youtu.be/ePi5BLJogyA?feature=shared" target="_blank">Kelelaの曲</a>が好きだということ。最高なんだこれが。<br/>
+          <br/>
+                            で、Jam Cityは寡作で、アルバムごとに結構毛色が違うわけ。一番好きなアルバムは2015年3月24日リリースの"<a href="https://jam-city.bandcamp.com/album/dream-a-garden?from=embed" target="_blank">Dream A Garden</a>
+                            "なんだけど、これ以降こういう感じの曲はあまり出してないのです。<br/>
+          <br/>
+                            そして本題、このClara La Sanのミックステープは、"Dream A Garden"のころのスタイルというか、雰囲気がタイムカプセルみたいに閉じ込められているのですよ！ <br/>
+          <br/>
+          <a href="https://www.youtube.com/watch?v=wIRe_x86Q8M" target="_blank">"Dream A
+                              Garden"のproudのMV</a>で、最後のメッセージが表示される部分には、<a href="https://jam-city.bandcamp.com/track/crisis" target="_blank">Crisis</a>のアウトロの、アルバムとは違うバージョンが使われていて、自分が知る限りそれはこのMVのこの部分でしか聞けなかったのです。<br/>
+          <br/>
+                            そして、このミックステープ収録の"Gravity"のアウトロ部分では、このCrisisのアウトロのProudMVバージョンが使われていたのです！<br/>
+          <br/>
+                            言いたいことがわかりますか。このめちゃくちゃ伝わりづらい感動！ 聴いててびっくりしたんですよ。アレじゃん！ アレはコレだったのか！ と、こういうこと。<br/>
+          <br/>
+                            つまり、このミックステープ、おすすめです。<br/>
+          <br/>
+                            でさ、最後に、Jam City。お前に言いたいことがある。この前気づいたんだけど、お前、proudのMV、youtubeで非公開にしただろ。<br/>
+          <br/>
+                            だめだよ、そういうことしちゃ。プロなんだから。上の記述、全部記憶で書いてるんだよ。<br/>
+          <br/>
+                            2年後削除とかさ、MV非公開とかさ、わかるよ。その気持ちは。消したくなる気持ち。でもさ、見たい人がいるんだよ。聴きたい人がいるんだ。<br/>
+          <br/>
+                            Clara La Sanはエラい！再リリースしたんだから。Jam CityもMV再公開してくれ。頼む。<br/>
+          <br/>
+                            熱くなってしまったが、トンチンカンなことを書いている気もしてきた。どっかであのバージョンのCrisis聴けるのかも。わからん。自信無くなってきた。怖。<br/>
+          <br/>
+          <br/>
+                            追伸：Clara la sanのGravityのコメント欄に、<a href="https://www.youtube.com/watch?v=6PJqxxk6o-Y&amp;lc=UgyuIQu4gHErb1NRCeh4AaABAg" target="_blank">Crisisのオルタナティブバージョンに言及してる人</a>がいた。そのコメントでは、オルタナティブバージョンは"Crisis"のMVで使われていたと書かれている。<br/>
+          <br/>
+                            ただ、調べた限りCrisisのMVについて記述しているサイトは見つからず、自分の記憶では"Dream A Garden"のMVは2本だけだったはずなんだよな（<a href="https://www.discogs.com/ja/master/813002-Jam-City-Dream-A-Garden" target="_blank">discogsに登録されてる動画</a>も2本のみで、うち1本Proudは非公開）。<br/>
+          <br/>
+                            ともかく、現在非公開のMVでcrisisのオルタナティブバージョンが使われていたという記憶はほかの人も持っているようだ。細かい話は置いておいて、話の筋書きは信じられるはず。<br/>
+          <br/>
+                            このコメントした人と仲良くなりたいわ。<br/>
+          </p>
+          <span class="hashtag"><a href="/txt/zakki/tag/music.html">#music</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-02-06" data-relevance="10">
+          <h3><a href="/txt/zakki/2025/02/days/2025-02-06.html">2025-02-06</a></h3>
+          <section data-tags="music=10">
+          <h4>テスト</h4>
+          <p>
+                        関連度ハッシュタグのテスト。「#music:10」でそのタグと10%関連するという意味です。<br/>
+                        プレーンな「#music」タグは100%として扱われる予定。<br/>
+          <span class="hashtag"><a href="/txt/zakki/tag/music.html">#music</a></span>
+          </p>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-01-01" data-relevance="70">
+          <h3><a href="/txt/zakki/2025/01/days/2025-01-01.html">2025-01-01</a></h3>
+          <section data-tags="music=70">
+          <h4>YouTube動画埋め込みテスト</h4>
+          <div class="youtube-16-9">
+          <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/HDajKZ3ytdY?si=Ju92gp9cIe3i8xws" title="YouTube video player" width="560"></iframe>
+          </div>
+          <p class="small">
+                        misononoaさんのblogに憧れてyoutubeの動画埋め込みのテスト。<br/>
+                        動画はecco2kがこの前話題に挙がってたのと、聞きながら書いてたので。<br/>
+          <br/>
+                        レスポンシブでiframeのサイズを動画に合わせて調整する方法がわからない。誰か教えて。<br/>
+          <span class="hashtag"><a href="/txt/zakki/tag/music.html">#music</a></span>
+          </p>
+          </section>
+        </article>
+
       </div>
     </main>
     <footer id="main-footer">
@@ -137,10 +689,126 @@
       <div id="footerhtml"></div>
     </footer>
   </div>
-  <script src="/txt/zakki/tag/tag-loader.js"></script>
+  
+  <!-- クライアント側ソートスクリプト -->
   <script>
-    // musicタグ用に初期化
-    initializeTagPage('music');
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const allArticles = Array.from(document.querySelectorAll('.tag-article')).map(article => ({
+        element: article,
+        date: article.getAttribute('data-date'),
+        relevance: parseInt(article.getAttribute('data-relevance') || '100'),
+        html: article.outerHTML
+      }));
+      
+      const totalCount = allArticles.length;
+      let currentSort = 'date-desc';
+      let minRelevance = 0;
+      
+      console.log('Tag page client sort initialized. Total articles:', totalCount);
+      
+      function sortArticles(articles, sortMethod) {
+        const sorted = [...articles];
+        switch (sortMethod) {
+          case 'date-desc':
+            return sorted.sort((a, b) => b.date.localeCompare(a.date));
+          case 'date-asc':
+            return sorted.sort((a, b) => a.date.localeCompare(b.date));
+          case 'relevance-desc':
+            return sorted.sort((a, b) => b.relevance - a.relevance || b.date.localeCompare(a.date));
+          case 'relevance-asc':
+            return sorted.sort((a, b) => a.relevance - b.relevance || a.date.localeCompare(b.date));
+          default:
+            return sorted;
+        }
+      }
+      
+      function filterArticles(articles, minRel) {
+        return articles.filter(article => article.relevance >= minRel);
+      }
+      
+      function reverseTimelineLists(container, shouldReverse) {
+        const timelineLists = container.querySelectorAll('ul.timeline_md, ul.timeline_ymd');
+        timelineLists.forEach(list => {
+          const items = Array.from(list.querySelectorAll('li'));
+          if (items.length === 0) return;
+          
+          if (shouldReverse) {
+            items.reverse().forEach(item => list.appendChild(item));
+          }
+        });
+      }
+      
+      function updateDisplay() {
+        const filtered = filterArticles(allArticles, minRelevance);
+        const sorted = sortArticles(filtered, currentSort);
+        
+        const container = document.getElementById('articles-container');
+        container.innerHTML = sorted.map(article => article.html).join('');
+        
+        const shouldReverseTimeline = (currentSort === 'date-desc');
+        reverseTimelineLists(container, shouldReverseTimeline);
+        
+        const statsDisplay = document.getElementById('stats-display');
+        if (filtered.length > 0) {
+          const dates = sorted.map(a => a.date).sort();
+          const latest = dates[dates.length - 1];
+          const oldest = dates[0];
+          const avgRel = filtered.reduce((sum, a) => sum + a.relevance, 0) / filtered.length;
+          statsDisplay.textContent = '全' + totalCount + '件中' + filtered.length + '件表示中 | 最新: ' + latest + ' | 最古: ' + oldest + ' | 平均関連度: ' + Math.round(avgRel) + '%';
+        } else {
+          statsDisplay.textContent = '全' + totalCount + '件中0件表示中';
+        }
+        
+        console.log('Display updated:', {sort: currentSort, minRelevance: minRelevance, displayed: filtered.length, listReversed: shouldReverseTimeline});
+      }
+      
+      document.querySelectorAll('.tag-sort-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          currentSort = this.getAttribute('data-sort');
+          document.querySelectorAll('.tag-sort-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          console.log('Sort changed to:', currentSort);
+          updateDisplay();
+        });
+      });
+      
+      console.log('Sort buttons:', document.querySelectorAll('.tag-sort-btn').length);
+      
+      const slider = document.getElementById('relevance-slider');
+      const sliderValue = document.getElementById('slider-value');
+      
+      if (slider && sliderValue) {
+        slider.addEventListener('input', function() {
+          sliderValue.textContent = this.value + '%';
+        });
+        
+        slider.addEventListener('change', function() {
+          minRelevance = parseInt(this.value);
+          console.log('Relevance filter changed to:', minRelevance);
+          updateDisplay();
+        });
+      }
+      
+      const resetBtn = document.getElementById('reset-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function() {
+          currentSort = 'date-desc';
+          minRelevance = 0;
+          slider.value = 0;
+          sliderValue.textContent = '0%';
+          document.querySelectorAll('.tag-sort-btn').forEach(b => b.classList.remove('active'));
+          const defaultBtn = document.querySelector('[data-sort="date-desc"]');
+          if (defaultBtn) defaultBtn.classList.add('active');
+          console.log('Reset to defaults');
+          updateDisplay();
+        });
+      }
+      
+      const shouldReverseInitial = (currentSort === 'date-desc');
+      reverseTimelineLists(document.getElementById('articles-container'), shouldReverseInitial);
+    });
+    
   </script>
 </body>
 

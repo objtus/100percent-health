@@ -9,14 +9,14 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script src="/js/jquery-3.6.0.min.js"></script>
   <script src="/js/main.js"></script>
-  <script src="/js/mouse.js" defer></script>
+  <script src="/js/mouse.js"></script>
   <script>
     $(function () {
       $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
       $("#taghtml").load("/txt/txt_main.html #tag-list");
     });
   </script>
-  <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
+  <link rel="stylesheet" href="/txt/zakki/zakki-month.css">
   <link rel="stylesheet" href="/txt/zakki/tag-style.css">
 </head>
 
@@ -39,7 +39,7 @@
           <a class="addressbar" href="../2024.html">
             2024
           </a>/
-          <a class="addressbar" href="../10/2024-12.html">
+          <a class="addressbar" href="../12/2024-12.html">
             2024-12
           </a>
         </nav>
@@ -49,28 +49,32 @@
       <br>
       <h1>2024年12月の雑記</h1>
       <nav class='arrow' aria-label="前後月へのリンク">
-        <nav class='rowarrow' aria-label="前後月へのリンク">
-          <a class="leftarrow" href="../10/2024-10.html">&lt;</a>
-          <a class="uparrow" href="../2024.html">&lt;&lt;</a>
-          <a class="rightarrow" href="../../2025/01/2025-01.html">&gt;</a>
-        </nav>
+        <div class='rowarrow' aria-label="前後月へのリンク">
+          <a class="leftarrow" href="../10/2024-10.html" aria-label="前の月へ移動">&lt;</a>
+          <a class="uparrow" href="../2024.html" aria-label="年間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="../../2025/01/2025-01.html" aria-label="次の月へ移動">&gt;</a>
+        </div>
       </nav>
 
       <div id="zakki12">
         <h2><a href="/txt/zakki/2024/12/2024-12.html">2024-12</a></h2>
-        <div class="month-article"></div>
+        <div class="month-article">
+          <article id="241213">
+          <h3><a href="/txt/zakki/2024/12/days/2024-12-13.html">2024-12-13</a></h3>
+          <div class="article-preview"><p>
+                      簡単に、前回の雑記更新（2024年10月09日）以降に行った活動をリストにしてまとめてみる。<br/>
+                      並べてみると活動的な感じがするけど、実際は虚無。
+                    </p><hr/><h4>まとめの表</h4><ul class="timeline_md"><li>10月15日 いど子通信#9</li><li>10月21日 <a href="https://www.youtube.com/watch?v=FsLtxWMrf7Y" target="_blank">他人事ラジオ#11「プログラミング」</a></li><li>11月03日 <a href="https://www.youtube.com/watch?v=YJ6DLR9CXMg" target="_blank">他人事ラジオ#12「宇宙」</a></li><li class="list-ellipsis" style="font-style: italic; color: #666;"><em>... (他10項目)</em></li></ul><hr/><br/><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2024/12/days/2024-12-13.html">続きを読む / <span lang="en">read more</span></a></p></div>
+          </article>
+        </div> 
       </div>
-      <script src="zakki12.js"></script>
-      <script>
-        window.addEventListener('load', loadDailyArticles12);
-      </script>
 
-      <nav class='arrow' aria-label="前後月へのリンク">
-        <nav class='rowarrow' aria-label="前後月へのリンク">
-          <a class="leftarrow" href="../10/2024-10.html">&lt;</a>
-          <a class="uparrow" href="../2024.html">&lt;&lt;</a>
-          <a class="rightarrow" href="../../2025/01/2025-01.html">&gt;</a>
-        </nav>
+      <nav class='arrow' aria-label="前後月へのリンク"> 
+        <div class='rowarrow' aria-label="前後月へのリンク">
+          <a class="leftarrow" href="../10/2024-10.html" aria-label="前の月へ移動">&lt;</a>
+          <a class="uparrow" href="../2024.html" aria-label="年間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="../../2025/01/2025-01.html" aria-label="次の月へ移動">&gt;</a>
+        </div>
       </nav>
 
     </main>
@@ -84,9 +88,12 @@
   </div>
   <div id="lightbox">
     <link rel="stylesheet" href="/luminous-basic.min.css">
-    <script src="/Luminous.min.js"></script>
+    <script src="/Luminous.min.js" defer></script>
     <script>
-      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      // LuminousGalleryが読み込まれてから実行
+      if (typeof LuminousGallery !== 'undefined') {
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      }
     </script>
   </div>
 </body>

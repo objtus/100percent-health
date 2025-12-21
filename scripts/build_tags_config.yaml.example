@@ -1,0 +1,40 @@
+# タグページ自動生成スクリプト設定ファイル（YAML形式）
+# このファイルを build_tags_config.yaml にリネームして使用してください
+
+# グローバル設定
+zakki_root: "../txt/zakki"           # zakki ディレクトリのパス
+output_dir: "../txt/zakki/tag"       # 出力先ディレクトリ
+default_sort: "date-desc"            # デフォルトのソート方法
+
+# txt_main.html の更新設定
+txt_main_path: "../txt/txt_main.html"  # txt_main.html のパス
+update_txt_main: true                   # タグリストを自動更新するか（デフォルト: true）
+txt_main_tag_sort: "count-desc"        # タグのソート順（デフォルト: 件数降順）
+
+# タグ別設定
+tags:
+  timeline:
+    sort: "date-desc"                # このタグのソート方法
+    description: "個人史・活動のタイムライン"  # タグの説明文（ページに表示）
+  
+  music:
+    sort: "relevance-desc"
+    description: "音楽に関する記事"
+
+# ソート方法のオプション:
+#   - date-desc: 日付降順（新しい順）
+#   - date-asc: 日付昇順（古い順）
+#   - relevance-desc: 関連度降順（高い順）
+#   - relevance-asc: 関連度昇順（低い順）
+
+# txt_main_tag_sort のオプション:
+#   - count-desc: 件数降順（多い順）
+#   - count-asc: 件数昇順（少ない順）
+#   - name-asc: 名前昇順（アルファベット順）
+#   - name-desc: 名前降順（逆アルファベット順）
+
+# 注意事項:
+# - コマンドライン引数が優先されます
+# - タグ別設定で指定しないタグは、default_sort が使用されます
+# - 設定ファイルがない場合は、デフォルト値が使用されます
+

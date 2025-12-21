@@ -5,16 +5,40 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 12 Dec 2025 07:47:22 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 19 Dec 2025 19:20:48 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>2025年12月20日の雑記ページを追加</title>
+      <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-20.html</link>
+      <description>雑記ページを更新しました。インフルエンザに罹患した話とドメインを取得した話をしています。</description>
+      <pubDate>Fri, 19 Dec 2025 19:13:04 GMT</pubDate>
+      <category>zakki</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#j7zut7-20251220</guid>
+    </item>
+    <item>
+      <title>2025年12月18日の雑記ページを追加</title>
+      <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-18.html</link>
+      <description>雑記ページを更新しました。「すしすきー vol.2 Advent Calendar 2025」用です。とりとめもない感じの記事です。</description>
+      <pubDate>Thu, 18 Dec 2025 16:00:00 GMT</pubDate>
+      <category>zakki</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#8byjqq-20251218</guid>
+    </item>
+    <item>
+      <title>プロフィールページを作成</title>
+      <link>https://yuinoid.neocities.org/txt/profile.html</link>
+      <description>プロフィールページを作成しました。個人のプロフィールや利用サービス、お気に入りアルバムなどをまとめたページです。前略プロフィールを意識したけど前略プロフィールにはなりませんでした。</description>
+      <pubDate>Wed, 17 Dec 2025 14:50:41 GMT</pubDate>
+      <category>txt</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#a4rmrp-20251217</guid>
+    </item>
     <item>
       <title>12月12日の雑記を追加</title>
       <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-12.html</link>
       <description>雑記更新。「えとねるん Advent Calendar 2025」用です。更新した分散SNS関連年表について簡単に解説しました。</description>
       <pubDate>Fri, 12 Dec 2025 07:47:22 GMT</pubDate>
       <category>zakki</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#hqvtcz-20251212</guid>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#5hotdk-20251212</guid>
     </item>
     <item>
       <title>分散SNS関連年表を更新</title>
@@ -22,31 +46,7 @@
       <description>年表を更新しました。できごとを追記・一部再編集したほか、フィルタリングシステムやカテゴリを変更しています。</description>
       <pubDate>Fri, 12 Dec 2025 07:47:22 GMT</pubDate>
       <category>txt</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#c4f802-20251212</guid>
-    </item>
-    <item>
-      <title>リンクページにcompasslinkのバナーを追加 &amp; google analyticsからgoatcounterへ移行</title>
-      <link>https://yuinoid.neocities.org/links/links_main.html#registered_services_header</link>
-      <description>リンクページにcompasslinkのバナーを追加しました。あと、これまでアクセス解析ツールにgoogle analyticsを使っていたのですが、goatcounterに移行しました。</description>
-      <pubDate>Mon, 08 Dec 2025 15:13:17 GMT</pubDate>
-      <category>links</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#6uwj4f-20251209</guid>
-    </item>
-    <item>
-      <title>雑記ページを更新</title>
-      <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-08.html</link>
-      <description>雑記ページを更新しました。近況報告としてまとめの表を更新しました。3ヶ月分くらい。</description>
-      <pubDate>Mon, 08 Dec 2025 15:13:17 GMT</pubDate>
-      <category>zakki</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#2nbe8x-20251208</guid>
-    </item>
-    <item>
-      <title>12月06日の雑記を更新</title>
-      <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-06.html</link>
-      <description>雑記更新。「個人サイトを語ろう Advent Calendar 2025」用です。1年を振り返る記事なのですが、ひじょーに適当な文章になってしまいました。</description>
-      <pubDate>Thu, 04 Dec 2025 23:40:15 GMT</pubDate>
-      <category>zakki</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#emovsf-20251206</guid>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#x8i9vv-20251212</guid>
     </item>
   </channel>
 </rss>

@@ -49,29 +49,32 @@
       <br>
       <h1>2025年08月の雑記</h1>
       <nav class='arrow' aria-label="前後月へのリンク">
-        <nav class='rowarrow' aria-label="前後月へのリンク">
-          <a class="leftarrow" href="../07/2025-07.html">&lt;</a>
-          <a class="uparrow" href="../2025.html">&lt;&lt;</a>
-          <a class="rightarrow" href="../09/2025-09.html">&gt;</a>
-        </nav>
+        <div class='rowarrow' aria-label="前後月へのリンク">
+          <a class="leftarrow" href="../07/2025-07.html" aria-label="前の月へ移動">&lt;</a>
+          <a class="uparrow" href="../2025.html" aria-label="年間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="../09/2025-09.html" aria-label="次の月へ移動">&gt;</a>
+        </div>
       </nav>
 
       <div id="zakki08">
         <h2><a href="/txt/zakki/2025/08/2025-08.html">2025-08</a></h2>
-        <div class="month-article"></div> 
+        <div class="month-article">
+          <article id="250826">
+          <h3><a href="/txt/zakki/2025/08/days/2025-08-26.html">2025-08-26</a></h3>
+          <div class="article-preview"><h4>近況</h4><p>
+                        雑記について、なんだか最近（？）毎回分量がヘビーなっている。
+          
+                        別に意識してるわけじゃないんだけど、どうせ書くならってことで毎回長めに書いてしまっていて、なんとなくこれは本来の趣旨と<span class="ellipsis">...</span></p><h4>まとめの表</h4><ul class="timeline_md"><li>07月31日 京アニショップから荷物が届く。平沢唯さんの描き下ろし生原画抽選販売に当たったやつ！</li><li>08月01日 いど子通信#39@twitch</li><li>08月03日 100%health更新。tehhemさんと相互リンクになる。</li><li class="list-ellipsis" style="font-style: italic; color: #666;"><em>... (他17項目)</em></li></ul><hr/><br/><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2025/08/days/2025-08-26.html">続きを読む / <span lang="en">read more</span></a></p></div>
+          </article>
+        </div> 
       </div>
-      <script src="/txt/zakki/monthly-article-utils.js"></script>
-      <script src="zakki08.js"></script>
-      <script>
-        window.addEventListener('load', loadDailyArticles08);
-      </script>
 
       <nav class='arrow' aria-label="前後月へのリンク"> 
-        <nav class='rowarrow' aria-label="前後月へのリンク">
-          <a class="leftarrow" href="../07/2025-07.html">&lt;</a>
-          <a class="uparrow" href="../2025.html">&lt;&lt;</a>
-          <a class="rightarrow" href="../09/2025-09.html">&gt;</a>
-        </nav>
+        <div class='rowarrow' aria-label="前後月へのリンク">
+          <a class="leftarrow" href="../07/2025-07.html" aria-label="前の月へ移動">&lt;</a>
+          <a class="uparrow" href="../2025.html" aria-label="年間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="../09/2025-09.html" aria-label="次の月へ移動">&gt;</a>
+        </div>
       </nav>
 
     </main>
@@ -87,7 +90,10 @@
     <link rel="stylesheet" href="/luminous-basic.min.css">
     <script src="/Luminous.min.js" defer></script>
     <script>
-      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      // LuminousGalleryが読み込まれてから実行
+      if (typeof LuminousGallery !== 'undefined') {
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      }
     </script>
   </div>
 </body>

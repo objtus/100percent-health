@@ -87,7 +87,28 @@ article {
 		letter-spacing: 1em;
 		padding-left: 1em;
 	}
+
+	h4 {
+		padding-top: 1.5em;
+		padding-bottom: 0.5em;
+	}
+
+	.header-link{
+		opacity: 0.2;
+		padding: 0 1em;
+		margin-left: 1em;
+		text-decoration: none;
+		color: black;
+		transition: opacity 0.2s;
+	}
+
+	.header-link:hover{
+		color: black;
+		background-color: transparent;
+		opacity: 1;
+	}
 }
+
 @media screen and (max-width: 900px) {
 	h1 {
 		font-size: 1.8em;

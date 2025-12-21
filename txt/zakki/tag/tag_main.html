@@ -11,40 +11,77 @@
   <script src="/js/main.js"></script>
   <script src="/js/mouse.js"></script>
   <style>
-    #tagichiran {
-      margin: 20px 0;
-      padding-left: 30px;
+    /* タグ一覧ページ用スタイル */
+    .tag-list {
+      list-style: none;
+      padding: 0;
+      margin: 2em 0;
     }
     
     .tag-item {
-      margin-bottom: 30px;
-      list-style-type: none;
+      margin-bottom: 1.5em;
+      padding: 1em;
+      border: 2px solid #000000;
+    }
+    
+    .tag-item:hover {
+      background-color: #f5f5f5;
     }
     
     .tag-link {
-      color: #fff;
-      background-color: #000;
       text-decoration: none;
-
-      &:hover {
-        background-color: #fff;
-        color: #000;
-      }
+      color: #000000;
+      display: block;
+      margin-bottom: 0.5em;
     }
     
-    .tag-description {
-      font-size: 0.9em;
-      margin-top: 10px;
-      margin-left: 20px;
-      color: #666;
+    .tag-name {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-right: 0.5em;
     }
     
     .tag-count {
-      font-size: 0.85em;
-      color: #888;
-      margin-left: 5px;
+      color: #666;
+      font-size: 0.9em;
     }
+    
+    .tag-item-description {
+      font-size: 0.95em;
+      color: #555;
+      margin: 0.5em 0 0.3em 0;
+      padding: 0.5em 0.8em;
+
+      &::before {content: "♥";}
+    }
+    
+    .tag-meta {
+      font-size: 0.85em;
+      color: #666;
+      margin-top: 0.5em;
+    }
+    
+    .tag-date-range {
+      margin-right: 1em;
+    }
+    
+    .tag-stats-summary {
+      text-align: center;
+      padding: 1em 0;
+      margin: 1em 0;
+      font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
+      color: #666;
+      border-top: 2px dotted #000000;
+      border-bottom: 2px dotted #000000;
+    }
+    
   </style>
+  <script>
+    $(function () {
+      $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+      $("#taghtml").load("/txt/txt_main.html #tag-list");
+    });
+  </script>
   <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
   <link rel="stylesheet" href="/txt/zakki/tag-style.css">
 </head>
@@ -72,56 +109,38 @@
       </div>
     </header>
     <main id="main">
-      <article id="tag-main">
-        <br>
-        <h1>タグ一覧</h1>
-    
-        <p>
-          雑記の内容をタグで整理した「タグページ」一覧です。各ハッシュタグをクリックすると、そのハッシュタグが付けられた記事内のセクションの一覧が表示されます。
-        </p>
-    
-        <ul id="tagichiran">
-          <li class="tag-item">
-            <a class="tag-link" href="music.html">#music</a>
-            <span class="tag-count">(音楽関連の記事)</span>
-            <div class="tag-description">音楽の感想や考察など、音楽に関するセクション</div>
-          </li>
-          <li class="tag-item">
-            <a class="tag-link" href="timeline.html">#timeline</a>
-            <span class="tag-count">(タイムライン/時系列)</span>
-            <div class="tag-description">時系列でまとめられた記録、年表など、時系列に関するセクション</div>
-          </li>
-          <!-- 今後、新しいタグが増えたら以下に追加していく -->
-          <!-- 
-            <li class="tag-item">
-              <a href="tech.html">♥tech</a>
-              <span class="tag-count">(技術関連)</span>
-              <div class="tag-description">技術的な話題、プログラミング、ウェブ制作など</div>
-            </li>
-            <li class="tag-item">
-              <a href="diary.html">♥diary</a>
-              <span class="tag-count">(日記)</span>
-              <div class="tag-description">日々の記録や思い出など</div>
-            </li>
-            -->
-        </ul>
-    
-        <h2 style="margin-top: 60px;">タグについて</h2>
-        <p>
-          記事内にタグを付けることで、関連する話題をまとめて閲覧できるようになっています。
-          新しいタグは随時追加されます。
-        </p>
-    
-        <p>
-          各ハッシュタグには関連度が設定されています。<br>
-          関連度は0から100までの数値で表され、100が最も関連度が高いことを表します。
-        </p>
-        <p>
-          プレーンな「#music」タグは100%として扱われます。<br>
-          <br>
-          例えば、あるセクションに「#music:10」というハッシュタグがついている場合、そのセクションはハッシュタグと10%関連するという意味です。<br>
-        </p>
-      </article>
+      <h1>タグ一覧</h1>
+      
+      <!-- 統計情報 -->
+      <div class="tag-stats-summary">
+        <p>全2タグ | 総セクション数: 17件</p>
+      </div>
+      
+      <!-- タグリスト -->
+      <ul class="tag-list">
+        <li class="tag-item">
+          <a href="timeline.html" class="tag-link">
+            <span class="tag-name">#timeline</span>
+            <span class="tag-count">(9件)</span>
+          </a>
+          <p class="tag-item-description">個人史・活動のタイムライン</p>
+          <div class="tag-meta">
+            <span class="tag-date-range">2024-12-13 〜 2025-12-08</span>
+            <span class="tag-relevance">平均関連度: 99%</span>
+          </div>
+        </li>
+        <li class="tag-item">
+          <a href="music.html" class="tag-link">
+            <span class="tag-name">#music</span>
+            <span class="tag-count">(8件)</span>
+          </a>
+          <p class="tag-item-description">音楽に関する記事</p>
+          <div class="tag-meta">
+            <span class="tag-date-range">2025-01-01 〜 2025-09-02</span>
+            <span class="tag-relevance">平均関連度: 82%</span>
+          </div>
+        </li>
+      </ul>
     </main>
     <footer id="main-footer">
       <div id="zakkihtml"></div>
@@ -129,19 +148,6 @@
       <div id="footerhtml"></div>
     </footer>
   </div>
-  <div id="lightbox">
-    <link rel="stylesheet" href="/luminous-basic.min.css">
-    <script src="/Luminous.min.js"></script>
-    <script>
-      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
-    </script>
-  </div>
-  <script>
-    $(function () {
-      $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
-      $("#taghtml").load("/txt/txt_main.html #tag-list");
-    });
-  </script>
 </body>
 
 </html>

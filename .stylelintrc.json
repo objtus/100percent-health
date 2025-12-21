@@ -1,0 +1,14 @@
+{
+  "extends": "stylelint-config-standard",
+  "plugins": ["@stylistic/stylelint-plugin"],
+  "rules": {
+    "@stylistic/indentation": 2,
+    "@stylistic/string-quotes": "double",
+    "@stylistic/color-hex-case": "lower",
+    "@stylistic/block-opening-brace-space-before": "always",
+    "@stylistic/declaration-colon-space-after": "always",
+    "@stylistic/declaration-colon-space-before": "never",
+    "@stylistic/selector-list-comma-newline-after": "always",
+    "@stylistic/number-leading-zero": "always"
+  }
+}

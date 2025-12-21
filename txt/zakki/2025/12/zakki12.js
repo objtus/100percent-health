@@ -1,7 +1,7 @@
 async function loadDailyArticles12() {
 	const month = "12";
 	const year = "2025";
-	const dates = ["06", "08", "12"];
+	const dates = ["06", "08", "12", "18", "20"];
 
 	// 月別ページ用プレビュー設定（オプション）
 	const customConfig = {

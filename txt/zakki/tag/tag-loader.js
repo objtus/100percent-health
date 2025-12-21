@@ -507,51 +507,102 @@ async function processDay(year, month, date, tag) {
   }
 }
 
+// data-tags属性をパースして {tagName: relevance} オブジェクトを返す
+function parseDataTags(dataTagsStr) {
+  if (!dataTagsStr || typeof dataTagsStr !== 'string') return {};
+  
+  const trimmed = dataTagsStr.trim();
+  if (!trimmed) return {};
+  
+  // JSON形式の検出と処理（将来の拡張用）
+  if (trimmed.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      const validated = {};
+      for (const [key, value] of Object.entries(parsed)) {
+        const rel = typeof value === 'number' ? value : parseInt(value, 10);
+        validated[key] = (rel >= 0 && rel <= 100) ? rel : 100;
+      }
+      return validated;
+    } catch (e) {
+      console.warn('Invalid JSON in data-tags:', e);
+      return {};
+    }
+  }
+  
+  // イコール区切り形式: "music=80,timeline,anime=60"
+  const tags = {};
+  trimmed.split(',').forEach(item => {
+    const cleaned = item.trim();
+    if (!cleaned) return;
+    
+    const equalIndex = cleaned.indexOf('=');
+    if (equalIndex === -1) {
+      // イコールなし → デフォルト100%
+      tags[cleaned] = 100;
+    } else {
+      // イコールあり → 指定された関連度
+      const tag = cleaned.substring(0, equalIndex).trim();
+      const relevanceStr = cleaned.substring(equalIndex + 1).trim();
+      if (tag) {
+        const relevance = parseInt(relevanceStr, 10);
+        tags[tag] = (relevance >= 0 && relevance <= 100) ? relevance : 100;
+      }
+    }
+  });
+  
+  return tags;
+}
+
 function findTaggedSections(article, tag) {
   const taggedSections = [];
   const tagInfo = {};
-  const processedSections = new Set();
-  for (const span of article.getElementsByTagName('span')) {
-    if (!span.classList.contains('hashtag')) continue;
-    for (const link of span.getElementsByTagName('a')) {
-      if (link.href && link.href.includes(`/tag/${tag}.html`)) {
-        const relevance = span.dataset.relevance ? parseInt(span.dataset.relevance, 10) : 100;
-        const parentSection = span.closest('section');
-        if (parentSection) {
-          const bestSection = findBestParentSection(parentSection, article);
-          if (bestSection && !processedSections.has(bestSection)) {
-            processedSections.add(bestSection);
-            const sectionId = bestSection.id || bestSection.innerHTML.length;
-            if (!tagInfo[sectionId] || tagInfo[sectionId].relevance < relevance) {
-              tagInfo[sectionId] = {section: bestSection, relevance};
-            }
-            taggedSections.push(bestSection);
-          }
-        }
-      }
+  
+  // data-tags属性を持つすべてのsectionを検索
+  article.querySelectorAll('section[data-tags]').forEach(section => {
+    const tags = parseDataTags(section.dataset.tags);
+    
+    if (tags.hasOwnProperty(tag)) {
+      const relevance = tags[tag];
+      const sectionId = section.id || section.innerHTML.length;
+      
+      taggedSections.push(section);
+      tagInfo[sectionId] = { section, relevance };
+      
+      console.log(`Found section with tag "${tag}" (${relevance}%):`, Object.keys(tags).join(', '));
     }
-  }
+  });
+  
   if (taggedSections.length > 0) {
-    console.log(`Found ${taggedSections.length} hashtags in article ${article.id || 'unknown'}`);
+    console.log(`Found ${taggedSections.length} sections with tag "${tag}" in article ${article.id || 'unknown'}`);
   }
-  return {taggedSections, tagInfo};
+  
+  return { taggedSections, tagInfo };
 }
 
 function extractUniqueSections(taggedSections, tagInfo, date, articleId) {
   const uniqueSections = [];
   const sectionSignatures = new Map();
+  
   for (const section of taggedSections) {
     const signature = generateSectionSignature(section);
     const sectionId = section.id || section.innerHTML.length;
     const relevance = tagInfo[sectionId] ? tagInfo[sectionId].relevance : 100;
+    
     if (!sectionSignatures.has(signature)) {
-      uniqueSections.push({date, section: section.outerHTML, signature, relevance});
+      uniqueSections.push({
+        date,
+        section: section.outerHTML,
+        signature,
+        relevance
+      });
       sectionSignatures.set(signature, true);
       console.log(`Added unique section from ${date}, article ${articleId} with relevance ${relevance}%`);
     } else {
       console.log(`Skipped duplicate section in ${date}, article ${articleId}`);
     }
   }
+  
   return uniqueSections;
 }
 
@@ -570,31 +621,6 @@ function generateSectionSignature(section) {
   }
   const textSample = section.textContent.replace(/\s+/g, ' ').trim().slice(0, 50);
   return [headings.join('|'), links.join('|'), textSample, section.outerHTML.length].join('::');
-}
-
-function findBestParentSection(targetSection, article) {
-  let bestSection = targetSection;
-  let bestHeadingLevel = getHeadingLevel(targetSection);
-  let currentElement = targetSection.parentElement;
-  while (currentElement && currentElement !== article) {
-    if (currentElement.tagName === 'SECTION') {
-      const level = getHeadingLevel(currentElement);
-      if (level > bestHeadingLevel) {
-        bestHeadingLevel = level;
-        bestSection = currentElement;
-      }
-    }
-    currentElement = currentElement.parentElement;
-  }
-  return bestSection;
-}
-function getHeadingLevel(section) {
-  for (const child of section.children) {
-    if (/^H[2-6]$/.test(child.tagName)) {
-      return parseInt(child.tagName.substring(1), 10);
-    }
-  }
-  return 0;
 }
 
 function applySortAndFilter(articles, sortMethod, minRelevance) {

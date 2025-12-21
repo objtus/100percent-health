@@ -10,7 +10,6 @@
   <script src="/js/jquery-3.6.0.min.js"></script>
   <script src="/js/main.js"></script>
   <script src="/js/mouse.js"></script>
-  <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
   <style>
     /* タグページ用スタイル */
     article.tag-article {
@@ -20,16 +19,16 @@
       animation: fadeIn 0.5s ease-in;
     }
     
-    article.tag-article h2 {
+    article.tag-article h3 {
       margin-bottom: 0.5em;
       padding-bottom: 0.3em;
     }
     
-    article.tag-article h2 a:hover {
+    article.tag-article h3 a:hover {
       text-decoration: underline;
     }
     
-    article.tag-article h2 a:hover::after {
+    article.tag-article h3 a:hover::after {
       content: ' \2197'; /* 右上向き矢印 */
       font-size: 0.8em;
       position: relative;
@@ -40,42 +39,18 @@
       margin-bottom: 1em;
     }
 
-    h3 {
-      margin-left: 0;
+    article{
+      h3,
+      h4 {padding-top: 0.5em!important;margin-left: 0;}
     }
     
-    /* ローディング表示のスタイル */
-    #loading-indicator {
-      text-align: center;
-      padding: 20px;
-      margin: 20px 0;
-      font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
-    }
-    
-    .progress-container {
-      width: 100%;
-      height: 1px;
-      margin: 15px 0;
-      position: relative;
-      border-top: 1px dotted #000000;
-      overflow: visible;
-    }
-    
-    .progress-bar {
-      width: 10%;
-      height: 1px;
-      background-color: #000000;
-      position: relative;
-      transition: width 0.3s steps(20, end);
-      margin-top: -1px;
-    }
-    
-    #loading-status {
+    .tag-description {
       font-size: 1em;
-      color: #000000;
-      margin-top: 5px;
-      font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
-      letter-spacing: -0.05em;
+      color: #555;
+      margin: 1em 0;
+      padding: 0.8em 1.2em;
+
+      &::before { content: "♥"; }
     }
     
     @keyframes fadeIn {
@@ -120,16 +95,311 @@
       </div>
     </header>
     <main id="main">
-      <h1>timelineタグ一覧</h1>
-      <div class="tag-articles">
-        <!-- ここに動的に記事が挿入される -->
-        <div id="loading-indicator">
-          <p>♥ #timeline タグ付きセクションを読み込み中 ♥</p>
-          <div class="progress-container">
-            <div class="progress-bar"></div>
+      <h1>timeline タグ一覧</h1>
+      <p class="tag-description">個人史・活動のタイムライン</p>
+      
+      <!-- ソート・フィルターコントロール -->
+      <div class="tag-controls">
+        <h2 class="tag-controls-heading">表示とソートの設定</h2>
+        
+        <!-- ソートボタン行 -->
+        <div class="tag-controls-row">
+          <div class="tag-control-group">
+            <label>日付でソート:</label>
+            <div class="tag-control-buttons">
+              <button class="tag-sort-btn active" data-sort="date-desc">新しい順</button>
+              <button class="tag-sort-btn" data-sort="date-asc">古い順</button>
+            </div>
           </div>
-          <p id="loading-status">準備中...</p>
+          <div class="tag-control-group">
+            <label>関連度でソート:</label>
+            <div class="tag-control-buttons">
+              <button class="tag-sort-btn" data-sort="relevance-desc">関連度高い順</button>
+              <button class="tag-sort-btn" data-sort="relevance-asc">関連度低い順</button>
+            </div>
+          </div>
         </div>
+        
+        <!-- フィルター行 -->
+        <div class="tag-controls-row">
+          <div class="tag-control-group">
+            <label>最小関連度でフィルター:</label>
+            <div class="tag-slider-container">
+              <input type="range" min="0" max="100" step="10" value="0" class="tag-slider" id="relevance-slider">
+              <span class="tag-slider-value" id="slider-value">0%</span>
+            </div>
+          </div>
+          <div class="tag-control-group">
+            <label>設定をリセット:</label>
+            <button class="tag-reset-btn" id="reset-btn">リセット</button>
+          </div>
+        </div>
+        
+        <!-- 統計情報 -->
+        <p class="tag-stats" id="stats-display">全9件 | 最新: 2025-12-08 | 最古: 2024-12-13 | 平均関連度: 99%</p>
+      </div>
+      
+      <!-- タグ付きセクション一覧 -->
+      <h2>記事一覧</h2>
+      <div class="tag-articles" id="articles-container">
+        <article class="tag-article" data-date="2025-12-08" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/12/days/2025-12-08.html">2025-12-08</a></h3>
+          <section data-tags="timeline=100">
+          <h4>まとめの表</h4>
+          <ul class="timeline_md">
+          <li><time datetime="2025-08-27">08月27日</time> 100%health:<a href="../../08/days/2025-08-26.html">雑記ページ更新</a>&amp;諸々更新（アクセシビリティ対応など）</li>
+          <li><time datetime="2025-08-29">08月29日</time> いど子通信#43@twitch</li>
+          <li><time datetime="2025-08-30">08月30日</time> 100%health:<a href="/txt/redcompass_compilation_series.html">redcompass_compilation_series</a>ページを作成。</li>
+          <li><time datetime="2025-09-02">09月02日</time> 100%health:<a href="../../09/days/2025-09-02.html">雑記ページ</a>を更新。</li>
+          <li><time datetime="2025-09-04">09月04日</time> 100%health:半自動のRSS生成機能を追加。</li>
+          <li><time datetime="2025-09-06">09月06日</time> 100%health:アクティビティまとめページ「planet_yuinoid」を作成。</li>
+          <li><time datetime="2025-09-05">09月05日</time> いど子通信#44@twitch</li>
+          <li><time datetime="2025-09-08">09月08日</time> identi.caに初期に登録していたアカウントを調べる。</li>
+          <li><time datetime="2025-09-09">09月09日</time> 他人事ラジオ#27@youtube</li>
+          <li><time datetime="2025-09-12">09月12日</time> いど子通信#45@twitch</li>
+          <li><time datetime="2025-09-16">09月16日</time> 100%health:gabrielさんのサイトと相互リンクになる。</li>
+          <li><time datetime="2025-09-18">09月18日</time> 100%health:<a href="../../09/days/2025-09-18.html">雑記ページ</a>を更新。</li>
+          <li><time datetime="2025-09-19">09月19日</time> いど子通信#46@twitch</li>
+          <li><time datetime="2025-09-26">09月26日</time> いど子通信#47@twitch</li>
+          <li><time datetime="2025-09-28">09月28日</time> 他人事ラジオ#28@youtube</li>
+          <li><time datetime="2025-10-03">10月03日</time> いど子通信#48@twitch</li>
+          <li><time datetime="2025-10-03">10月03日</time> 100%health:<a href="../../10/days/2025-10-03.html">雑記ページ</a>を更新。</li>
+          <li><time datetime="2025-10-04">10月04日</time> tanoshii.siteにアカウントを作成して1周年を迎える。</li>
+          <li><time datetime="2025-10-03">10月03日</time> 3回寝たり起きたりする。</li>
+          <li><time datetime="2025-10-06">10月06日</time> 100%health:galleryに「<a href="/gallery/tag-page/groundpolis_paint_rip.html">groundpolis_paint_rip</a>」シリーズを追加（再整備）。</li>
+          <li><time datetime="2025-10-10">10月10日</time> 昭和100年10月10日。昭和に思いを馳せる。</li>
+          <li><time datetime="2025-10-10">10月10日</time> いど子通信#49@twitch</li>
+          <li><time datetime="2025-10-10">10月10日</time> 100%health:サイドバー機能を追加。</li>
+          <li><time datetime="2025-10-14">10月14日</time> 100%health:worksに「<a href="/gallery/image-page/girls-chronicle_2020-2024.html">girls chronicle (2020-2024)</a>」を追加。</li>
+          <li><time datetime="2025-10-17">10月17日</time> 興味があるものについての<a href="https://tanoshii.site/notes/adx744c2y8vf1v64" target="_blank">マインドマップ</a>を作って公開する。</li>
+          <li><time datetime="2025-10-28">10月28日</time> 昭和について調べる。80年代のアレコレを調べて昭和時代の過激さを思い知る。</li>
+          <li><time datetime="2025-10-29">10月29日</time> 2時間風呂に入る。</li>
+          <li><time datetime="2025-10-31">10月31日</time> いど子通信をしようとするが寝過ごす。</li>
+          <li><time datetime="2025-11-02">11月02日</time> youtubeの広告に「肛門に水当てすぎるの、今すぐやめてください！」と言われる。</li>
+          <li><time datetime="2025-11-04">11月04日</time> 風邪気味で鼻をかみ、ギャグ漫画みたいに鼻血が出る。</li>
+          <li><time datetime="2025-11-18">11月18日</time> cloudflareが落ちてテンションが上がる。</li>
+          <li><time datetime="2025-11-20">11月20日</time> 3時間くらいショート動画を見る。</li>
+          <li><time datetime="2025-11-22">11月22日</time> いど子通信#50@twitch</li>
+          <li><time datetime="2025-11-22">11月22日</time> 他人事ラジオ#29@youtube</li>
+          <li><time datetime="2025-11-23">11月23日</time> 100%healthの総アクセス数が300000を超えていることに気づく。</li>
+          <li><time datetime="2025-11-25">11月25日</time> 100%health:「<a href="/txt/generations/generations-timeline.html">人物世代早見表</a>」を作成。</li>
+          <li><time datetime="2025-12-05">12月05日</time> 萌えを感じる。</li>
+          <li><time datetime="2025-12-06">12月06日</time> 100%health:<a href="./2025-12-06.html">雑記ページ</a>を更新。個人サイトを語ろう Advent Calendar 2025の記事を公開。</li>
+          <li><time datetime="2025-12-07">12月07日</time> 他人事ラジオ#30@youtube</li>
+          </ul>
+          <span class="hashtag"><a href="/txt/zakki/tag/timeline.html">#timeline</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-08-26" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/08/days/2025-08-26.html">2025-08-26</a></h3>
+          <section data-tags="timeline=100">
+          <h4>まとめの表</h4>
+          <ul class="timeline_md">
+          <li>07月31日 京アニショップから荷物が届く。平沢唯さんの描き下ろし生原画抽選販売に当たったやつ！</li>
+          <li>08月01日 いど子通信#39@twitch</li>
+          <li>08月03日 100%health更新。tehhemさんと相互リンクになる。</li>
+          <li>08月08日 分散SNS関連年表をフランス革命からはじめたらおもしろいんじゃないかと気づく。が、更新はめんどくさくてせず。</li>
+          <li>08月09日 いど子通信#40@twitch</li>
+          <li>08月11日 オーストラリアに行きたいと思う。思っただけ。</li>
+          <li>08月12日 親知らずの抜歯のため入院する。当日昼4本抜歯する。痛くてつらい。その後1週間歯が痛いのと血餅が外れそうとで流動食を食べて過ごす。</li>
+          <li>08月13日 退院</li>
+          <li>08月15日 100%health更新。ネオ日本語ウェブリングに参加、主宰のちょきさんのサイトと相互リンクになる。</li>
+          <li>08月15日 100%health更新。みかんさん、JSさん、ほそかわさんのリンクを設置。</li>
+          <li>08月15日 いど子通信#41@twitch ここから広告がつく。</li>
+          <li>08月16日 100%health更新。相互リンクが増える。</li>
+          <li>08月17日 口の中に口内炎が2つできる。ゴツいの。</li>
+          <li>08月18日 他人事ラジオ#26@youtube</li>
+          <li>08月18日 100%health更新。caramelpuddinzさん、げをさん、ありがとうジャバのサイトのリンクを設置。</li>
+          <li>08月19日 インディーロックいいなと思う。</li>
+          <li>08月22日 いど子通信#42@twitch</li>
+          <li>08月23日 100%health更新。さくしゃさん、IamnotHayatoさんのサイトのリンクを設置。</li>
+          <li>08月23日 100%health更新。「やさしい日本語」に対応</li>
+          <li>08月24日 100%health更新。15さんのミンゲイインターネットに参加。</li>
+          </ul>
+          <span class="hashtag"><a href="/txt/zakki/tag/timeline.html">#timeline</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-07-30" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/07/days/2025-07-30.html">2025-07-30</a></h3>
+          <section data-tags="timeline=100">
+          <h4>まとめの表</h4>
+          <ul class="timeline_md">
+          <li>05月21日 機動戦士ガンダムジークアクスを2話までみて中断し最初のガンダムを1話から見返し始める</li>
+          <li>05月23日 commissionページと納品作品のページを作成</li>
+          <li>05月24日 いど子通信#32@twitch</li>
+          <li>06月07日 いど子通信#33@twitch 体調不良のため中止。</li>
+          <li>06月09日 新型コロナウイルスに罹患していたことが発覚。</li>
+          <li>06月10日 他人事ラジオ#23@youtube</li>
+          <li>06月12日 galleryコーナーにタグ機能をつける</li>
+          <li>06月13日 いど子通信#34@twitch</li>
+          <li>06月17日 年表のために「はちま起稿」の最初の頃をinternet archiveで延々見返す。</li>
+          <li>06月20日 いど子通信#35@twitch,youtube</li>
+          <li>06月29日 今日はなんの日botの作成を始める。3代目。</li>
+          <li>07月03日 Skebのリクエスト受付を再開。</li>
+          <li>07月09日 駿河屋で中古で買った「まじかる☆ひよりん」のぬいぐるみが届く。前から欲しかった。</li>
+          <li>07月10日 いど子通信#36@twitch</li>
+          <li>07月11日 ジークアクスを最終話まで観る。</li>
+          <li>07月12日 他人事ラジオ#24</li>
+          <li>07月15日 参院選の期日前投票に行く。やらかす。</li>
+          <li>07月17日 いど子通信#37@twitch</li>
+          <li>07月25日 いど子通信#38@twitch</li>
+          <li>07月28日 他人事ラジオ#25</li>
+          <li>07月29日 2025年下半期のテーマを決め、SNSのアイコンを変える。</li>
+          </ul>
+          <span class="hashtag"><a href="/txt/zakki/tag/timeline.html">#timeline</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-05-22" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/05/days/2025-05-22.html">2025-05-22</a></h3>
+          <section data-tags="timeline=100">
+          <h4>まとめの表</h4>
+          <ul class="timeline_md">
+          <li>03月10日 リンクページに相互リンクを追加。</li>
+          <li>03月14日 鼻血が出る（伏線）</li>
+          <li>03月15日 SNSのアイコンを変更：mokoさんありがとうございます</li>
+          <li>03月17日 雑記コーナーにタグページを追加する：公開はせず</li>
+          <li>03月18日 ブルーハーツ聴きながら散歩する</li>
+          <li>03月18日 いど子通信#23@twitch</li>
+          <li>03月22日 いど子通信#24@twitch：鼻血が出る (伏線回収)</li>
+          <li>03月28日 いど子通信のはずが忘れてて配信せず</li>
+          <li>03月31日 天然を演じる女子になって男を取っ替え引っ替えする夢を見る</li>
+          <li>04月02日 人身事故に遭遇する夢を見る</li>
+          <li>04月08日 いど子通信#25@twitch</li>
+          <li>04月12日 いど子通信#26@twitch</li>
+          <li>04月13日 分散SNS関連年表を更新</li>
+          <li>04月14日 skebを納品</li>
+          <li>04月18日 いど子通信#27@twitch</li>
+          <li>04月18日 他人事ラジオ#20@youtube</li>
+          <li>04月22日 アニメ『葬送のフリーレン』を見る</li>
+          <li>04月22日 朝の「めざましテレビ」でcoachella2025についてニュースをチラ見する。</li>
+          <li>04月23日 大阪・関西万博へ行く</li>
+          <li>04月26日 いど子通信#28@twitch</li>
+          <li>05月01日 「創作サーチ」にこのサイトのリンクを追加</li>
+          <li>05月02日 他人事ラジオ#21@youtube</li>
+          <li>05月03日 東山動植物園へ行く</li>
+          <li>05月03日 いど子通信#29@twitch</li>
+          <li>05月09日 いど子通信#30@twitch</li>
+          <li>05月16日 いど子通信#31@twitch</li>
+          <li>05月18日 他人事ラジオ#22@youtube</li>
+          <li>05月21日 機動戦士ガンダムジークアクスを2話までみて中断し最初のガンダムを1話から見返し始める</li>
+          </ul>
+          <span class="hashtag"><a href="/txt/zakki/tag/timeline.html">#timeline</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-03-10" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/03/days/2025-03-10.html">2025-03-10</a></h3>
+          <section data-tags="timeline=100">
+          <h4>まとめの表</h4>
+          <ul class="timeline_md">
+          <li>02月05日 いど子通信#17@twitch</li>
+          <li>02月14日 100%healthの<a href="/aboutme.html" target="_blank">aboutページ</a>を整備し、<a href="/txt/100phealth_introduction.html" target="_blank">100%health_introduction</a>を更新。</li>
+          <li>02月15日 いど子通信#18@twitch</li>
+          <li>02月18日 いど子通信#19@twitch</li>
+          <li>02月21日 annictを編集。</li>
+          <li>02月23日 いど子通信#20@twitch</li>
+          <li>02月23日 <a href="https://youtu.be/iiIFjy-M6b0" target="_blank">他人事ラジオ#18@youtube</a></li>
+          <li>02月24日 filmarksのアカウントを作成し、みたことのある映画を記録する。</li>
+          <li>02月26日 アルコールを摂りながら散歩するのにハマる。よつばと！のネタバレを食らい人生を考えながら散歩する。</li>
+          <li>03月01日 いど子通信#21@twitch</li>
+          <li>03月09日 いど子通信#22@twitch</li>
+          <li>03月10日 他人事ラジオ#19@youtube</li>
+          <li>03月10日 リンクページに相互リンクを追加。</li>
+          </ul>
+          <span class="hashtag"><a href="/txt/zakki/tag/timeline.html">#timeline</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-02-06" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/02/days/2025-02-06.html">2025-02-06</a></h3>
+          <section data-tags="timeline=100">
+          <h4>まとめの表</h4>
+          <ul class="timeline_md">
+          <li>01月04日 いど子通信#12@twitch</li>
+          <li>01月06日 いど子通信#13@twitch</li>
+          <li>01月09日 雑記ページのファイル構造を変更。</li>
+          <li>01月11日 いど子通信#14@twitch</li>
+          <li>01月13日 <a href="https://www.misononoa.cc" target="_blank">misononoaさんのサイト</a>と相互リンクになる。</li>
+          <li>01月18日 いど子通信#15@twitch</li>
+          <li>01月18日 <a href="https://eap.vg" target="_blank">かんたん宛名印刷さんのサイト</a>と相互リンクになる。</li>
+          <li>01月21日 作業配信@twitch</li>
+          <li>01月28日 いど子通信#16@twitch</li>
+          <li>01月29日 ex. happyender girlのアルバム''<a href="https://happyender-girl.bandcamp.com/album/re-summer-never-ends" target="_blank">追憶の夏のハッピーエンダーガール - re: summer (never) ends</a>''に<a href="/gallery/image-page/re-summer(never)ends.html">アートワークを提供</a>。</li>
+          <li>01月29日 Philips Hueを導入。</li>
+          <li>01月29日 <a href="https://yuinoid.umblr.com" target="_blank">Tumblr</a>に投稿していなかったイラストをまとめて投稿。3年ぶりくらい。</li>
+          <li>01月30日 LLMにsvgで絵を描かせると味がある絵を描いてきておもしろいことを発見。</li>
+          <li>02月03日 <a href="https://skeb.jp/@yuinoid" target="_blank">skeb</a>をはじめる。</li>
+          <li>02月03日 <a href="https://www.youtube.com/watch?v=UP2BJB4IhwA" target="_blank">他人事ラジオ#17@youtube</a></li>
+          </ul>
+          <span class="hashtag"><a href="/txt/zakki/tag/timeline.html">#timeline</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-01-01" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/01/days/2025-01-01.html">2025-01-01</a></h3>
+          <section data-tags="timeline=100">
+          <h4>まとめの表</h4>
+          <ul class="timeline_md">
+          <li>12月16日 <a href="/txt/2024_tokyo_travel.html">2024年東京旅行まとめ</a>を公開。</li>
+          <li>12月16日 mixi2公開。コミュニティを荒らすがすぐに飽きる。</li>
+          <li>12月21日 他人事ラジオ、のんラジ（仮）とコラボし録音する。</li>
+          <li>12月24日 他人事ラジオ＆のんラジ（仮）コラボ回前編公開。</li>
+          <li>12月25日 <a href="https://yuinoid.notion.site/2024-147879f827368013b009e0fd9121dcc9" target="_blank">2024年まとめ年表</a>を公開。すしすきーアドベントカレンダーに（遅れて）投稿。</li>
+          <li>12月26日 RSSリーダーを久々に見返す。ニュースを見るのにこれ便利だなと思う。</li>
+          <li>12月30日 部屋を整理して本棚を増設する。</li>
+          <li>12月31日 マイナンバーカードをなくす。</li>
+          <li>12月31日 他人事ラジオ＆のんラジ（仮）コラボ回後編公開。</li>
+          </ul>
+          <span class="hashtag"><a href="/txt/zakki/tag/timeline.html">#timeline</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2024-12-13" data-relevance="100">
+          <h3><a href="/txt/zakki/2024/12/days/2024-12-13.html">2024-12-13</a></h3>
+          <section data-tags="timeline=100">
+          <h4>まとめの表</h4>
+          <ul class="timeline_md">
+          <li>10月15日 いど子通信#9</li>
+          <li>10月21日 <a href="https://www.youtube.com/watch?v=FsLtxWMrf7Y" target="_blank">他人事ラジオ#11「プログラミング」</a></li>
+          <li>11月03日 <a href="https://www.youtube.com/watch?v=YJ6DLR9CXMg" target="_blank">他人事ラジオ#12「宇宙」</a></li>
+          <li>11月03日 なんだか配信（いど子通信#10）</li>
+          <li>11月18日 <a href="https://www.youtube.com/watch?v=GDd98K9Vbv8" target="_blank">他人事ラジオ#13「カレンダー」</a>他ラジ第2期開幕</li>
+          <li>11月26日 いど子通信#11</li>
+          <li>11月27日 100%healthに<a href="/gallery/image-page/idoko_taningoto1.html">他人事ラジオ用イラストのページ</a>を作成</li>
+          <li>11月29日 <a href="/txt/my_dsns_timeline.html">分散SNS関連年表</a>を更新</li>
+          <li>12月03日 <a href="https://www.youtube.com/watch?v=_WGTkJR-cW0" target="_blank">他人事ラジオ#14「時代」</a></li>
+          <li>12月03日 『<a href="https://yuinoid.notion.site/SNS-SNS-141879f827368050b21ace63c86e53f0" target="_blank">分散SNS関連年表の回顧と展望</a>』公開</li>
+          <li>12月04日 tanoshii.siteで1000ノート達成</li>
+          <li>12月11日 『<a href="https://adventar.org/calendars/10172" target="_blank">個人ホームページ訪問 Advent Calendar 2024</a>』の11日目の記事として"<a href="/txt/100phealth_introduction.html">100%health_introduction</a> "を公開</li>
+          <li>12月11日 女子小学生になった夢をみて、醒めた後で憂鬱になる</li>
+          </ul>
+          <span class="hashtag"><a href="/txt/zakki/tag/timeline.html">#timeline</a></span>
+          </section>
+          <section data-tags="timeline=90">
+          <h4>個人史まとめ</h4>
+          <ul class="timeline_ymd">
+          <li>2017年04月14日 mastodon.cloud登録</li>
+          <li>2017年04月15日 pawoo.net登録</li>
+          <li>2017年04月20日 friends.nico登録</li>
+          <li>2017年06月??日 tumblrにgirl's surfaceのもとになるブログを作成</li>
+          <li>2017年12月31日 mstdn.jpのアカウントを削除し新しいアカウントを作成</li>
+          <li>2018年07月11日 misskey.xyz登録</li>
+          <li>2019年04月15日 misskey.io登録</li>
+          <li>2019年07月18日 neocitiesにアカウントを開設</li>
+          <li>2020年05月??日 100%healthを整備</li>
+          <li>2020年05月27日 groundpolis.appに登録</li>
+          <li>2021年02月25日 sushi.skiに登録</li>
+          <li>2022年08月13日 msk.ilnk.infoに登録</li>
+          <li>2022年12月03日 分散SNS関連年表初公開</li>
+          <li>2023年01月27日 pon.icu開設</li>
+          <li>2023年02月08日 tanoshii.site登録</li>
+          <li>2023年02月14日 pon.icuが壊れ立て直す</li>
+          <li>2024年04月13日 misskey.ioに新しいアカウント登録、後いど子へ</li>
+          <li>2024年04月26日 misskey.ioいど子誕生</li>
+          <li>2024年05月16日 他人事ラジオ初回公開</li>
+          <li>2024年10月04日 pon.icu閉鎖、前日から調子悪かった</li>
+          <li>2024年10月04日 tanoshii.siteに現アカウント登録</li>
+          </ul>
+          <span class="hashtag"><a href="/txt/zakki/tag/timeline.html">#timeline</a></span>
+          </section>
+        </article>
+
       </div>
     </main>
     <footer id="main-footer">
@@ -138,10 +408,126 @@
       <div id="footerhtml"></div>
     </footer>
   </div>
-  <script src="/txt/zakki/tag/tag-loader.js"></script>
+  
+  <!-- クライアント側ソートスクリプト -->
   <script>
-    // timelineタグ用に初期化
-    initializeTagPage('timeline');
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const allArticles = Array.from(document.querySelectorAll('.tag-article')).map(article => ({
+        element: article,
+        date: article.getAttribute('data-date'),
+        relevance: parseInt(article.getAttribute('data-relevance') || '100'),
+        html: article.outerHTML
+      }));
+      
+      const totalCount = allArticles.length;
+      let currentSort = 'date-desc';
+      let minRelevance = 0;
+      
+      console.log('Tag page client sort initialized. Total articles:', totalCount);
+      
+      function sortArticles(articles, sortMethod) {
+        const sorted = [...articles];
+        switch (sortMethod) {
+          case 'date-desc':
+            return sorted.sort((a, b) => b.date.localeCompare(a.date));
+          case 'date-asc':
+            return sorted.sort((a, b) => a.date.localeCompare(b.date));
+          case 'relevance-desc':
+            return sorted.sort((a, b) => b.relevance - a.relevance || b.date.localeCompare(a.date));
+          case 'relevance-asc':
+            return sorted.sort((a, b) => a.relevance - b.relevance || a.date.localeCompare(b.date));
+          default:
+            return sorted;
+        }
+      }
+      
+      function filterArticles(articles, minRel) {
+        return articles.filter(article => article.relevance >= minRel);
+      }
+      
+      function reverseTimelineLists(container, shouldReverse) {
+        const timelineLists = container.querySelectorAll('ul.timeline_md, ul.timeline_ymd');
+        timelineLists.forEach(list => {
+          const items = Array.from(list.querySelectorAll('li'));
+          if (items.length === 0) return;
+          
+          if (shouldReverse) {
+            items.reverse().forEach(item => list.appendChild(item));
+          }
+        });
+      }
+      
+      function updateDisplay() {
+        const filtered = filterArticles(allArticles, minRelevance);
+        const sorted = sortArticles(filtered, currentSort);
+        
+        const container = document.getElementById('articles-container');
+        container.innerHTML = sorted.map(article => article.html).join('');
+        
+        const shouldReverseTimeline = (currentSort === 'date-desc');
+        reverseTimelineLists(container, shouldReverseTimeline);
+        
+        const statsDisplay = document.getElementById('stats-display');
+        if (filtered.length > 0) {
+          const dates = sorted.map(a => a.date).sort();
+          const latest = dates[dates.length - 1];
+          const oldest = dates[0];
+          const avgRel = filtered.reduce((sum, a) => sum + a.relevance, 0) / filtered.length;
+          statsDisplay.textContent = '全' + totalCount + '件中' + filtered.length + '件表示中 | 最新: ' + latest + ' | 最古: ' + oldest + ' | 平均関連度: ' + Math.round(avgRel) + '%';
+        } else {
+          statsDisplay.textContent = '全' + totalCount + '件中0件表示中';
+        }
+        
+        console.log('Display updated:', {sort: currentSort, minRelevance: minRelevance, displayed: filtered.length, listReversed: shouldReverseTimeline});
+      }
+      
+      document.querySelectorAll('.tag-sort-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          currentSort = this.getAttribute('data-sort');
+          document.querySelectorAll('.tag-sort-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          console.log('Sort changed to:', currentSort);
+          updateDisplay();
+        });
+      });
+      
+      console.log('Sort buttons:', document.querySelectorAll('.tag-sort-btn').length);
+      
+      const slider = document.getElementById('relevance-slider');
+      const sliderValue = document.getElementById('slider-value');
+      
+      if (slider && sliderValue) {
+        slider.addEventListener('input', function() {
+          sliderValue.textContent = this.value + '%';
+        });
+        
+        slider.addEventListener('change', function() {
+          minRelevance = parseInt(this.value);
+          console.log('Relevance filter changed to:', minRelevance);
+          updateDisplay();
+        });
+      }
+      
+      const resetBtn = document.getElementById('reset-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function() {
+          currentSort = 'date-desc';
+          minRelevance = 0;
+          slider.value = 0;
+          sliderValue.textContent = '0%';
+          document.querySelectorAll('.tag-sort-btn').forEach(b => b.classList.remove('active'));
+          const defaultBtn = document.querySelector('[data-sort="date-desc"]');
+          if (defaultBtn) defaultBtn.classList.add('active');
+          console.log('Reset to defaults');
+          updateDisplay();
+        });
+      }
+      
+      const shouldReverseInitial = (currentSort === 'date-desc');
+      reverseTimelineLists(document.getElementById('articles-container'), shouldReverseInitial);
+    });
+    
   </script>
 </body>
 

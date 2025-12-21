@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script src="/js/jquery-3.6.0.min.js"></script>
   <script src="/js/main.js"></script>
-  <script src="/js/mouse.js" defer></script>
+  <script src="/js/mouse.js"></script>
   <script>
     $(function () {
       $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
@@ -49,7 +49,7 @@
       <br>
       <h1>2025年05月の雑記</h1>
       <nav class='arrow' aria-label="前後月へのリンク">
-        <div class='rowarrow'>
+        <div class='rowarrow' aria-label="前後月へのリンク">
           <a class="leftarrow" href="../03/2025-03.html" aria-label="前の月へ移動">&lt;</a>
           <a class="uparrow" href="../2025.html" aria-label="年間表示へ戻る">&lt;&lt;</a>
           <a class="rightarrow" href="../07/2025-07.html" aria-label="次の月へ移動">&gt;</a>
@@ -58,16 +58,20 @@
 
       <div id="zakki05">
         <h2><a href="/txt/zakki/2025/05/2025-05.html">2025-05</a></h2>
-        <div class="month-article"></div> 
+        <div class="month-article">
+          <article id="250522">
+          <h3><a href="/txt/zakki/2025/05/days/2025-05-22.html">2025-05-22</a></h3>
+          <div class="article-preview"><p>
+                        4月に更新するつもりはあったんですが、なんだかんだで更新できず、こんな時期になってしまいました。
+                        こまめに更新できるようになりたい。
+          
+                        いちおう更新しよう<span class="ellipsis">...</span></p><h4>まとめの表</h4><ul class="timeline_md"><li>03月10日 リンクページに相互リンクを追加。</li><li>03月14日 鼻血が出る（伏線）</li><li>03月15日 SNSのアイコンを変更：mokoさんありがとうございます</li><li class="list-ellipsis" style="font-style: italic; color: #666;"><em>... (他25項目)</em></li></ul><hr/><br/><h4>03月28日に配信できなかったことについて</h4><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2025/05/days/2025-05-22.html">続きを読む / <span lang="en">read more</span></a></p></div>
+          </article>
+        </div> 
       </div>
-      <script src="/txt/zakki/monthly-article-utils.js"></script>
-      <script src="zakki05.js"></script>
-      <script>
-        window.addEventListener('load', loadDailyArticles05);
-      </script>
 
       <nav class='arrow' aria-label="前後月へのリンク"> 
-        <div class='rowarrow'>
+        <div class='rowarrow' aria-label="前後月へのリンク">
           <a class="leftarrow" href="../03/2025-03.html" aria-label="前の月へ移動">&lt;</a>
           <a class="uparrow" href="../2025.html" aria-label="年間表示へ戻る">&lt;&lt;</a>
           <a class="rightarrow" href="../07/2025-07.html" aria-label="次の月へ移動">&gt;</a>
@@ -85,9 +89,12 @@
   </div>
   <div id="lightbox">
     <link rel="stylesheet" href="/luminous-basic.min.css">
-    <script src="/Luminous.min.js"></script>
+    <script src="/Luminous.min.js" defer></script>
     <script>
-      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      // LuminousGalleryが読み込まれてから実行
+      if (typeof LuminousGallery !== 'undefined') {
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      }
     </script>
   </div>
 </body>

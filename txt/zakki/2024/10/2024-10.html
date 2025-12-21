@@ -9,14 +9,14 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script src="/js/jquery-3.6.0.min.js"></script>
   <script src="/js/main.js"></script>
-  <script src="/js/mouse.js" defer></script>
+  <script src="/js/mouse.js"></script>
   <script>
     $(function () {
       $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
       $("#taghtml").load("/txt/txt_main.html #tag-list");
     });
   </script>
-  <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
+  <link rel="stylesheet" href="/txt/zakki/zakki-month.css">
   <link rel="stylesheet" href="/txt/zakki/tag-style.css">
 </head>
 
@@ -49,28 +49,37 @@
       <br>
       <h1>2024年10月の雑記</h1>
       <nav class='arrow' aria-label="前後月へのリンク">
-        <nav class='rowarrow' aria-label="前後月へのリンク">
-          <a class="leftarrow" href="../08/2024-08.html">&lt;</a>
-          <a class="uparrow" href="../2024.html">&lt;&lt;</a>
-          <a class="rightarrow" href="../12/2024-12.html">&gt;</a>
-        </nav>
+        <div class='rowarrow' aria-label="前後月へのリンク">
+          <a class="leftarrow" href="../08/2024-08.html" aria-label="前の月へ移動">&lt;</a>
+          <a class="uparrow" href="../2024.html" aria-label="年間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="../12/2024-12.html" aria-label="次の月へ移動">&gt;</a>
+        </div>
       </nav>
 
       <div id="zakki10">
         <h2><a href="/txt/zakki/2024/10/2024-10.html">2024-10</a></h2>
-        <div class="month-article"></div>
+        <div class="month-article">
+          <article id="241009">
+          <h3><a href="/txt/zakki/2024/10/days/2024-10-09.html">2024-10-09</a></h3>
+          <div class="article-preview"><p>
+                      一ヶ月に2回は更新したいとか考えてたが、甘かった。
+                      自分自身の継続性のなさの見積もりが甘かった。
+          
+                      9月中には1ヶ月に1回でもいいかと思っていた。9月が終わると、10<span class="ellipsis">...</span></p><p>
+                      ちょっとヘビーなものとして捉えすぎてる気がする。これまでなんだか文章量が多少あるのが多かったし。<br/>
+          <br/>
+                      とりあえず雑に9月の振り返りをする。<br/>
+          </p><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2024/10/days/2024-10-09.html">続きを読む / <span lang="en">read more</span></a></p></div>
+          </article>
+        </div> 
       </div>
-      <script src="zakki10.js"></script>
-      <script>
-        window.addEventListener('load', loadDailyArticles10);
-      </script>
 
-      <nav class='arrow' aria-label="前後月へのリンク">
-        <nav class='rowarrow' aria-label="前後月へのリンク">
-          <a class="leftarrow" href="../08/2024-08.html">&lt;</a>
-          <a class="uparrow" href="../2024.html">&lt;&lt;</a>
-          <a class="rightarrow" href="../12/2024-12.html">&gt;</a>
-        </nav>
+      <nav class='arrow' aria-label="前後月へのリンク"> 
+        <div class='rowarrow' aria-label="前後月へのリンク">
+          <a class="leftarrow" href="../08/2024-08.html" aria-label="前の月へ移動">&lt;</a>
+          <a class="uparrow" href="../2024.html" aria-label="年間表示へ戻る">&lt;&lt;</a>
+          <a class="rightarrow" href="../12/2024-12.html" aria-label="次の月へ移動">&gt;</a>
+        </div>
       </nav>
 
     </main>
@@ -84,9 +93,12 @@
   </div>
   <div id="lightbox">
     <link rel="stylesheet" href="/luminous-basic.min.css">
-    <script src="/Luminous.min.js"></script>
+    <script src="/Luminous.min.js" defer></script>
     <script>
-      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      // LuminousGalleryが読み込まれてから実行
+      if (typeof LuminousGallery !== 'undefined') {
+        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+      }
     </script>
   </div>
 </body>

@@ -68,10 +68,12 @@ class ChangelogRSSGenerator {
       const items = dom.window.document.querySelectorAll('ol > li');
       console.log(`総エントリ数: ${items.length}`);
       
-      // 既存エントリからタイトルベースでのマップを作成
-      const existingByTitle = new Map();
+      // 既存エントリからGUIDベースでのマップを作成
+      const existingByGuid = new Map();
       for (const existing of existingItems) {
-        existingByTitle.set(existing.title, existing);
+        // GUIDからベースURLを除去して純粋なGUID部分を取得
+        const pureGuid = existing.guid.replace(this.config.siteUrl + '/rss#', '');
+        existingByGuid.set(pureGuid, existing);
       }
       
       const newRssItems = [];
@@ -86,14 +88,22 @@ class ChangelogRSSGenerator {
         
         const rssItem = this.extractRSSData(item, true, true); // 増分更新フラグと新規エントリフラグを渡す
         if (rssItem) {
-          // 既存エントリと同じタイトルの場合は、既存のGUIDとpubDateを使用
-          const existingItem = existingByTitle.get(rssItem.title);
+          // 新規生成されたGUIDから純粋なGUID部分を取得
+          const pureGuid = rssItem.guid.replace(this.config.siteUrl + '/rss#', '');
+          const existingItem = existingByGuid.get(pureGuid);
+          
           if (existingItem) {
-            console.log(`♻️ 既存エントリを維持: ${rssItem.title} (GUID: ${existingItem.guid})`);
+            console.log(`♻️ 既存エントリを維持: ${rssItem.title}`);
+            console.log(`   リンク: ${rssItem.link}`);
+            console.log(`   GUID: ${pureGuid}`);
+            console.log(`   日付: ${existingItem.pubDate}`);
             rssItem.guid = existingItem.guid;
             rssItem.pubDate = existingItem.pubDate; // 既存のpubDateを保持
           } else {
             console.log(`✅ 新規エントリ: ${rssItem.title}`);
+            console.log(`   リンク: ${rssItem.link}`);
+            console.log(`   GUID: ${pureGuid}`);
+            console.log(`   日付: ${rssItem.pubDate}`);
           }
           newRssItems.push(rssItem);
           processedCount++;
@@ -237,9 +247,9 @@ class ChangelogRSSGenerator {
       // GUIDの生成（data属性があれば使用、なければ自動生成）
       let guid = liElement.getAttribute('data-rss-guid');
       if (!guid) {
-        // デフォルト：意味のある文字列（タイトル+日付のハッシュ）
-        const titleHash = this.simpleHash(title);
-        guid = `${titleHash}-${dateStr.replace(/\//g, '')}`;
+        // デフォルト：意味のある文字列（リンク+日付のハッシュ）
+        const linkHash = this.simpleHash(link);
+        guid = `${linkHash}-${dateStr.replace(/\//g, '')}`;
       }
       
       return {
@@ -363,14 +373,11 @@ ${items.map(item => this.generateRSSItem(item)).join('\n')}
     // 最新エントリのみを処理（既存エントリの情報を渡す）
     const newItems = this.parseChangelogIncremental(existingItems);
     
-    // マージ（シンプル化 - newItemsに既存エントリも含まれている）
-    const allItems = newItems;
+    // マージ（新規エントリと既存エントリを結合）
+    const allItems = this.mergeRSSFeeds(existingItems, newItems);
     
-    // 日付順ソート（pubDateベース）
-    allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-    
-    // 最大件数でカット
-    const finalItems = allItems.slice(0, this.config.maxItems);
+    // 日付順ソートと最大件数のカットはmergeRSSFeeds内で実施済み
+    const finalItems = allItems;
     
     console.log(`最終RSS: ${finalItems.length}個のエントリ`);
     

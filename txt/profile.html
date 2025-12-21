@@ -44,7 +44,7 @@
       }
     }
   
-    div#bio, div#social_links {
+    div#bio, div#social-links {
       margin-bottom: 30px;
     }
   
@@ -75,6 +75,61 @@
       tr:last-child{
         border-bottom: none;
       }
+    }
+
+    .table-wrapper {
+    }
+
+    .service-table {
+      width: 100%;
+      border-collapse: collapse;
+      th,td{
+        text-align: left;
+        padding: 3px 8px;
+      }
+      th:last-child,td:last-child{
+        text-align: right;
+      }
+      td[rowspan]{
+        vertical-align: top;
+      }
+    }
+
+    h2,h3,h4{
+      padding-top: 1em;
+    }
+
+    .fediverse-symbol{
+      font-size: small;
+      vertical-align: initial;
+      a{
+        text-decoration: none;
+        color: #666;
+        &:hover{
+          color: white;
+        }
+      }
+      a::after{
+        display: none!important;
+      }
+    }
+
+    .notestock-url {
+      font-size: 6px;
+    }
+
+    .header-link{
+      opacity: 0.2;
+      padding: 0 1em;
+      margin-left: 1em;
+      text-decoration: none;
+      color: black;
+      transition: opacity 0.2s;
+    }
+    .header-link:hover{
+      color: black;
+      background-color: transparent;
+      opacity: 1;
     }
 
     /* 外部リンクアイコンのスタイル */
@@ -116,10 +171,57 @@
       list-style-type: none;
     }
 
-    @media screen and (max-width:628px) {
+    @media screen and (width <= 576px) {
       .profile-table {
         th {
+          font-size: 10pt;
           width: 88px;
+          padding: 15px 30px 15px 0;
+        }
+      }
+
+      .table-wrapper {
+        margin-right: 0;
+      }
+
+      .service-table {
+        margin-left: 0;
+        width: auto;
+
+        th,
+        td {
+          padding: 0 1px;
+        }
+
+        tr{
+          border-bottom: 1px solid #f0f0f0;
+        }
+        
+        tr:last-child{
+          border-bottom: none;
+        }
+
+        th:nth-child(3) {
+          visibility: hidden;
+          &::after {
+            content: 'link';
+            visibility: visible;
+            margin-left: -6px;
+          }
+        }
+
+        .notestock-url {
+          font-size: 0;
+        }
+
+        td:nth-last-child(2) {
+          font-size: 0!important;
+          padding: 0 20px;
+        }
+
+        th:last-child,
+        td:last-child {
+          font-size: 8pt;
         }
       }
     }
@@ -155,7 +257,7 @@
       <section id="textblock">
         <h1 class="title">プロフィール / <small title="profile" lang="en">profile</small></h1>
         <section id="bio">
-          <h2>前略プロフィール</h2>
+          <h2 id="profile">前略プロフィール <a href="#profile" class="header-link">§</a></h2>
           <div id="biocard">
             <div style="text-align: center;">
               <img style="width: 360px;height: auto;user-select: none;-webkit-user-drag: none;" src="/img/idoko-profile.webp" alt="いど子のプロフィール画像" width="360" height="360">
@@ -213,7 +315,7 @@
                 <tr>
                   <th>好きな漫画・アニメ</th>
                   <td>
-                    <p>漫画：あずまきよひこ『あずまんが大王』、ばらスィー『苺ましまろ』</p>
+                    <p>漫画：あずまきよひこ『あずまんが大王』、ばらスィー『苺ましまろ』、富沢ひとし『エイリアン9』</p>
                     <p>アニメ：『電脳コイル』、『灰羽連盟』、『ジュエルペットサンシャイン』、『フリクリ』、『エイリアン9』、『カイバ』、『らき☆すた』、『けいおん！』、『本好きの下剋上』とか......あとは攻殻機動隊シリーズ、押井守監督作品。</p>
                   </td>
                 </tr>
@@ -231,10 +333,114 @@
             </table>
           </div>
         </section>
+        <section>
+          <h2 id="service-usage">利用サービス <a href="#service-usage" class="header-link">§</a></h2>
+          <div class="table-wrapper">
+            <table class="service-table" aria-label="利用サービス一覧">
+              <thead>
+                <tr>
+                  <th>サービス名</th>
+                  <th>サーバー</th>
+                  <th>URL</th>
+                  <th>利用状況</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="1">neocities</td>
+                  <td>-</td>
+                  <td><a href="https://neocities.org/site/yuinoid" target="_blank" rel="me">neocities.org/site/yuinoid</a></td>
+                  <td>2 - 3回/週程度確認</td>
+                </tr>
+                <tr>
+                  <td rowspan="4">misskey <span class="fediverse-symbol" style="font-size: small;vertical-align: initial;text-decoration: none;"><a href="https://symbol.fediverse.info/en" target="_blank">⁂</a></span></td>
+                  <td>tanoshii.site</td>
+                  <td><a href="https://tanoshii.site/@yuinoid" target="_blank" rel="me">tanoshii.site/@yuinoid</a></td>
+                  <td>活用（メイン）</td>
+                </tr>
+                <tr>
+                  <td>misskey.io</td>
+                  <td><a href="https://misskey.io/@yuinoid" target="_blank" rel="me">misskey.io/@yuinoid</a></td>
+                  <td>2 - 3回/週程度確認</td>
+                </tr>
+                <tr>
+                  <td>sushi.ski</td>
+                  <td><a href="https://sushi.ski/@idoko" target="_blank" rel="me">sushi.ski/@idoko</a></td>
+                  <td>2 - 3回/週程度確認</td>
+                </tr>
+                <tr>
+                  <td>msk.ilnk.info</td>
+                  <td><a href="https://msk.ilnk.info/@yuinoid" target="_blank" rel="me">msk.ilnk.info/@yuinoid</a></td>
+                  <td>不活用</td>
+                </tr>
+                <tr>
+                  <td rowspan="2">mastodon <span class="fediverse-symbol" style="font-size: small;vertical-align: initial;text-decoration: none;"><a href="https://symbol.fediverse.info/en" target="_blank">⁂</a></span></td>
+                  <td>mistodon.cloud</td>
+                  <td><a href="https://mistodon.cloud/@health" target="_blank" rel="me">mistodon.cloud/@health</a></td>
+                  <td>1回/週程度確認</td>
+                </tr>
+                <tr>
+                  <td>mastodon.cloud</td>
+                  <td><a href="https://mastodon.cloud/@objtus" target="_blank" rel="me">mastodon.cloud/@objtus</a></td>
+                  <td>不活用</td>
+                </tr>
+                <tr>
+                  <td>concurrent <span class="fediverse-symbol" style="font-size: small;vertical-align: initial;text-decoration: none;"><a href="https://symbol.fediverse.info/en" target="_blank">⁂</a></span></td>
+                  <td>concrnt.world</td>
+                  <td><a href="https://concrnt.world/idoko.org" target="_blank" rel="me">concrnt.world/idoko.org</a></td>
+                  <td>不活用</td>
+                </tr>
+                <tr>
+                  <td>notestock <span class="fediverse-symbol" style="font-size: small;vertical-align: initial;text-decoration: none;"><a href="https://symbol.fediverse.info/en" target="_blank">⁂</a></span></td>
+                  <td>-</td>
+                  <td><a href="https://notestock.osa-p.net/@health@tanoshii.site/group_yuinoid" target="_blank" rel="me">notestock.osa-p.net/<span class="notestock-url">@health@tanoshii.site/group_yuinoid</span></a></td>
+                  <td>自動更新</td>
+                </tr>
+                <tr>
+                  <td>pikidairy</td>
+                  <td>-</td>
+                  <td><a href="https://pikidiary.lol/@health" target="_blank" rel="me">pikidiary.lol/@health</a></td>
+                  <td>1回/週程度確認</td>
+                </tr>
+                <tr>
+                  <td rowspan="1">Twitter</td>
+                  <td colspan="1">-</td>
+                  <td><a href="https://x.com/yuinoid" target="_blank" rel="me">x.com/yuinoid</a></td>
+                  <td>閲覧のみ</td>
+                </tr>
+                <tr>
+                  <td rowspan="1">Tumblr</td>
+                  <td>-</td>
+                  <td><a href="https://yuinoid.tumblr.com" target="_blank" rel="me">yuinoid.tumblr.com</a></td>
+                  <td>不活用</td>
+                </tr>
+                <tr>
+                  <td>skeb.jp</td>
+                  <td>-</td>
+                  <td><a href="https://skeb.jp/@yuinoid" target="_blank" rel="me">skeb.jp/@yuinoid</a></td>
+                  <td>募集中</td>
+                </tr>
+                <tr>
+                  <td>twtch.tv</td>
+                  <td>-</td>
+                  <td><a href="https://twtch.tv/yuinoid" target="_blank" rel="me">twtch.tv/yuinoid</a></td>
+                  <td>毎週金曜日<br>22:00から配信中</td>
+                </tr>
+                <tr>
+                  <td>last.fm</td>
+                  <td>-</td>
+                  <td><a href="https://last.fm/user/objtus" target="_blank" rel="me">last.fm/user/objtus</a></td>
+                  <td>自動更新</td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </section>
         <section id="favorite-albums">
-          <h2>お気に入りアルバム</h2>
-          <img src="/img/chart.webp" style="-webkit-user-drag: none;user-select: none;" usemap="#image-map" alt="お気に入りなアルバムのアートワークを複数まとめたもの" width="600" height="396">
-          <map name="image-map">
+          <h2>お気に入りアルバム <a href="#favorite-albums" class="header-link">§</a></h2>
+          <img id="album-chart-image" src="/img/chart.webp" style="-webkit-user-drag: none;user-select: none;image-rendering: auto;max-width: 100%;height: auto;" usemap="#image-map" alt="お気に入りなアルバムのアートワークを複数まとめたもの" width="600" height="396">
+          <map name="image-map" id="album-image-map">
               <area target="_blank" alt="Ecco2k - e" title="Ecco2k - e" href="https://e-ec.co" coords="4,6,78,80" shape="rect">
               <area target="_blank" alt="Aphex Twin - Syro" title="Aphex Twin - Syro" href="https://aphextwin.warp.net/release/68152-aphex-twin-syro" coords="84,5,156,79" shape="rect">
               <area target="_blank" alt="Jam City - Dream a Garden" title="Jam City - Dream a Garden" href="https://nightslugs.net/releases/nslp004-jam-city-dream-a-garden-2/" coords="161,4,234,79" shape="rect">
@@ -272,6 +478,39 @@
       <div id="footerhtml"></div>
     </footer>
   </div>
+
+  <script>
+    // 画像マップのレスポンシブ対応
+    (function() {
+      const img = document.getElementById('album-chart-image');
+      const map = document.getElementById('album-image-map');
+      const areas = map.getElementsByTagName('area');
+      
+      // 元の座標を保存
+      const originalCoords = [];
+      for (let i = 0; i < areas.length; i++) {
+        originalCoords[i] = areas[i].getAttribute('coords').split(',').map(Number);
+      }
+      
+      function resizeMap() {
+        const scale = img.offsetWidth / 600; // 元の画像幅は600px
+        
+        for (let i = 0; i < areas.length; i++) {
+          const newCoords = originalCoords[i].map(coord => Math.round(coord * scale));
+          areas[i].setAttribute('coords', newCoords.join(','));
+        }
+      }
+      
+      // 画像読み込み時とリサイズ時に実行
+      img.addEventListener('load', resizeMap);
+      window.addEventListener('resize', resizeMap);
+      
+      // すでに読み込まれている場合
+      if (img.complete) {
+        resizeMap();
+      }
+    })();
+  </script>
 </body>
 
 </html>

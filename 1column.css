@@ -1,6 +1,6 @@
-/*===================
+/* ===================
  全体への装飾
-===================*/
+=================== */
 
 :root {
   --min-width768: 95%;
@@ -15,15 +15,15 @@
 }
 
 @font-face {
-  font-family: "saitamaar";
+  font-family: saitamaar;
   src: url("saitamaar.woff2") format("woff2"),
     url("saitamaar.woff") format("woff"),
     url("saitamaar.ttf") format("ttf");
   font-display: swap;
 }
 
-.saitamaar_light {
-  font-family: "saitamaar";
+.saitamaar-light {
+  font-family: saitamaar, sans-serif;
   white-space: pre;
   font-size: 16px;
   line-height: 18px;
@@ -39,7 +39,7 @@ body {
   width: 100%;
   height: 100%;
   font-size: 11pt;
-  font-family: "saitamaar", 'PikoA', "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  font-family: saitamaar, PikoA, "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   word-break: auto-phrase;
   transition: background-color 0.3s, color 0.3s;
 }
@@ -47,8 +47,7 @@ body {
 #wrapper {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden auto;
   box-sizing: border-box;
   background-color: light-dark(white, #222);
   display: flex;
@@ -66,17 +65,13 @@ img {
   image-rendering: pixelated;
 }
 
-::-moz-selection {
-  color: #ffffff;
-  background-color: light-dark(rgb(0, 0, 255), #ccc);
-}
-
 ::selection {
-  color: #ffffff;
-  background-color: light-dark(rgb(0, 0, 255), #ccc);
+  color: #fff;
+  background-color: light-dark(#00f, #ccc);
 }
 
-h1, h2 {
+h1,
+h2 {
   margin-top: 1rem;
 }
 
@@ -86,16 +81,26 @@ h1.title {
   line-height: 24px;
 }
 
+/* デフォルト状態：ぼかし効果 */
+.nsfw img {
+  filter: blur(20px);
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: auto;
+  user-select: none;
+}
+
 a {
   color: light-dark(black, #fff);
   
   &:hover {
-    color: #ffffff;
+    color: #fff;
     background-color: light-dark(black, #888);
     
     img {
-      font-size: 0pt;
-      color: none;
+      font-size: 0;
+      color: transparent;
       background-color: transparent;
     }
   }
@@ -110,9 +115,9 @@ button {
 
 /* 外部リンクアイコンのスタイル */
 a[href^="http"]::after {
-  content: '';
+  content: "";
   display: inline-block;
-  background-image: url(/external_link-icon1x2.png);
+  background-image: url("external_link-icon1x2.png");
   image-rendering: auto;
   margin-left: 3px;
   margin-right: 1px;
@@ -121,6 +126,16 @@ a[href^="http"]::after {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: inherit;
+}
+
+a[href^="http"]:hover::after {
+  filter: invert(1);
+}
+
+.article-body a[href^="http"]::after {
+  width: 12px;
+  height: 20px;
+  transform: translateY(-3px);
 }
 
 #galleryspace a[href^="http"]::after {
@@ -134,24 +149,14 @@ a[href^="http"]::after {
   height: 20px;
 }
 
-.article-body a[href^="http"]::after {
-  width: 12px;
-  height: 20px;
-  transform: translateY(-3px);
-}
-
 #footerhtml a[href^="http"]::after {
   width: 10px;
   height: 14px;
 }
 
-a[href^="http"]:hover::after {
-  filter: invert(1);
-}
-
-/*===================
+/* ===================
   headerBlock
-===================*/
+=================== */
 
 #header-flex {
   display: flex;
@@ -160,25 +165,24 @@ a[href^="http"]:hover::after {
   width: 100%
 }
 
-a {
-  &#backicon, &.addressbar {
-    color: light-dark(black, #ddd);
-    overflow: auto;
-    text-decoration: none;
-    
-    &:hover {
-      background-color: transparent;
-    }
+a#backicon,
+a.addressbar {
+  color: light-dark(black, #ddd);
+  overflow: auto;
+  text-decoration: none;
+  
+  &:hover {
+    background-color: transparent;
   }
 }
 
-#back, #address {
+#back,
+#address {
   position: relative;
   top: -3px;
   font-size: large;
   background-color: light-dark(transparent, #444);
   backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   filter: grayscale(100%);
   font-weight: bold;
   line-height: 18px;
@@ -196,10 +200,11 @@ a {
   transform: scale(1.15, 0.85);
 }
 
-/*===================
+/* ===================
  mainBlock
-===================*/
-#main, #main-footer {
+=================== */
+#main,
+#main-footer {
   width: 70%;
   max-width: 600px;
   margin: 0 auto;
@@ -228,12 +233,12 @@ a {
   }
 }
 
-.youtube_16-9 {
+.youtube-16-9 {
   width: 100%;
   aspect-ratio: 16 / 9;
 }
 
-.youtube_16-9 iframe {
+.youtube-16-9 iframe {
   width: 100%;
   height: 100%;
 }
@@ -289,9 +294,9 @@ nav {
   }
 }
 
-/*================================
+/* ================================
    NSFWフィルター機能（piccardベース・caption問題解決版）
-================================*/
+================================ */
 
 /* NSFWフィルター基本設定 */
 .nsfw {
@@ -303,14 +308,6 @@ nav {
   display: block;
   overflow: hidden;
   border-radius: inherit;
-}
-
-/* デフォルト状態：ぼかし効果 */
-.nsfw img {
-  filter: blur(20px);
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 .related-item.nsfw img{
@@ -331,7 +328,7 @@ nav {
   top: 44%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.2);
+  background: rgb(0 0 0 / 20%);
   color: white;
   padding: 8px 4px;
   border-radius: 4px;
@@ -341,8 +338,8 @@ nav {
   cursor: pointer;
   z-index: 10;
   pointer-events: auto;
+
   /* iOS向けタッチ対応 */
-  -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
 }
@@ -363,7 +360,7 @@ nav {
   position: absolute;
   top: -30px;
   right: 0;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgb(0 0 0 / 5%);
   color: black;
   padding: 6px 12px;
   border-radius: 2px;
@@ -372,8 +369,8 @@ nav {
   z-index: 10;
   backdrop-filter: blur(5px);
   transition: background-color 0.2s ease;
+
   /* iOS向けタッチ対応 */
-  -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
 }
@@ -390,7 +387,7 @@ nav {
 }
 
 .nsfw.revealed::after:hover {
-  background: rgba(85, 85, 85, 0.9);
+  background: rgb(85 85 85 / 90%);
   color: white;
 }
 
@@ -402,13 +399,6 @@ nav {
 
 .related-item.nsfw:not(.revealed) > a {
   pointer-events: auto;
-}
-
-/* iOS向け：画像自体にもタッチイベントを有効化 */
-.nsfw img {
-  pointer-events: auto;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 /* ライトボックス内NSFWフィルター */
@@ -427,7 +417,7 @@ nav {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.2);
+  background: rgb(0 0 0 / 20%);
   color: white;
   padding: 14px 10px;
   border-radius: 4px;
@@ -438,8 +428,8 @@ nav {
   z-index: 10005;
   pointer-events: auto;
   display: block;
+
   /* iOS向けタッチ対応 */
-  -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
 }
@@ -450,7 +440,7 @@ nav {
   position: absolute;
   top: 20px;
   right: 20px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgb(0 0 0 / 30%);
   color: white;
   padding: 8px 14px;
   border-radius: 3px;
@@ -459,19 +449,19 @@ nav {
   z-index: 10005;
   backdrop-filter: blur(5px);
   transition: background-color 0.2s ease;
+
   /* iOS向けタッチ対応 */
-  -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
   pointer-events: auto;
 }
 
 .lum-lightbox .lum-lightbox-image-wrapper:not(.nsfw-filtered).nsfw-revealed::after:hover {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgb(0 0 0 / 60%);
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 768px) {
+@media screen and (width <= 768px) {
   .nsfw::before,
   .lum-lightbox .lum-lightbox-image-wrapper.nsfw-filtered::before {
     font-size: 11px;
@@ -495,9 +485,9 @@ nav {
   }
 }
 
-/*===================
+/* ===================
  galleryhtml
-===================*/
+=================== */
 .topborder {
   height: 1px;
   position: relative;
@@ -508,27 +498,26 @@ nav {
     background-size: 20px 1px;
     background-repeat: repeat-x;
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    inset: 0;
   }
 }
 
 #gallerymaphtml {
   summary {
     list-style: none;
+    
     h3 > a {
       text-decoration: none;
     }
   }
+
   h3 {
     font-weight: normal;
     font-size: 1rem;
   }
 }
 
-.gallery_summary {
+.gallery-summary {
   color: light-dark(#fff, #ccc);
   background-color: light-dark(#000, #555);
   
@@ -538,7 +527,7 @@ nav {
   }
 }
 
-.summary_boxes {
+.summary-boxes {
   padding-left: 10px;
   border-left: dotted 2px;
   margin: 5px 0 5px 5px;
@@ -578,11 +567,12 @@ nav {
   margin-left: -0.14rem;
 }
 
-/*===================
+/* ===================
   linksBlock
-===================*/
+=================== */
 
-.nav_links, #foot_links {
+.nav-links,
+#foot-links {
   font-size: 0.8em;
   
   a {
@@ -590,16 +580,16 @@ nav {
   }
 }
 
-.nav_links {
+.nav-links {
   margin-top: 30px;
 }
 
-#foot_links {
+#foot-links {
   max-width: 600px;
   margin-top: 10px;
 }
 
-#favorite_links {
+#favorite-links {
   padding-left: 0.5em;
   margin-bottom: 60px;
   margin-right: 50px;
@@ -619,9 +609,9 @@ nav {
   }
 }
 
-/*===================
+/* ===================
   footerBlock
-===================*/
+=================== */
 #footer {
   display: flex;
   align-items: flex-end;
@@ -631,7 +621,7 @@ nav {
   background-color: transparent;
 }
 
-#foot_comment {
+#foot-comment {
   display: inline;
   font-size: 0.8em;
   margin-top: 23px;
@@ -639,12 +629,12 @@ nav {
 }
 
 /* フッター統計情報のスタイル */
-#foot_comment #last-update {
-  font-feature-settings: 'tnum';
+#foot-comment #last-update {
+  font-feature-settings: "tnum";
   white-space: nowrap;
 }
 
-#foot_comment #random-msg {
+#foot-comment #random-msg {
   display: inline-block;
   position: relative;
   cursor: pointer;
@@ -668,17 +658,18 @@ nav {
   }
 
   &::before {
-    content: '';
+    content: "";
     display: inline-block;
     width: 35px;
     height: 12px;
-    background-image: url(heart_3.webp);
+    background-image: url("heart_3.webp");
     background-repeat: no-repeat;
     background-size: contain;
-    vertical-align: right;
+    vertical-align: middle;
     image-rendering: pixelated;
     pointer-events: none;
   }
+
   @media (prefers-color-scheme: dark) {
     &::before {
       filter: invert(1);
@@ -686,23 +677,23 @@ nav {
   }
 }
 
-#logo_footer {
+#logo-footer {
   width: 35px;
   min-width: 35px;
   padding: 0;
   image-rendering: pixelated;
 }
+
 @media (prefers-color-scheme: dark) {
-  #logo_footer {
+  #logo-footer {
     filter: invert(1);
     mix-blend-mode: lighten;
-
   }
 }
 
-/*===================
+/* ===================
   シークレットモーダル
-===================*/
+=================== */
 #secret-modal {
   border: none;
   padding: 0;
@@ -725,46 +716,51 @@ nav {
   }
 
   &::backdrop {
-    background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.5));
+    background-color: light-dark(rgb(0 0 0 / 10%), rgb(255 255 255 / 50%));
     backdrop-filter: saturate(0);
-    -webkit-backdrop-filter: saturate(0);
   }
+
   h2 {
     display: inline-block;
-    margin:0 0 8px 0;
+    margin: 0 0 8px;
     font-size: 1rem;
     background-color: white;
     color: black;
     clip-path: inset(2px 1px 3px 0);
   }
+
   p {
     display: inline-block;
-    margin: 0 0 20px 0;
+    margin: 0 0 20px;
     font-size: 0.8rem;
     background-color: white;
     color: black;
     line-height: 1.4;
     clip-path: inset(3px 1px 3px 0);
   }
+
   .secret-link-and-button {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
   }
+
   a {
     display: inline-block;
     font-size: 0.8rem;
     background-color: blue;
     color: white;
     clip-path: inset(2px 1px 1px 0);
+
     &:hover {
       background-color: blue;
       color: white;
     }
   }
+
   #close-secret-modal {
-    font-family: 'saitamaar';
+    font-family: saitamaar, sans-serif;
     background-color: black;
     color: white;
     padding: 1px 1px 0 3px;
@@ -773,6 +769,7 @@ nav {
     cursor: pointer;
     font-size: 0.8rem;
     clip-path: inset(2px 1px 1px 2px);
+
     &:hover {
       background-color: white;
       color: black;
@@ -781,14 +778,14 @@ nav {
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 768px) {
-  #foot_comment {
+@media screen and (width <= 768px) {
+  #foot-comment {
     font-size: 0.75em;
     line-height: 1.5;
   }
 }
 
-@media screen and (max-width: 576px) {
+@media screen and (width <= 576px) {
   #secret-modal .modal-content {
     padding: 15px;
     min-width: 240px;
@@ -799,18 +796,18 @@ nav {
   }
 }
 
-@media (max-width: 480px) {
-  #foot_comment {
+@media screen and (width <= 480px) {
+  #foot-comment {
     display: block;
     text-align: center;
     font-size: 0.7em;
   }
 }
 
-/*===================
+/* ===================
   @media
-===================*/
-@media screen and (min-width: 900px) {
+=================== */
+@media screen and (width >= 900px) {
   #header-flex {
     position: absolute;
   }
@@ -821,38 +818,42 @@ nav {
   
   #address {
     position: relative;
+
     /* left: calc((18.5% * 2) - 313px); */
   }
 }
 
-@media screen and (max-width: 768px) {
-  #address{
+@media screen and (width <= 768px) {
+  #address {
     margin-left: calc(11% - 4.8vw);
   }
-  #main, #main-footer {
+
+  #main,
+  #main-footer {
     width: 80%;
   }
 }
+
 /* スマホサイズ */
-@media screen and (max-width: 576px) {
+@media screen and (width <= 576px) {
   body {
     font-size: 0.9rem;
     line-height: 25px;
   }
 
   h1 {
-		font-size: 1.5rem;
-		font-weight: bold;
-		text-align: right;
-		background-image: linear-gradient(to bottom, #ccc);
-		background-size: 100% 1.5rem;
-		background-repeat: no-repeat;
-		background-position: 0 8px;
-		padding-top: 10px;
-	}
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: right;
+    background-image: linear-gradient(to bottom, #ccc);
+    background-size: 100% 1.5rem;
+    background-repeat: no-repeat;
+    background-position: 0 8px;
+    padding-top: 10px;
+  }
 
-  #back{
-    width: 0px;
+  #back {
+    width: 0;
   }
   
   #wrapper {
@@ -862,12 +863,13 @@ nav {
     border-bottom: none;
   }
 
-	#main {
-		margin-left: 5%;
-		margin-right: 0px;
-	}
+  #main {
+    margin-left: 5%;
+    margin-right: 0;
+  }
   
-  #main, #main-footer {
+  #main,
+  #main-footer {
     width: 90%;
     margin-top: 45px;
   }
@@ -876,25 +878,26 @@ nav {
     font-size: medium;
   }
   
-  article, #galleryspace {
+  article,
+  #galleryspace {
     h1.title {
       background-color: #ccc;
     }
   }
 
-  #foot_links {
+  #foot-links {
     margin-top: 0;
   }
 }
 
 
-@media screen and (max-width: 435px) {
+@media screen and (width <= 435px) {
   #gallerymaphtml {
     width: calc(100% - 20px);
     margin-bottom: 30px;
   }
   
-  a.linkImg {
+  a.link-img {
     span {
       display: none;
       position: absolute;
@@ -904,8 +907,8 @@ nav {
   }
 }
 
-@media screen and (min-width: 435px) {
-  a.linkImg {
+@media screen and (width >= 435px) {
+  a.link-img {
     &:hover {
       position: relative;
       text-decoration: none;
@@ -929,19 +932,20 @@ nav {
   }
 }
 
-@media screen and (max-width: 375px) {
+@media screen and (width <= 375px) {
   #wrapper {
     border: none;
   }
   
-  #main, #main-footer {
+  #main,
+  #main-footer {
     width: 90%;
   }
 }
 
-/*===================
+/* ===================
   サイドバー
-===================*/
+=================== */
 .sidebar {
   position: fixed;
   top: 10%;
@@ -951,20 +955,20 @@ nav {
   gap: 0;
 
   .sidebar-content {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 
     .sidebar-item {
       width: 40px;
       height: 40px;
-      background-color: light-dark(rgba(0, 0, 0, 0.9), transparent);
+      background-color: light-dark(rgb(0 0 0 / 90%), transparent);
       color: light-dark(#fff, transparent);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-family: "saitamaar", 'PikoA', "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+      font-family: saitamaar, PikoA, "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
       font-size: 16px;
       transition: all 0.2s ease;
 
@@ -978,7 +982,6 @@ nav {
       display: block;
       line-height: 1;
       transition: transform 0.2s ease;
-
       transform: rotate(90deg);
     }
   }
@@ -992,12 +995,11 @@ nav {
   left: 40px;
   width: 250px;
   max-height: 400px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgb(255 255 255 / 95%);
   border: 1px solid #000;
   backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   z-index: 200;
-  font-family: "saitamaar", 'PikoA', "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  font-family: saitamaar, PikoA, "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   font-size: 12px;
   overflow: hidden;
   display: flex;
@@ -1008,7 +1010,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2px 12px 0px 12px;
+  padding: 2px 12px 0;
   background-color: #000;
   color: #fff;
   border-bottom: 1px solid #000;
@@ -1074,6 +1076,7 @@ nav {
   &.level-2 {
     padding-left: 30px;
     text-indent: -18px;
+
     &::before {
       content: "h2:";
       color: light-dark(#ccc, #aaa);
@@ -1084,6 +1087,7 @@ nav {
   &.level-3 {
     padding-left: 42px;
     text-indent: -31px;
+
     &::before {
       content: "==h3:";
       color: light-dark(#ccc, #aaa);
@@ -1094,6 +1098,7 @@ nav {
   &.level-4 {
     padding-left: 53px;
     text-indent: -42px;
+
     &::before {
       content: "====h4:";
       color: light-dark(#ccc, #aaa);
@@ -1104,6 +1109,7 @@ nav {
   &.level-5 {
     padding-left: 65px;
     text-indent: -54px;
+
     &::before {
       content: "======h5:";
       color: light-dark(#ccc, #aaa);
@@ -1114,6 +1120,7 @@ nav {
   &.level-6 {
     padding-left: 77px;
     text-indent: -66px;
+    
     &::before {
       content: "========h6:";
       color: light-dark(#ccc, #aaa);
@@ -1140,8 +1147,7 @@ nav {
   display: grid;
   grid-template-rows: repeat(3, 1fr);
   justify-content: start;
-  grid-column-gap: 10px;
-  grid-row-gap: 0px;
+  gap: 0 10px;
   bottom: 300px;
   left: -229px;
   width: 500px;
@@ -1195,7 +1201,6 @@ nav {
 }
 
 #sidebar-current-heading-value {
-  word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
 }
@@ -1203,7 +1208,7 @@ nav {
 
 /* レスポンシブ対応 */
 
-@media screen and (max-width: 576px) {
+@media screen and (width <= 576px) {
   .sidebar {
     display: none;
   }
