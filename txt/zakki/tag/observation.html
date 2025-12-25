@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tag: observation - 100%health</title>
+  <link rel="stylesheet" href="/1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/mouse.js"></script>
+  <style>
+    /* タグページ用スタイル */
+    article.tag-article {
+      margin-bottom: 2em;
+      padding-bottom: 1em;
+      border-bottom: 2px dotted #000000;
+      animation: fadeIn 0.5s ease-in;
+    }
+    
+    article.tag-article h3 {
+      margin-bottom: 0.5em;
+      padding-bottom: 0.3em;
+    }
+    
+    article.tag-article h3 a:hover {
+      text-decoration: underline;
+    }
+    
+    article.tag-article h3 a:hover::after {
+      content: ' \2197'; /* 右上向き矢印 */
+      font-size: 0.8em;
+      position: relative;
+      top: -0.3em;
+    }
+    
+    .tag-articles section {
+      margin-bottom: 1em;
+    }
+
+    article{
+      h3,
+      h4 {padding-top: 0.5em!important;margin-left: 0;}
+    }
+    
+    .tag-description {
+      font-size: 1em;
+      color: #555;
+      margin: 1em 0;
+      padding: 0.8em 1.2em;
+
+      &::before { content: "♥"; }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  <script>
+    $(function () {
+      $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+      $("#taghtml").load("/txt/txt_main.html #tag-list");
+    });
+  </script>
+  <link rel="stylesheet" href="/txt/zakki/zakki-style.css">
+  <link rel="stylesheet" href="/txt/zakki/tag-style.css">
+  <link rel="stylesheet" href="/txt/zakki/tag/tag-controls.css">
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="/index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <a class="addressbar" href="/index.html">
+            100%health
+          </a>/
+          <a class="addressbar" href="/txt/txt_main.html">
+            txt
+          </a>/
+          <a class="addressbar" href="/txt/zakki/tag/tag_main.html">
+            tag
+          </a>/
+          <a class="addressbar" href="observation.html">
+            observation
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <h1>observation タグ一覧</h1>
+      
+      
+      <!-- ソート・フィルターコントロール -->
+      <div class="tag-controls">
+        <h2 class="tag-controls-heading">表示とソートの設定</h2>
+        
+        <!-- ソートボタン行 -->
+        <div class="tag-controls-row">
+          <div class="tag-control-group">
+            <label>日付でソート:</label>
+            <div class="tag-control-buttons">
+              <button class="tag-sort-btn active" data-sort="date-desc">新しい順</button>
+              <button class="tag-sort-btn" data-sort="date-asc">古い順</button>
+            </div>
+          </div>
+          <div class="tag-control-group">
+            <label>関連度でソート:</label>
+            <div class="tag-control-buttons">
+              <button class="tag-sort-btn" data-sort="relevance-desc">関連度高い順</button>
+              <button class="tag-sort-btn" data-sort="relevance-asc">関連度低い順</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- フィルター行 -->
+        <div class="tag-controls-row">
+          <div class="tag-control-group">
+            <label>最小関連度でフィルター:</label>
+            <div class="tag-slider-container">
+              <input type="range" min="0" max="100" step="10" value="0" class="tag-slider" id="relevance-slider">
+              <span class="tag-slider-value" id="slider-value">0%</span>
+            </div>
+          </div>
+          <div class="tag-control-group">
+            <label>設定をリセット:</label>
+            <button class="tag-reset-btn" id="reset-btn">リセット</button>
+          </div>
+        </div>
+        
+        <!-- 統計情報 -->
+        <p class="tag-stats" id="stats-display">全3件 | 最新: 2025-12-23 | 最古: 2025-12-18 | 平均関連度: 100%</p>
+      </div>
+      
+      <!-- タグ付きセクション一覧 -->
+      <h2>記事一覧</h2>
+      <div class="tag-articles" id="articles-container">
+        <article class="tag-article" data-date="2025-12-23" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/12/days/2025-12-23.html">2025-12-23</a></h3>
+          <section data-tags="music,observation">
+          <h4 id="youtube-playlist">youtubeアルゴリズムで面白いプレイリスト動画が流れてきた <a class="header-link" href="#youtube-playlist">§</a></h4>
+          <p>
+                        先日、youtubeを見ていたら、「あなたへのおすすめ」におもしろい動画が流れてきた。
+                      </p>
+          <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/yfVCzQUXkmc" title="YouTube video player" width="560"></iframe>
+          <p>
+                        タイトルは「White Girl Music Playlist for African Dictators」。2000年代後半から2010年代前半のグローバルヒットチャートを賑わせたようなガールポップをあつめたプレイリストだ。<br/>
+          <br/>
+                        投稿日時とコメントをみてみると、投稿されてすぐの<time datetime="2025-03">今年3月頃</time>にyoutubeアルゴリズムで話題になっていたようだ。<br/>
+          <br/>
+                        この動画の投稿者はこの動画と似たような妙なコンセプトのプレイリスト動画をアップしており、どれもyoutubeアルゴリズムで話題になっているみたいだった。<br/>
+          <br/>
+                        どれもタイトルとサムネイル画像に味がある。「<a href="https://www.youtube.com/watch?v=qQE1N38QBys" target="_blank">Ultra Masculine White Girl Music for Engaging in Medical Malpractice</a>」や、「<a href="https://www.youtube.com/watch?v=26F3iZYbLNI" target="_blank">Country Playlist to Drive to your Divorce Hearing</a>」というタイトルがおもしろい。<br/>
+          <br/>
+                        この投稿者のプレイリスト動画をみると、「Ultra Masculine White Girl」とタイトルに入っている動画が2つある。どれも上に貼ったようなガールポップのプレイリスト動画なのだが、調べてみると、どうもこの「Ultra Masculine White Girl」というのが今年前半にちょっとしたミームとなっていたようだった。
+                      </p>
+          <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/iFV1KDRgIp0?si=NTPEsXRWIHZVbfx8" title="YouTube video player" width="560"></iframe>
+          <p>
+                        最古の動画が多分この「ultra masculine whitegirl playlist」だと思う。「<a href="https://www.youtube.com/@averageenjoyer7346" target="_blank">average enjoyer</a>」による<time datetime="2024-10-16">2024年10月16日</time>の動画が「ultra masculine whitegirl」音楽の初出なのではないか。<br/>
+          <br/>
+                        サムネイルはHOUSE M.D.のGregory House。これを契機に似たようなコンセプトの動画が複数投稿され、その流れのなかに「African Dictators」のものもあるらしかった。ようはUltra Masculineから連想して、この路線を拡張した先にAfrican Dictatorsがあるということだ。<br/>
+          <br/>
+          <a href="https://www.youtube.com/playlist?list=PLL4Kx9K0TERw20KO03EYklBGXYmP3qQAO" target="_blank">プレイリストをまとめた再生リスト</a>もあった。14件の動画が登録されている。
+                      </p>
+          <p>
+                        これらのプレイリストの文脈はわかりづらいしよくわかっていないが、たぶん「Sigma male」から来ているものだろう。<br/>
+          <br/>
+                        もともと、狼の群れを研究する動物行動学だか比較心理学だかで生まれた、群れの社会的ヒエラルキーの階層をギリシャ文字を使って呼び表す習慣から来ている。<br/>
+          <br/>
+                        研究上、狼の群れのなかでオスの社会階層の、より上位の階層を「アルファ」、下位を「ベータ」と呼ぶようになり、ここから研究上この呼び方が習慣化した。さらにここから、人間の、とくに男性社会のヒエラルキーにこの呼び名を転用して、上位の階層の男性を「Alpha male」、下位の男性を「Beta male」と呼ぶようになった。人間社会に転用して、性別ごとの社会的ヒエラルキーをこうした言葉で階層づけるようになったのがいつ頃なのかはよくわからない。しかし、これを設定として取り入れた、ファンフィクションの共有設定「<a href="https://ja.wikipedia.org/wiki/%E3%82%AA%E3%83%A1%E3%82%AC%E3%83%90%E3%83%BC%E3%82%B9" target="_blank">オメガバース</a>」の歴史をみると、この用例の受容のされ方がわかりやすい。<br/>
+          <br/>
+                        オメガバースは2010年代初頭に生まれたらしいから、歴史は意外と浅いのかもしれない。人間社会に転用するのは、もともとそういう用例があり、オメガバースがそれを取り入れたのか、それともオメガバースが人間社会に転用しはじめて、そこから広まったのか、それはよくわからなかった。<br/>
+          <br/>
+                        「<a href="https://simple.wikipedia.org/wiki/Sigma_male" target="_blank">Sigma</a>」は2020年代に入ってから一般に広まった比較的新しいスラングで、「Alpha male」と同じように成功しているが、<a href="https://note.com/mrsrosy/n/n6f57814c32b6" target="_blank">ヒエラルキーに属さず群れない孤高な存在</a>、という意味がある。Z世代を中心にtiktokで流行した結果、「Sigma」はかっこいい、というような意味となり、スラングになった。<br/>
+          <br/>
+          <time datetime="2024-10-04">2024年10年04日</time>にロシアのデュオ「Betsy」と「Maria Iankovskaia」が発表した「<a href="https://www.youtube.com/watch?v=ueNY30Cs8Lk" target="_blank">Sigma Boy</a>」がバイラルヒットしたのが象徴的だ。Streichbruderことドイツ出身のtiktokインフルエンサー、Simon Bothがこの曲を使った動画を投稿して炎上し、<a href="https://x.com/canceljohnnys/status/1913324750254096385?s=20" target="_blank">日本でも話題に</a>なっていた記憶が新しい。<br/>
+          <br/>
+                        追記：英語版Wikipediaの「<a href="https://en.wikipedia.org/wiki/Alpha_and_beta_male#Sigma_male" target="_blank">Alpha and beta male</a>」の項目をみると歴史について書いてあった。1990年代初頭に一部メディアがビジネス界の男性に向けて使いはじめて広めたらしい。「sigma」は2010年にオルタナ右翼の著述家であるVox Dayがブログで使いはじめたものらしい。マノスフィアでよく使われているというし、この点くわしく調べるとおもしろいかもしれない。追記終わり
+                      </p>
+          <p>
+                        「Ultra Masculine White Girl」は、このsigma maleミームから来ているように見える。「<a href="https://www.youtube.com/watch?v=tRyXb85gFKw&amp;lc=UgyRMbdzoFx3gtPliyV4AaABAg" target="_blank">ライオンは自分が聴く音楽につけられたラベルを気にしない</a>」というコメントがわかりやすい。Sigma maleは、Ultra Masculineであるがゆえに聴く音楽はMasculineである必要がないということなのだろう。<br/>
+          <br/>
+                        ところで、sigma boyのwikipediaをみていたら、このミームは「アルファ世代」に流行している、とか書いてあった。確かにBetsyとMaria Iankovskaiaはまだ10代前半らしい。アルファ世代......。台頭してきてる確実に、着実に、俺たちのほうに。ガチで危機感を持っています。<br/>
+          <br/>
+                        話をAfrican Dictatorsにもどすと、African DictatorsはSigma maleなのだろうか、という気持ちになった。African Dictatorsは典型的なAlphaだろう......。コメント欄がおもしろい。「<a href="https://www.youtube.com/watch?v=yfVCzQUXkmc&amp;lc=Ugz5qyAHpEwxO7lsgVt4AaABAg" target="_blank">仲間が全員内閣に就任</a>」とか。シンプルにAfrican Dictatorsすぎる。<br/>
+          <br/>
+                        というわけで、youtubeアルゴリズムが教えてくれたおもしろいプレイリスト動画についての話でした。
+                      </p>
+          <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/videoseries?si=oqfQ8FXsFqwL7Flf&amp;list=PLqLUUJbXXXPkAeplWNJkfXMEyNHD9b6Zi" title="YouTube video player" width="560"></iframe>
+          <p>
+                        最後に、こういうyoutubeアルゴリズムで流れてくるおもしろい動画をみると、コメント欄に「<a href="https://en.wiktionary.org/wiki/alive_internet_theory" target="_blank">alive internet theory</a>」とあるのをよく見る。これは「<a href="https://ja.wikipedia.org/wiki/%E6%AD%BB%E3%82%93%E3%81%A0%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%8D%E3%83%83%E3%83%88%E7%90%86%E8%AB%96" target="_blank">死んだインターネット理論</a>」という陰謀論的な言説のカウンターミームらしい。<a href="https://www.youtube.com/playlist?list=PLqLUUJbXXXPkAeplWNJkfXMEyNHD9b6Zi" target="_blank">alive internet theoryの再生リスト</a>をみても、これがdeadなのかaliveなのか、自分にはよくわかりませんでした。<br/>
+          <br/>
+                        youtubeアルゴリズムで話題になった動画のコメント欄は結構盛り上がってる傾向が強いから、それでaliveなんだろうけど......。（インターネットに幽霊が出る――ナンセンスという幽霊である。）って感じ？
+                      </p>
+          <span class="hashtag"><a href="/txt/zakki/tag/music.html">#music</a> <a href="/txt/zakki/tag/observation.html">#observation</a></span>
+          </section>
+        </article>
+        <article class="tag-article" data-date="2025-12-18" data-relevance="100">
+          <h3><a href="/txt/zakki/2025/12/days/2025-12-18.html">2025-12-18</a></h3>
+          <section data-tags="observation">
+          <h4 id="internet-observation">定点観測の話 <a class="header-link" href="#internet observation">§</a></h4>
+          <p>
+                        忘れるところだった。定点観測の話。冒頭に書いた通り、これを書かなければ。<br/>
+          <br/>
+                        最近、定期的な出力をしなければならないと感じている。<br/>
+          <br/>
+                        インターネットをやっていると、いつの間にかなにかが盛り上がったり、いつの間にかその盛り上がりが忘れ去られたり、何かが変わったり、なにかが変わったことはわかるが何が変わったのかよくわからなくなったりする状況を経験する。<br/>
+          <br/>
+          <time datetime="2015">2015年</time>、ツイッターがデフォルトのタイムラインに「おすすめ」というレコメンデーションアルゴリズムを導入した。たしか、ほかのプラットフォームに追従したものだったはずだが、思うに、これはインターネットの風景を大きく変える契機の一つだった。<br/>
+          <br/>
+                        それまでは、フォローしていたアカウントの投稿が時系列でタイムラインならんでいた。個人的な感覚の話でしかないが、時系列タイムラインがデフォルトだった時代はとてもツイッターが「わかりやすかった」気がする。<br/>
+          <br/>
+                        いつの間にか、インターネットの風景がアルゴリズムで構築されたものばかりになっている。ページを更新すると、そのページにならんだコンテンツが入れ替わる。どのプラットフォームもそうなっている。<br/>
+          <br/>
+                        アルゴリズムで動的に生成されるインターネットは、翻って、「分かりづらい」。<br/>
+          <br/>
+                        この「分かりやすさ」、「分かりづらさ」は、ニュアンスの問題で、感覚的なものだ。うまく言語化できないが、言い換えてみると、「捉えどころがない」感じといえるかもしれない。<br/>
+          <br/>
+                        「分かりやすさ」という言葉で表現するとインターネットがわかりやすかった時代があるのかと思われるかもしれない。<br/>
+          <br/>
+                        そのとおりだ。ネットはいつでも広大だし、インターネットに限らずいつの時代もすべてがいつの間にか変わっている。<br/>
+          <br/>
+                        動的なサイトが出現したのも20年以上前の話だし、かといって今すべてのサイトが動的であるわけでもない。<br/>
+          <br/>
+                        もう少し考えてみると、「捉えどころのなさ」や「分かりづらさ」とは、他者と見ているものが違う、という感覚なのかもしれない。ターゲティングやパーソナライズで、動的にコンテンツが表示される。かつてのGoogle検索はページランクによる評価を行っていても、検索ワードが同じであれば結果が他のユーザーによる検索結果は似たようなものだった。<br/>
+          <br/>
+                        検索結果が検索履歴やトラッキングによる情報収集によってパーソナライズされるものになり、文字どおりどんどん人とは違う検索結果が表示されるようになった。<br/>
+          <br/>
+                        パーソナライズはgoogleだけでなく、ほかのプラットフォームも進めている。人と見ているものが違うという感覚は、アルゴリズムそのものというより、パーソナライズに由来するのかもしれない。<br/>
+          <br/>
+                        話をもどして、定期的な出力が大事だと思った、という話。これは、これまで書いてきたような居心地の悪さを、見ているインターネットの風景を記録・共有することで緩和できないだろうか、と思ったからだった。<br/>
+          <br/>
+                        SNSはどんどん投稿が流れていく。レコメンデーションアルゴリズム・パーソナライズが強いtwitterは論外として、オルタナティブなソーシャルメディアでもそれは変わらない。<br/>
+          <br/>
+                        この個人サイトのようなストック型のサイトで、自分の見ているインターネットの風景を記録すること。捉えどころのないインターネットの「定点観測」とその記録が、今のこの捉えどころのないインターネットを捉えられるようにできるかもしれない。<br/>
+          <br/>
+                        記録と観測が、自分も含めたいつかの誰かがインターネットを捉えられるようになる手助けになるのかもしれない。<br/>
+          <br/>
+                        こんなわけで、インターネットの定点観測をしたいなと思ったという話でした。なんだかエモエモな文章になってしまった。
+                      </p>
+          <span class="hashtag"><a href="/txt/zakki/tag/observation.html">#observation</a></span>
+          </section>
+          <section data-tags="observation">
+          <h4 id="cynicism">冷笑の話 <a class="header-link" href="#cynicism">§</a></h4>
+          <p>
+                        最近ツイッターをみてると、「冷笑」がインターネットミームみたいになってきてる感じがする。<br/>
+          <br/>
+                        最近見るようになった言葉が「<a href="https://dic.pixiv.net/a/%E3%81%86%E3%81%8A%EF%BD%97" target="_blank">うおw</a>」。ピクシブ百科事典によると「配信者界隈」で2024年前半頃から流行りだしたらしい。派生として、もこうの配信から2024年中旬頃に生まれた「<a href="https://dic.pixiv.net/a/%E3%81%A9%E3%82%8F%E3%83%BC%EF%BD%97" target="_blank">どわーw</a>」、2025年に入って広まったらしい<a href="https://x.com/4X4icecream/status/1959828788872974724" target="_blank">ニコニコ動画の定型文コメント機能を元にした淫夢用語</a>「おお」があるようだ。<br/>
+          <br/>
+                        ネットミームっぽくなっていると感じたきっかけが、邪教によるnote「<a href="https://note.com/jakyo/n/n1c54b1cc92b8?sub_rt=share_pw" target="_blank">冷笑100選</a>」が話題になっているのを見かけたからだ。<a href="https://x.com/Jakyo_/status/2000206755427651713" target="_blank">告知ツイート</a>が<time datetime="2025-12-14">2025年12月14日</time>にされていて、<time datetime="2025-12-18">12月18日</time>現在で2000RTを越えているため話題になっているのがわかる。<br/>
+          <br/>
+                        似たような記事で思い浮かぶのが、ダ・ヴィンチ・恐山が<time datetime="2022-06-22">2022年6月22日</time>に公開したnote「頻出ツイート100選（<a href="https://anond.hatelabo.jp/20220622203351" target="_blank">はてな匿名ダイアリーへの転載</a>）」だ。当日話題になってまとめが作成され、<a href="https://b.hatena.ne.jp/entry/s/note.com/d_v_osorezan/n/n5647b3a2c2be#:~:text=%E3%81%9F%E3%81%AE%E3%81%AB-,%E6%B6%88%E3%81%88%E3%81%A6%E3%82%8B,-%E3%81%A0%E3%81%A8%E2%80%A6" target="_blank">当日中に記事が削除</a>されている。<br/>
+          <br/>
+                        ただの連想なのだが、2017年05月末に出現した「<a href="https://x.com/net_108_watch" target="_blank">ネット論客108星</a>」なるツイッターアカウントも思い出す。このアカウントにフォローされたアカウントが<a href="https://posfie.com/@marumarumoheji/p/dRDsztZ" target="_blank">「ネット論客108星」として話題</a>になった。<br/>
+          <br/>
+                        冷笑でいうと、ここ数年自分のTLでは「冷笑から誠実へ」っていう言葉が話題になっていた。「冷笑」のミーム化というのが本当に起こっているのかよくわからないが、もしミーム化が起こっているとしたら、これは「誠実」へのカウンターとしての動向かもしれない。<br/>
+          <br/>
+                        ツイッターで検索してみると、「冷笑から誠実へ」というのは<time datetime="2024-04-02">2024年4月2日</time>の<a href="https://x.com/GAWA_TaTsuTa/status/1775131749481349514" target="_blank">「オモコロ」に関するツイート</a>が発端らしかった。<br/>
+          <br/>
+                        自分の観測範囲で言うと、批評系クラスタのあにもにさんが2023年くらいに冷笑を批判するような投稿をしていた記憶がある（<a href="https://x.com/search?q=from%3Aanimmony%20%22%E8%AA%A0%E5%AE%9F%22%20min_faves%3A100%20until%3A2024-01-01&amp;src=typed_query&amp;f=top" target="_blank">簡単に検索してみた結果</a>）。<br/>
+          <br/>
+                        さらに個人的な主観を書いておくと、「冷笑系」といえば「破滅クラスタ」的なツイッター上のクラスタがまず思い浮かぶ。<br/>
+          <br/>
+                        くわしくは<a href="/txt/my_dsns_timeline.html?search=破滅">分散SNS関連年表</a>を見てほしいのだが、「破滅クラスタ」というのは2008年頃に命名されたtwitterユーザーのあるまとまりを指す。<br/>
+          <br/>
+                        さらに遡ることもできそうだが、ともかく、「破滅クラスタ」周辺のtwitterユーザーが「冷笑」的なツイートを行っていた印象がある。<br/>
+          <br/>
+                        ネット上の冷笑文化（？）の本場はtwitterよりも明らかに2ちゃんねるだろう。以前雑記で言及したが北田暁大『<a href="https://www.nhk-book.co.jp/detail/000000910242005.html" target="_blank">嗤う日本の「ナショナリズム」</a>』がこうした動向を取り扱っていた。<br/>
+          <br/>
+                        話というか、定点観測の実践として、なんとなく話題になっているっぽい「冷笑」について、個人的に思い浮かぶ話題をまとめてみた。
+                      </p>
+          <span class="hashtag"><a href="/txt/zakki/tag/observation.html">#observation</a></span>
+          </section>
+        </article>
+
+      </div>
+    </main>
+    <footer id="main-footer">
+      <div id="zakkihtml"></div>
+      <div id="taghtml"></div>
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  
+  <!-- クライアント側ソートスクリプト -->
+  <script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const allArticles = Array.from(document.querySelectorAll('.tag-article')).map(article => ({
+        element: article,
+        date: article.getAttribute('data-date'),
+        relevance: parseInt(article.getAttribute('data-relevance') || '100'),
+        html: article.outerHTML
+      }));
+      
+      const totalCount = allArticles.length;
+      let currentSort = 'date-desc';
+      let minRelevance = 0;
+      
+      console.log('Tag page client sort initialized. Total articles:', totalCount);
+      
+      function sortArticles(articles, sortMethod) {
+        const sorted = [...articles];
+        switch (sortMethod) {
+          case 'date-desc':
+            return sorted.sort((a, b) => b.date.localeCompare(a.date));
+          case 'date-asc':
+            return sorted.sort((a, b) => a.date.localeCompare(b.date));
+          case 'relevance-desc':
+            return sorted.sort((a, b) => b.relevance - a.relevance || b.date.localeCompare(a.date));
+          case 'relevance-asc':
+            return sorted.sort((a, b) => a.relevance - b.relevance || a.date.localeCompare(b.date));
+          default:
+            return sorted;
+        }
+      }
+      
+      function filterArticles(articles, minRel) {
+        return articles.filter(article => article.relevance >= minRel);
+      }
+      
+      function reverseTimelineLists(container, shouldReverse) {
+        const timelineLists = container.querySelectorAll('ul.timeline_md, ul.timeline_ymd');
+        timelineLists.forEach(list => {
+          const items = Array.from(list.querySelectorAll('li'));
+          if (items.length === 0) return;
+          
+          if (shouldReverse) {
+            items.reverse().forEach(item => list.appendChild(item));
+          }
+        });
+      }
+      
+      function updateDisplay() {
+        const filtered = filterArticles(allArticles, minRelevance);
+        const sorted = sortArticles(filtered, currentSort);
+        
+        const container = document.getElementById('articles-container');
+        container.innerHTML = sorted.map(article => article.html).join('');
+        
+        const shouldReverseTimeline = (currentSort === 'date-desc');
+        reverseTimelineLists(container, shouldReverseTimeline);
+        
+        const statsDisplay = document.getElementById('stats-display');
+        if (filtered.length > 0) {
+          const dates = sorted.map(a => a.date).sort();
+          const latest = dates[dates.length - 1];
+          const oldest = dates[0];
+          const avgRel = filtered.reduce((sum, a) => sum + a.relevance, 0) / filtered.length;
+          statsDisplay.textContent = '全' + totalCount + '件中' + filtered.length + '件表示中 | 最新: ' + latest + ' | 最古: ' + oldest + ' | 平均関連度: ' + Math.round(avgRel) + '%';
+        } else {
+          statsDisplay.textContent = '全' + totalCount + '件中0件表示中';
+        }
+        
+        console.log('Display updated:', {sort: currentSort, minRelevance: minRelevance, displayed: filtered.length, listReversed: shouldReverseTimeline});
+      }
+      
+      document.querySelectorAll('.tag-sort-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          currentSort = this.getAttribute('data-sort');
+          document.querySelectorAll('.tag-sort-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          console.log('Sort changed to:', currentSort);
+          updateDisplay();
+        });
+      });
+      
+      console.log('Sort buttons:', document.querySelectorAll('.tag-sort-btn').length);
+      
+      const slider = document.getElementById('relevance-slider');
+      const sliderValue = document.getElementById('slider-value');
+      
+      if (slider && sliderValue) {
+        slider.addEventListener('input', function() {
+          sliderValue.textContent = this.value + '%';
+        });
+        
+        slider.addEventListener('change', function() {
+          minRelevance = parseInt(this.value);
+          console.log('Relevance filter changed to:', minRelevance);
+          updateDisplay();
+        });
+      }
+      
+      const resetBtn = document.getElementById('reset-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function() {
+          currentSort = 'date-desc';
+          minRelevance = 0;
+          slider.value = 0;
+          sliderValue.textContent = '0%';
+          document.querySelectorAll('.tag-sort-btn').forEach(b => b.classList.remove('active'));
+          const defaultBtn = document.querySelector('[data-sort="date-desc"]');
+          if (defaultBtn) defaultBtn.classList.add('active');
+          console.log('Reset to defaults');
+          updateDisplay();
+        });
+      }
+      
+      const shouldReverseInitial = (currentSort === 'date-desc');
+      reverseTimelineLists(document.getElementById('articles-container'), shouldReverseInitial);
+    });
+    
+  </script>
+</body>
+
+</html>
