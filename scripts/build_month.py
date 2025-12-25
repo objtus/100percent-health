@@ -1,21 +1,77 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-月別雑記ページ生成スクリプト（省略処理なし版）
+月別雑記ページ生成スクリプト
 
 Usage:
-    python build_month.py <year> <month> <days_dir>
+    python build_month.py <year> <month> <days_dir> [options]
     
 Example:
     python build_month.py 2025 12 /path/to/txt/zakki/2025/12/days
+    python build_month.py 2025 12 ./txt/zakki/2025/12/days --sort-order asc --debug
+    python build_month.py 2025 12 ./txt/zakki/2025/12/days --config custom_config.yaml
 """
 
 from bs4 import BeautifulSoup
 from pathlib import Path
 import sys
+import argparse
+import yaml
+import shutil
 
 
-def find_adjacent_months(year, month, days_dir):
+def load_config(config_path=None):
+    """
+    設定ファイルを読み込む
+    
+    Args:
+        config_path: 設定ファイルのパス（None の場合はデフォルト設定）
+    
+    Returns:
+        設定辞書
+    """
+    # デフォルト設定
+    default_config = {
+        'sort_order': 'desc',
+        'truncate': {
+            'max_chars': 300,
+            'min_elements': 2,
+            'max_elements': 6,
+            'text_truncate_length': 120,
+            'max_list_items': 3,
+            'list_item_estimate': 25,
+        },
+        'debug': False,
+        'create_backup': True,
+        'adjacent_month_search_range': 24,
+    }
+    
+    # 設定ファイルが指定されている場合は読み込み
+    if config_path:
+        config_file = Path(config_path)
+        if not config_file.exists():
+            print(f'Warning: Config file not found: {config_path}')
+            print('Using default configuration.')
+            return default_config
+        
+        try:
+            with open(config_file, 'r', encoding='utf-8') as f:
+                user_config = yaml.safe_load(f)
+                if user_config:
+                    # デフォルト設定とマージ（truncate は深くマージ）
+                    if 'truncate' in user_config:
+                        default_config['truncate'].update(user_config['truncate'])
+                        del user_config['truncate']
+                    default_config.update(user_config)
+                    print(f'✓ Loaded configuration from: {config_path}')
+        except Exception as e:
+            print(f'Error reading config file: {e}')
+            print('Using default configuration.')
+    
+    return default_config
+
+
+def find_adjacent_months(year, month, days_dir, search_range=24):
     """
     実際に存在する前後の月を検出
     
@@ -23,6 +79,7 @@ def find_adjacent_months(year, month, days_dir):
         year: 現在の年
         month: 現在の月
         days_dir: 日別HTMLディレクトリのパス
+        search_range: 探索範囲（最大何ヶ月前後まで探すか）
     
     Returns:
         ((prev_year, prev_month), (next_year, next_month))
@@ -34,9 +91,9 @@ def find_adjacent_months(year, month, days_dir):
     
     current_ym = int(year) * 12 + int(month)
     
-    # 前の月を探す（最大24ヶ月前まで）
+    # 前の月を探す
     prev_year, prev_month = None, None
-    for i in range(1, 25):
+    for i in range(1, search_range + 1):
         check_ym = current_ym - i
         check_year = check_ym // 12
         check_month = check_ym % 12
@@ -57,9 +114,9 @@ def find_adjacent_months(year, month, days_dir):
                 print(f'  Found previous month: {prev_year}-{prev_month}')
                 break
     
-    # 次の月を探す（最大24ヶ月後まで）
+    # 次の月を探す
     next_year, next_month = None, None
-    for i in range(1, 25):
+    for i in range(1, search_range + 1):
         check_ym = current_ym + i
         check_year = check_ym // 12
         check_month = check_ym % 12
@@ -318,7 +375,7 @@ def process_element(element, config):
     return {'element': cloned, 'chars': estimated_chars}
 
 
-def build_month_page(year, month, days_dir):
+def build_month_page(year, month, days_dir, config=None):
     """
     日別記事を統合して月別ページを生成
     
@@ -326,7 +383,12 @@ def build_month_page(year, month, days_dir):
         year: 年（例: "2025"）
         month: 月（例: "12"）
         days_dir: 日別HTMLファイルが格納されているディレクトリパス
+        config: 設定辞書（省略時はデフォルト設定）
     """
+    # デフォルト設定を使用
+    if config is None:
+        config = load_config()
+    
     days_path = Path(days_dir)
     
     if not days_path.exists():
@@ -335,7 +397,10 @@ def build_month_page(year, month, days_dir):
     
     # 実際に存在する前後の月を検出
     print('Searching for adjacent months...')
-    (prev_year, prev_month), (next_year, next_month) = find_adjacent_months(year, month, days_dir)
+    search_range = config.get('adjacent_month_search_range', 24)
+    (prev_year, prev_month), (next_year, next_month) = find_adjacent_months(
+        year, month, days_dir, search_range
+    )
     
     # 記事を格納するリスト
     articles_html = []
@@ -343,8 +408,20 @@ def build_month_page(year, month, days_dir):
     # days/フォルダ内の全HTMLファイルを処理（日付順にソート）
     html_files = sorted(days_path.glob('*.html'))
     
+    # 並び順の制御
+    sort_order = config.get('sort_order', 'desc')
+    if sort_order == 'desc':
+        html_files = list(reversed(html_files))
+        print(f'✓ Sort order: newest first (descending)')
+    else:
+        print(f'✓ Sort order: oldest first (ascending)')
+    
     if not html_files:
         print(f'Warning: No HTML files found in {days_path}')
+    
+    # truncate 設定を取得
+    truncate_config = config.get('truncate', {})
+    truncate_config['debug'] = config.get('debug', False)
     
     for html_file in html_files:
         print(f'Processing: {html_file.name}')
@@ -357,7 +434,7 @@ def build_month_page(year, month, days_dir):
                 article = soup.find('article')
                 if article:
                     # 高度な省略処理を適用（JavaScriptと同等）
-                    truncated_html = advanced_truncate_article(article, year, month)
+                    truncated_html = advanced_truncate_article(article, year, month, truncate_config)
                     articles_html.append(truncated_html)
                 else:
                     print(f'  Warning: No <article> found in {html_file.name}')
@@ -485,6 +562,15 @@ def build_month_page(year, month, days_dir):
     output_dir = days_path.parent
     output_path = output_dir / f'{year}-{month}.html'
     
+    # バックアップの作成
+    if output_path.exists() and config.get('create_backup', True):
+        backup_path = output_dir / f'{year}-{month}.html.bak'
+        try:
+            shutil.copy2(output_path, backup_path)
+            print(f'✓ Backup created: {backup_path}')
+        except Exception as e:
+            print(f'Warning: Could not create backup: {e}')
+    
     # ファイルに書き出し
     try:
         with open(output_path, 'w', encoding='utf-8') as f:
@@ -499,20 +585,149 @@ def build_month_page(year, month, days_dir):
         sys.exit(1)
 
 
+def parse_arguments():
+    """
+    コマンドライン引数を解析
+    """
+    parser = argparse.ArgumentParser(
+        description='月別雑記ページ生成スクリプト',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''
+例:
+  # 基本的な使い方
+  python build_month.py 2025 12 ./txt/zakki/2025/12/days
+  
+  # 新しい順（デフォルト）
+  python build_month.py 2025 12 ./txt/zakki/2025/12/days --sort-order desc
+  
+  # 古い順
+  python build_month.py 2025 12 ./txt/zakki/2025/12/days --sort-order asc
+  
+  # デバッグモード
+  python build_month.py 2025 12 ./txt/zakki/2025/12/days --debug
+  
+  # カスタム設定ファイル使用
+  python build_month.py 2025 12 ./txt/zakki/2025/12/days --config custom.yaml
+  
+  # 複数のオプション指定
+  python build_month.py 2025 12 ./txt/zakki/2025/12/days --sort-order asc --max-chars 500 --debug
+        '''
+    )
+    
+    # 必須引数
+    parser.add_argument('year', type=str, help='年（例: 2025）')
+    parser.add_argument('month', type=str, help='月（例: 12）')
+    parser.add_argument('days_dir', type=str, help='日別HTMLファイルのディレクトリパス')
+    
+    # オプション引数
+    parser.add_argument(
+        '--config', '-c',
+        type=str,
+        default=None,
+        help='設定ファイルのパス（YAML形式）'
+    )
+    
+    parser.add_argument(
+        '--sort-order',
+        type=str,
+        choices=['asc', 'desc'],
+        help='記事の並び順（asc: 古い順, desc: 新しい順）'
+    )
+    
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='デバッグモードを有効化（詳細なログを出力）'
+    )
+    
+    parser.add_argument(
+        '--no-backup',
+        action='store_true',
+        help='バックアップを作成しない'
+    )
+    
+    # 省略処理のパラメータ
+    parser.add_argument(
+        '--max-chars',
+        type=int,
+        help='最大文字数（デフォルト: 300）'
+    )
+    
+    parser.add_argument(
+        '--min-elements',
+        type=int,
+        help='最小要素数（デフォルト: 2）'
+    )
+    
+    parser.add_argument(
+        '--max-elements',
+        type=int,
+        help='最大要素数（デフォルト: 6）'
+    )
+    
+    parser.add_argument(
+        '--text-truncate-length',
+        type=int,
+        help='段落の切り詰め文字数（デフォルト: 120）'
+    )
+    
+    parser.add_argument(
+        '--max-list-items',
+        type=int,
+        help='リストの最大項目数（デフォルト: 3）'
+    )
+    
+    return parser.parse_args()
+
+
 def main():
-    if len(sys.argv) != 4:
-        print('Usage: python build_month.py <year> <month> <days_dir>')
-        print('\nExample:')
-        print('  python build_month.py 2025 12 /path/to/txt/zakki/2025/12/days')
-        print('  python build_month.py 2025 12 ./txt/zakki/2025/12/days')
-        sys.exit(1)
+    args = parse_arguments()
     
-    year = sys.argv[1]
-    month = sys.argv[2].zfill(2)  # 1桁の月を2桁に変換（例: "1" → "01"）
-    days_dir = sys.argv[3]
+    # 月を2桁に変換
+    year = args.year
+    month = args.month.zfill(2)
+    days_dir = args.days_dir
     
-    print(f'Building month page for {year}-{month}...\n')
-    build_month_page(year, month, days_dir)
+    # 設定を読み込み
+    config = load_config(args.config)
+    
+    # コマンドライン引数で設定を上書き
+    if args.sort_order:
+        config['sort_order'] = args.sort_order
+    
+    if args.debug:
+        config['debug'] = True
+    
+    if args.no_backup:
+        config['create_backup'] = False
+    
+    # truncate 設定の上書き
+    if args.max_chars:
+        config['truncate']['max_chars'] = args.max_chars
+    
+    if args.min_elements:
+        config['truncate']['min_elements'] = args.min_elements
+    
+    if args.max_elements:
+        config['truncate']['max_elements'] = args.max_elements
+    
+    if args.text_truncate_length:
+        config['truncate']['text_truncate_length'] = args.text_truncate_length
+    
+    if args.max_list_items:
+        config['truncate']['max_list_items'] = args.max_list_items
+    
+    # 実行情報を表示
+    print(f'Building month page for {year}-{month}...')
+    print(f'Configuration:')
+    print(f'  Sort order: {config["sort_order"]}')
+    print(f'  Debug mode: {config["debug"]}')
+    print(f'  Create backup: {config["create_backup"]}')
+    print(f'  Max chars: {config["truncate"]["max_chars"]}')
+    print(f'  Max elements: {config["truncate"]["max_elements"]}')
+    print()
+    
+    build_month_page(year, month, days_dir, config)
 
 
 if __name__ == '__main__':

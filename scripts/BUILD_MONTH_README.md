@@ -7,7 +7,12 @@ JavaScriptの `BalancedArticleProcessor` と同等の高度な省略処理を実
 
 ## 主な機能
 
-### 1. 高度な省略処理（JavaScript版と完全同等）
+### 1. 記事の並び順制御（NEW! v2.1.0）
+- **新しい順（デフォルト）**: 最新の記事が上に表示
+- **古い順**: 古い記事から時系列順に表示
+- コマンドライン引数または設定ファイルで制御可能
+
+### 2. 高度な省略処理（JavaScript版と完全同等）
 - **文字数ベースの制御**: デフォルト300文字まで（カスタマイズ可能）
 - **要素数の範囲制御**: 最小2個、最大6個
 - **段落の自動切り詰め**: 120文字を超える段落は `<span class="ellipsis">...</span>` で省略
@@ -15,12 +20,21 @@ JavaScriptの `BalancedArticleProcessor` と同等の高度な省略処理を実
 - **全要素をフラット化**: sectionタグを無視して全要素を統一的に処理
 - **iframe/画像のサポート**: 埋め込みコンテンツや画像を表示（文字数カウント0）
 
-### 2. スマートなナビゲーション
-- **実在する前後月を自動検出**: 最大24ヶ月前後まで探索
+### 3. 柔軟な設定管理（NEW! v2.1.0）
+- **設定ファイルサポート**: YAML形式でデフォルト値を管理
+- **コマンドライン引数**: 一時的な設定変更が可能
+- **優先順位**: コマンドライン引数 > 設定ファイル > デフォルト値
+
+### 4. スマートなナビゲーション
+- **実在する前後月を自動検出**: 最大24ヶ月前後まで探索（カスタマイズ可能）
 - **年をまたぐリンクに対応**: 相対パスを自動調整
 - **存在しない月は非表示**: `visibility: hidden` で処理
 
-### 3. 既存スタイルとの互換性
+### 5. バックアップ機能（NEW! v2.1.0）
+- 既存ファイルを上書きする前に自動的に `.bak` ファイルを作成
+- `--no-backup` フラグで無効化可能
+
+### 6. 既存スタイルとの互換性
 - `.article-preview` クラスを使用
 - `.article-ellipsis` と `.read-more-link` を自動生成
 - 既存のCSSがそのまま適用可能
@@ -29,11 +43,12 @@ JavaScriptの `BalancedArticleProcessor` と同等の高度な省略処理を実
 
 - Python 3.6以上
 - BeautifulSoup4ライブラリ
+- PyYAML ライブラリ（設定ファイルを使用する場合）
 
 ## インストール
 
 ```bash
-pip install beautifulsoup4
+pip install beautifulsoup4 pyyaml
 ```
 
 ## 使い方
@@ -41,7 +56,7 @@ pip install beautifulsoup4
 ### 基本的な使い方
 
 ```bash
-python build_month.py <年> <月> <日別HTMLが入っているディレクトリ>
+python build_month.py <年> <月> <日別HTMLが入っているディレクトリ> [オプション]
 ```
 
 ### 実行例
@@ -52,12 +67,89 @@ cd /scripts
 ```
 
 ```bash
-# 2025年12月のページを生成
+# 2025年12月のページを生成（デフォルト: 新しい順）
 python build_month.py 2025 12 D:\web\100percent-health\txt\zakki\2025\12\days
 
 # 相対パスでも可
-python build_month.py 2025 12 ./txt/zakki/2025/12/days
+python build_month.py 2025 12 D:\web\100percent-health\txt\zakki\2025\12\days
+
+# 古い順で生成
+python build_month.py 2025 12 D:\web\100percent-health\txt\zakki\2025\12\days --sort-order asc
+
+# デバッグモードで実行
+python build_month.py 2025 12 D:\web\100percent-health\txt\zakki\2025\12\days --debug
+
+# デフォルト設定ファイルを使用
+python build_month.py 2025 12 D:\web\100percent-health\txt\zakki\2025\12\days --config build_month_config.yaml
+
+# カスタム設定ファイルを使用
+python build_month.py 2025 12 D:\web\100percent-health\txt\zakki\2025\12\days --config custom_config.yaml
+
+# 複数のオプションを組み合わせ
+python build_month.py 2025 12 D:\web\100percent-health\txt\zakki\2025\12\days --sort-order asc --max-chars 500 --debug
 ```
+
+### コマンドライン引数
+
+#### 必須引数
+- `year`: 年（例: 2025）
+- `month`: 月（例: 12）
+- `days_dir`: 日別HTMLファイルのディレクトリパス
+
+#### オプション引数
+
+| オプション | 短縮形 | 説明 | デフォルト値 |
+|-----------|--------|------|-------------|
+| `--config` | `-c` | 設定ファイルのパス（YAML形式） | なし（デフォルト設定を使用） |
+| `--sort-order` | | 記事の並び順（`asc`: 古い順, `desc`: 新しい順） | `desc` |
+| `--debug` | | デバッグモードを有効化（詳細なログを出力） | `False` |
+| `--no-backup` | | バックアップを作成しない | バックアップを作成 |
+| `--max-chars` | | 最大文字数 | `300` |
+| `--min-elements` | | 最小要素数 | `2` |
+| `--max-elements` | | 最大要素数 | `6` |
+| `--text-truncate-length` | | 段落の切り詰め文字数 | `120` |
+| `--max-list-items` | | リストの最大項目数 | `3` |
+
+### 設定ファイルの使用
+
+設定ファイル（YAML形式）でデフォルトの動作をカスタマイズできます。
+
+**設定ファイルの例（`build_month_config.yaml`）:**
+
+```yaml
+# 記事の並び順
+sort_order: "desc"  # "desc": 新しい順, "asc": 古い順
+
+# 省略処理の設定
+truncate:
+  max_chars: 300
+  min_elements: 2
+  max_elements: 6
+  text_truncate_length: 120
+  max_list_items: 3
+  list_item_estimate: 25
+
+# デバッグモード
+debug: false
+
+# バックアップの作成
+create_backup: true
+
+# 前後月の探索範囲
+adjacent_month_search_range: 24
+```
+
+**設定ファイルの使い方:**
+
+```bash
+# デフォルトの設定ファイル（build_month_config.yaml）を作成してスクリプトと同じディレクトリに配置
+python build_month.py 2025 12 ./txt/zakki/2025/12/days --config build_month_config.yaml
+
+# カスタム設定ファイルを使用
+python build_month.py 2025 12 ./txt/zakki/2025/12/days --config my_custom_config.yaml
+```
+
+**注意:** コマンドライン引数は設定ファイルの値を上書きします。
 
 ### 出力
 
@@ -170,19 +262,55 @@ python build_month.py 2025 12 ./txt/zakki/2025/12/days
 
 ## 設定のカスタマイズ
 
-省略処理の設定は関数内で定義されています。将来的にコマンドライン引数やconfigファイルでカスタマイズ可能にする予定です。
+### 設定ファイル（推奨）
 
-```python
-default_config = {
-    'maxChars': 300,           # 最大文字数
-    'minElements': 2,          # 最小要素数
-    'maxElements': 6,          # 最大要素数
-    'textTruncateLength': 120, # 段落の切り詰め文字数
-    'maxListItems': 3,         # リストの最大項目数
-    'listItemEstimate': 25,    # リスト1項目あたりの推定文字数
-    'debug': False             # デバッグモード
-}
+設定ファイル（`build_month_config.yaml`）を使用すると、毎回コマンドライン引数を入力する必要がなくなります。
+
+```yaml
+# 記事の並び順（"desc": 新しい順, "asc": 古い順）
+sort_order: "desc"
+
+# 省略処理の設定
+truncate:
+  max_chars: 300           # 最大文字数
+  min_elements: 2          # 最小要素数
+  max_elements: 6          # 最大要素数
+  text_truncate_length: 120 # 段落の切り詰め文字数
+  max_list_items: 3        # リストの最大項目数
+  list_item_estimate: 25   # リスト1項目あたりの推定文字数
+
+# デバッグモード
+debug: false
+
+# バックアップの作成
+create_backup: true
+
+# 前後月の探索範囲
+adjacent_month_search_range: 24
 ```
+
+### コマンドライン引数（一時的な変更）
+
+コマンドライン引数を使用すると、設定ファイルの値を一時的に上書きできます。
+
+```bash
+# 並び順を一時的に変更
+python build_month.py 2025 12 ./txt/zakki/2025/12/days --sort-order asc
+
+# 最大文字数を増やす
+python build_month.py 2025 12 ./txt/zakki/2025/12/days --max-chars 500
+
+# 複数の設定を同時に変更
+python build_month.py 2025 12 ./txt/zakki/2025/12/days --sort-order asc --max-chars 500 --max-elements 8
+```
+
+### 優先順位
+
+設定の優先順位は以下の通りです（上が優先）:
+
+1. **コマンドライン引数**（最優先）
+2. **設定ファイル**（`--config` で指定）
+3. **デフォルト値**（スクリプト内のハードコード値）
 
 ## デバッグモード
 
@@ -246,18 +374,37 @@ Preview completed: 6 elements, 260 chars
 
 ## 今後の拡張予定
 
-- [ ] コマンドライン引数での設定カスタマイズ
-- [ ] 設定ファイル（YAML/JSON）のサポート
+### Phase 1 - 完了 ✅
+- [x] コマンドライン引数での設定カスタマイズ
+- [x] 設定ファイル（YAML）のサポート
+- [x] 記事の並び順制御（新しい順/古い順）
+- [x] デバッグモードのコマンドライン制御
+- [x] バックアップ機能
+
+### Phase 2 - 高優先
 - [ ] 年別ページの生成
-- [ ] 複数月の一括処理
-- [ ] 進捗表示の改善
+- [ ] 複数月の一括処理（`--range` オプション）
 - [ ] より詳細なエラーハンドリング
+- [ ] プレビューモード（`--dry-run`）
+
+### Phase 3 - 中優先
+- [ ] 進捗バーの表示
+- [ ] HTML/CSS のバリデーション
+- [ ] 画像の最適化チェック
 
 ## ライセンス
 
 このスクリプトは個人利用を目的としています。
 
 ## 更新履歴
+
+### v2.1.0 (2025-12-25) ✨
+- **記事の並び順制御を追加**: `--sort-order` で新しい順/古い順を選択可能（デフォルト: 新しい順）
+- **設定ファイルのサポート**: YAML形式の設定ファイルでデフォルト値をカスタマイズ可能
+- **コマンドライン引数の拡張**: argparseによる柔軟な引数処理
+- **バックアップ機能**: 既存ファイルを上書きする前に `.bak` ファイルを自動作成
+- **デバッグモードの改善**: `--debug` フラグでコマンドラインから制御可能
+- **省略処理のカスタマイズ**: `--max-chars`, `--max-elements` など各種パラメータを指定可能
 
 ### v2.0.0 (2025-12-14)
 - JavaScriptと同等の高度な省略処理を実装

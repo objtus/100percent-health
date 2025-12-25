@@ -1,0 +1,37 @@
+# 月別雑記ページ生成スクリプト 設定ファイル
+# build_month.py の動作をカスタマイズできます
+
+# 記事の並び順
+# - "desc": 新しい順（デフォルト）
+# - "asc": 古い順
+sort_order: "desc"
+
+# 省略処理の設定
+truncate:
+  # 最大文字数
+  max_chars: 300
+  
+  # 最小要素数（この数まで必ず表示）
+  min_elements: 2
+  
+  # 最大要素数
+  max_elements: 6
+  
+  # 段落の切り詰め文字数
+  text_truncate_length: 120
+  
+  # リストの最大項目数
+  max_list_items: 3
+  
+  # リスト1項目あたりの推定文字数
+  list_item_estimate: 25
+
+# デバッグモード（詳細なログを出力）
+debug: false
+
+# バックアップの作成（既存ファイルを上書きする前に .bak を作成）
+create_backup: true
+
+# 前後月の探索範囲（最大何ヶ月前後まで探すか）
+adjacent_month_search_range: 24
+
