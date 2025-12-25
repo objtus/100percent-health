@@ -396,6 +396,28 @@ Preview completed: 6 elements, 260 chars
 
 このスクリプトは個人利用を目的としています。
 
+## 関連ドキュメント
+
+- **[BUILD_YEAR_README.md](./BUILD_YEAR_README.md)** - 年別ページ生成スクリプトの説明
+- **[build_month_config.yaml](./build_month_config.yaml)** - 設定ファイルのサンプル
+- **[build_utils.py](./build_utils.py)** - 共通ユーティリティモジュール
+
+## ワークフロー例
+
+月別ページと年別ページを両方生成する場合の推奨ワークフロー：
+
+```bash
+# 1. 各月の月別ページを生成
+python build_month.py 2025 01 D:\web\100percent-health\txt\zakki\2025\01\days
+python build_month.py 2025 02 D:\web\100percent-health\txt\zakki\2025\02\days
+# ... 他の月
+
+# 2. 年別ページを生成（全ての月を統合）
+python build_year.py 2025 D:\web\100percent-health\txt\zakki
+```
+
+これで、月別ページと年別ページの両方が自動生成されます。
+
 ## 更新履歴
 
 ### v2.1.0 (2025-12-25) ✨

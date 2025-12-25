@@ -16,127 +16,22 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 import sys
 import argparse
-import yaml
 import shutil
+from build_utils import (
+    load_config,
+    create_backup,
+    find_adjacent_months,
+    generate_html_head,
+    generate_html_footer,
+    generate_breadcrumb
+)
 
-
-def load_config(config_path=None):
-    """
-    設定ファイルを読み込む
-    
-    Args:
-        config_path: 設定ファイルのパス（None の場合はデフォルト設定）
-    
-    Returns:
-        設定辞書
-    """
-    # デフォルト設定
-    default_config = {
-        'sort_order': 'desc',
-        'truncate': {
-            'max_chars': 300,
-            'min_elements': 2,
-            'max_elements': 6,
-            'text_truncate_length': 120,
-            'max_list_items': 3,
-            'list_item_estimate': 25,
-        },
-        'debug': False,
-        'create_backup': True,
-        'adjacent_month_search_range': 24,
-    }
-    
-    # 設定ファイルが指定されている場合は読み込み
-    if config_path:
-        config_file = Path(config_path)
-        if not config_file.exists():
-            print(f'Warning: Config file not found: {config_path}')
-            print('Using default configuration.')
-            return default_config
-        
-        try:
-            with open(config_file, 'r', encoding='utf-8') as f:
-                user_config = yaml.safe_load(f)
-                if user_config:
-                    # デフォルト設定とマージ（truncate は深くマージ）
-                    if 'truncate' in user_config:
-                        default_config['truncate'].update(user_config['truncate'])
-                        del user_config['truncate']
-                    default_config.update(user_config)
-                    print(f'✓ Loaded configuration from: {config_path}')
-        except Exception as e:
-            print(f'Error reading config file: {e}')
-            print('Using default configuration.')
-    
-    return default_config
-
-
-def find_adjacent_months(year, month, days_dir, search_range=24):
-    """
-    実際に存在する前後の月を検出
-    
-    Args:
-        year: 現在の年
-        month: 現在の月
-        days_dir: 日別HTMLディレクトリのパス
-        search_range: 探索範囲（最大何ヶ月前後まで探すか）
-    
-    Returns:
-        ((prev_year, prev_month), (next_year, next_month))
-        存在しない場合は (None, None)
-    """
-    days_path = Path(days_dir)
-    # txt/zakki/ ディレクトリを取得
-    zakki_root = days_path.parent.parent.parent
-    
-    current_ym = int(year) * 12 + int(month)
-    
-    # 前の月を探す
-    prev_year, prev_month = None, None
-    for i in range(1, search_range + 1):
-        check_ym = current_ym - i
-        check_year = check_ym // 12
-        check_month = check_ym % 12
-        if check_month == 0:
-            check_year -= 1
-            check_month = 12
-        
-        check_year_str = str(check_year)
-        check_month_str = str(check_month).zfill(2)
-        
-        # days/ディレクトリが存在し、HTMLファイルがあるかチェック
-        check_days_dir = zakki_root / check_year_str / check_month_str / 'days'
-        if check_days_dir.exists():
-            html_files = list(check_days_dir.glob('*.html'))
-            if html_files:
-                prev_year = check_year_str
-                prev_month = check_month_str
-                print(f'  Found previous month: {prev_year}-{prev_month}')
-                break
-    
-    # 次の月を探す
-    next_year, next_month = None, None
-    for i in range(1, search_range + 1):
-        check_ym = current_ym + i
-        check_year = check_ym // 12
-        check_month = check_ym % 12
-        if check_month == 0:
-            check_year -= 1
-            check_month = 12
-        
-        check_year_str = str(check_year)
-        check_month_str = str(check_month).zfill(2)
-        
-        check_days_dir = zakki_root / check_year_str / check_month_str / 'days'
-        if check_days_dir.exists():
-            html_files = list(check_days_dir.glob('*.html'))
-            if html_files:
-                next_year = check_year_str
-                next_month = check_month_str
-                print(f'  Found next month: {next_year}-{next_month}')
-                break
-    
-    return (prev_year, prev_month), (next_year, next_month)
+# UTF-8で出力（Windows対応）
+if sys.stdout.encoding != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except:
+        pass
 
 
 def advanced_truncate_article(article_soup, year, month, config=None):
@@ -174,6 +69,13 @@ def advanced_truncate_article(article_soup, year, month, config=None):
     
     # articleをコピー
     truncated = BeautifulSoup(str(article_soup), 'html.parser').find('article')
+    
+    # class="daily-article" を確実に追加
+    if truncated:
+        current_classes = truncated.get('class', [])
+        if 'daily-article' not in current_classes:
+            current_classes.append('daily-article')
+            truncated['class'] = current_classes
     
     # .article-body を取得
     article_body = truncated.find(class_='article-body')
@@ -563,13 +465,7 @@ def build_month_page(year, month, days_dir, config=None):
     output_path = output_dir / f'{year}-{month}.html'
     
     # バックアップの作成
-    if output_path.exists() and config.get('create_backup', True):
-        backup_path = output_dir / f'{year}-{month}.html.bak'
-        try:
-            shutil.copy2(output_path, backup_path)
-            print(f'✓ Backup created: {backup_path}')
-        except Exception as e:
-            print(f'Warning: Could not create backup: {e}')
+    create_backup(output_path, config.get('create_backup', True))
     
     # ファイルに書き出し
     try:

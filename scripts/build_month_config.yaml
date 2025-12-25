@@ -1,5 +1,5 @@
-# 月別雑記ページ生成スクリプト 設定ファイル
-# build_month.py の動作をカスタマイズできます
+# 雑記ページ生成スクリプト 設定ファイル
+# build_month.py と build_year.py の両方で使用できます
 
 # 記事の並び順
 # - "desc": 新しい順（デフォルト）
@@ -34,4 +34,7 @@ create_backup: true
 
 # 前後月の探索範囲（最大何ヶ月前後まで探すか）
 adjacent_month_search_range: 24
+
+# 前後年の探索範囲（最大何年前後まで探すか）※ build_year.py で使用
+adjacent_year_search_range: 10
 
