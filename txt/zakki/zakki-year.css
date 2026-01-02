@@ -2,55 +2,131 @@
 	padding-left: 6.3em;
 	text-indent: -6.3em;
 	margin-bottom: 40%;
+}
 
-	ol {
-		display: flex;
-		flex-direction: column-reverse;
-		list-style: none;
+/* 年間統計 */
+.year-stats {
+	text-align: center;
+	padding: 1rem;
+	
+	p {
+		font-size: 10pt;
 	}
 }
-.month-article {
-	padding-left: 0px;
-	background-image: linear-gradient(to bottom, #000 4px, transparent 4px);
+
+/* 月別目次（カレンダー風） */
+.year-index {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+	gap: 0;
+	margin-top: 2rem;
+	padding: 1rem;
+}
+	
+.month-link {
+	padding: 5px;
+	text-align: center;
+	display: block;
+	transition: all 0.2s;
+}
+	
+.month-link.has-articles {
+	color: #000;
+
+	&:hover {
+		color: #fff;
+	}
+}
+
+.month-link.no-articles {
+	color: #999;
+}
+
+/* 月別セクション */
+.month-section {
+	margin: 0;
+	padding: 1rem 0;
+	border-bottom: 2px solid #ddd;
+}
+	
+.month-section:last-child {
+	border-bottom: none;
+}
+	
+.month-info {
+	color: #666;
+	font-size: 0.9rem;
+	margin-bottom: 0.5rem;
+}
+
+.month-articles {
+	padding-left: 0;
+
+	/* background-image: linear-gradient(to bottom, #000 4px, transparent 4px);
 	background-size: 2px 8px;
 	background-repeat: repeat-y;
-	background-position: left bottom;
-	margin-bottom: 32px;
+	background-position: left bottom; */
+	margin-bottom: 1.5rem;
 }
-article {
+
+.daily-article {
 	overflow: hidden;
 	display: -webkit-box;
 	text-overflow: ellipsis;
 	-webkit-box-orient: vertical;
+	margin-bottom: 0.5rem;
 
 	h3 {
 		font-size: 14pt;
 		padding-left: 10px;
 		border-left: 5px solid;
-		border-bottom: 2px dotted;
+		border-bottom: 2px dotted #ccc;
 		margin-left: 20px;
 	}
+
 	h4 {
 		font-size: 12pt;
+		padding-top: 1.5em;
+		padding-bottom: 0.5em;
+
 	}
+
 	p {
 		font-size: 10pt;
 	}
+
 	ul {
 		font-size: 10pt;
 		text-indent: -4.3em;
 		margin-left: 6em;
 		list-style: none;
 	}
+
 	hr {
 		border: none;
 		text-align: center;
 		font-size: 1em;
 	}
+
 	hr::before {
 		content: "*****";
 		letter-spacing: 1em;
 		padding-left: 2em;
+	}
+
+	.header-link{
+		opacity: 0.2;
+		padding: 0 1em;
+		margin-left: 1em;
+		text-decoration: none;
+		color: black;
+		transition: opacity 0.2s;
+	}
+
+	.header-link:hover{
+		color: black;
+		background-color: transparent;
+		opacity: 1;
 	}
 }
 
@@ -58,21 +134,25 @@ article {
 .article-preview {
 	margin: 10px 0;
 	padding: 0 40px;
-	p{
+
+	p {
 		font-size: 10pt;
 		line-height: 1.6;
 		margin: 0;
 	}
+
 	.article-ellipsis {
 		font-size: 12pt;
 		text-align: center;
 		margin: 10px 0;
 		padding-left: 15px;
 	}
+
 	.ellipsis {
 		font-style: italic;
 		color: #666;
 	}
+
 	.list-ellipsis {
 		font-style: italic;
 		color: #666;
@@ -81,23 +161,46 @@ article {
 }
 
 
-#zakkizone,.monthlist,#taglist {
+#zakkizone,
+.monthlist,
+#taglist {
 	list-style-type: none;
 }
+
 .monthlist {
 	display: flex;
 	flex-wrap: wrap;
 	margin-left: 20px;
 }
+
 .month {
 	margin-right: 20px;
 }
+
 #zakkihtml {
 	margin-top: 60px;
 }
 
 /* スマホサイズ */
-@media screen and (max-width: 576px) {
+@media screen and (width <= 576px) {
+	.year-stats {
+		padding: 0.5rem;
+	}
+
+	.year-index {
+		margin-top: 1rem;
+		padding: 0;
+	}
+
+	article {
+		iframe {
+			width: 97%;
+		}
+
+		.youtube-16-9 {
+			height: auto;
+		}
+	}
 
 	#zakkizone {
 		.monthlist {
@@ -105,6 +208,7 @@ article {
 			margin-left: 0;
 			justify-content: space-evenly;
 		}
+
 		.month {
 			margin-right: 0;
 		}

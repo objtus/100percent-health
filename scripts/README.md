@@ -128,6 +128,11 @@ python build_year.py 2025 ./txt/zakki --config build_month_config.yaml
 
 ## 🆕 更新情報
 
+### v3.0.1 (2025-12-26)
+- 🐛 **メディアラッパーdivの保持機能を追加**
+  - YouTube埋め込みなど、iframe/img/videoを含むdivが正しく保持されるように修正
+  - レスポンシブデザインが維持されます
+
 ### v3.0.0 (2025-12-25)
 - ✨ **一括生成スクリプトを追加**（`build_all.py`）
 - ✨ 複数月の一括生成機能

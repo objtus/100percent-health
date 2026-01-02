@@ -236,7 +236,7 @@ class TagPageSystem {
         }
         
         // 新しい画像リンクを対象にライトボックスを初期化
-        const imageLinks = document.querySelectorAll('#works-container a[href$=jpg], #works-container a[href$=png], #works-container a[href$=gif], #works-container a[href$=webp]');
+        const imageLinks = document.querySelectorAll('#works-container a[href$=jpg], #works-container a[href$=png], #works-container a[href$=gif], #works-container a[href$=webp], #works-container a[href$=avif]');
         
         if (imageLinks.length > 0 && typeof LuminousGallery !== 'undefined') {
             window.luminousGallery = new LuminousGallery(imageLinks);

@@ -77,7 +77,8 @@
       }
     }
 
-    .table-wrapper {
+    a:has(img):hover {
+      background-color: transparent;
     }
 
     .service-table {
@@ -169,6 +170,30 @@
 
     #texthtml, ol {
       list-style-type: none;
+    }
+
+    figure img {
+      image-rendering: inherit !important;
+    }
+
+    figcaption {
+      font-size: 0.8em;
+      display: block;
+      text-align: right;
+      color: #888;
+      padding-top: 0;
+      margin-top: 10px;
+
+      a {
+        color: #888;
+        text-decoration: none;
+
+        &:hover {
+          color: #888;
+          background-color: #fff;
+          text-decoration: none;
+        }
+      }
     }
 
     @media screen and (width <= 576px) {
@@ -468,6 +493,16 @@
               <area target="_blank" alt="Fatboy Slim - You've Come a Long Way, Baby" title="Fatboy Slim - You've Come a Long Way, Baby" href="https://www.fatboyslim.net/music-albums/youve-come-a-long-way-baby/" coords="316,317,391,392" shape="rect">
           </map>
         </section>
+        <section id="fediverse-usage-2017~2025">
+          <h2>fediverseの利用状況 <a href="#fediverse-usage-2017~2025" class="header-link">§</a></h2>
+          <figure class="fediverse-usage-image">
+            <a href="/img/fedi_usage_2017-2025.png"><img src="/img/fedi_usage_2017-2025.png" alt="分散SNS利用状況" width="600" height="396"></a>
+            <figcaption>
+              2017年から2025年までの分散SNSの各サーバーでの利用状況です。<br>
+              2019年あたりの投稿数が少ないのは、その頃使っていたアカウントをアーカイブせず削除したため、記録が失われたからです。<br>
+            </figcaption>
+          </figure>
+        </section>
 
       </section>
     </main>
@@ -477,6 +512,13 @@
       <div id="sitenavhtml"></div>
       <div id="footerhtml"></div>
     </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="/luminous-basic.min.css">
+    <script src="/Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+    </script>
   </div>
 
   <script>

@@ -1,140 +1,204 @@
-  <!DOCTYPE html>
-  <html lang="ja">
+<!DOCTYPE html>
+<html lang="ja">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024 - 100%health</title>
-    <link rel="stylesheet" href="/1column.css">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <script src="/js/jquery-3.6.0.min.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/mouse.js"></script>
-    <link rel="stylesheet" href="/txt/zakki/tag-style.css">
-    <link rel="stylesheet" href="/txt/zakki/zakki-year.css">
-    <style>
-      article {
-        -webkit-line-clamp: 7;
-      }
-    </style>
-    <script>
-      $(function () {
-        $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
-        $("#taghtml").load("/txt/txt_main.html #tag-list");
-      });
-    </script>
-    <script>
-      $(document).ready(function () {
-        var yearDiv = $('#y2024');
-        const year = '2024';
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2024 - 100%health</title>
+  <link rel="stylesheet" href="/1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/mouse.js"></script>
+  <script>
+    $(function () {
+      $("#zakkihtml").load("/txt/txt_main.html #zakki-list");
+      $("#taghtml").load("/txt/txt_main.html #tag-list");
+    });
+  </script>
+  <link rel="stylesheet" href="/txt/zakki/tag-style.css">
+  <link rel="stylesheet" href="/txt/zakki/zakki-year.css">
+</head>
 
-        // 月別スクリプトを動的にロードする関数
-        function loadMonthScript(month) {
-          return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = `/txt/zakki/${year}/${month}/zakki${month}.js`;
-            script.onload = resolve;
-            script.onerror = reject;
-            document.body.appendChild(script);
-          });
-        }
-
-        // 12ヶ月分のdiv要素を作成
-        for (var i = 1; i <= 12; i++) {
-          var monthId = 'm' + ('0' + i).slice(-2);
-          var monthDiv = $('<div>').attr('id', monthId);
-          yearDiv.append(monthDiv);
-        }
-
-        var counter = 1;
-        var totalMonths = 12;
-
-        async function loadMonth(month) {
-          var paddedMonth = ('0' + month).slice(-2);
-          var monthId = 'm' + paddedMonth;
-
-          try {
-            // 1. 月別HTMLの読み込み
-            const response = await $.ajax({
-              url: `/txt/zakki/${year}/${paddedMonth}/${year}-${paddedMonth}.html`,
-              type: 'GET'
-            });
-
-            var content = $(response).find('#zakki' + paddedMonth).html();
-            if (content) {
-              $('#' + monthId).html(content);
-
-              // 2. 月別スクリプトの読み込み
-              await loadMonthScript(paddedMonth);
-
-              // 3. 記事読み込み関数の実行
-              const funcName = `loadDailyArticles${paddedMonth}`;
-              if (typeof window[funcName] === 'function') {
-                await window[funcName]();
-              }
-            }
-          } catch (error) {
-            console.error(`Error loading month ${paddedMonth}:`, error);
-          }
-
-          // 次の月の処理
-          counter++;
-          if (counter <= totalMonths) {
-            await loadMonth(counter);
-          }
-        }
-
-        // 1月から読み込み開始
-        loadMonth(1);
-      });
-    </script>
-  </head>
-
-  <body>
-    <div id="wrapper">
-      <header id="header">
-        <div id="header-flex">
-          <nav id="back">
-            <a id="backicon" href="/index.html">
-              &lt;
-            </a>
-          </nav>
-          <nav id="address" class="addressbar">
-            <a class="addressbar" href="/index.html">
-              100%health
-            </a>/
-            <a class="addressbar" href="/txt/txt_main.html">
-              txt
-            </a>/
-            <a class="addressbar" href="/txt/zakki/2024.html">
-              2024
-            </a>
-            </a>
-          </nav>
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="/index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <a class="addressbar" href="/index.html">100%health</a>
+          /
+          <a class="addressbar" href="/txt/txt_main.html">txt</a>
+          /
+          <a class="addressbar" href="/txt/zakki/2024/2024.html">2024</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <br>
+      <h1>2024年の雑記帳</h1>
+      
+      <!-- 年間統計 -->
+      <div class="year-stats">
+        <p>総記事数: 7件 | 投稿月数: 4ヶ月</p>
+      </div>
+      
+      <!-- 前後年へのナビゲーション -->
+      <nav class='arrow' aria-label="前後年へのリンク">
+        <div class='rowarrow'>
+          <a class="leftarrow" style="visibility: hidden;" aria-label="前の年へ移動">&lt;</a>
+          <a class="uparrow" href="/txt/txt_main.html" aria-label="雑記トップへ">雑記トップ</a>
+          <a class="rightarrow" href="../2025/2025.html" aria-label="次の年へ移動">2025 &gt;</a>
         </div>
-      </header>
-      <main id="main">
-        <br>
-        <h1>2024年の雑記帳</h1>
+      </nav>
+      
+      <!-- 月別目次（カレンダー風） -->
+      <nav class="year-index">
+    <span class="month-link no-articles">1月</span>
+    <span class="month-link no-articles">2月</span>
+    <span class="month-link no-articles">3月</span>
+    <span class="month-link no-articles">4月</span>
+    <span class="month-link no-articles">5月</span>
+    <span class="month-link no-articles">6月</span>
+    <a href="#month-07" class="month-link has-articles">7月 (4)</a>
+    <a href="#month-08" class="month-link has-articles">8月 (1)</a>
+    <span class="month-link no-articles">9月</span>
+    <a href="#month-10" class="month-link has-articles">10月 (1)</a>
+    <span class="month-link no-articles">11月</span>
+    <a href="#month-12" class="month-link has-articles">12月 (1)</a>
+      </nav>
+      
+      <!-- 月別コンテンツ -->
+      <div class="year-content">
 
-        <div id="y2024">
+    <section class="month-section" id="month-12">
+      <h2><a href="/txt/zakki/2024/12/2024-12.html">2024年12月</a></h2>
+      <p class="month-info">1件の記事</p>
+      
+      <div class="month-articles">
+        <article class="daily-article" id="241213">
+<h3><a href="/txt/zakki/2024/12/days/2024-12-13.html">2024-12-13</a></h3>
+<div class="article-preview"><p>
+                      簡単に、前回の雑記更新（2024年10月09日）以降に行った活動をリストにしてまとめてみる。<br>
+                      並べてみると活動的な感じがするけど、実際は虚無。
+                    </br></p><hr/><h4>まとめの表</h4><ul class="timeline_md"><li>10月15日 いど子通信#9</li><li>10月21日 <a href="https://www.youtube.com/watch?v=FsLtxWMrf7Y" target="_blank">他人事ラジオ#11「プログラミング」</a></li><li>11月03日 <a href="https://www.youtube.com/watch?v=YJ6DLR9CXMg" target="_blank">他人事ラジオ#12「宇宙」</a></li><li class="list-ellipsis" style="font-style: italic; color: #666;"><em>... (他10項目)</em></li></ul><hr/><br/><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2024/12/days/2024-12-13.html">続きを読む / <span lang="en">read more</span></a></p></div>
+</article>
+      </div>
+    </section>
+    <section class="month-section" id="month-10">
+      <h2><a href="/txt/zakki/2024/10/2024-10.html">2024年10月</a></h2>
+      <p class="month-info">1件の記事</p>
+      
+      <div class="month-articles">
+        <article class="daily-article" id="241009">
+<h3><a href="/txt/zakki/2024/10/days/2024-10-09.html">2024-10-09</a></h3>
+<div class="article-preview"><p>
+                      一ヶ月に2回は更新したいとか考えてたが、甘かった。
+                      自分自身の継続性のなさの見積もりが甘かった。
+          
+                      9月中には1ヶ月に1回でもいいかと思っていた。9月が終わると、10<span class="ellipsis">...</span></p><p>
+                      ちょっとヘビーなものとして捉えすぎてる気がする。これまでなんだか文章量が多少あるのが多かったし。<br>
+<br/>
+                      とりあえず雑に9月の振り返りをする。<br/>
+</br></p><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2024/10/days/2024-10-09.html">続きを読む / <span lang="en">read more</span></a></p></div>
+</article>
+      </div>
+    </section>
+    <section class="month-section" id="month-08">
+      <h2><a href="/txt/zakki/2024/08/2024-08.html">2024年8月</a></h2>
+      <p class="month-info">1件の記事</p>
+      
+      <div class="month-articles">
+        <article class="daily-article" id="240828">
+<h3><a href="/txt/zakki/2024/08/days/2024-08-28.html">2024-08-28</a></h3>
+<div class="article-preview"><p>
+                      8月中に更新しなければならない。雑記をはじめたときに、できれば継続したい、などと書いていたくせに、文字通り三日坊主になるところだ。
+          
+                      せめて、というか最低でも一月に一回は更新しなければならな<span class="ellipsis">...</span></p><p>
+                      8月初め頃は絵を描いていたような気がする。詳細は現在明かせないのだが、ある案件で、意見を聞きつつ絵を書き進めるということをしていた。8月15日に公開した他人事ラジオ#7で依頼を受けて絵を描いていると言及しているのだ<span class="ellipsis">...</span></p><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2024/08/days/2024-08-28.html">続きを読む / <span lang="en">read more</span></a></p></div>
+</article>
+      </div>
+    </section>
+    <section class="month-section" id="month-07">
+      <h2><a href="/txt/zakki/2024/07/2024-07.html">2024年7月</a></h2>
+      <p class="month-info">4件の記事</p>
+      
+      <div class="month-articles">
+        <article class="daily-article" id="240728">
+<h3><a href="/txt/zakki/2024/07/days/2024-07-28.html">2024-07-28</a></h3>
+<div class="article-preview"><p>とりあえず、最近やったことを書いておく。</p><p>
+                        07月18日には分散SNS関連年表を更新して、検索機能の結果を共有できるようにした。
+          
+                        例えば、「misskey」で検索した状態をURLで共有できる。これで、例えばSNS等で何らかの<span class="ellipsis">...</span></p><p>
+                        すしすきーで分散SNS関連年表を話題に出したら、タイミングもよかったのか割と話題になったのでよかった。
+                        あと、以前せせせさんが作ってくれた「今日はなんの日bot」も最近はちょくちょく<span class="ellipsis">...</span></p><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2024/07/days/2024-07-28.html">続きを読む / <span lang="en">read more</span></a></p></div>
+</article>
+        <article class="daily-article" id="240717">
+<h3><a href="/txt/zakki/2024/07/days/2024-07-17.html">2024-07-17</a></h3>
+<div class="article-preview"><p>
+                        最近どうすか、逆に。
+          
+                        え、俺？俺はまあ、良くもなく、悪くもなくって感じかな。
+                        なんとなく絵を描かないとなーと思いつつも描けない日々や。
+          
+                 <span class="ellipsis">...</span></p><p>
+                        わたしは『あずまんが大王』という漫画がすきだ。
+          
+                        作者はあずまきよひこであり、あずまきよひこと組んで事務所「よつばスタジオ」をやっているのがデザイナー、編集者、コピーライターである里<span class="ellipsis">...</span></p><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2024/07/days/2024-07-17.html">続きを読む / <span lang="en">read more</span></a></p></div>
+</article>
+        <article class="daily-article" id="240715">
+<h3><a href="/txt/zakki/2024/07/days/2024-07-15.html">2024-07-15</a></h3>
+<div class="article-preview"><p>
+                        現在0時33分、とくに書くことがないのだが、雑記を増やしていきたいと思っているので強引に書いていくことにする。
+                      </p><p>
+                        昨日はドナルド・トランプが暗殺されそうになってて驚いた。
+                        日本では2022年に安倍晋三さんが応援演説中に自作銃で殺されるという衝撃的な事件があったから、そのことをなんにせよ思い出して<span class="ellipsis">...</span></p><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2024/07/days/2024-07-15.html">続きを読む / <span lang="en">read more</span></a></p></div>
+</article>
+        <article class="daily-article" id="240712">
+<h3><a href="/txt/zakki/2024/07/days/2024-07-12.html">2024-07-12</a></h3>
+<div class="article-preview"><p>
+                        前々から作りたいと思っていた雑記ページをつくってみた。<br>
+                        しかしとくに書くことがない......。
+                      </br></p><p>
+                        ここ、100%healthをいろいろいじっていたら1日が終わった。
+                        変更したり修正した部分についてはchangelogに書いたのでここには書かない。大したことをやっているわけでもない<span class="ellipsis">...</span></p><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2024/07/days/2024-07-12.html">続きを読む / <span lang="en">read more</span></a></p></div>
+</article>
+      </div>
+    </section>
+      </div>
+      
+      <!-- 下部ナビゲーション -->
+      <nav class='arrow' aria-label="前後年へのリンク">
+        <div class='rowarrow'>
+          <a class="leftarrow" style="visibility: hidden;" aria-label="前の年へ移動">&lt;</a>
+          <a class="uparrow" href="/txt/txt_main.html" aria-label="雑記トップへ">雑記トップ</a>
+          <a class="rightarrow" href="../2025/2025.html" aria-label="次の年へ移動">2025 &gt;</a>
         </div>
-
-      </main>
+      </nav>
+      
+    </main>
       <footer id="main-footer">
-        <div id="zakkihtml"></div>
-        <div id="taghtml"></div>
-        <!-- main.jsから#footerへfooter.htmlの挿入 -->
-        <div id="footerhtml"></div>
-      </footer>
-    </div>
-    <div id="lightbox">
-      <link rel="stylesheet" href="/luminous-basic.min.css">
-      <script src="/Luminous.min.js"></script>
-      <script>
-        new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
-      </script>
-    </div>
-  </body>
+    <div id="zakkihtml"></div>
+    <div id="taghtml"></div>
+    <!-- main.jsから#footerへfooter.htmlの挿入 -->
+    <div id="footerhtml"></div>
+  </footer>
 
-  </html>
+</div>
+<div id="lightbox">
+  <link rel="stylesheet" href="/luminous-basic.min.css">
+  <script src="/Luminous.min.js" defer></script>
+  <script>
+    // LuminousGalleryが読み込まれてから実行
+    if (typeof LuminousGallery !== 'undefined') {
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    }
+  </script>
+</div>
+</body>
+
+</html>

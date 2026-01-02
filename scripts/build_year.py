@@ -26,12 +26,6 @@ from build_utils import (
     generate_html_footer,
     generate_breadcrumb
 )
-# 月別ページの省略処理機能をインポート
-from build_month import (
-    advanced_truncate_article,
-    get_all_relevant_elements,
-    process_element
-)
 
 # UTF-8で出力（Windows対応）
 if sys.stdout.encoding != 'utf-8':

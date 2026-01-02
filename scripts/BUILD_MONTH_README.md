@@ -179,7 +179,11 @@ python build_month.py 2025 12 ./txt/zakki/2025/12/days --config my_custom_config
 | 引用（BLOCKQUOTE） | 120文字超過時は切り詰め + `...` | 実際の文字数（最大120） |
 | iframe | そのまま表示 | **0文字** |
 | 画像（IMG） | そのまま表示 | **0文字** |
+| 動画（VIDEO） | そのまま表示 | **0文字** |
+| メディアラッパー（DIV） | iframe/img/videoを含むdivはそのまま保持 ★ | **0文字** |
 | 区切り（HR/BR） | そのまま表示 | 0文字 |
+
+**★ 重要:** `<div class="youtube-16-9"><iframe>...</iframe></div>` のようなレスポンシブラッパーdivは、CSSスタイルを維持するために保持されます。
 
 ### 省略例
 
@@ -419,6 +423,12 @@ python build_year.py 2025 D:\web\100percent-health\txt\zakki
 これで、月別ページと年別ページの両方が自動生成されます。
 
 ## 更新履歴
+
+### v2.1.1 (2025-12-26) 🐛
+- **メディアラッパーdivの保持機能を追加**
+  - YouTube埋め込みなど、iframe/img/videoを含むdivが正しく保持されるように修正
+  - `div.youtube-16-9` などのCSSラッパーが削除されなくなりました
+  - レスポンシブデザインが維持されます
 
 ### v2.1.0 (2025-12-25) ✨
 - **記事の並び順制御を追加**: `--sort-order` で新しい順/古い順を選択可能（デフォルト: 新しい順）

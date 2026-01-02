@@ -81,6 +81,18 @@ h1.title {
   line-height: 24px;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
+}
+
 /* デフォルト状態：ぼかし効果 */
 .nsfw img {
   filter: blur(20px);
@@ -200,6 +212,49 @@ a.addressbar {
   transform: scale(1.15, 0.85);
 }
 
+.breadcrumb {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 0.5em;
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      background-color: transparent;
+      color: #000;
+    }
+  }
+}
+
+.breadcrumb li::after {
+  content: "/";
+  margin-left: 0.5em;
+}
+
+.breadcrumb li:first-child::after {
+  content: "::";
+}
+
+.breadcrumb li:last-child::after {
+  content: "";
+  margin-left: 0;
+}
+
+.breadcrumb li[aria-current="page"] {
+  font-weight: bold;
+
+  &::before {
+    content: "**";
+  }
+
+  &::after {
+    content: "**";
+  }
+}
+
 /* ===================
  mainBlock
 =================== */
@@ -228,6 +283,14 @@ a.addressbar {
 }
 
 .caption {
+  p {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   a:hover {
     background-color: light-dark(black, #444);
   }

@@ -158,7 +158,17 @@ def get_all_relevant_elements(container):
     """
     elements = []
     relevant_tags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'UL', 'OL', 'BLOCKQUOTE', 'HR', 'BR', 'IFRAME', 'IMG']
-    container_tags = ['SECTION', 'DIV', 'ARTICLE']
+    container_tags = ['SECTION', 'ARTICLE']  # DIVは条件付きで処理
+    
+    def has_media_child(node):
+        """
+        ノードが直接的にiframeやimgを含むかチェック
+        （レスポンシブラッパーdivを保持するため）
+        """
+        for child in node.children:
+            if child.name and child.name.upper() in ['IFRAME', 'IMG', 'VIDEO']:
+                return True
+        return False
     
     def traverse(node):
         for child in node.children:
@@ -169,8 +179,15 @@ def get_all_relevant_elements(container):
             
             if tag_upper in relevant_tags:
                 elements.append(child)
+            elif tag_upper == 'DIV':
+                # DIVがiframe/img/videoを直接含む場合は、DIVごと保持
+                if has_media_child(child):
+                    elements.append(child)
+                else:
+                    # それ以外のDIVは中身を再帰的に処理
+                    traverse(child)
             elif tag_upper in container_tags:
-                # コンテナ要素の場合は中身を再帰的に処理
+                # SECTION、ARTICLEは中身を再帰的に処理
                 traverse(child)
             # else: その他の要素は無視
     
@@ -257,6 +274,14 @@ def process_element(element, config):
         if config['debug']:
             print(f"    Processed {element.name}")
     
+    elif tag_upper == 'DIV':
+        # DIVはメディアラッパーとして保持（iframe/img/videoを含む場合）
+        # そのまま保持、文字数は0
+        estimated_chars = 0
+        if config['debug']:
+            classes = element.get('class', [])
+            print(f"    Processed div (classes: {', '.join(classes) if classes else 'none'})")
+    
     elif tag_upper == 'IFRAME':
         # iframeはそのまま保持、文字数は0
         estimated_chars = 0
@@ -268,6 +293,12 @@ def process_element(element, config):
         estimated_chars = 0
         if config['debug']:
             print(f"    Processed img")
+    
+    elif tag_upper == 'VIDEO':
+        # videoもそのまま保持、文字数は0
+        estimated_chars = 0
+        if config['debug']:
+            print(f"    Processed video")
     
     else:
         estimated_chars = len(element.get_text())

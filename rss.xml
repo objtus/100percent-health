@@ -5,9 +5,25 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Tue, 23 Dec 2025 00:23:45 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 02 Jan 2026 06:21:50 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>galleryに年賀イラスト1点を追加</title>
+      <link>https://yuinoid.neocities.org/gallery/image-page/idoko_2026akeome.html</link>
+      <description>いど子です。galleryページに年賀イラスト（いわゆる「あけおめ絵」）を1点を追加しました。2026年元日に描いた作品です。あけましておめでとうございます。2026年もよろしくお願いします。</description>
+      <pubDate>Fri, 02 Jan 2026 06:21:50 GMT</pubDate>
+      <category>gallery</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#l0jcn5-20260102</guid>
+    </item>
+    <item>
+      <title>2025年12月30日の雑記ページを追加</title>
+      <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-30.html</link>
+      <description>雑記ページを更新しました。2026年の目標を決めた話をしています。</description>
+      <pubDate>Tue, 30 Dec 2025 12:47:56 GMT</pubDate>
+      <category>zakki</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#xwe518-20251230</guid>
+    </item>
     <item>
       <title>2025年12月23日の雑記ページを追加</title>
       <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-23.html</link>
