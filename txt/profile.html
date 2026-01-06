@@ -21,6 +21,16 @@
       font-size: 1.5rem;
       margin-bottom: 10px;
     }
+
+    .breadcrumb li:nth-child(2)::after {
+      content: "(";
+    }
+
+    .breadcrumb li[aria-current="page"] {
+      &::after {
+        content: var(--address-last-mark) " )";
+      }
+    }
   
     p.contact {
       border: solid 1px;
@@ -263,18 +273,12 @@
           </a>
         </nav>
         <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
-          <a class="addressbar" href="../index.html">
-            100%health
-          </a>/
-          <a class="addressbar" href="/aboutme.html">
-            about_me
-          </a>(
-          <a class="addressbar" href="./txt_main.html">
-            txt
-          </a>/
-          <a class="addressbar" href="profile.html">
-            profile:yuinoid
-          </a>)
+          <ol class="breadcrumb">
+            <li><a href="../index.html">100%health</a></li>
+            <li><a href="/aboutme.html">about_me</a></li>
+            <li><a href="./txt_main.html">txt</a></li>
+            <li aria-current="page"><a href="profile.html">profile:yuinoid</a></li>
+          </ol>
         </nav>
       </div>
     </header>

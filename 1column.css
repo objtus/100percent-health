@@ -5,6 +5,8 @@
 :root {
   --min-width768: 95%;
   --max-width768: 85%;
+  --address-first-mark: "";
+  --address-last-mark: "";
 
   color-scheme: light only;
 }
@@ -247,11 +249,11 @@ a.addressbar {
   font-weight: bold;
 
   &::before {
-    content: "**";
+    content: var(--address-first-mark);
   }
 
   &::after {
-    content: "**";
+    content: var(--address-last-mark);
   }
 }
 

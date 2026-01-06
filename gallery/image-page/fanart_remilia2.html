@@ -21,50 +21,45 @@
             </a>
           </nav>
           <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
-            <a class="addressbar" href="/index.html">100%health</a>&nbsp;/
-            <a class="addressbar" href="../gallery_main.html">gallery</a>&nbsp;/
-            <a class="addressbar" href="/gallery/tag-page/fanart.html">fanart</a>&nbsp;/
-            <a class="addressbar" href="fanart_remilia2.html">
-              fanart_remilia2
-            </a>
+            <ol class="breadcrumb">
+              <li><a href="/index.html">100%health</a></li>
+              <li><a href="../gallery_main.html">gallery</a></li>
+              <li><a href="/gallery/tag-page/fanart.html">fanart</a></li>
+              <li aria-current="page"><a href="fanart_remilia2.html">fanart_remilia2</a></li>
+            </ol>
           </nav>
         </div>
       </header>
       <main id="main">
-          <div id="galleryspace">
-            <h1 class="title" style="display: none;">fanart_remilia2</h1>
+          <article id="galleryspace">
+            <h1 class="title visually-hidden">fanart_remilia2</h1>
             <div class="card">
-              <div class="piccard">
-                <h2 style="display: none;">作品"fanart_remilia2"について</h2>
-                <h3 style="display: none;">アートワーク</h3>
+              <figure class="piccard">
                   <a href="/img/fanart/remilia2.gif">
-                    <img src="/img/fanart/remilia2.gif" alt="touhou remilia scarlet fan art">
-                  </a>
-                <h3 style="display: none;">キャプション</h3>
-                <p class="title"></p>
-                <div class="caption">
+                    <img src="/img/fanart/remilia2.gif" alt="touhou remilia scarlet fan art" style="width: 100%;">
+                </a>
+                <figcaption class="caption">
                   <details>
                     <summary aria-label="東方のレミリア・スカーレットさんのファンアートについて"></summary>
-                    東方のレミリア・スカーレットさんのファンアートです。<br>
-                    1はgroundpolis.appにアップしていましたが、サービス終了に伴い閲覧できなくなりました。<br>
-                    <br>
-                    こっそり全身ラフver.
+                    <p>東方のレミリア・スカーレットさんのファンアートです。</p>
+                    <p>1はgroundpolis.appにアップしていましたが、サービス終了に伴い閲覧できなくなりました。</p>
+                    <p>こっそり全身ラフver.</p>
                     <a href="/img/fanart/remilia2piyo.png">
-                      <img src="/img/fanart/remilia2piyo.png" alt="touhou remilia scarlet fan art">
+                      <img src="/img/fanart/remilia2piyo.png" alt="touhou remilia scarlet fan art" style="width: 100%;">
                     </a>
                   </details>
+                  <p class="date">&gt;<time datetime="2021-09-23">2021-09-23</time></p>
+                </figcaption>
+              </figure>
+
+              <nav class="tags-section" aria-label="作品タグ">
+                <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
+                <div class="tags-list" data-tags-container="">
+                  <span class="loading-placeholder">タグ読み込み中...</span>
                 </div>
-                <p class="date">&gt;2021-09-23</p>
-                <h3 style="display: none;">タグ</h3>
-                <nav class="tags-section" aria-label="作品タグ">
-                  <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
-                  <div class="tags-list" data-tags-container="">
-                    <span class="loading-placeholder">タグ読み込み中...</span>
-                  </div>
-                </nav>
-              </div>
+              </nav>
             </div>
-          </div>
+          </article>
       </main>
       
       <!-- テンプレート定義（mainの直後に移動） -->

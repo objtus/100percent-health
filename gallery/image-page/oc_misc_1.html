@@ -19,45 +19,35 @@
 						<a id="backicon" href="/index.html">&lt;</a>
 					</nav>
 					<nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
-						<a class="addressbar" href="/index.html">100%health</a>&nbsp;/
-						<a class="addressbar" href="../gallery_main.html">gallery</a>&nbsp;/
-						<a class="addressbar" href="/gallery/tag-page/oc_misc.html">oc_misc</a>&nbsp;/
-						<a class="addressbar" href="oc_misc_1.html">oc_misc_1</a>
+					  <ol class="breadcrumb">
+					    <li><a href="/index.html">100%health</a></li>
+					    <li><a href="../gallery_main.html">gallery</a></li>
+					    <li><a href="/gallery/tag-page/oc_misc.html">oc_misc</a></li>
+					    <li aria-current="page"><a href="oc_misc_1.html">oc_misc_1</a></li>
+					  </ol>
 					</nav>
 				</div>
 			</header>
 			<main id="main">
-				<div id="galleryspace">
-					<h1 class="title" style="display: none;">oc_misc_1</h1>
+				<article id="galleryspace">
+					<h1 class="title visually-hidden">oc_misc_1</h1>
 					<div class="card">
-						<div class="piccard">
-							<h2 style="display: none;">作品"oc_misc_1"について</h2>
-							<h3 style="display: none;">アートワーク</h3>
+						<figure class="piccard">
 							<a href="../../img/original/oc3_1.png"><img src="../../img/original/oc3_1.png" alt="original character illust" /></a>
-							<p class="title"></p>
-							<div class="caption">
-								<details>
-									<summary aria-label="oc_misc_1のアートワークについて"></summary>
-									<a href="stilldreaminghour0.html">“still dreaming (hour) vol.0” artwork</a>
-									の案その1
-									<br />
-									関連作品:
-									<a href="oc2_1.html">♥</a>
-									 
-									<a href="gptaniguchi.html">♥</a>
-								</details>
+							<figcaption class="caption">
+								<p><a href="stilldreaminghour0.html">“still dreaming (hour) vol.0” artwork</a>の案その1</p>
+								<p>関連作品: <a href="oc2_1.html">♥</a>   <a href="gptaniguchi.html">♥</a></p>
+								<p class="date">&gt;<time datetime="2020-06-18">2020-06-18</time></p>
+							</figcaption>
+						</figure>
+						<nav class="tags-section" aria-label="作品タグ">
+							<div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
+							<div class="tags-list" data-tags-container="">
+								<span class="loading-placeholder">タグ読み込み中...</span>
 							</div>
-							<p class="date">&gt;2020-06-18</p>
-							<h3 style="display: none;">タグ</h3>
-							<nav class="tags-section" aria-label="作品タグ">
-								<div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
-								<div class="tags-list" data-tags-container="">
-									<span class="loading-placeholder">タグ読み込み中...</span>
-								</div>
-							</nav>
-						</div>
+						</nav>
 					</div>
-				</div>
+				</article>
 			</main>
 			<!-- テンプレート定義 -->
 			<template id="related-item-template">

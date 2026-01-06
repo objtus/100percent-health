@@ -11,70 +11,68 @@
 <body>
   <div id="wrapper">
     
-    
     <header id="header">
-            <div id="header-flex">
-                <nav id="back" aria-label="戻るナビゲーション">
-                    <a id="backicon" href="/index.html">&lt;</a>
-                </nav>
-                <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
-                    <a class="addressbar" href="/index.html">100%health</a>&nbsp;/
-                    <a class="addressbar" href="../gallery_main.html">gallery</a>&nbsp;/
-                    <a class="addressbar" href="/gallery/tag-page/oc3.html">oc3</a>&nbsp;/
-                    <a class="addressbar" href="oc3_3.html">oc3_3</a>
-                </nav>
-            </div>
-        </header><main id="main">
-      <div id="galleryspace">
-        <h1 class="title" style="display: none;">oc3_3</h1>
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="/index.html">&lt;</a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <ol class="breadcrumb">
+            <li><a href="/index.html">100%health</a></li>
+            <li><a href="../gallery_main.html">gallery</a></li>
+            <li><a href="/gallery/tag-page/oc3.html">oc3</a></li>
+            <li aria-current="page"><a href="oc3_3.html">oc3_3</a></li>
+          </ol>
+        </nav>
+    </header>
+
+    <main id="main">
+      <article id="galleryspace">
+        <h1 class="title visually-hidden">oc3_3</h1>
         <div class="card">
-          <div class="piccard">
-            <h2 style="display: none;">作品"oc3_3"について</h2>
-            <h3 style="display: none;">アートワーク</h3>
-            <a href="../../img/original/2023-10-09.png"><img src="../../img/original/2023-10-09.png" alt="original character illust" class="border_img"></a>
-            <h3 style="display: none;">キャプション</h3>
-            <p class="title"></p>
-            <div class="caption">
+          <figure class="piccard">
+            <a href="../../img/original/2023-10-09.png">
+              <img src="../../img/original/2023-10-09.png" alt="original character illust" class="border_img">
+            </a>
+            <figcaption class="caption">
               <details>
                 <summary aria-label="oc3_3のアートワークについて"></summary>
-              関連作品: <a href="oc3_1.html">♥</a>
+                関連作品: <a href="oc3_1.html">♥</a>
               </details>
+              <p class="date">&gt;2023-10-09</p>
+            </figcaption>
+          </figure>
+          <nav class="tags-section" aria-label="作品タグ">
+            <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
+            <div class="tags-list" data-tags-container="">
+              <span class="loading-placeholder">タグ読み込み中...</span>
             </div>
-            <p class="date">&gt;2023-10-09</p>
-            <h3 style="display: none;">タグ</h3>
-            <nav class="tags-section" aria-label="作品タグ">
-              <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
-              <div class="tags-list" data-tags-container="">
-                <span class="loading-placeholder">タグ読み込み中...</span>
-            </div>
-        </nav>
-          </div>
-          
+          </nav>
         </div>
-      </div>
+      </article>
     </main>
-        <!-- テンプレート定義 -->
-        <template id="related-item-template">
-            <div class="related-item" data-id="">
-                <a href="" class="image-link">
-                    <img src="" alt="" loading="lazy">
-                </a>
-                <a href="" class="title-link">
-                    <span></span>
-                </a>
-            </div>
-        </template>
 
-        <template id="text-link-template">
-            <a href="" class="text-item-link"></a>
-        </template>
+      <!-- テンプレート定義 -->
+      <template id="related-item-template">
+          <div class="related-item" data-id="">
+              <a href="" class="image-link">
+                  <img src="" alt="" loading="lazy">
+              </a>
+              <a href="" class="title-link">
+                  <span></span>
+              </a>
+          </div>
+      </template>
 
-        <template id="tag-link-template">
-            <a href="" class="tag-link"></a>
-        </template>
+      <template id="text-link-template">
+          <a href="" class="text-item-link"></a>
+      </template>
+
+      <template id="tag-link-template">
+          <a href="" class="tag-link"></a>
+      </template>
         
     <footer id="main-footer">
-    
       <section id="galleryhtml" class="view-mode-text" aria-label="関連作品">
         <!-- 表示切り替えボタン -->
         <div class="view-toggle" role="tablist" aria-label="表示切り替え">
@@ -164,8 +162,8 @@
       </section>
       <div id="gallerymaphtml" class="gallery-collapsed"></div>
       <div id="footerhtml"></div>
-      
     </footer>
+
     </div>
     <div id="lightbox">
       <link rel="stylesheet" href="/luminous-basic.min.css">

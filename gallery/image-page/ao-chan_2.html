@@ -22,38 +22,40 @@
           <a id="backicon" href="/index.html">&lt;</a>
         </nav>
         <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
-          <a class="addressbar" href="/index.html">100%health</a>&nbsp;/
-          <a class="addressbar" href="../gallery_main.html">gallery</a>&nbsp;/
-          <a class="addressbar" href="/gallery/tag-page/ao-chan.html">ao-chan</a>&nbsp;/
-          <a class="addressbar" href="ao-chan_2.html">ao-chan_2</a>
+          <ol class="breadcrumb">
+            <li><a href="/index.html">100%health</a></li>
+            <li><a href="../gallery_main.html">gallery</a></li>
+            <li><a href="/gallery/tag-page/ao-chan.html">ao-chan</a></li>
+            <li aria-current="page"><a href="ao-chan_2.html">ao-chan_2</a></li>
+          </ol>
         </nav>
       </div>
     </header>
 
     <main id="main">
-      <div id="galleryspace">
-        <h1 class="title" style="display: none;">ao-chan_2</h1>
+      <article id="galleryspace">
+        <h1 class="title visually-hidden">ao-chan_2</h1>
         <div class="card">
-          <div class="piccard">
-            <h2 style="display: none;">作品"ao-chan#2"について</h2>
-            <h3 style="display: none;">アートワーク</h3>
-            <a href="../../img/original/ao-chan-gif.gif"><img src="../../img/original/ao-chan-gif.gif"
-                style="image-rendering: auto !important;" alt="aogif"></a>
-            <h3 style="display: none;">キャプション</h3>
-            <p class="title" style="display: none;">ao-chan#2</p>
-            <div class="caption">
+
+          <figure class="piccard">
+            <a href="../../img/original/ao-chan-gif.gif">
+              <img src="../../img/original/ao-chan-gif.gif" style="image-rendering: auto !important;" alt="aogif">
+            </a>
+            
+            <figcaption class="caption">
+              <p class="date">&gt;<time datetime="2020-02-02">2020-02-02</time></p>
+            </figcaption>
+
+          </figure>
+
+          <nav class="tags-section" aria-label="作品タグ">
+            <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
+            <div class="tags-list" data-tags-container="">
+              <span class="loading-placeholder">タグ読み込み中...</span>
             </div>
-            <p class="date">&gt;2020-02-02</p>
-            <h3 style="display: none;">タグ</h3>
-            <nav class="tags-section" aria-label="作品タグ">
-              <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
-              <div class="tags-list" data-tags-container="">
-                <span class="loading-placeholder">タグ読み込み中...</span>
-              </div>
-            </nav>
-          </div>
+          </nav>
         </div>
-      </div>
+      </article>
     </main>
 
     <!-- テンプレート定義 -->

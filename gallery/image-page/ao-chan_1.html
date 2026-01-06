@@ -22,43 +22,48 @@
           <a id="backicon" href="/index.html">&lt;</a>
         </nav>
         <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
-          <a class="addressbar" href="/index.html">100%health</a>&nbsp;/
-          <a class="addressbar" href="../gallery_main.html">gallery</a>&nbsp;/
-          <a class="addressbar" href="/gallery/tag-page/ao-chan.html">ao-chan</a>&nbsp;/
-          <a class="addressbar" href="ao-chan_1.html">ao-chan_1</a>
+          <ol class="breadcrumb">
+            <li><a href="/index.html">100%health</a></li>
+            <li><a href="../gallery_main.html">gallery</a></li>
+            <li><a href="/gallery/tag-page/ao-chan.html">ao-chan</a></li>
+            <li aria-current="page"><a href="ao-chan_1.html">ao-chan_1</a></li>
+          </ol>
         </nav>
       </div>
     </header>
 
     <main id="main">
-      <div id="galleryspace">
-        <h1 class="title" style="display: none;">ao-chan_1</h1>
+      <article id="galleryspace">
+        <h1 class="title visually-hidden">ao-chan_1</h1>
         <div class="card">
-          <div class="piccard">
-            <h2 style="display: none;">作品"ao-chan#1"について</h2>
-            <h3 style="display: none;">アートワーク</h3>
-            <a href="../../img/original/ao-chan.jpg"><img src="../../img/original/ao-chan.jpg" alt="ao"></a>
-            <h3 style="display: none;">キャプション</h3>
-            <p class="title" style="display: none;">ao-chan#1</p>
-            <div class="caption">
+          
+          <figure class="piccard">
+            <a href="../../img/original/ao-chan.jpg">
+              <img src="../../img/original/ao-chan.jpg" alt="ao">
+            </a>
+
+            <figcaption class="caption">
               <details open>
                 <summary aria-label="ao-chan#1について"></summary>
-                mastodon.cloudでかつて採用されていた、
-                <a href="https://glitch-soc.github.io/docs/features/doodle/">Mastodon Glitch
-                  Editionのペイント機能</a>を用いて描かれた絵。
+                <p>
+                  mastodon.cloudでかつて採用されていた、
+                  <a href="https://glitch-soc.github.io/docs/features/doodle/">Mastodon Glitch
+                    Editionのペイント機能</a>を用いて描かれた絵。
+                </p>
               </details>
-            </div>
-            <p class="date">&gt;2018-07-25</p>
-            <h3 style="display: none;">タグ</h3>
+              <p class="date">&gt;<time datetime="2018-07-25">2018-07-25</time></p>
+            </figcaption>
+
             <nav class="tags-section" aria-label="作品タグ">
               <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
               <div class="tags-list" data-tags-container="">
                 <span class="loading-placeholder">タグ読み込み中...</span>
               </div>
             </nav>
-          </div>
+          </figure>
+
         </div>
-      </div>
+      </article>
     </main>
     
     <!-- テンプレート定義 -->

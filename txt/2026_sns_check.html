@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026_sns_check - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <link rel="stylesheet" href="text.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="../index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <ol class="breadcrumb">
+            <li><a href="../index.html">100%health</a></li>
+            <li><a href="/txt/txt_main.html">txt</a></li>
+            <li aria-current="page"><a href="/txt/2026_sns_check.html">2026_sns_check</a></li>
+          </ol>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <article id="textblock">
+          <h1 class="title">2026年SNS投稿目標チェッカー</h1>
+          <section style="margin-top: 2rem;">
+            <h2>説明</h2>
+            <p>個人用ページです。2026年の目標を達成するための各種指標を簡単にチェックします。</p>
+          </section>
+
+          <section>
+            <h2>目標</h2>
+            <blockquote style="color: #000;">
+              「<b>2026年末時点</b>で@health@tanoshii.siteの投稿数を<b>1.5万ノート</b>にする」
+            </blockquote>
+          </section>
+
+          <section style="background: #fff3cd; padding: 1.5rem; border-left: 4px solid #ffc107; margin: 2rem 0;">
+            <h2 style="margin-top: 0; font-size: 1.2rem; color: #856404;">📊 目標達成に必要な1日あたりのペース</h2>
+            <p style="font-size: 2rem; font-weight: bold; margin: 0.5rem 0; color: #856404;">
+              <span id="required-pace-display">計算中...</span>
+            </p>
+          </section>
+
+          <section>
+            <h2>基本情報</h2>
+            <ul style="list-style: none; padding-left: 0;">
+              <li>今日の日付: <strong id="today">読み込み中...</strong></li>
+              <li>現在の投稿数: <strong id="current-notes">読み込み中...</strong></li>
+              <li>目標投稿数: <strong>15,000 note</strong></li>
+              <li>目標までの残り: <strong id="remaining-notes">計算中...</strong></li>
+              <li>達成率: <strong id="achievement-rate">計算中...</strong></li>
+            </ul>
+
+            <div style="margin: 1rem 0;">
+              <progress id="progress-bar" value="0" max="100" style="width: 100%; height: 24px;"></progress>
+            </div>
+          </section>
+
+          <section>
+            <h2>2026年の進捗</h2>
+            <ul style="list-style: none; padding-left: 0;">
+              <li>2026年の増加数: <strong id="year-increase">計算中...</strong></li>
+              <li>年の経過日数: <strong id="year-elapsed">計算中...</strong></li>
+              <li>年の経過率: <strong id="year-progress">計算中...</strong></li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>実際のペース分析</h2>
+            <ul style="list-style: none; padding-left: 0;">
+              <li>アカウント登録日: <strong>2024/10/04</strong></li>
+              <li>登録からの経過日数: <strong id="days-since-registration">計算中...</strong></li>
+              <li>全期間の平均ペース: <strong id="actual-pace">計算中...</strong></li>
+              <li>2026年の平均ペース: <strong id="pace-2026">計算中...</strong></li>
+              <li>ペース変化: <strong id="pace-change">計算中...</strong></li>
+              <li>必要ペースとの差: <strong id="pace-difference">計算中...</strong></li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>進捗比較</h2>
+            <ul style="list-style: none; padding-left: 0;">
+              <li>理想的な達成率: <strong id="ideal-achievement-rate">計算中...</strong></li>
+              <li>今日時点で理想的にあるべき投稿数: <strong id="ideal-notes">計算中...</strong></li>
+              <li>理想との差: <strong id="ideal-difference">計算中...</strong></li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>予測</h2>
+            <ul style="list-style: none; padding-left: 0;">
+              <li>現在のペースでの予測到達数: <strong id="predicted-notes">計算中...</strong></li>
+              <li>最終的な予測不足/超過: <strong id="predicted-difference">計算中...</strong></li>
+              <li>順調度: <strong id="status-judgment">計算中...</strong></li>
+              <li>目標達成予測日: <strong id="predicted-achievement-date">計算中...</strong></li>
+              <li>目標達成までの予測日数: <strong id="predicted-days-to-goal">計算中...</strong></li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>短期目標</h2>
+            <ul style="list-style: none; padding-left: 0;">
+              <li>今週の目標投稿数: <strong id="weekly-goal">計算中...</strong></li>
+              <li>今月の目標投稿数: <strong id="monthly-goal">計算中...</strong></li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>マイルストーン</h2>
+            <ul style="list-style: none; padding-left: 0;">
+              <li>次のマイルストーン: <strong id="next-milestone">計算中...</strong></li>
+              <li>達成まで: <strong id="milestone-remaining">計算中...</strong></li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>中間目標（2026/06/01）</h2>
+            <ul style="list-style: none; padding-left: 0;">
+              <li>中間評価日までの残り日数: <strong id="mid-days-remaining">計算中...</strong></li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>最終目標（2026/12/31）</h2>
+            <ul style="list-style: none; padding-left: 0;">
+              <li>最終目標日までの残り日数: <strong id="final-days-remaining">計算中...</strong></li>
+              <li>目標達成に必要な1日あたりのペース: <strong id="final-daily-pace">計算中...</strong></li>
+            </ul>
+          </section>
+
+      </article>
+    </main>
+    <footer id="main-footer">
+      <div id="texthtml"></div>
+      <div id="sitenachtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../../luminous-basic.min.css">
+    <script src="../../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+
+  <script>
+    // 定数設定
+    const MISSKEY_API_URL = 'https://tanoshii.site/api/users/show';
+    const USER_ID = '9yxxpz7k803n0bb4';
+    const TARGET_NOTES = 15000; // 目標投稿数
+    const NOTES_ON_JAN1_2026 = 4315; // 2026年1月1日時点の投稿数
+    const REGISTRATION_DATE = new Date('2024-10-04'); // アカウント登録日
+    const MID_EVAL_DATE = new Date('2026-06-01'); // 中間評価日
+    const FINAL_DATE = new Date('2026-12-31'); // 最終目標日
+
+    // 日付フォーマット関数
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}/${month}/${day}`;
+    }
+
+    // 数値をカンマ区切りにフォーマット
+    function formatNumber(num) {
+      return num.toLocaleString('ja-JP');
+    }
+
+    // 日数を計算
+    function daysBetween(date1, date2) {
+      const oneDay = 24 * 60 * 60 * 1000;
+      return Math.ceil((date2 - date1) / oneDay);
+    }
+
+    // Misskey APIからユーザー情報を取得
+    async function fetchUserNotes() {
+      try {
+        const response = await fetch(MISSKEY_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: USER_ID,
+            host: null
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('API request failed');
+        }
+
+        const data = await response.json();
+        return data.notesCount || 0;
+      } catch (error) {
+        console.error('Error fetching user notes:', error);
+        return null;
+      }
+    }
+
+    // 計算と表示を実行
+    async function updateDisplay() {
+      const today = new Date();
+      const currentNotes = await fetchUserNotes();
+
+      // 基本情報の表示
+      document.getElementById('today').textContent = formatDate(today);
+
+      if (currentNotes === null) {
+        document.getElementById('current-notes').textContent = 'エラー: データ取得失敗';
+        return;
+      }
+
+      document.getElementById('current-notes').textContent = `${formatNumber(currentNotes)} note`;
+
+      // 目標までの残り
+      const remainingNotes = TARGET_NOTES - currentNotes;
+      document.getElementById('remaining-notes').textContent = `${formatNumber(remainingNotes)} note`;
+
+      // 達成率
+      const achievementRate = (currentNotes / TARGET_NOTES * 100).toFixed(1);
+      document.getElementById('achievement-rate').textContent = `${achievementRate}%`;
+      document.getElementById('progress-bar').value = achievementRate;
+
+      // 2026年の増加数
+      const yearIncrease = currentNotes - NOTES_ON_JAN1_2026;
+      document.getElementById('year-increase').textContent = `${formatNumber(yearIncrease)} note`;
+
+      // 年の経過日数と経過率
+      const yearStart = new Date('2026-01-01');
+      const yearEnd = new Date('2026-12-31');
+      const elapsedDays = daysBetween(yearStart, today);
+      const totalDaysInYear = daysBetween(yearStart, yearEnd) + 1; // 365日
+      const yearProgressRate = (elapsedDays / totalDaysInYear * 100).toFixed(1);
+      
+      document.getElementById('year-elapsed').textContent = `${elapsedDays}日`;
+      document.getElementById('year-progress').textContent = `${yearProgressRate}%`;
+
+      // 実際のペース分析
+      const daysSinceRegistration = daysBetween(REGISTRATION_DATE, today);
+      document.getElementById('days-since-registration').textContent = `${daysSinceRegistration}日`;
+
+      const actualDailyPace = currentNotes / daysSinceRegistration;
+      document.getElementById('actual-pace').textContent = `${actualDailyPace.toFixed(1)} note/日`;
+
+      // 2026年の平均ペース
+      const daysSinceYearStart = daysBetween(yearStart, today);
+      const pace2026 = yearIncrease / daysSinceYearStart;
+      document.getElementById('pace-2026').textContent = `${pace2026.toFixed(1)} note/日`;
+
+      // ペース変化
+      const paceChange = pace2026 - actualDailyPace;
+      let paceChangeText = '';
+      if (paceChange > 0) {
+        paceChangeText = `2026年は +${paceChange.toFixed(1)} note/日 速い`;
+      } else if (paceChange < 0) {
+        paceChangeText = `2026年は ${paceChange.toFixed(1)} note/日 遅い`;
+      } else {
+        paceChangeText = '変化なし';
+      }
+      document.getElementById('pace-change').textContent = paceChangeText;
+
+      // 最終目標までの日数と必要ペース
+      const finalDaysRemaining = daysBetween(today, FINAL_DATE);
+      document.getElementById('final-days-remaining').textContent = `${finalDaysRemaining}日`;
+
+      let requiredDailyPace = 0;
+      if (finalDaysRemaining > 0) {
+        requiredDailyPace = remainingNotes / finalDaysRemaining;
+        document.getElementById('final-daily-pace').textContent = `${requiredDailyPace.toFixed(1)} note/日`;
+        
+        // 強調表示用（目標セクション直後）
+        document.getElementById('required-pace-display').textContent = `${requiredDailyPace.toFixed(1)} note/日`;
+
+        // 必要ペースとの差
+        const paceDiff = actualDailyPace - requiredDailyPace;
+        let paceDiffText = '';
+        if (paceDiff > 0) {
+          paceDiffText = `必要より +${paceDiff.toFixed(1)} note/日 速い`;
+        } else if (paceDiff < 0) {
+          paceDiffText = `必要より ${paceDiff.toFixed(1)} note/日 遅い`;
+        } else {
+          paceDiffText = 'ちょうど同じ';
+        }
+        document.getElementById('pace-difference').textContent = paceDiffText;
+      } else {
+        document.getElementById('final-daily-pace').textContent = '目標日を過ぎました';
+        document.getElementById('pace-difference').textContent = '計算不可';
+      }
+
+      // 進捗比較（理想的な進捗との比較）
+      const idealAchievementRate = (yearProgressRate / 100) * 100; // 年の経過率 = 理想の達成率
+      document.getElementById('ideal-achievement-rate').textContent = `${idealAchievementRate.toFixed(1)}%（年経過率と同じ）`;
+
+      const idealNotes = NOTES_ON_JAN1_2026 + ((TARGET_NOTES - NOTES_ON_JAN1_2026) * (yearProgressRate / 100));
+      document.getElementById('ideal-notes').textContent = `${formatNumber(Math.round(idealNotes))} note`;
+
+      const idealDiff = currentNotes - idealNotes;
+      let idealDiffText = '';
+      if (idealDiff > 0) {
+        idealDiffText = `理想より +${formatNumber(Math.round(idealDiff))} note 先行`;
+      } else if (idealDiff < 0) {
+        idealDiffText = `理想より ${formatNumber(Math.round(Math.abs(idealDiff)))} note 遅れ`;
+      } else {
+        idealDiffText = 'ちょうど理想通り';
+      }
+      document.getElementById('ideal-difference').textContent = idealDiffText;
+
+      // 予測
+      if (finalDaysRemaining > 0) {
+        const predictedNotes = currentNotes + (actualDailyPace * finalDaysRemaining);
+        document.getElementById('predicted-notes').textContent = `${formatNumber(Math.round(predictedNotes))} note`;
+
+        // 最終的な予測不足/超過
+        const predictedDiff = predictedNotes - TARGET_NOTES;
+        let predictedDiffText = '';
+        if (predictedDiff > 0) {
+          predictedDiffText = `+${formatNumber(Math.round(predictedDiff))} note 超過`;
+        } else if (predictedDiff < 0) {
+          predictedDiffText = `${formatNumber(Math.round(Math.abs(predictedDiff)))} note 不足`;
+        } else {
+          predictedDiffText = 'ちょうど目標達成';
+        }
+        document.getElementById('predicted-difference').textContent = predictedDiffText;
+
+        // 順調度判定
+        let statusText = '';
+        if (predictedDiff >= 0) {
+          statusText = `✓ 順調！`;
+        } else {
+          statusText = `✗ 要注意！`;
+        }
+        document.getElementById('status-judgment').textContent = statusText;
+
+        // 目標達成予測日
+        if (actualDailyPace > 0) {
+          const daysToGoal = (TARGET_NOTES - currentNotes) / actualDailyPace;
+          const achievementDate = new Date(today);
+          achievementDate.setDate(achievementDate.getDate() + Math.ceil(daysToGoal));
+          document.getElementById('predicted-achievement-date').textContent = formatDate(achievementDate);
+          document.getElementById('predicted-days-to-goal').textContent = `${Math.ceil(daysToGoal)}日`;
+        } else {
+          document.getElementById('predicted-achievement-date').textContent = '計算不可';
+          document.getElementById('predicted-days-to-goal').textContent = '計算不可';
+        }
+      } else {
+        document.getElementById('predicted-notes').textContent = '計算不可';
+        document.getElementById('predicted-difference').textContent = '計算不可';
+        document.getElementById('status-judgment').textContent = '計算不可';
+        document.getElementById('predicted-achievement-date').textContent = '計算不可';
+        document.getElementById('predicted-days-to-goal').textContent = '計算不可';
+      }
+
+      // 短期目標
+      if (requiredDailyPace > 0) {
+        const weeklyGoal = requiredDailyPace * 7;
+        document.getElementById('weekly-goal').textContent = `${weeklyGoal.toFixed(1)} note/週`;
+
+        const monthlyGoal = requiredDailyPace * 30;
+        document.getElementById('monthly-goal').textContent = `${monthlyGoal.toFixed(1)} note/月`;
+      } else {
+        document.getElementById('weekly-goal').textContent = '計算不可';
+        document.getElementById('monthly-goal').textContent = '計算不可';
+      }
+
+      // マイルストーン
+      const milestones = [5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000];
+      let nextMilestone = milestones.find(m => m > currentNotes);
+      if (nextMilestone) {
+        document.getElementById('next-milestone').textContent = `${formatNumber(nextMilestone)} note`;
+        const milestoneRemaining = nextMilestone - currentNotes;
+        document.getElementById('milestone-remaining').textContent = `あと ${formatNumber(milestoneRemaining)} note`;
+      } else {
+        document.getElementById('next-milestone').textContent = '目標達成！';
+        document.getElementById('milestone-remaining').textContent = '－';
+      }
+
+      // 中間目標日までの残り日数
+      const midDaysRemaining = daysBetween(today, MID_EVAL_DATE);
+      document.getElementById('mid-days-remaining').textContent = `${midDaysRemaining}日`;
+    }
+
+    // ページ読み込み時に実行
+    window.addEventListener('DOMContentLoaded', updateDisplay);
+  </script>
+</body>
+
+</html>

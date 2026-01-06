@@ -19,38 +19,35 @@
 						<a id="backicon" href="../index.html">&lt;</a>
 					</nav>
 					<nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
-						<a class="addressbar" href="/index.html">100%health</a>&nbsp;/
-						<a class="addressbar" href="/gallery/gallery_main.html">gallery</a>&nbsp;/
-						<a class="addressbar" href="/gallery/tag-page/groundpolis_paint_rip.html">groundpolis_paint_rip</a>&nbsp;/
-						<a class="addressbar" href="/gallery/image-page/gprip12.html">gprip12</a>
+					  <ol class="breadcrumb">
+					    <li><a href="/index.html">100%health</a></li>
+					    <li><a href="/gallery/gallery_main.html">gallery</a></li>
+					    <li><a href="/gallery/tag-page/groundpolis_paint_rip.html">groundpolis_paint_rip</a></li>
+					    <li aria-current="page"><a href="/gallery/image-page/gprip12.html">gprip12</a></li>
+					  </ol>
 					</nav>
 				</div>
 			</header>
 			<main id="main">
-				<div id="galleryspace">
-					<h1 class="title" style="display: none;">gprip12</h1>
+				<article id="galleryspace">
+					<h1 class="title visually-hidden">gprip12</h1>
 					<div class="card">
-						<div class="piccard">
-							<h2 style="display: none;">作品"gprip12"について</h2>
-							<h3 style="display: none;">アートワーク</h3>
+						<figure class="piccard">
 							<a href="../../img/original/gp_p2.png"><img src="../../img/original/gp_p2.png" alt="gp illust" /></a>
-							<h3 style="display: none;">キャプション</h3>
-							<p class="title"></p>
-							<div class="caption">
-								groundpolis paint rakugaki<br>
-								TLでお題をもらって描きました。
+							<figcaption class="caption">
+								<p>groundpolis paint rakugaki</p>
+								<p>TLでお題をもらって描きました。</p>
+								<p class="date">&gt;<time datetime="2021-11-23">2021-11-23</time></p>
+							</figcaption>
+						</figure>
+						<nav class="tags-section" aria-label="作品タグ">
+							<div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
+							<div class="tags-list" data-tags-container="">
+								<span class="loading-placeholder">タグ読み込み中...</span>
 							</div>
-							<p class="date">&gt;2021-11-23</p>
-							<h3 style="display: none;">タグ</h3>
-							<nav class="tags-section" aria-label="作品タグ">
-								<div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
-								<div class="tags-list" data-tags-container="">
-									<span class="loading-placeholder">タグ読み込み中...</span>
-								</div>
-							</nav>
-						</div>
+						</nav>
 					</div>
-				</div>
+				</article>
 			</main>
 			<!-- テンプレート定義 -->
 			<template id="related-item-template">

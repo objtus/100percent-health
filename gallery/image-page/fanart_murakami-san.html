@@ -21,45 +21,42 @@
 						</a>
 					</nav>
 					<nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
-						<a class="addressbar" href="/index.html">100%health</a>&nbsp;/
-						<a class="addressbar" href="../gallery_main.html">gallery</a>&nbsp;/
-						<a class="addressbar" href="/gallery/tag-page/fanart.html">fanart</a>&nbsp;/
-						<a class="addressbar" href="fanart_murakami-san.html">
-							fanart_murakami-san
-						</a>
+					  <ol class="breadcrumb">
+					    <li><a href="/index.html">100%health</a></li>
+					    <li><a href="../gallery_main.html">gallery</a></li>
+					    <li><a href="/gallery/tag-page/fanart.html">fanart</a></li>
+					    <li aria-current="page"><a href="fanart_murakami-san.html">fanart_murakami-san</a></li>
+					  </ol>
 					</nav>
 				</div>
 			</header>
 			<main id="main">
-				<div id="galleryspace">
-					<h1 class="title" style="display: none;">fanart_murakami-san</h1>
+				<article id="galleryspace">
+					<h1 class="title visually-hidden">fanart_murakami-san</h1>
 					<div class="card">
-						<div class="piccard">
-							<h2 style="display: none;">作品"fanart_murakami-san"について</h2>
-							<h3 style="display: none;">アートワーク</h3>
+						<figure class="piccard">
 							<a href="../../img/fanart/fanart_murakami.webp"><img src="../../img/fanart/fanart_murakami.webp" style="image-rendering: auto !important" alt="misskey.io管理人である村上さんのファンアートです" class="border_img" /></a>
-							<h3 style="display: none;">キャプション</h3>
-							<p class="title"></p>
-							<div class="caption">
+							<figcaption class="caption">
 								<details open>
 									<summary aria-label="村上さんのファンアートについて"></summary>
-									fanart for 村上さん (c)
-									<a href="https://misskey.io/@AureoleArk" target="_blank">村上さん</a>
-									with procreate
+									<p>fanart for 村上さん (c)</p>
+									<p>
+										<a href="https://misskey.io/@AureoleArk" target="_blank">村上さん</a> with procreate
+									</p>
 								</details>
-							</div>
-							<p class="date">&gt;2024-04-14</p>
-							<h3 style="display: none;">タグ</h3>
+								<p class="date">&gt;<time datetime="2024-04-14">2024-04-14</time></p>
+							</figcaption>
+						</figure>
+
 							<nav class="tags-section" aria-label="作品タグ">
-								<div class="tags-title">tags:</div>
+								<div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
 								<div class="tags-list" data-tags-container="">
 									<span class="loading-placeholder">タグ読み込み中...</span>
 								</div>
 							</nav>
-						</div>
 
 					</div>
-				</div>
+				</article>
 			</main>
 			<!-- テンプレート定義 -->
 			<template id="related-item-template">

@@ -12,56 +12,55 @@
   <div id="wrapper">
     
     <header id="header">
-            <div id="header-flex">
-                <nav id="back" aria-label="戻るナビゲーション">
-                    <a id="backicon" href="/index.html">&lt;</a>
-                </nav>
-                <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
-                    <a class="addressbar" href="/index.html">100%health</a>&nbsp;/
-                    <a class="addressbar" href="../gallery_main.html">gallery</a>&nbsp;/
-                    <a class="addressbar" href="/works/works_main.html">works</a>&nbsp;/
-                    <a class="addressbar" href="stilldreaminghour0.html">stilldreaminghour0</a>
-                </nav>
-            </div>
-        </header><main id="main">
-      <div id="galleryspace">
-        <h1 class="title" style="display: none;">stilldreaminghour0</h1>
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="/index.html">&lt;</a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <ol class="breadcrumb">
+            <li><a href="/index.html">100%health</a></li>
+            <li><a href="../gallery_main.html">gallery</a></li>
+            <li><a href="/works/works_main.html">works</a></li>
+            <li aria-current="page"><a href="stilldreaminghour0.html">stilldreaminghour0</a></li>
+          </ol>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <article id="galleryspace">
+        <h1 class="title visually-hidden">stilldreaminghour0</h1>
         <div class="card">
-          <div class="piccard">
-            <h2 style="display: none;">作品"stilldreaminghour0"について</h2>
-            <h3 style="display: none;">アートワーク</h3>
+          <figure class="piccard">
             <a href="../../img/original/フライヤー.png"><img src="../../img/original/フライヤー.png" alt="stilldreamingflyer"></a>
             <p class="title"></p>
-            <h3 style="display: none;">キャプション</h3>
-            <div class="caption">
+            <figcaption class="caption">
               <div class="youtube-16-9">
                 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/OJh3cQ-gqd4?si=OJXE5c8gYRXKKdxR" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
               </div>
+              <p>蝉暮せせせと初音ミクからなる音楽サークルex. happyender girlによるYouTube Live"still dreaming (hour) vol.0"のフライヤーを制作しました。</p>
+              <p>また、同イベントのライブアルバム"21.04.11"のアルバムアートも制作しました。</p>
+              <p class="date">&gt;<time datetime="2021-04-11">2021-04-11</time></p>
+            </figcaption>
+          </figure>
+          <nav class="tags-section" aria-label="作品タグ">
+            <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
+            <div class="tags-list" data-tags-container="">
+              <span class="loading-placeholder">タグ読み込み中...</span>
             </div>
-            <p class="date">&gt;2021-04-11</p>
-            <h3 style="display: none;">タグ</h3>
-            <nav class="tags-section" aria-label="作品タグ">
-              <div class="tags-title"><a href="/gallery/tag-page/tags.html">tags:</a></div>
-              <div class="tags-list" data-tags-container="">
-                <span class="loading-placeholder">タグ読み込み中...</span>
-            </div>
-        </nav>
-          </div>
+          </nav>
         </div>
-        <div class="card">
-          <div class="piccard">
-            <a href="../../img/original/21.04.11.jpg"><img src="../../img/original/21.04.11.jpg" alt="ap2001"></a>
-            <p class="title"></p>
-            <div class="caption">
-              蝉暮せせせと初音ミクからなる音楽サークルex. happyender girlによるYouTube Live"still dreaming (hour) vol.0"のフライヤーを制作しました。<br>
-              また、同イベントのライブアルバム"21​.​04​.​11"のアルバムアートも制作しました。
-              <iframe style="border: 0; width: 100%; height: 406px;" src="https://bandcamp.com/EmbeddedPlayer/album=611022987/size=large/bgcol=ffffff/linkcol=333333/artwork=none/transparent=true/" seamless=""><a href="https://happyender-girl.bandcamp.com/album/210411">21.04.11 (ex.) happyender girl</a></iframe> 
-            </div>
-            <p class="date">&gt;2021-05-07</p>
-          </div>
-        </div>
-      </div>
 
+        <div class="card">
+          <figure class="piccard">
+            <a href="../../img/original/21.04.11.jpg"><img src="../../img/original/21.04.11.jpg" alt="ap2001"></a>
+            <figcaption class="caption">
+              <p class="date">&gt;<time datetime="2021-05-07">2021-05-07</time></p>
+            </figcaption>
+            <iframe style="border: 0; width: 100%; height: 406px;" src="https://bandcamp.com/EmbeddedPlayer/album=611022987/size=large/bgcol=ffffff/linkcol=333333/artwork=none/transparent=true/" seamless=""><a href="https://happyender-girl.bandcamp.com/album/210411">21.04.11 (ex.) happyender girl</a></iframe> 
+          </figure>
+        </div>
+
+      </article>
     </main>
         <!-- テンプレート定義 -->
         <template id="related-item-template">
