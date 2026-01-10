@@ -254,7 +254,7 @@ class TagPageSystem {
     }
     
     createWorkCard(work) {
-        const card = document.createElement('div');
+        const card = document.createElement('section');
         card.className = 'card';
         
         // nsfwタグがある場合の判定
@@ -263,13 +263,13 @@ class TagPageSystem {
         
         card.innerHTML = `
             <div class="${piccardClass}">
+                <h2 class="title">
+                    <a href="${work.path}">${work.id}</a>
+                </h2>
                 <a href="${work.image_path}">
                     <img src="${work.image_path}" alt="${work.id}" loading="lazy">
                 </a>
-                <h3 class="title">
-                    <a href="${work.path}">${work.id}</a>
-                </h3>
-                <p class="date">&gt;${work.date}</p>
+                <p class="date"><time datetime="${work.date}">${work.date}</time></p>
                 <div class="series-info">${work.series}</div>
                 
                 <!-- タグ一覧セクション -->

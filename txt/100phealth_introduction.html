@@ -11,6 +11,10 @@
   <script src="../../js/main.js" defer></script>
   <script src="/js/mouse.js" defer></script>
   <style>
+    /* 本文 */
+    h3 {
+      padding-top: 1.5rem;
+    }
     p {
       font-size: 1rem;
       margin-left: 1rem;
@@ -36,20 +40,22 @@
         min-width: 130px;
         margin-right: 10px;
       }
+
+      li a::before {
+        content: "♥";
+        margin-right: 3px;
+        text-decoration: none;
+      }
     }
     #textblock {
       margin-bottom: 3rem;
   
       .heading_title {
         font-size: 1.2rem;
-        display: inline-block;
-        border-bottom: dotted 3px;
         margin-bottom: 15px;
-        line-height: 10px;
       }
       .title {
-        text-align: right;
-        line-height: 24px;
+        margin-top: 1rem;
       }
       .str {
         font-size: large;
@@ -83,6 +89,26 @@
         padding-left: 1rem;
         margin-left: 1rem;
       }
+      .content-title {
+        font-size: 1.2rem;
+        min-width: 80px;
+        a::before {
+          content: "";
+          background-image: url(/favicon.svg);
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          vertical-align: middle;
+          margin-right: 3px;
+          text-decoration: underline;
+        }
+        a:hover::before {
+          filter: invert(1);
+        }
+      }
       .content-item {
         display: flex;
         flex-direction: row;
@@ -112,9 +138,21 @@
     @media screen and (max-width: 600px) {
       /* 600pxまでの幅の場合に適応される */
       #main{
-        width: 85%;
+        line-height: 1.2;
       }
+      .content-title {
+        margin-right: 1rem;
+        min-width: 10px!important;
+      }
+
+      .section-content,
+      #gallery-content {
+        margin-top: 1rem;
+        margin-left: 1rem;
+      }
+
       .content-item{
+        flex-direction: column!important;
         margin-bottom: 15px;
 
         h3{
@@ -131,6 +169,7 @@
           }
           li a + * {
             margin-left: 20px;
+            text-align: end;
           }
         }
       }
@@ -175,33 +214,60 @@
       </div>
     </header>
     <main id="main">
+      <header id="category-header">
+        <nav aria-label="ページカテゴリナビゲーション">
+          <ol class="sub-category">
+            <li><a href="/aboutme.html">about_me</a></li>
+            <li><a href="/txt/profile.html">profile</a></li>
+            <li><a href="/txt/100phealth_introduction.html">introduction</a></li>  
+          </ol>
+        </nav>
+        <nav id="toc" aria-label="目次">
+          <ol id="toc-list">
+            <li><a href="#about-this-site">このサイトについて</a></li>
+            <li><a href="#contents">コンテンツ</a></li>
+            <li><a href="#about-this-page">このページについて</a></li>
+            <li><a href="#story-of-this-site">経緯の話</a></li>
+            <li><a href="#change_log">更新履歴</a></li>
+          </ol>
+        </nav>
+      </header>
       <article id="textblock">
         <h1 class="title"><ruby>100%health<rt>このサイト</rt>_<rt>の</rt>introduction<rt>説明ページ</rt></ruby></h1>
-        <section>
-          <h2 class="heading_title">このサイトについて / <small title="about this site" lang="en">about this site</small></h2>
+        <section id="about-this-site">
+          <h2 class="heading_title">このサイトについて / <small title="about this site" lang="en">about this site</small><a href="#about-this-site" class="header-link">§</a></h2>
           <div class="section-item">
             <p>
-              このサイトは、 yuinoid / いど子 の個人サイトであり、<span class="str"><ruby>創作系<rt>そうさくけい</rt></ruby>個人サイトのスタイルを<ruby>模倣<rt>まね</rt></ruby>した、ポートフォリオサイト</span>です。<br>
+              このサイトは、 <a href="/aboutme.html">yuinoid / いど子</a> の個人サイトであり、<span class="str">創作系個人サイトのスタイルを意識したポートフォリオサイト</span>です。<br>
             </p>
             <p>
-              このサイトは、<a href="https://neocities.org/site/yuinoid" target="_blank">neocities</a>によって<ruby>ホスティング<rt>公開・運用</rt></ruby>されています。<br>
+              このサイトは、<a href="https://neocities.org/site/yuinoid" target="_blank">neocities</a>によってホスティングされています。<br>
               <br>
               半自動更新のRSSフィードは<a href="/rss.xml" target="_blank"><span aria-hidden="true">♥</span>こちら</a>です。
             </p>
           </div>
         </section>
-        <section>
-          <h3 class="heading_title">コンテンツ / <small title="contents" lang="en">contents</small></h3>
+        <section id="contents">
+          <h3 class="heading_title">コンテンツ / <small title="contents" lang="en">contents</small><a href="#contents" class="header-link">§</a></h3>
           <div class="section-item">
             <p><span class="str2"><ruby>主要<rt>おも</rt></ruby>なコーナーは4つ</span>あります。</p>
             <div class="content-item">
-              <h4><a href="/aboutme.html"><span aria-hidden="true">♥</span>about</a></h4>
-              <p>
-                <span class="str2">自己紹介ページ</span>です。私に関する<ruby>各種<rt>いろんな</rt></ruby>リンクもまとめています。
-              </p>
+              <h4 class="content-title"><a href="/aboutme.html">about</a></h4>
+              <div class="section-content">
+                <p>
+                  <span class="str2">自己紹介ページ</span>です。私に関する各種リンクもまとめています。
+                </p>
+                <div class="linklist">
+                  <ul>
+                    <li><a href="/aboutme.html" class="internal-link">about</a><span>自己紹介ページです。</span></li>
+                    <li><a href="/txt/profile.html" class="internal-link">profile</a><span>プロフィールページです。</span></li>
+                    <li><a href="/txt/100phealth_introduction.html" class="internal-link"><span style="font-size: 0.75rem;">100%health_introduction</span></a><span>このページです。</span></li>
+                  </ul>
+                </div>
+              </div>
             </div>
             <div class="content-item">
-              <h4><a href="/gallery/gallery_main.html"><span aria-hidden="true">♥</span>gallery</a></h4>
+              <h4 class="content-title"><a href="/gallery/gallery_main.html">gallery</a></h4>
               <div id="gallery-content">
                 <p>
                   <span class="str2">描いた絵を展示するコーナー</span>です。<br>
@@ -210,61 +276,59 @@
                 </p>
                 <div class="linklist">
                   <ul>
-                    <li><a href="/gallery/gallery_main.html"><span aria-hidden="true">♥</span>gallery</a><span>galleryコーナーのインデックスページです。</span></li>
-                    <li><a href="/works/works_main.html"><span aria-hidden="true">♥</span>works</a><span>行った仕事を<ruby>掲載<rt>けいさい</rt></ruby>しています。</span></li>
-                    <li><a href="/gallery/tag-page/tags.html"><span aria-hidden="true">♥</span>tags</a><span>絵に付けられたタグの一覧です。</span></li>
-                    <li><a href="/all.html"><span aria-hidden="true">♥</span>all</a><span>だいたいすべての絵が一覧で見ることができます。重いかも。</span></li>
-                    <li><a href="/gallery/tag-page/oc.html"><span aria-hidden="true">♥</span>original_character</a><span>オリジナルキャラクターの絵を一覧で見ることができます。</span></li>
-                    <li><a href="/gallery/tag-page/groundpolis_paint.html"><span aria-hidden="true">♥</span>groundpolis_paint</a><span>groundpolis paintで描いた絵を見ることができます。</span></li>
-                    <li><a href="/gallery/tag-page/fanart.html"><span aria-hidden="true">♥</span>fanart</a><span>ファンアートを見ることができます。</span></li>
+                    <li><a href="/gallery/gallery_main.html" class="internal-link">gallery</a><span>galleryコーナーのインデックスページです。</span></li>
+                    <li><a href="/works/works_main.html" class="internal-link">works</a><span>行った仕事を掲載しています。</span></li>
+                    <li><a href="/gallery/tag-page/tags.html" class="internal-link">tags</a><span>絵に付けられたタグの一覧です。</span></li>
+                    <li><a href="/gallery/tag-page/oc.html" class="internal-link">original_character</a><span>オリジナルキャラクターの絵を一覧で見ることができます。</span></li>
+                    <li><a href="/gallery/tag-page/groundpolis_paint.html" class="internal-link">groundpolis_paint</a><span>groundpolis paintで描いた絵を見ることができます。</span></li>
+                    <li><a href="/gallery/tag-page/fanart.html" class="internal-link">fanart</a><span>ファンアートを見ることができます。</span></li>
                   </ul>
                 </div>
               </div>
             </div>
             <div class="content-item">
-              <h4><a href="/txt/txt_main.html"><span aria-hidden="true">♥</span>txt</a></h4>
+              <h4 class="content-title"><a href="/txt/txt_main.html">txt</a></h4>
               <div class="section-content">
                 <p>
-                  書いた<span class="str2">テキストを<ruby>アーカイブする<rt>おいておく</rt></ruby>コーナー</span>です。<br>
-                  コンテンツとしては、静的なテキストと、<ruby>不定期<rt>ときどき</rt></ruby>更新の雑記（日記のようなもの？）とに分けられています。<br>
+                  書いた<span class="str2">テキストをアーカイブするコーナー</span>です。<br>
+                  コンテンツとしては、静的なテキストと、<ruby>不定期<rt>ときどき</rt></ruby>更新の雑記とに分けられています。<br>
                   <br>
-                  <a href="/txt/100phealth_introduction.html">このページ</a>もtxtコーナーの一部に位置づけられています。<br>
                   代表的なページのリンクをここに記しておきます。
                 </p>
                 <div class="linklist">
                   <ul>
-                    <li><a href="/txt/txt_main.html"><span aria-hidden="true">♥</span>txt</a><span>txtコーナーのインデックスページです。</span></li>
-                    <li><a href="/txt/100phealth_introduction.html"><span aria-hidden="true">♥</span><span style="font-size: 0.75rem;">100%health_introduction</span></a><span>このページです。</span></li>
-                    <li><a href="/txt/my_dsns_timeline.html"><span aria-hidden="true">♥</span>分散SNS関連年表</a><span>分散SNSを中心としたインターネット関連の年表です。</span></li>
-                    <li><a href="/txt/zakki/2024/2024.html"><span aria-hidden="true">♥</span><time datetime="2024">2024年</time>の雑記帳</a><span><time datetime="2024">2024年</time>の雑記一覧です。</span></li>
-                    <li><a href="/txt/zakki/2025/2025.html"><span aria-hidden="true">♥</span><time datetime="2025">2025年</time>の雑記帳</a><span><time datetime="2025">2025年</time>の雑記一覧です。</span></li>
-                    <li><a href="/txt/zakki/tag/tag_main.html"><span aria-hidden="true">♥</span>タグ一覧</a><span>雑記のうち、タグ付けされたものを一覧で見ることができます。</span></li>
+                    <li><a href="/txt/txt_main.html" class="internal-link">txt</a><span>txtコーナーのインデックスページです。</span></li>
+                    <li><a href="/txt/100phealth_introduction.html" class="internal-link"><span style="font-size: 0.75rem;">100%health_introduction</span></a><span>このページです。</span></li>
+                    <li><a href="/txt/my_dsns_timeline.html" class="internal-link">分散SNS関連年表</a><span>分散SNSを中心としたインターネット関連の年表です。</span></li>
+                    <li><a href="/txt/zakki/2024/2024.html" class="internal-link"><time datetime="2024">2024年</time>の雑記帳</a><span><time datetime="2024">2024年</time>の雑記一覧です。</span></li>
+                    <li><a href="/txt/zakki/2025/2025.html" class="internal-link"><time datetime="2025">2025年</time>の雑記帳</a><span><time datetime="2025">2025年</time>の雑記一覧です。</span></li>
+                    <li><a href="/txt/zakki/tag/tag_main.html" class="internal-link">タグ一覧</a><span>雑記のうち、タグ付けされたものを一覧で見ることができます。</span></li>
                   </ul>
                 </div>
               </div>
             </div>
             <div class="content-item">
-              <h4><a href="/links/links_main.html"><span aria-hidden="true">♥</span>links</a></h4>
+              <h4 class="content-title"><a href="/links/links_main.html">links</a></h4>
               <div class="section-content">
                 <p><span class="str2">リンクに関するページ</span>です。リンク集やウェブリングがまとめてあるほか、このサイトのバナーを<ruby>掲載<rt>けいさい</rt></ruby>しています。
                 </p>
                 <div class="linklist">
                   <ul>
-                    <li><a href="/links/links_main.html#crosslinks"><span aria-hidden="true">♥</span>相互リンク</a><span>相互リンクしていただいているサイトをまとめたセクションです。</span></li>
-                    <li><a href="/links/links_main.html#favlinks"><span aria-hidden="true">♥</span>お気に入り</a><span>yuinoidが紹介したいサイトのリンクをまとめたセクションです。</span></li>
-                    <li><a href="/links/links_main.html#my_banner_header"><span aria-hidden="true">♥</span>バナー</a><span>このサイトのバナーを<ruby>掲載<rt>けいさい</rt></ruby>しています。</span></li>
+                    <li><a href="/links/links_main.html#crosslinks" class="internal-link">相互リンク</a><span>相互リンクしていただいているサイトをまとめたセクションです。</span></li>
+                    <li><a href="/links/links_main.html#favlinks" class="internal-link">お気に入り</a><span>yuinoidが紹介したいサイトのリンクをまとめたセクションです。</span></li>
+                    <li><a href="/links/links_main.html#my_banner_header" class="internal-link">バナー</a><span>このサイトのバナーを<ruby>掲載<rt>けいさい</rt></ruby>しています。</span></li>
                   </ul>
                 </div>
               </div>
             </div>
             <div class="content-item">
-              <h4><a href="/changelog_main.html"><span aria-hidden="true">♥</span>changelog</a></h4>
+              <h4 class="content-title" style="margin-top: 5px;"><a href="/changelog_main.html">changelog</a></h4>
               <p>このページの<ruby>更新<rt>こうしん</rt>履歴<rt>りれき</rt></ruby>がまとめてあります。</p>
             </div>
           </div>
         </section>
-        <section>
-          <h2 class="heading_title">このページについて / <small title="about this page" lang="en">about this page</small></h2>
+        <section id="about-this-page">
+          <h2 class="heading_title">このページについて / <small title="about this page" lang="en">about this page</small><a href="#about-this-page" class="header-link">§</a></h2>
           <div class="section-item">
             <p>
               このページは『<a href="https://adventar.org/calendars/10172" target="_blank">個人ホームページ訪問 Advent Calendar
@@ -278,10 +342,10 @@
             </p>
           </div>
         </section>
-        <section>
+        <section id="story-of-this-site">
           <details>
             <summary aria-label="経緯の話の詳細を開くボタン">
-              <h2 class="heading_title"><ruby>経緯の話<rt>このサイトが生まれた流れ</rt></ruby> / <small title="story of this site" lang="en">story of this site</small></h2>
+              <h2 class="heading_title"><ruby>経緯の話<rt>このサイトが生まれた流れ</rt></ruby> / <small title="story of this site" lang="en">story of this site</small><a href="#story-of-this-site" class="header-link">§</a></h2>
             </summary>
             <div class="section-item">
               <div class="smalltext" id="keii">
@@ -348,7 +412,7 @@
           </details>
         </section>
         <section id="change_log">
-          <h2 class="heading_title"><ruby>更新履歴<rt>このページの変わった日</rt></ruby> / <small title="change log of this page" lang="en">change log</small></h2>
+          <h2 class="heading_title"><ruby>更新履歴<rt>このページの変わった日</rt></ruby> / <small title="change log of this page" lang="en">change log</small><a href="#change_log" class="header-link">§</a></h2>
           <div class="section-item">
             <ul>
               <li><time datetime="2024-12-11">2024年12月11日</time>初版公開</li>

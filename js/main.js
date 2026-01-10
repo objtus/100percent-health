@@ -556,8 +556,10 @@ function initHeadingFeatures() {
       const clickHandler = function() {
         const targetElement = document.getElementById(this.getAttribute('data-target'));
         if (targetElement && state.wrapper) {
+          const offset = 20; // ヘッダー + 余白
+          
           state.wrapper.scrollTo({
-            top: targetElement.offsetTop,
+            top: targetElement.offsetTop - offset,
             behavior: 'smooth'
           });
         }

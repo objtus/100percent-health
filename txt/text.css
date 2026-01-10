@@ -41,7 +41,7 @@
 	}
 
 	p:before {
-		content: "♥";
+		content: "";
 		margin-right: -0.3em;
 	}
 
@@ -58,10 +58,12 @@
 			text-align: right;
 			color: #888;
 		}
+
 		cite a {
 			color: #888;
 			text-decoration: none;
 		}
+
 		cite a:hover {
 			color: #888;
 			background-color: #fff;
@@ -129,6 +131,7 @@
 		color: black;
 		transition: opacity 0.2s;
 	}
+
 	.header-link:hover{
 		color: black;
 		background-color: transparent;

@@ -30,10 +30,12 @@ article {
 			margin-left: 0;
 		}	
 	}
+
 	p {
 		margin-bottom: 2rem;
 		line-height: 1.3;
 	}
+
 	blockquote {
 		font-size: 1em;
 		margin-left: 1rem;
@@ -47,6 +49,7 @@ article {
 			text-align: right;
 			color: #888;
 		}
+
 		cite a {
 			color: #888;
 			text-decoration: none;
@@ -58,30 +61,37 @@ article {
 			text-decoration: none;
 		}
 	}
-	ul{
+
+	ul {
 		font-size: 10pt;
 	}
+
 	ul.timeline_md {
 		text-indent: -4.3em;
 		margin-left: 6em;
 		list-style: none;
 	}
+
 	ul.timeline_ymd {
 		text-indent: -7.3em;
 		margin-left: 9em;
 		list-style: none;
 	}
+
 	li {
 		margin-bottom: 5px;
 	}
+
 	.small {
 		font-size: 0.8em;
 	}
+
 	hr {
 		border: none;
 		text-align: center;
 		font-size: 1em;
 	}
+
 	hr::before {
 		content: "*****";
 		letter-spacing: 1em;
@@ -92,57 +102,50 @@ article {
 		padding-top: 1.5em;
 		padding-bottom: 0.5em;
 	}
-
-	.header-link{
-		opacity: 0.2;
-		padding: 0 1em;
-		margin-left: 1em;
-		text-decoration: none;
-		color: black;
-		transition: opacity 0.2s;
-	}
-
-	.header-link:hover{
-		color: black;
-		background-color: transparent;
-		opacity: 1;
-	}
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (width <= 900px) {
 	h1 {
 		font-size: 1.8em;
 	}
+
 	h2 {
-		margin-top: 0rem;
+		margin-top: 0;
 	}
+
 	article {
 		h3 {
 			margin-left: 10px;
 		}
+
 		.article-body {
 			padding-left: 20px;
 		}
+
 		ul.timeline_md {
 			text-indent: -4.3em;
 			margin-left: 4.5em;
 		}
+
 		ul.timeline_ymd {
 			text-indent: -7.3em;
 			margin-left: 7.5em;
 		}
+
 		iframe {
 			width: 100%;
 		}
 	}
 }
-@media screen and (max-width: 480px) {
+
+@media screen and (width <= 480px) {
 	h1 {
 		font-size: 20pt;
 		margin-bottom: 20px;
 	}
+
 	h2 {
-		margin-top: 0rem;
+		margin-top: 0;
 	}
 	
 	article {
@@ -150,72 +153,89 @@ article {
 		border-top: 1px dotted;
 		border-bottom: 1px dotted;
 		margin-bottom: 5px;
+
 		h3 {
-			margin-left: 0px;
+			margin-left: 0;
 		}
+
 		.article-body {
 			padding-left: 7px;
 		}
+
 		ul.timeline_md {
 			text-indent: -4.3em;
 			margin-left: 4.5em;
 		}
+
 		ul.timeline_ymd {
 			text-indent: -7.3em;
 			margin-left: 8.5em;
 		}
+
 		hr {
 			margin-right: 0;
 		}
 	}
 }
-#zakkizone,.monthlist,#taglist {
+
+#zakkizone,
+.monthlist,
+#taglist {
 	list-style-type: none;
 }
+
 .monthlist {
 	display: flex;
 	flex-wrap: wrap;
 	margin-left: 20px;
 }
+
 .month {
 	margin-right: 20px;
 }
+
 #zakkihtml {
 	margin-top: 60px;
 }
 
 /* 月別ページ用の省略表示スタイル */
 .month-article {
-	padding-left: 0px;
+	padding-left: 0;
 }
 
 /* 省略表示用スタイル */
 .article-preview {
 	margin: 10px 0;
 	padding: 0 40px;
+
 	p {
 		font-size: 10pt;
 		line-height: 1.6;
 		margin: 0;
 	}
+
 	.article-ellipsis {
 		font-size: 12pt;
 		text-align: center;
 		margin: 10px 0;
 	}
+
 	.ellipsis {
 		font-style: italic;
 		font-weight: bold;
 		color: #666;
 	}
+
 	.list-ellipsis {
 		font-style: italic;
 		color: #666;
 		text-align: right;
 	}
+
 	.read-more-link {
 		color: inherit;
 		text-decoration: underline;
+
 		&:hover {
 			color: #fff;
 			background-color: #000;
@@ -234,13 +254,14 @@ article {
 }
 
 /* スマホサイズ */
-@media screen and (max-width: 576px) {
+@media screen and (width <= 576px) {
 	#zakkizone {
 		.monthlist {
 			font-size: 0.8rem;
 			margin-left: 0;
 			justify-content: space-evenly;
 		}
+		
 		.month {
 			margin-right: 0;
 		}

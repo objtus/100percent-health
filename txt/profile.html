@@ -8,9 +8,10 @@
   <link rel="stylesheet" href="../1column.css">
   <script src="../js/jquery-3.6.0.min.js" defer></script>
   <script src="../js/main.js" defer></script>
-  <script src="./js/mouse.js" defer></script>
+  <script src="../js/mouse.js" defer></script>
   <link rel="profile" href="https://microformats.org/profile/hcard">
   <style>
+    /* 本文 */
     #galleryspace {
       display: flex;
       flex-direction: column;
@@ -106,7 +107,7 @@
       }
     }
 
-    h2,h3,h4{
+    h3,h4{
       padding-top: 1em;
     }
 
@@ -283,11 +284,27 @@
       </div>
     </header>
     <main id="main">
+      <header id="category-header">
+        <nav aria-label="ページカテゴリナビゲーション">
+          <ol class="sub-category">
+            <li><a href="/aboutme.html">about_me</a></li>
+            <li><a href="/txt/profile.html">profile</a></li>
+            <li><a href="/txt/100phealth_introduction.html">introduction</a></li>  
+          </ol>
+        </nav>
+        <nav id="toc" aria-label="目次">
+          <ol id="toc-list">
+            <li><a href="#profile">前略プロフィール</a></li>
+            <li><a href="#service-usage">利用サービス</a></li>
+            <li><a href="#favorite-albums">お気に入りアルバム</a></li>
+            <li><a href="#fediverse-usage-2017to2025">fediverse利用状況</a></li>
+          </ol>
+        </nav>
+      </header>
       <section id="textblock">
-        <h1 class="title">プロフィール / <small title="profile" lang="en">profile</small></h1>
-        <section id="bio">
-          <h2 id="profile">前略プロフィール <a href="#profile" class="header-link">§</a></h2>
-          <div id="biocard">
+        <h1 class="title">プロフィールのページ</h1>
+        <section id="profile">
+          <h2 id="profile_header" class="highlight">前略プロフィール <a href="#profile" class="header-link">§</a></h2>
             <div style="text-align: center;">
               <img style="width: 360px;height: auto;user-select: none;-webkit-user-drag: none;" src="/img/idoko-profile.webp" alt="いど子のプロフィール画像" width="360" height="360">
               <cite style="display: inline;;font-size: small;">from:<a href="https://wiki.sushi.ski/ja/%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC/idoko" target="_blank">すしすきーwiki</a></cite>
@@ -360,7 +377,6 @@
                 </tr>
               </tbody>
             </table>
-          </div>
         </section>
         <section>
           <h2 id="service-usage">利用サービス <a href="#service-usage" class="header-link">§</a></h2>
@@ -497,7 +513,7 @@
               <area target="_blank" alt="Fatboy Slim - You've Come a Long Way, Baby" title="Fatboy Slim - You've Come a Long Way, Baby" href="https://www.fatboyslim.net/music-albums/youve-come-a-long-way-baby/" coords="316,317,391,392" shape="rect">
           </map>
         </section>
-        <section id="fediverse-usage-2017~2025">
+        <section id="fediverse-usage-2017to2025">
           <h2>fediverseの利用状況 <a href="#fediverse-usage-2017~2025" class="header-link">§</a></h2>
           <figure class="fediverse-usage-image">
             <a href="/img/fedi_usage_2017-2025.png"><img src="/img/fedi_usage_2017-2025.png" alt="分散SNS利用状況" width="600" height="396"></a>

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用語集 - 100%health</title>
+  <link rel="stylesheet" href="../../1column.css">
+  <link rel="stylesheet" href="text.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+
+  <style>
+    .intro {
+      color: #666;
+      font-size: 0.85rem;
+    }
+  
+    article>nav {
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+  
+      h2 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+    }
+  
+    .index-nav {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+  
+      a {
+        font-size: 0.85rem;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 0.3rem 0.6rem;
+        transition: background-color 0.2s ease;
+  
+        &:hover {
+          background-color: #00000010;
+        }
+      }
+    }
+  
+    .index-section {
+      margin-bottom: 2rem;
+  
+      h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+    }
+  
+    .index-marker {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      padding-bottom: 0.3rem;
+      letter-spacing: 0.1em;
+    }
+  
+    dl.glossary {
+      margin: 0;
+  
+      &>dt {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+        margin-top: 1rem;
+        color: #222;
+        padding: 0.8rem;
+        border-radius: 8px;
+        transition: background-color 0.2s;
+        scroll-margin-top: 2rem;
+      }
+  
+      &>dd {
+        margin-left: 0;
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
+        padding-bottom: 0.6rem;
+        color: #444;
+      }
+    }
+  
+    .description {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 0.6rem;
+    }
+  
+    .category {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #888;
+      margin-left: 0.5rem;
+    }
+  
+    .redirect {
+      color: #666;
+      font-style: italic;
+  
+      a {
+        text-decoration: none;
+        border-bottom: 1px solid #888;
+      }
+    }
+  
+    dl.derivatives {
+      margin-left: 1.5rem;
+      margin-top: 0.6rem;
+      padding-top: 0.4rem;
+      border-top: 1px solid #f0f0f0;
+  
+      dt {
+        display: inline;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #555;
+  
+        &::after {
+          content: ":";
+          margin-right: 0.3rem;
+        }
+      }
+  
+      dd {
+        display: inline;
+        margin-left: 0;
+        font-size: 0.85rem;
+        color: #666;
+      }
+    }
+  
+    .meta-info {
+      margin-top: 0.6rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #f0f0f0;
+      font-size: 0.85rem;
+      color: #666;
+  
+      dt {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #555;
+  
+        &::after {
+          content: ":";
+          margin-right: 0.3rem;
+        }
+      }
+  
+      dd {
+        margin-left: 0;
+        font-size: 0.85rem;
+        color: #666;
+  
+        &::after {
+          content: "、";
+          display: block;
+          margin-right: 0.3rem;
+        }
+  
+        &:last-child::after {
+          content: "";
+          margin-right: 0;
+          margin-bottom: 0;
+        }
+      }
+  
+      a {
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s;
+        display: block;
+        margin-bottom: 0.2rem;
+  
+        &:hover {
+          border-color: #888;
+        }
+      }
+    }
+  
+    .related-desc {
+      display: block;
+      color: #777;
+      font-size: 0.8rem;
+      margin-left: 0.8rem;
+      margin-top: 0.1rem;
+      margin-bottom: 0.3rem;
+    }
+  
+    @media (max-width: 600px) {
+      body {
+        padding: 0.8rem;
+        font-size: 0.85rem;
+      }
+  
+      h1 {
+        font-size: 1.3rem;
+      }
+  
+      .index-nav {
+        gap: 0.5rem;
+      }
+  
+      .index-nav a {
+        font-size: 0.9rem;
+        padding: 0.3rem 0.6rem;
+      }
+  
+      .index-marker {
+        font-size: 1.6rem;
+      }
+  
+      dl.glossary>dt {
+        font-size: 1rem;
+        padding: 0.6rem;
+      }
+  
+      dl.glossary>dd {
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+      }
+  
+      dl.derivatives {
+        margin-left: 1rem;
+      }
+  
+      .meta-info dd {
+        margin-left: 0.5rem;
+      }
+  
+      .related-desc {
+        margin-left: 0.5rem;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="../index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <ol class="breadcrumb">
+            <li><a href="../index.html">100%health</a></li>
+            <li><a href="/txt/txt_main.html">txt</a></li>
+            <li aria-current="page"><a href="/txt/glossary.html">用語集</a></li>
+          </ol>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <article id="textblock">
+          <h1 class="title">用語集</h1>
+          <header>
+            <p class="intro">Web技術、分散型SNS、インターネット文化、音楽ジャンルなどの用語をまとめています。</p>
+          </header>
+
+          <nav>
+            <h2>索引</h2>
+            <div class="index-nav">
+              <a href="#index-a">A</a>
+              <a href="#index-c">C</a>
+              <a href="#index-f">F</a>
+              <a href="#index-i">I</a>
+              <a href="#index-n">N</a>
+              <a href="#index-r">R</a>
+              <a href="#index-s">S</a>
+              <a href="#index-v">V</a>
+              <a href="#index-a-ja">あ</a>
+              <a href="#index-i-ja">い</a>
+              <a href="#index-e-ja">え</a>
+              <a href="#index-ke-ja">け</a>
+              <a href="#index-ru-ja">る</a>
+            </div>
+          </nav>
+
+          <main>
+            <!-- A セクション -->
+            <div class="index-section" id="index-a">
+              <h2 class="index-marker">A</h2>
+          
+              <dl class="glossary">
+                <dt id="activitypub">ActivityPub<span class="category">［分散型SNS］</span></dt>
+                <dd>
+                  <div class="description">
+                    W3Cが策定した分散型SNSのためのプロトコル。
+                    異なるサーバー間でユーザーが相互にやり取りできる仕組みを提供する。
+                    Mastodon、Misskey、PixelfedなどのプラットフォームがActivityPubを実装している。
+                    中央集権的なSNSに対する代替として注目されている。
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#fediverse">Fediverse</a>
+                      <span class="related-desc">ActivityPubを用いて相互接続されたSNSの総称。</span>
+                      <a href="#fep">FEP</a>
+                      <span class="related-desc">ActivityPubの機能拡張提案。</span>
+                    </dd>
+                  </dl>
+                </dd>
+          
+                <dt id="aa">ASCII Art（アスキーアート）<span class="category">［インターネット文化］</span></dt>
+                <dd>
+                  <div class="description">
+                    ASCII文字や記号を組み合わせて絵や図を表現する技法。
+                    日本では2ちゃんねるなどの掲示板文化で発展し、独自のAA文化が形成された。
+                    モナーやギコ猫などのキャラクターAAが広く知られている。
+                    専用フォント（AAフォント）を使用することで、より精緻な表現が可能になる。
+                  </div>
+                  <dl class="derivatives">
+                    <dt>──フォント</dt>
+                    <dd>ASCII Artを正しく表示するために最適化された等幅フォント。MS Pゴシックやモナーフォントなどがある。</dd>
+                  </dl>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#keijiban">掲示板</a>
+                      <span class="related-desc">AAが広く使われたコミュニケーション空間。</span>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- C セクション -->
+            <div class="index-section" id="index-c">
+              <h2 class="index-marker">C</h2>
+          
+              <dl class="glossary">
+                <dt id="chillwave">Chillwave<span class="category">［音楽］</span></dt>
+                <dd>
+                  <div class="description">
+                    2000年代後半に登場したエレクトロニック・ミュージックのジャンル。
+                    ノスタルジックで夢見心地なサウンドが特徴で、Lo-Fi美学を取り入れている。
+                    Washed Out、Toro y Moi、Neon Indianなどが代表的なアーティスト。
+                    インターネットを通じて広まり、ブログやSoundCloudで人気を獲得した。
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#vaporwave">Vaporwave</a>
+                      <span class="related-desc">同時期にインターネット上で生まれた音楽ムーブメント。</span>
+                      <a href="#idm">IDM</a>
+                      <span class="related-desc">実験的な電子音楽の先行ジャンル。</span>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- F セクション -->
+            <div class="index-section" id="index-f">
+              <h2 class="index-marker">F</h2>
+          
+              <dl class="glossary">
+                <dt id="fediverse">Fediverse<span class="category">［分散型SNS］</span></dt>
+                <dd>
+                  <div class="description">
+                    ActivityPubなどの分散型プロトコルを使用して相互接続されたSNSの総称。
+                    「Federation（連合）」と「Universe（宇宙）」を組み合わせた造語。
+                    各サーバー（インスタンス）は独立して運営されながらも、相互に通信できる。
+                    ユーザーは好みのサーバーを選んで参加し、他のサーバーのユーザーとも交流できる。
+                  </div>
+                  <dl class="derivatives">
+                    <dt>インスタンス</dt>
+                    <dd>Fediverse上の個別のサーバー。それぞれが独自のルールやコミュニティ文化を持つ。「サーバー」とも。</dd>
+                  </dl>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#activitypub">ActivityPub</a>
+                      <span class="related-desc">Fediverseで使用される標準プロトコル。</span>
+                      <a href="#fep">FEP</a>
+                      <span class="related-desc">Fediverseの機能拡張提案。</span>
+                    </dd>
+                  </dl>
+                </dd>
+          
+                <dt id="fep">FEP<span class="category">［分散型SNS］</span></dt>
+                <dd>
+                  <div class="description">
+                    Fediverseの機能拡張や標準化を提案するための文書体系。
+                    ActivityPubの仕様を補完し、実装者間での相互運用性を高めることを目的とする。
+                    コミュニティ主導で策定され、各種プラットフォームの実装に反映される。
+                    引用投稿、検索機能、コンテンツ警告などの機能がFEPとして提案されている。
+                    略称：Fediverse Enhancement Proposal。
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#activitypub">ActivityPub</a>
+                      <span class="related-desc">FEPが拡張対象とするプロトコル。</span>
+                      <a href="#fediverse">Fediverse</a>
+                      <span class="related-desc">FEPが策定される対象のSNSネットワーク。</span>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- I セクション -->
+            <div class="index-section" id="index-i">
+              <h2 class="index-marker">I</h2>
+          
+              <dl class="glossary">
+                <dt id="idm">IDM<span class="category">［音楽］</span></dt>
+                <dd>
+                  <div class="description">
+                    1990年代初頭にイギリスで生まれた電子音楽のジャンル。
+                    ダンスミュージックの要素を持ちながら、実験的で複雑なリズムや音響を特徴とする。
+                    Aphex Twin、Autechre、Boards of Canadaなどが代表的なアーティスト。
+                    「聴くための電子音楽」として、クラブシーンとは異なる文脈で発展した。
+                    略称：Intelligent Dance Music。
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#chillwave">Chillwave</a>
+                      <span class="related-desc">IDMの影響を受けた後続ジャンル。</span>
+                      <a href="#vaporwave">Vaporwave</a>
+                      <span class="related-desc">同じく実験的な電子音楽の流れを汲むジャンル。</span>
+                    </dd>
+                  </dl>
+                </dd>
+          
+                <dt id="internet">Internet</dt>
+                <dd>
+                  <div class="redirect">
+                    → <a href="#internet-ja">インターネット</a>参照
+                  </div>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- N セクション -->
+            <div class="index-section" id="index-n">
+              <h2 class="index-marker">N</h2>
+          
+              <dl class="glossary">
+                <dt id="neocities">Neocities<span class="category">［インターネット文化］</span></dt>
+                <dd>
+                  <div class="description">
+                    個人サイトを無料でホスティングできるWebサービス。
+                    1990年代のインターネット文化を再興することを目指し、2013年に開始された。
+                    HTML/CSS/JavaScriptを自由に編集でき、創造的な個人サイト制作を支援する。
+                    ソーシャル機能も備えており、他のユーザーのサイトをフォローできる。
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#internet-ja">インターネット</a>
+                      <span class="related-desc">Neocitiesが再興を目指す1990年代のインターネット文化の基盤。</span>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- R セクション -->
+            <div class="index-section" id="index-r">
+              <h2 class="index-marker">R</h2>
+          
+              <dl class="glossary">
+                <dt id="rss">RSS<span class="category">［Web技術］</span></dt>
+                <dd>
+                  <div class="description">
+                    Webサイトの更新情報を配信するためのXMLベースのフォーマット。
+                    ブログ記事やニュースサイトの新着情報を、RSSリーダーで一元管理できる。
+                    RSSフィードを購読することで、サイトを直接訪問せずに更新をチェックできる。
+                    現在でも多くの個人サイトやブログで活用されている。
+                    略称：Really Simple Syndication / Rich Site Summary。同義語：ウェブフィード、シンジケーションフィード。
+                  </div>
+                  <dl class="derivatives">
+                    <dt>──リーダー</dt>
+                    <dd>複数のRSSフィードを購読・管理するためのアプリケーション。Feedly、Inoreader、NetNewsWireなどがある。</dd>
+                    <dt>──フィード</dt>
+                    <dd>RSS形式で配信される更新情報そのもの。通常、サイトのルートディレクトリやブログセクションに配置される。</dd>
+                  </dl>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>なし</dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- S セクション -->
+            <div class="index-section" id="index-s">
+              <h2 class="index-marker">S</h2>
+          
+              <dl class="glossary">
+                <dt id="ssg">Static Site Generator（静的サイトジェネレーター）<span class="category">［Web技術］</span></dt>
+                <dd>
+                  <div class="description">
+                    テンプレートとコンテンツファイル（Markdown、JSONなど）から、HTMLファイルを事前に生成するツール。
+                    サーバーサイドの処理が不要なため、高速で安全なWebサイトを構築できる。
+                    代表的なツールにHugo、Jekyll、Eleventyなどがある。
+                    個人のブログやドキュメントサイトの制作に適している。
+                    略称：SSG。
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語：</dt>
+                    <dd>なし</dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- V セクション -->
+            <div class="index-section" id="index-v">
+              <h2 class="index-marker">V</h2>
+          
+              <dl class="glossary">
+                <dt id="vaporwave">Vaporwave<span class="category">［音楽］</span></dt>
+                <dd>
+                  <div class="description">
+                    2010年代初頭にインターネット上で生まれた音楽・視覚芸術のムーブメント。
+                    1980～90年代の消費文化や企業音楽をサンプリングし、スローダウンやループで再構成する。
+                    ピンクと青を基調としたレトロフューチャー的なビジュアルが特徴的。
+                    資本主義や消費文化への批評的・風刺的な側面を持つとされる。
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語：</dt>
+                    <dd>
+                      <a href="#chillwave">Chillwave</a>
+                      <span class="related-desc">同時期に登場したノスタルジックな電子音楽ジャンル。</span>
+                      <a href="#idm">IDM</a>
+                      <span class="related-desc">実験的な電子音楽の先行ジャンル。</span>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- あ セクション -->
+            <div class="index-section" id="index-a-ja">
+              <h2 class="index-marker">あ</h2>
+          
+              <dl class="glossary">
+                <dt id="arashi">荒らし（trolling）<span class="category">［インターネット文化］</span></dt>
+                <dd>
+                  <div class="description">
+                    掲示板やSNSなどのオンラインコミュニティにおいて、意図的に場を乱す行為や、そうした行為を行う人物。
+                    議論を妨害する投稿、他のユーザーへの攻撃、無関係な内容の大量投稿などが含まれる。
+                    コミュニティの秩序を破壊し、健全な議論を阻害する問題行動として認識されている。
+                    英語ではtrollingと呼ばれる。
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語：</dt>
+                    <dd>
+                      <a href="#keijiban">掲示板</a>
+                      <span class="related-desc">荒らし行為がしばしば問題となる場。</span>
+                      <a href="#enjou">炎上</a>
+                      <span class="related-desc">荒らし行為が引き金となることもある現象。</span>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- い セクション -->
+            <div class="index-section" id="index-i-ja">
+              <h2 class="index-marker">い</h2>
+          
+              <dl class="glossary">
+                <dt id="internet-ja">インターネット（Internet）<span class="category">［技術］</span></dt>
+                <dd>
+                  <div class="description">
+                    世界中のコンピュータネットワークを相互接続した、グローバルな情報通信網。
+                    1960年代のARPANETを起源とし、1990年代にWorld Wide Webの登場により爆発的に普及した。
+                    電子メール、ウェブサイト、SNS、動画配信など、多様なサービスの基盤となっている。
+                    現代社会における情報流通とコミュニケーションの中核的インフラストラクチャー。
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#keijiban">掲示板</a>
+                      <span class="related-desc">インターネット上で発達したコミュニケーション手段。</span>
+                      <a href="#neocities">Neocities</a>
+                      <span class="related-desc">初期インターネット文化を再興するサービス。</span>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- え セクション -->
+            <div class="index-section" id="index-e-ja">
+              <h2 class="index-marker">え</h2>
+          
+              <dl class="glossary">
+                <dt id="enjou">炎上（flaming）<span class="category">［インターネット文化］</span></dt>
+                <dd>
+                  <div class="description">
+                    SNSやブログなどで、特定の投稿や発言に対して批判や非難が殺到し、収拾がつかなくなる現象。
+                    不適切な発言、倫理的問題のある行動、誤解を招く情報などがきっかけとなることが多い。
+                    企業や著名人のイメージダウン、アカウント削除、謝罪に追い込まれるなど、深刻な影響をもたらすこともある。
+                    英語ではflamingと呼ばれる。
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#arashi">荒らし</a>
+                      <span class="related-desc">炎上を意図的に引き起こす行為。</span>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+          
+            <!-- け セクション -->
+            <div class="index-section" id="index-ke-ja">
+              <h2 class="index-marker">け</h2>
+          
+              <dl class="glossary">
+                <dt id="keijiban">掲示板（BBS）<span class="category">［インターネット文化］</span></dt>
+                <dd>
+                  <div class="description">
+                    インターネット上で不特定多数のユーザーが文章を投稿し、コミュニケーションを行うシステム。
+                    英語ではBBS（Bulletin Board System）と呼ばれる。
+                    2ちゃんねる（現5ちゃんねる）に代表される日本の匿名掲示板文化は、独自の発展を遂げた。
+                    テキストベースの情報交換、議論、雑談などに利用され、インターネット文化の形成に大きな影響を与えた。
+                  </div>
+                  <dl class="derivatives">
+                    <dt>電子掲示板</dt>
+                    <dd>掲示板の正式名称。コンピュータネットワーク上で情報を掲示・閲覧するシステムの総称。</dd>
+                  </dl>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#aa">ASCII Art</a>
+                      <span class="related-desc">掲示板で発展した文字による表現技法。</span>
+                      <a href="#arashi">荒らし</a>
+                      <span class="related-desc">掲示板における問題行為。</span>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+
+            <!-- る セクション -->
+            <div class="index-section" id="index-ru-ja">
+              <h2 class="index-marker">る</h2>
+          
+              <dl class="glossary">
+                <dt id="rufi">ルフィ【勉強垢】フォロバ100%<span class="category">［インターネット文化］</span></dt>
+                <dd>
+                  <div class="description">
+                    <p>
+                      ツイッターアカウント「<a href="https://x.com/queen_student" target="_blank">@queen_student</a>」のユーザー名。<br>
+                      アイコンを漫画・アニメ作品『ワンピース』の主人公ルフィの画像に設定しているbotアカウント。英語と数学を頑張ると説明欄に記述している。<br>
+                      投稿内容は3パターン「<strong>レベルの高い大学に行くんだ！</strong>」、「<strong>毎日勉強！</strong>」、「<strong>頑張る！</strong>」をランダムに繰り返すもので、『ワンピース』のルフィと投稿内容のイメージにギャップがあること、勉強垢としつつ投稿内容が貧困なことからネットの一部で注目を集めた。<br>
+                      2017年02月から投稿を開始し、2018年09月05日まで、約2070tweetほどのbot投稿を行った。
+                    </p>
+                  </div>
+                  <dl class="meta-info">
+                    <dt>関連語</dt>
+                    <dd>
+                      <a href="#twitter">ツイッター/X</a>
+                      <span class="related-desc">2006年からサービスを開始した、ミニブログ・ソーシャルメディアサービスの名称。twitterは2022年11月にイーロン・マスクに買収され、Xに名称を変更した。</span>
+                      <a href="#bot">bot</a>
+                      <span class="related-desc">自動投稿を行うアカウントの総称。</span>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </div>
+
+          </main>
+      </article>
+    </main>
+    <footer id="main-footer">
+      <div id="texthtml"></div>
+      <div id="sitenachtml"></div>
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../../luminous-basic.min.css">
+    <script src="../../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif]'));
+    </script>
+  </div>
+</body>
+
+</html>

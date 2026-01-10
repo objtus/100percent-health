@@ -30,10 +30,29 @@
       </div>
     </header>
     <main id="main">
-      <div id="galleryspace">
+      <header id="category-header">
+        <nav aria-label="カテゴリナビゲーション">
+          <ol class="main-category">
+            <li><a href="/aboutme.html">about_me</a></li>
+            <li><a href="/gallery/gallery_main.html">gallery</a></li>
+            <li><a href="/works/works_main.html">works</a></li>
+            <li><a href="/txt/txt_main.html">txt</a></li>
+            <li><a href="/links/links_main.html">links</a></li>
+          </ol>
+        </nav>
+        <nav id="toc" aria-label="目次">
+          <ol id="toc-list">
+            <li><a href="#crosslinks">相互リンクしているサイト</a></li>
+            <li><a href="#favlinks">お気に入りなサイトへのリンク</a></li>
+            <li><a href="#registered_services">登録しているサービス</a></li>
+            <li><a href="#my_banner">このサイトのバナー</a></li>
+          </ol>
+        </nav>
+      </header>
+      <article id="galleryspace">
         <h1 class="title"><span lang="ja">リンク<ruby>集<rt>しゅう</rt></ruby></span> / <small title="link collection" lang="en">LINKS</small></h1>
-        <div id="crosslinks">
-          <h2 id="crosslinks_header" class="highlight"><span lang="ja"><ruby>相互<rt>おたがいに</rt></ruby>リンクしているサイト</span> / <small title="mutual link" lang="en">mutual_links</small></h2>
+        <section id="crosslinks">
+          <h2 id="crosslinks_header" class="highlight"><span lang="ja"><ruby>相互<rt>おたがいに</rt></ruby>リンクしているサイト</span> / <small title="mutual link" lang="en">mutual_links</small><a href="#crosslinks" class="header-link">§</a></h2>
           <div class="links_contents">
             <div class="favs">
               <div class="link_title_box">
@@ -491,9 +510,9 @@
             </div>
 
           </div>
-        </div>
-        <div id="favlinks">
-          <h2 id="favlinks_header" class="highlight"><span lang="ja">お気に入りなサイトへのリンク</span> / <small title="favorite websites" lang="en">favorite_links</small></h2>
+        </section>
+        <section id="favlinks">
+          <h2 id="favlinks_header" class="highlight"><span lang="ja">お気に入りなサイトへのリンク</span> / <small title="favorite websites" lang="en">favorite_links</small><a href="#favlinks" class="header-link">§</a></h2>
           <div class="links_contents">
 
             <div class="favs">
@@ -761,9 +780,9 @@
               </div>
             </div>
           </div>
-        </div>
-        <div id="registered_services">
-          <h2 id="registered_services_header" class="highlight"><span lang="ja"><ruby>登録<rt>とうろく</rt></ruby>しているサービス</span> / <small title="registered services" lang="en">registered_services</small></h2>
+        </section>
+        <section id="registered_services">
+          <h2 id="registered_services_header" class="highlight"><span lang="ja"><ruby>登録<rt>とうろく</rt></ruby>しているサービス</span> / <small title="registered services" lang="en">registered_services</small><a href="#registered_services" class="header-link">§</a></h2>
           <div class="links_contents">
             <p>
               このサイトはウェブリングに参加しています。<br>
@@ -798,9 +817,9 @@
               </div>
             </div>
           </div>
-        </div>
-        <div id="my_banner">
-          <h2 id="my_banner_header" class="highlight">このサイトの<ruby lang="ja">バナー<rt>紹介用の のぼり</rt></ruby> / <small title="banner images for this site" lang="en">my_banner</small></h2>
+        </section>
+        <section id="my_banner">
+          <h2 id="my_banner_header" class="highlight">このサイトの<ruby lang="ja">バナー<rt>紹介用の のぼり</rt></ruby> / <small title="banner images for this site" lang="en">my_banner</small><a href="#my_banner" class="header-link">§</a></h2>
           <div class="links_contents">
             <p>
               このサイトはリンクフリーです。<br>
@@ -827,8 +846,8 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </article>
     </main>
     <footer id="main-footer">
       <!-- main.jsから#footerへfooter.htmlの挿入 -->

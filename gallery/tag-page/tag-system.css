@@ -6,40 +6,50 @@ div.works-count{
 
 
 /* 各カードのスタイル */
-div.card {
+section.card {
     margin-bottom: 40px;
     border-bottom: 1px solid #888;
     padding: 15px;
     padding-bottom: 40px;
 }
-h3.title{
+
+h2.title {
+    scroll-margin-top: 1.5rem;
     display: inline-block;
     color: white;
     background-color: #888;
     font-size: 1em;
     font-weight: normal;
-    margin: 0;
-    a{
+    padding-top: 0;
+
+    a {
         color: white;
         text-decoration: none;
-        &:hover{
-            color: #000000;
+
+        &:hover {
+            color: #000;
         }
     }
-    &:hover{
-        color: #000000;
+
+    &:hover {
+        color: #000;
         background-color: white;
     }
-    &::before{
+
+    &::before {
         content: ">>";
     }
 }
 
-.series-info{
+p.date::before {
+    content: ">";
+}
+
+.series-info {
     font-size: 0.8em;
     color: #888;
 
-    &::before{
+    &::before {
         content: "series :";
         margin-right: 5px;
     }
@@ -55,17 +65,19 @@ h3.title{
     border-top: 1px dotted #ddd;
 	padding-top: 5px;
 	text-align: right;
-    .tags-list{
+
+    .tags-list {
         line-height: 1.4;
     }
 
-	a{
+	a {
 		color: #888;
         margin-right: 8px;
 		text-decoration: none;
-		&:hover{
+
+		&:hover {
 			color: #fff;
-			background-color: #000000ff!important;
+			background-color: #000f!important;
 		}
 	}
 }
@@ -94,7 +106,7 @@ h3.title{
 }
 
 .filter-row select {
-    padding: 4px 4px;
+    padding: 4px;
     font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
     color: #000;
     border: 1px solid #ddd;
@@ -136,14 +148,14 @@ h3.title{
     height: 1px;
     margin: 15px 0;
     position: relative;
-    border-top: 1px dotted #000000;
+    border-top: 1px dotted #000;
     overflow: visible;
 }
 
 .progress-bar {
     width: 0%;
     height: 1px;
-    background-color: #000000;
+    background-color: #000;
     position: relative;
     transition: width 0.3s steps(20, end);
     margin-top: -1px;
@@ -151,7 +163,7 @@ h3.title{
 
 #loading-status {
     font-size: 1em;
-    color: #000000;
+    color: #000;
     margin-top: 5px;
     font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
     letter-spacing: -0.05em;
@@ -167,19 +179,21 @@ h3.title{
 }
 
 /* エラー状態とNoResults状態のスタイル */
-.error-state, .no-results {
+.error-state,
+.no-results {
     text-align: center;
     padding: 40px 20px;
     font-family: "saitamaar", 'PikoA', system-ui, sans-serif;
 }
 
-.error-state p, .no-results p {
+.error-state p,
+.no-results p {
     font-size: 1.1em;
     margin: 0;
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 768px) {
+@media screen and (width <= 768px) {
     .filter-row {
         flex-direction: column;
         align-items: stretch;
