@@ -3,6 +3,8 @@
 =================== */
 
 :root {
+  interpolate-size: allow-keywords;
+
   --min-width768: 95%;
   --max-width768: 85%;
   --address-first-mark: "";
@@ -401,6 +403,43 @@ a.addressbar {
   a:hover {
     background-color: light-dark(black, #444);
   }
+
+  details {
+    &::details-content {
+      @media (prefers-reduced-motion: no-preference) {
+        overflow: clip;
+        transition-duration: 35ms;
+        transition-property: content-visibility, block-size;
+        transition-behavior: allow-discrete;
+      }
+    }
+
+    &:not([open])::details-content {
+      block-size: 0;
+    }
+  }
+
+  summary {
+    display: inline-block;
+    list-style: none;
+
+    &::before {
+      display: inline;
+      content: "+";
+      margin-right: 5px;
+      background-color: #888;
+      color: #fff;
+      padding: 2px 4px;
+    }
+
+    [open] &::before {
+      display: inline;
+      content: "-";
+      background-color: #888;
+      color: #fff;
+      padding: 2px 4px;
+    }
+  }
 }
 
 .youtube-16-9 {
@@ -673,38 +712,103 @@ nav {
 }
 
 #gallerymaphtml {
-  summary {
-    list-style: none;
-    
-    h3 > a {
-      text-decoration: none;
+  details {
+    margin-bottom: 2px;
+
+    &::details-content {
+      @media (prefers-reduced-motion: no-preference) {
+        overflow: clip;
+        transition-duration: 35ms;
+        transition-property: content-visibility, block-size;
+        transition-behavior: allow-discrete;
+      }
+    }
+
+    &:not([open])::details-content {
+      block-size: 0;
     }
   }
-
-  h3 {
-    font-weight: normal;
-    font-size: 1rem;
-  }
-}
-
-.gallery-summary {
-  color: light-dark(#fff, #ccc);
-  background-color: light-dark(#000, #555);
   
-  &:hover {
-    color: light-dark(#000, #ddd);
-    background-color: light-dark(#fff, #444);
-  }
-}
+  summary {
+    display: inline-block;
+    list-style: none;
+    color: light-dark(#fff, #ccc);
+    background-color: light-dark(#000, #555);
+    padding-left: 3px;
+    line-height: 1rem;
+    transition: color 0.1s linear(0, 0.45, 0.48, 0.52, 0.55, 1), background-color 0.1s linear(0, 0.45, 0.48, 0.52, 0.55, 1);;
 
-.summary-boxes {
-  padding-left: 10px;
-  border-left: dotted 2px;
-  margin: 5px 0 5px 5px;
+    &:hover {
+      color: light-dark(#000, #ddd);
+      background-color: light-dark(#fff, #444);
+    }
+
+    &::before {
+      display: inline;
+      content: "+";
+      margin-right: 5px;
+    }
+
+    [open] &::before {
+      display: inline;
+      content: "-";
+      margin-right: 5px;
+    }
+
+    h3 {
+      display: inline-block;
+      font-weight: normal;
+      font-size: 1rem;
+    }
+
+    a {
+      background-color: #fff;
+      color: #000;
+      text-decoration: none;
+      padding-left: 5px;
+      font-size: 1.1rem;
+      transition: 0.1s linear(0, 0.45, 0.48, 0.52, 0.55, 1), background-color 0.1s linear(0, 0.45, 0.48, 0.52, 0.55, 1);
+
+      &:hover {
+        color: #fff;
+        background-color: #000;
+        padding-left: 2px;
+        margin-left: 3px;
+      }
+    }
+  }
 }
 
 #rootbox {
   padding-left: 1px;
+}
+
+.summary-boxes {
+  border-left: dotted 2px light-dark(#000, #555);
+  padding-left: 10px;
+  margin: 5px 0 5px 5px;
+
+  a {
+    margin-right: 0.5rem;
+  }
+}
+
+.lowerbox {
+  text-indent: -33px;
+  padding-left: 32px;
+  margin-top: 3px;
+  margin-left: -0.14rem;
+}
+
+#works-content {
+  p::before {
+    content: ">";
+    margin-right: 2px;
+  }
+
+  .boxes {
+    margin-bottom: 5px;
+  }
 }
 
 .boxes {
@@ -720,21 +824,6 @@ nav {
   a {
     text-decoration: none;
   }
-}
-
-.galleryhtml {
-  summary {
-    a {
-      color: light-dark(#fff, #ccc);
-    }
-  }
-}
-
-.lowerbox {
-  text-indent: -33px;
-  padding-left: 32px;
-  margin-top: 3px;
-  margin-left: -0.14rem;
 }
 
 /* ===================
@@ -1127,31 +1216,6 @@ nav {
       position: absolute;
       top: 2.5em;
       left: 20px;
-    }
-  }
-}
-
-@media screen and (width >= 435px) {
-  a.link-img {
-    &:hover {
-      position: relative;
-      text-decoration: none;
-      
-      span {
-        border: none;
-        display: block;
-        
-        > img {
-          height: 200px;
-        }
-      }
-    }
-    
-    span {
-      display: none;
-      position: absolute;
-      left: 20px;
-      bottom: 10px;
     }
   }
 }

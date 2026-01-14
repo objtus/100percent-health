@@ -10,5 +10,11 @@
         "**/*.jpg",
         "**/*.png",
         "**/*.gif"
-      ]
+      ],
+    "liveServer.settings.donotShowInfoMsg": true,
+    "liveServer.settings.donotVerifyTags": true,
+    "liveServer.settings.NoBrowser": false,
+    "liveServer.settings.useBrowserPreview": false,
+    "liveServer.settings.wait": 0,
+    "liveServer.settings.fullReload": false
 }

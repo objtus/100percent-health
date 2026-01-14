@@ -7,6 +7,13 @@
 /* 既存の個別ページスタイル */
 
 /* 関連作品表示エリア */
+#related-content {
+	.gallery-summary {
+		background-color: #000;
+		color: #fff;
+	}
+}
+
 #galleryhtml {
 	margin-top: 40px;
 	border-top: 1px solid #333;
@@ -93,18 +100,20 @@
 	margin-top: 10px;
 	padding-top: 5px;
 	text-align: right;
-	a{
+
+	a {
 		color: #888;
 		text-decoration: none;
-		&:hover{
+
+		&:hover {
 			color: #fff;
-			background-color: #000000ff!important;
+			background-color: #000f!important;
 		}
 	}
 }
 
-.tags-list{
-	a{
+.tags-list {
+	a {
 		margin-right: 8px;
 		margin-bottom: 3px;
 	}
@@ -279,16 +288,19 @@
 }
 
 /* モバイル対応（縦並び） */
-@media (max-width: 768px) {
+@media screen and (width <= 768px) {
     .related-container {
         display: block;
     }
+
     .related-section {
         margin-bottom: 25px;
     }
+
 	.related-grid {
 		grid-template-columns: repeat(2, 1fr);
 	}
+
     .debug-info {
         max-width: 250px;
         font-size: 10px;
@@ -296,7 +308,7 @@
 }
 
 /* 2×2グリッドレイアウト（デスクトップ） */
-@media (min-width: 769px) {
+@media screen and (width >= 769px) {
 	.related-container {
 		display: grid;
 		grid-template-columns: 1fr 1fr;

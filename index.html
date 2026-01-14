@@ -25,15 +25,7 @@
   <script src="./js/mouse.js" defer></script>
   <script src="./js/rundomjump.js" defer></script>
   <link rel="alternate" type="application/rss+xml" title="100%health RSS Feed" href="/rss.xml">
-  <style>
-    #mutual_links_gallery {
-      margin-top: 2rem;
-      
-      h4 {
-        font-weight: normal;
-      }
-    }
-  
+  <style>  
     .empty_placeholder {
       width: 200px;
       height: 40px;
@@ -95,18 +87,19 @@
 </head>
 
 <body>
-  <!-- スキップリンク -->
-  <a href="#item2" class="skip-link" id="skip-link">メインコンテンツにスキップ</a>
-  <a href="#about" class="skip-link" id="skip-about">aboutセクションにスキップ</a>
-  <a href="#gallery" class="skip-link" id="skip-gallery">galleryセクションにスキップ</a>
-  <a href="#works" class="skip-link" id="skip-works">worksセクションにスキップ</a>
-  <a href="#links" class="skip-link" id="skip-links">linksセクションにスキップ</a>
-  
+  <div id="skip-links-container">
+    <!-- スキップリンク -->
+    <a href="#item2" class="skip-link" id="skip-link">メインコンテンツにスキップ</a>
+    <a href="#about" class="skip-link" id="skip-about">aboutセクションにスキップ</a>
+    <a href="#gallery" class="skip-link" id="skip-gallery">galleryセクションにスキップ</a>
+    <a href="#works" class="skip-link" id="skip-works">worksセクションにスキップ</a>
+    <a href="#links" class="skip-link" id="skip-links">linksセクションにスキップ</a>
+  </div>
+
   <div id="wrapper">
     <div id="flexrayout">
       <div id="item1">
         <h1 id="sitetitle" title="site title">100%health</h1>
-        <br>
       </div>
       <div id="item2">
         <nav class="section" id="about" aria-label="自己紹介セクション">
@@ -146,10 +139,9 @@
             </a>
           </h2>
           <div id="textcontainer">
-            <h3><ruby lang="ja">書庫<rt>しょこ</rt></ruby> <small title="documents" lang="en">documents</small></h3>
+            <h3 class="section-title">documents</h3>
             <div id="texthtml"></div>
-            <br>
-            <h3><ruby lang="ja">雑記帳<rt>ざっきちょう</rt></ruby> <small title="journal" lang="en">journal</small></h3>
+            <h3 class="section-title">journal</h3>
             <div id="zakkihtml"></div>
           </div>
         </nav>
@@ -177,74 +169,81 @@
               <span title="links" lang="en">links</span> / <small>リンク</small><span class="internallink">>></span>
             </a>
           </h2>
+          <div id="mutual_links_gallery">
+            <h3 class="section-title">friends & services</h3>
+            <p style="text-align: right; font-size: 0.8rem;" lang="en">scroll to see more</p>
+            <div id="mutual_links_gallery_container">
+              <script>
+                fetch('./links/links_main.html')
+                  .then(response => response.text())
+                  .then(html => {
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const crosslinks = doc.getElementById('crosslinks');
+                    const registeredServicesContents = doc.querySelector('.registered_services_contents');
+                    
+                    if (crosslinks) {
+                      mutual_links_gallery_container.innerHTML = '';
+                      crosslinks.querySelectorAll('.favs').forEach(fav => {
+                        const bannerImg = fav.querySelector('.banner-img');
+                        if (bannerImg.querySelector('img')?.src.includes('empty.png')) {
+                          const placeholder = document.createElement('div');
+                          placeholder.className = 'empty_placeholder';
+                          placeholder.textContent = fav.querySelector('.site_name').textContent;
+                          bannerImg.querySelector('a').innerHTML = '';
+                          bannerImg.querySelector('a').appendChild(placeholder);
+                        }
+                        mutual_links_gallery_container.appendChild(bannerImg.cloneNode(true));
+                      });
+                    }
+                    
+                    if (registeredServicesContents) {
+                      const registeredServicesContainer = document.createElement('div');
+                      registeredServicesContainer.innerHTML = registeredServicesContents.innerHTML;
+                      mutual_links_gallery_container.appendChild(registeredServicesContainer);
+                    }
+                  });
+              </script>
+            </div>
+            <p style="margin-top: 1rem; text-align: right;" lang="ja">詳細は<a href="links/links_main.html"><span aria-hidden="true">♥</span>こちら</a></p>
+          </div>
           <div id="social-links">
-            <h3><span aria-hidden="true">♥</span>my social links</h3>
-            <p>><a href="https://tanoshii.site/@health" target="_blank">tanoshii.site</a><br></p>
-            <p>><a href="https://yuinoid.tumblr.com" target="_blank">tumblr</a><br></p>
-            <p>><a href="https://twitter.com/yuinoid" target="_blank">twitter</a><br></p>
+            <div>
+              <h3 class="section-title">my links</h3>
+              <p>><a href="https://tanoshii.site/@health" target="_blank">tanoshii.site</a><br></p>
+              <p>><a href="https://yuinoid.tumblr.com" target="_blank">tumblr</a><br></p>
+              <p>><a href="https://twitter.com/yuinoid" target="_blank">twitter</a><br></p>
+              <p>><a href="https://tanoshii.site/@health" target="_blank">@health@tanoshii.site</a> (fediverse)</p>
+
+              <p style="margin-top: 0.5rem; font-size: 0.9rem; text-align: right;">その他のリンクは<a href="/aboutme.html">aboutme</a>、<a href="/txt/profile.html">profile</a>をご覧ください</p>
+            </div>
+            <div>
+              <h3 class="section-title">contact</h3>
+              <p>><a href="https://tanoshii.site/@health" target="_blank">@health@tanoshii.site</a> (fediverse)</p>
+              <p>><a href="https://discord.com/users/303985467810906126" target="_blank">@yuinoid</a> (<a href="https://discord.com" target="_blank">discord</a>)</p>  
+            </div>
           </div>
           <div id="banner">
-            <h3 style="line-break: strict;white-space: nowrap;"><span aria-hidden="true">♥</span>このサイトのバナー<wbr> / <wbr><small title="banner images for this site" lang="en">my banners</small></h3>
+            <h3 class="section-title">my banners</h3>
             <div id="banner-container">
               <img src="./img/banner.gif" alt="100%healthサイトのメインバナー画像" class="banner-img">
               <img src="./img/banner2.gif" alt="100%healthサイトのサブバナー画像" class="banner-img">
             </div>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; text-align: right;">詳細は<a href="/links/links_main.html#my_banner">こちら</a>をご覧ください</p>
           </div>
         </nav>
-        <nav class="section" id="contact" aria-label="連絡先セクション">
-          <h2 class="highlight">
-            <span title="contact" lang="en">contact</span> / <small title="話したいときには">連絡先</small>
-          </h2>
-          <p>><a href="https://tanoshii.site/@health" target="_blank">@health@tanoshii.site</a> (fediverse)</p>
-          <p>><a href="https://discord.com/users/303985467810906126" target="_blank">@yuinoid</a> (<a href="https://discord.com" target="_blank">discord</a>)</p>
-        </nav>
-        <div id="randomjump">
-          <a href="javascript:random_jump();">
-            <img id="randomjumpimg" src="./img/d2000.gif" alt="ランダムジャンプ機能のアイコン - クリックするとランダムなページに移動します" style="width:200px;opacity:1;">
-          </a>
-        </div>
-        <div id="accesscounterhtml"></div>
-        <p>>&thinsp;<span style="padding-left: 0.1rem;"></span>created: <time datetime="2019-07-18">2019/07/18</time></p>
-        <div id="last-updatedhtml"></div>
-        <div id="mutual_links_gallery">
-          <h2 class="highlight">
-            <span title="mutual links & registered services" lang="en">mutual links & registered services</span> / <br><small>相互リンク&ensp;と&ensp;登録サービス</small>
-          </h2>
-          <p style="text-align: right; font-size: 0.8rem;">scroll to see more</p>
-          <div id="mutual_links_gallery_container">
-            <script>
-              fetch('./links/links_main.html')
-                .then(response => response.text())
-                .then(html => {
-                  const doc = new DOMParser().parseFromString(html, 'text/html');
-                  const crosslinks = doc.getElementById('crosslinks');
-                  const registeredServicesContents = doc.querySelector('.registered_services_contents');
-                  
-                  if (crosslinks) {
-                    mutual_links_gallery_container.innerHTML = '';
-                    crosslinks.querySelectorAll('.favs').forEach(fav => {
-                      const bannerImg = fav.querySelector('.banner-img');
-                      if (bannerImg.querySelector('img')?.src.includes('empty.png')) {
-                        const placeholder = document.createElement('div');
-                        placeholder.className = 'empty_placeholder';
-                        placeholder.textContent = fav.querySelector('.site_name').textContent;
-                        bannerImg.querySelector('a').innerHTML = '';
-                        bannerImg.querySelector('a').appendChild(placeholder);
-                      }
-                      mutual_links_gallery_container.appendChild(bannerImg.cloneNode(true));
-                    });
-                  }
-                  
-                  if (registeredServicesContents) {
-                    const registeredServicesContainer = document.createElement('div');
-                    registeredServicesContainer.innerHTML = registeredServicesContents.innerHTML;
-                    mutual_links_gallery_container.appendChild(registeredServicesContainer);
-                  }
-                });
-            </script>
+        <nav class="section" id="site-information" aria-label="サイト情報セクション">
+          <h2 class="section-title">site information</h2>
+          <div id="randomjump">
+            <a href="javascript:random_jump();">
+              <img id="randomjumpimg" src="./img/d2000.gif" alt="ランダムジャンプ機能のアイコン - クリックするとランダムなページに移動します" style="width:200px;opacity:1;">
+            </a>
           </div>
-          <p style="margin-top: 1rem; line-break: strict; text-align: right;"><ruby lang="ja">詳細<rt>くわしく</rt></ruby>は<wbr><a href="links/links_main.html"><span aria-hidden="true">♥</span>こちら</a></p>
-        </div>
+          <div>
+            <div id="accesscounterhtml"></div>
+            <p>>&thinsp;<span style="padding-left: 0.1rem;"></span>created: <time datetime="2019-07-18">2019/07/18</time></p>
+            <div id="last-updatedhtml"></div>
+          </div>
+        </nav>
       </div>
     </div>
     <div id="footerhtml"></div>
