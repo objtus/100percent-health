@@ -179,7 +179,8 @@ a[href^="http"]:hover::after {
   display: flex;
   position: absolute;
   align-items: center;
-  width: 100%
+  width: 100%;
+  will-change: transform;
 }
 
 a#backicon,
@@ -912,6 +913,7 @@ nav {
   justify-content: space-between;
   width: 100%;
   background-color: transparent;
+  will-change: transform;
 }
 
 #foot-comment {

@@ -22,6 +22,7 @@
 
 .related-section {
 	margin-bottom: 15px;
+	contain: layout style; /* レイアウトの分離 */
 }
 
 .related-title {
@@ -34,6 +35,7 @@
 	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 	gap: 15px;
 	margin-bottom: 0;
+	contain: layout style; /* レイアウトの分離 */
 }
 
 .related-item {

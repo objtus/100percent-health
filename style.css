@@ -704,6 +704,7 @@ button:hover {
   position: relative;
   justify-content: flex-end;
   width: 100%;
+  will-change: transform;
 }
 
 #foot-comment {
