@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Creator - Parts Editor</title>
+    <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <h1>Character Creator - Parts Editor</h1>
+            <div class="header-actions">
+                <button id="editGroupsBtn" class="btn">グループ管理</button>
+                <button id="editMetaBtn" class="btn">メタデータ編集</button>
+                <button id="loadJsonBtn" class="btn">JSON読込</button>
+                <button id="exportJsonBtn" class="btn btn-primary">JSON出力</button>
+                <button id="saveBtn" class="btn btn-success">保存</button>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content">
+            <!-- 左カラム: カテゴリ選択 -->
+            <aside class="sidebar">
+                <h2>カテゴリ</h2>
+                <div id="categoryList" class="category-list"></div>
+                <button id="addCategoryBtn" class="btn btn-small">+ カテゴリ追加</button>
+            </aside>
+
+            <!-- 中央カラム: パーツ一覧 -->
+            <section class="parts-list-section">
+                <div class="section-header">
+                    <h2 id="currentCategoryName">パーツ一覧</h2>
+                    <button id="addPartBtn" class="btn btn-small">+ 新規パーツ</button>
+                </div>
+                <div id="partsList" class="parts-list">
+                    <p class="placeholder">カテゴリを選択してください</p>
+                </div>
+            </section>
+
+            <!-- 右カラム: プレビュー & 編集 -->
+            <section class="editor-section">
+                <div class="preview-area">
+                    <h3>プレビュー</h3>
+                    <div class="preview-canvas-wrapper">
+                        <canvas id="previewCanvas" width="800" height="900"></canvas>
+                    </div>
+                    <div class="preview-controls">
+                        <label>
+                            <input type="checkbox" id="previewWithOthers">
+                            他パーツと重ねて表示
+                        </label>
+                        <div id="otherPartsSelector" style="display:none;">
+                            <!-- 他のカテゴリのパーツ選択 -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="editor-panel" id="editorPanel" style="display:none;">
+                    <h3>パーツ編集: <span id="editingPartName"></span></h3>
+                    
+                    <!-- 基本情報 -->
+                    <details open>
+                        <summary>基本情報</summary>
+                        <div class="form-group">
+                            <label>ID:</label>
+                            <input type="text" id="partId" placeholder="part_id">
+                        </div>
+                        <div class="form-group">
+                            <label>名前:</label>
+                            <input type="text" id="partName" placeholder="パーツ名">
+                        </div>
+                        <div class="form-group">
+                            <label>カテゴリ:</label>
+                            <select id="partCategory"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>zIndex:</label>
+                            <input type="number" id="partZIndex" value="100">
+                        </div>
+                    </details>
+
+                    <!-- レイヤー設定 -->
+                    <details open>
+                        <summary>レイヤー設定</summary>
+                        <div id="layersList" class="layers-list"></div>
+                        <button id="addLayerBtn" class="btn btn-small">+ レイヤー追加</button>
+                    </details>
+
+                    <!-- 色設定 -->
+                    <details>
+                        <summary>色設定</summary>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="colorizableCheckbox">
+                                色変更可能
+                            </label>
+                        </div>
+                        <div id="colorPresetsArea" style="display:none;">
+                            <div id="colorPresetsList"></div>
+                            <button id="addColorBtn" class="btn btn-small">+ 色追加</button>
+                        </div>
+                    </details>
+
+                    <!-- 依存関係 -->
+                    <details>
+                        <summary>依存関係</summary>
+                        <div class="form-group">
+                            <label>必須パーツ:</label>
+                            <select id="requiresPart">
+                                <option value="">なし</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>表示するカテゴリ/パーツ:</label>
+                            <div id="unlocksList"></div>
+                            <button id="addUnlockBtn" class="btn btn-small">+ 追加</button>
+                        </div>
+                    </details>
+
+                    <!-- 警告表示 -->
+                    <details>
+                        <summary>⚠ 警告 (<span id="warningCount">0</span>)</summary>
+                        <div id="warningsList" class="warnings-list"></div>
+                    </details>
+
+                    <div class="editor-actions">
+                        <button id="savePartBtn" class="btn btn-primary">パーツを保存</button>
+                        <button id="cancelEditBtn" class="btn">キャンセル</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ファイル選択用の非表示input -->
+    <input type="file" id="fileInput" accept=".json" style="display:none;">
+
+    <script src="editor.js"></script>
+</body>
+</html>

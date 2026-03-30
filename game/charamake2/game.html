@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Creator - Dress Up Game</title>
+    <link rel="stylesheet" href="game.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <h1>Character Creator</h1>
+            <div class="header-actions">
+                <button id="loadDataBtn" class="btn">JSONを再読込</button>
+                <button id="loadCharacterBtn" class="btn">キャラ読込</button>
+                <button id="saveCharacterBtn" class="btn btn-primary">キャラ保存</button>
+                <button id="exportPngBtn" class="btn btn-success">PNG出力</button>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content">
+            <!-- モバイル用タブ -->
+            <div class="mobile-tabs">
+                <button class="tab-btn active" data-tab="categories">カテゴリ</button>
+                <button class="tab-btn" data-tab="controls">パーツ・色設定</button>
+            </div>
+
+            <!-- 左カラム: カテゴリ選択 -->
+            <aside class="sidebar tab-content" data-tab-content="categories">
+                <h2>カテゴリ</h2>
+                <div id="categoryList" class="category-list"></div>
+            </aside>
+
+            <!-- 中央カラム: キャラクタープレビュー -->
+            <section class="preview-section">
+                <h2>プレビュー</h2>
+                <div class="preview-canvas-wrapper">
+                    <canvas id="previewCanvas" width="800" height="900"></canvas>
+                </div>
+            </section>
+
+            <!-- 右カラム: パーツ選択・色設定 -->
+            <section class="control-section tab-content" data-tab-content="controls">
+                <div id="partsSelector" class="parts-selector-area">
+                    <h3 id="currentCategoryName">パーツを選択</h3>
+                    <div id="partsGrid" class="parts-grid">
+                        <p class="placeholder">カテゴリを選択してください</p>
+                    </div>
+                </div>
+
+                <div id="colorSettings" class="color-settings-area" style="display:none;">
+                    <h3>色設定</h3>
+                    
+                    <!-- プリセット色選択 -->
+                    <div class="form-group">
+                        <label>色プリセット:</label>
+                        <div id="colorPresetSelector" class="color-preset-buttons"></div>
+                    </div>
+
+                    <!-- 拡張設定 -->
+                    <div id="advancedColorSettings" style="display:none;">
+                        <h4>拡張設定</h4>
+                        
+                        <div class="form-group">
+                            <label>ブレンドモード:</label>
+                            <select id="customBlendMode">
+                                <option value="multiply">multiply</option>
+                                <option value="screen">screen</option>
+                                <option value="overlay">overlay</option>
+                                <option value="darken">darken</option>
+                                <option value="lighten">lighten</option>
+                                <option value="color-dodge">color-dodge</option>
+                                <option value="color-burn">color-burn</option>
+                                <option value="hard-light">hard-light</option>
+                                <option value="soft-light">soft-light</option>
+                                <option value="difference">difference</option>
+                                <option value="exclusion">exclusion</option>
+                                <option value="hue">hue</option>
+                                <option value="saturation">saturation</option>
+                                <option value="color">color</option>
+                                <option value="luminosity">luminosity</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>カラー:</label>
+                            <input type="color" id="customColor" value="#000000">
+                        </div>
+
+                        <div class="form-group">
+                            <label>不透明度:</label>
+                            <input type="range" id="customOpacity" min="0" max="1" step="0.1" value="1">
+                            <span id="opacityValue">1.0</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>色相回転:</label>
+                            <input type="range" id="customHueShift" min="-180" max="180" step="1" value="0">
+                            <span id="hueShiftValue">0°</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>色相適用度:</label>
+                            <input type="range" id="customHueOpacity" min="0" max="1" step="0.1" value="0">
+                            <span id="hueOpacityValue">0.0</span>
+                        </div>
+
+                        <div class="form-group">
+                            <button id="applyCustomColorBtn" class="btn btn-small">適用</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ファイル選択用の非表示input -->
+    <input type="file" id="dataFileInput" accept=".json" style="display:none;">
+    <input type="file" id="characterFileInput" accept=".json" style="display:none;">
+
+    <script src="game.js"></script>
+</body>
+</html>

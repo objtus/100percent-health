@@ -1,0 +1,1643 @@
+{
+  "meta": {
+    "version": "2.0",
+    "canvasWidth": 600,
+    "canvasHeight": 845,
+    "projectRoot": "D:\\web\\100percent-health\\game\\charamake2"
+  },
+  "parts": [
+    {
+      "id": "bg_transparent",
+      "name": "透過（なし）",
+      "category": "background",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/none.png"
+        }
+      ],
+      "unlocks": [],
+      "colors": {
+        "black": {
+          "blend": "color",
+          "color": "#000000",
+          "opacity": 0
+        }
+      }
+    },
+    {
+      "id": "body_normal",
+      "name": "通常体型",
+      "category": "body",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/basics/body/basebody.png"
+        },
+        {
+          "file": "parts/basics/body/hand1.png",
+          "zIndex": 100,
+          "animated": false
+        }
+      ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f3efec",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "bg_white",
+      "name": "背景（白）",
+      "category": "background",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/basics/background/white.png",
+          "animated": false
+        }
+      ],
+      "unlocks": [],
+      "colors": {
+        "黒": {
+          "blend": "multiply",
+          "color": "#000000",
+          "opacity": 1
+        },
+        "白": {
+          "blend": "multiply",
+          "color": "#ffffff",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "bg_gray",
+      "name": "背景（グレー）",
+      "category": "background",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/basics/background/gray.png",
+          "animated": false
+        }
+      ],
+      "unlocks": [],
+      "colors": {
+        "黒": {
+          "blend": "multiply",
+          "color": "#000000",
+          "opacity": 1
+        },
+        "白": {
+          "blend": "overlay",
+          "color": "#ffffff",
+          "opacity": 1,
+          "hueOpacity": 0
+        },
+        "赤": {
+          "blend": "overlay",
+          "color": "#ff0000",
+          "opacity": 1,
+          "hueOpacity": 0,
+          "hueShift": 1
+        },
+        "青": {
+          "blend": "overlay",
+          "color": "#0000ff",
+          "opacity": 1
+        },
+        "緑": {
+          "blend": "overlay",
+          "color": "#00ff00",
+          "opacity": 1
+        },
+        "黄": {
+          "blend": "overlay",
+          "color": "#ffff00",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "frame1",
+      "name": "枠",
+      "category": "frame",
+      "zIndex": 1000,
+      "layers": [
+        {
+          "file": "parts/basics/frame/frame1.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "pupil1",
+      "name": "瞳1",
+      "category": "pupil",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/face/pupil/pupil1.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "pupil2",
+      "name": "瞳2",
+      "category": "pupil",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/face/pupil/pupil2.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "pupil3",
+      "name": "瞳3",
+      "category": "pupil",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/face/pupil/pupil3.png",
+          "animated": false
+        }
+      ],
+      "unlocks": [
+        "iris"
+      ]
+    },
+    {
+      "id": "pupil4",
+      "name": "瞳4",
+      "category": "pupil",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/face/pupil/pupil4.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "pupil5",
+      "name": "瞳5",
+      "category": "pupil",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/face/pupil/pupil5.png",
+          "animated": false
+        }
+      ],
+      "hides": [
+        "eye-highlight"
+      ]
+    },
+    {
+      "id": "pupil6",
+      "name": "瞳6",
+      "category": "pupil",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/face/pupil/pupil6.png",
+          "animated": false
+        }
+      ],
+      "hides": [
+        "eye-highlight"
+      ]
+    },
+    {
+      "id": "pupil7",
+      "name": "瞳7",
+      "category": "pupil",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/face/pupil/pupil7.png",
+          "animated": false
+        }
+      ],
+      "unlocks": [
+        "iris"
+      ],
+      "colors": {
+        "赤": {
+          "blend": "multiply",
+          "color": "#ff0040",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "pupil8",
+      "name": "瞳8",
+      "category": "pupil",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/face/pupil/pupil8.png",
+          "animated": false
+        }
+      ],
+      "unlocks": [
+        "iris"
+      ]
+    },
+    {
+      "id": "pupil9",
+      "name": "瞳9",
+      "category": "pupil",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/face/pupil/pupil9.png",
+          "animated": false
+        }
+      ],
+      "unlocks": [
+        "iris"
+      ]
+    },
+    {
+      "id": "eyelashes_turi1",
+      "name": "ツリ目1",
+      "category": "eyelashes",
+      "zIndex": 200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes1.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eyelashes_normal1",
+      "name": "普通目1",
+      "category": "eyelashes",
+      "zIndex": 200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes2.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eyelashes_normal2",
+      "name": "普通目2",
+      "category": "eyelashes",
+      "zIndex": 200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes3.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eyelashes_normal3",
+      "name": "普通目3",
+      "category": "eyelashes",
+      "zIndex": 200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes8.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eyelashes_simple1",
+      "name": "シンプルまつ毛1",
+      "category": "eyelashes",
+      "zIndex": 200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes4.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eyelashes_jito1",
+      "name": "ジト目1",
+      "category": "eyelashes",
+      "zIndex": 200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes5.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eyelashes_jito2",
+      "name": "ジト目2",
+      "category": "eyelashes",
+      "zIndex": 200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes6.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eyelashes_jito3",
+      "name": "ジト目3",
+      "category": "eyelashes",
+      "zIndex": 200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes7.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "iris_none",
+      "name": "瞳孔（なし）",
+      "category": "iris",
+      "zIndex": 160,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "iris1",
+      "name": "瞳孔1",
+      "category": "iris",
+      "zIndex": 160,
+      "layers": [
+        {
+          "file": "parts/face/iris/iris1.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "iris2",
+      "name": "瞳孔2",
+      "category": "iris",
+      "zIndex": 160,
+      "layers": [
+        {
+          "file": "parts/face/iris/iris2.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "iris3",
+      "name": "瞳孔3",
+      "category": "iris",
+      "zIndex": 160,
+      "layers": [
+        {
+          "file": "parts/face/iris/iris3.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "iris4",
+      "name": "瞳孔4",
+      "category": "iris",
+      "zIndex": 160,
+      "layers": [
+        {
+          "file": "parts/face/iris/iris4.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "iris5",
+      "name": "瞳孔5",
+      "category": "iris",
+      "zIndex": 160,
+      "layers": [
+        {
+          "file": "parts/face/iris/iris5.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "iris6",
+      "name": "瞳孔6",
+      "category": "iris",
+      "zIndex": 160,
+      "layers": [
+        {
+          "file": "parts/face/iris/iris6.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "iris7",
+      "name": "瞳孔7",
+      "category": "iris",
+      "zIndex": 160,
+      "layers": [
+        {
+          "file": "parts/face/iris/iris7.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight1",
+      "name": "瞳ハイライト1",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight1.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight2",
+      "name": "瞳ハイライト2",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight2.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight3",
+      "name": "瞳ハイライト3",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight3.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight4",
+      "name": "瞳ハイライト4",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight4.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight5",
+      "name": "瞳ハイライト5",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight5.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight6",
+      "name": "瞳ハイライト6",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight6.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight7",
+      "name": "瞳ハイライト7",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight7.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight8",
+      "name": "瞳ハイライト8",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight8.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight9",
+      "name": "瞳ハイライト9",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight9.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight10",
+      "name": "瞳ハイライト10",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight10.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "eye-highlight11",
+      "name": "瞳ハイライト11",
+      "category": "eye-highlight",
+      "zIndex": 170,
+      "layers": [
+        {
+          "file": "parts/face/eyehighlight/irishighlight11.png",
+          "animated": false
+        }
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "sclera1",
+      "name": "白目1",
+      "category": "sclera",
+      "zIndex": 110,
+      "layers": [
+        {
+          "file": "parts/face/sclera/sclera1.png",
+          "animated": false
+        }
+      ],
+      "colors": {
+        "白目1": {
+          "blend": "lighten",
+          "color": "#eafbfb",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "blush1",
+      "name": "頬ブラシ1",
+      "category": "blush",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "blush2",
+      "name": "頬ブラシ2",
+      "category": "blush",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush2.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "blush3",
+      "name": "頬ブラシ3",
+      "category": "blush",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush3.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "blush4",
+      "name": "頬ブラシ4",
+      "category": "blush",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush4.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ]
+    },
+    {
+      "id": "blush5",
+      "name": "頬ブラシ5",
+      "category": "blush",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush5.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ]
+    },
+    {
+      "id": "ears1",
+      "name": "耳1",
+      "category": "ears",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/ears/ear1R.png",
+          "animated": false
+        },
+        {
+          "file": "parts/face/ears/ear1L.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "eyebrows1",
+      "name": "眉毛1",
+      "category": "eyebrow",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/eyebrows/eyebrows1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "eyebrows2",
+      "name": "眉毛2",
+      "category": "eyebrow",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/eyebrows/eyebrows2.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "eyebrows3",
+      "name": "眉毛3",
+      "category": "eyebrow",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/eyebrows/eyebrows3.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "eyebrows4",
+      "name": "眉毛4",
+      "category": "eyebrow",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/eyebrows/eyebrows4.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "eyebrows5",
+      "name": "眉毛5",
+      "category": "eyebrow",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/eyebrows/eyebrows5.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "eyebrows6",
+      "name": "眉毛6",
+      "category": "eyebrow",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/eyebrows/eyebrows6.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "eyebrows7",
+      "name": "眉毛7",
+      "category": "eyebrow",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/eyebrows/eyebrows7.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "eyebrows8",
+      "name": "眉毛8",
+      "category": "eyebrow",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/eyebrows/eyebrows8.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "nose1",
+      "name": "鼻1",
+      "category": "nose",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/nose/nose1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "nose2",
+      "name": "鼻2",
+      "category": "nose",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/nose/nose2.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "nose3",
+      "name": "鼻3",
+      "category": "nose",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/nose/nose3.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "nose4",
+      "name": "鼻4",
+      "category": "nose",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/nose/nose4.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "nose5",
+      "name": "鼻5",
+      "category": "nose",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/nose/nose5.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth1",
+      "name": "口1",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth2",
+      "name": "口2",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth2.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth3",
+      "name": "口3",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth3.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth4",
+      "name": "口4",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth4.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth5",
+      "name": "口5",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth5.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth6",
+      "name": "口6",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth6.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth7",
+      "name": "口7",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth7.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth8",
+      "name": "口8",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth8.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth9",
+      "name": "口9",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth9.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth10",
+      "name": "口10",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth10.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth11",
+      "name": "口11",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth11.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "mouth12",
+      "name": "口12",
+      "category": "mouth",
+      "zIndex": 105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth12.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "body_peace",
+      "name": "通常体型 (ピース)",
+      "category": "body",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/basics/body/basebody.png"
+        },
+        {
+          "file": "parts/basics/body/hand2.png",
+          "zIndex": 600,
+          "animated": false
+        }
+      ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f3efec",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "backhair1",
+      "name": "後ろ髪1",
+      "category": "backhair",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "backhair2",
+      "name": "後ろ髪2",
+      "category": "backhair",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair2.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "backhair3",
+      "name": "後ろ髪3",
+      "category": "backhair",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair3.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "backhair4",
+      "name": "後ろ髪4",
+      "category": "backhair",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair4.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "backhair5",
+      "name": "後ろ髪5",
+      "category": "backhair",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair5.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "backhair6",
+      "name": "後ろ髪6",
+      "category": "backhair",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair6.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "backhair7",
+      "name": "後ろ髪7",
+      "category": "backhair",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair7.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "backhair8",
+      "name": "後ろ髪8",
+      "category": "backhair",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair8.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "backhair9",
+      "name": "後ろ髪9",
+      "category": "backhair",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair9.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "backhair10",
+      "name": "後ろ髪10",
+      "category": "backhair",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair10.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs1",
+      "name": "前髪1",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs2",
+      "name": "前髪2",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs2.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs3",
+      "name": "前髪3",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs3.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs4",
+      "name": "前髪4",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs4.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs5",
+      "name": "前髪5",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs5.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs6",
+      "name": "前髪6",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs6.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs7",
+      "name": "前髪7",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs7.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs8",
+      "name": "前髪8",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs8.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "sidehair1",
+      "name": "横髪1",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair1R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair1L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "sidehair2",
+      "name": "横髪2",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair2R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair2L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "sidehair3",
+      "name": "横髪3",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair3R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair3L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "sidehair4",
+      "name": "横髪4",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair4R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair4L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "sidehair5",
+      "name": "横髪5",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair5R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair5L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "sidehair6",
+      "name": "横髪6",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair6R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair6L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "sidehair7",
+      "name": "横髪7",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair7R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair7L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "sidehair8",
+      "name": "横髪8",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair8R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair8L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "sidehair9",
+      "name": "横髪9",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair9R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair9L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "sidehair10",
+      "name": "横髪10",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair10R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair10L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "basehair",
+      "name": "basehair",
+      "category": "basehair",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/basics/body/basehair.png",
+          "animated": false
+        }
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "id": "background",
+      "name": "背景",
+      "order": 1,
+      "selectionMode": "single",
+      "hidden": false,
+      "group": "basics"
+    },
+    {
+      "id": "body",
+      "name": "体型",
+      "order": 2,
+      "selectionMode": "single",
+      "hidden": false,
+      "group": "basics",
+      "colorGroup": "skin"
+    },
+    {
+      "id": "accessories_head",
+      "name": "頭アクセサリー",
+      "order": 50,
+      "selectionMode": "multiple",
+      "group": "accessories",
+      "hidden": false
+    },
+    {
+      "id": "eyebrow",
+      "name": "眉毛",
+      "order": 10,
+      "selectionMode": "single",
+      "hidden": false,
+      "group": "face"
+    },
+    {
+      "id": "frame",
+      "name": "フレーム",
+      "order": 60,
+      "selectionMode": "single",
+      "group": "decoration",
+      "hidden": false
+    },
+    {
+      "id": "pupil",
+      "name": "瞳",
+      "order": 30,
+      "selectionMode": "single",
+      "group": "face",
+      "hidden": false
+    },
+    {
+      "id": "eyelashes",
+      "name": "まつ毛",
+      "order": 20,
+      "selectionMode": "single",
+      "group": "face",
+      "hidden": false
+    },
+    {
+      "id": "iris",
+      "name": "瞳装飾",
+      "order": 35,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eye-highlight",
+      "name": "瞳ハイライト",
+      "order": 25,
+      "selectionMode": "multiple",
+      "group": "face",
+      "hidden": false
+    },
+    {
+      "id": "sclera",
+      "name": "白目",
+      "order": 40,
+      "selectionMode": "single",
+      "group": "face",
+      "hidden": false
+    },
+    {
+      "id": "blush",
+      "name": "頬ブラシ",
+      "order": 50,
+      "selectionMode": "multiple",
+      "group": "face",
+      "hidden": false
+    },
+    {
+      "id": "ears",
+      "name": "耳",
+      "order": 5,
+      "selectionMode": "single",
+      "group": "face",
+      "hidden": false,
+      "colorGroup": "skin"
+    },
+    {
+      "id": "nose",
+      "name": "鼻",
+      "order": 60,
+      "selectionMode": "single",
+      "group": "face",
+      "hidden": false
+    },
+    {
+      "id": "mouth",
+      "name": "口",
+      "order": 70,
+      "selectionMode": "single",
+      "group": "face",
+      "hidden": false
+    },
+    {
+      "id": "backhair",
+      "name": "後ろ髪",
+      "order": 50,
+      "selectionMode": "single",
+      "group": "hair",
+      "hidden": false,
+      "colorGroup": "hair"
+    },
+    {
+      "id": "bangs",
+      "name": "前髪",
+      "order": 150,
+      "selectionMode": "single",
+      "group": "hair",
+      "hidden": false,
+      "colorGroup": "hair"
+    },
+    {
+      "id": "sidehair",
+      "name": "横髪",
+      "order": 160,
+      "selectionMode": "multiple",
+      "group": "hair",
+      "hidden": false,
+      "colorGroup": "hair"
+    },
+    {
+      "id": "basehair",
+      "name": "ベース髪",
+      "order": 10,
+      "selectionMode": "single",
+      "group": "hair",
+      "colorGroup": "hair",
+      "hidden": false
+    }
+  ],
+  "categoryGroups": [
+    {
+      "id": "decoration",
+      "name": "画面装飾",
+      "order": 0,
+      "collapsed": false
+    },
+    {
+      "id": "basics",
+      "name": "基本",
+      "order": 1,
+      "collapsed": false
+    },
+    {
+      "id": "face",
+      "name": "顔",
+      "order": 2,
+      "collapsed": false
+    },
+    {
+      "id": "hair",
+      "name": "髪",
+      "order": 3,
+      "collapsed": false
+    },
+    {
+      "id": "cloches",
+      "name": "服",
+      "order": 4,
+      "collapsed": false
+    },
+    {
+      "id": "accessories",
+      "name": "アクセサリー",
+      "order": 5,
+      "collapsed": false
+    }
+  ]
+}

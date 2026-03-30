@@ -1,0 +1,106 @@
+{
+    "meta": {
+      "version": "2.0",
+      "canvasWidth": 800,
+      "canvasHeight": 900
+    },
+    "parts": [
+      {
+        "id": "bg_transparent",
+        "name": "透過（なし）",
+        "category": "background",
+        "zIndex": 0,
+        "layers": [
+          {
+            "file": "parts/none.png"
+          }
+        ]
+      },
+      {
+        "id": "body_normal",
+        "name": "通常体型",
+        "category": "body",
+        "zIndex": 100,
+        "layers": [
+          {
+            "file": "parts/body/normal.png"
+          }
+        ],
+        "unlocks": ["head"]
+      },
+      {
+        "id": "head_normal",
+        "name": "通常頭部",
+        "category": "head",
+        "zIndex": 200,
+        "requires": "body_normal",
+        "layers": [
+          {
+            "file": "parts/head/normal.png"
+          }
+        ]
+      },
+      {
+        "id": "eyes_basic",
+        "name": "基本の目",
+        "category": "eyes",
+        "zIndex": 400,
+        "layers": [
+          {
+            "file": "parts/eyes/basic.png"
+          }
+        ],
+        "colors": {
+          "black": {
+            "blend": "multiply",
+            "color": "#333333",
+            "opacity": 0.8
+          },
+          "blue": {
+            "blend": "overlay",
+            "color": "#3498db",
+            "opacity": 0.6
+          }
+        }
+      }
+    ],
+    "categories": [
+      {
+        "id": "background",
+        "name": "背景",
+        "order": 1,
+        "selectionMode": "single"
+      },
+      {
+        "id": "body",
+        "name": "体型",
+        "order": 2,
+        "selectionMode": "single"
+      },
+      {
+        "id": "head",
+        "name": "頭部",
+        "order": 3,
+        "hidden": true,
+        "selectionMode": "single"
+      },
+      {
+        "id": "eyes",
+        "name": "目",
+        "order": 10,
+        "selectionMode": "single"
+      },
+      {
+        "id": "hair_base",
+        "name": "髪（ベース）",
+        "order": 20,
+        "selectionMode": "single"
+      },
+      {
+        "id": "accessories_head",
+        "name": "頭アクセサリー",
+        "order": 50,
+        "selectionMode": "multiple"
+      }
+    ]
+  }
