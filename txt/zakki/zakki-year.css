@@ -76,6 +76,10 @@
 	-webkit-box-orient: vertical;
 	margin-bottom: 0.5rem;
 
+	> div > *:not(.article-ellipsis) {
+		font-family: "UDEV Gothic HSNFLG", sans-serif;
+	}
+
 	h3 {
 		font-size: 14pt;
 		padding-left: 10px;
@@ -104,14 +108,16 @@
 
 	hr {
 		border: none;
-		text-align: center;
-		font-size: 1em;
+		font-size: 1.5em;
+		color: #888;
+		margin-left: 56px;
 	}
 
 	hr::before {
+		display: flex;
+		justify-content: center;
 		content: "*****";
-		letter-spacing: 1em;
-		padding-left: 2em;
+		letter-spacing: 2em;
 	}
 }
 
@@ -175,6 +181,20 @@
 	.year-index {
 		margin-top: 1rem;
 		padding: 0;
+	}
+
+	.daily-article {
+		h4 {
+			padding-top: 0;
+		}
+
+		hr {
+			margin-left: 20px;
+
+			&::before {
+				letter-spacing: 1em;
+			}
+		}
 	}
 
 	article {

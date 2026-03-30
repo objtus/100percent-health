@@ -11,6 +11,44 @@
   <script src="../../js/main.js" defer></script>
   <script src="/js/mouse.js" defer></script>
   <style>
+    #toc-list {
+      li a {
+        padding-top: 2px!important;
+      }
+      li::before {
+        padding-top: 2px;
+        padding-right: 2px;
+        margin-right: 0!important;
+      }
+    }
+    #ogp-image {
+      height: 150px;
+      margin-top: 1rem;
+      margin-bottom: -6rem;
+
+      &::after {
+            display: block;
+            content: "";
+            width: auto;
+            height: 120px;
+            background-image: url(/img/ogp.gif);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 50% 20%;
+      }
+    }
+    .title-container {
+      text-align: right;
+      h1.title {
+        display: inline-block;
+        background-color: #fff!important;
+        background-image: none!important;
+        padding: 0;
+        clip-path: inset(2px 0 1px 1px);
+        margin-top: 3rem;
+      }
+    }
+
     /* 本文 */
     h3 {
       padding-top: 1.5rem;
@@ -48,14 +86,12 @@
       }
     }
     #textblock {
+      line-height: 1.5;
       margin-bottom: 3rem;
   
       .heading_title {
         font-size: 1.2rem;
-        margin-bottom: 15px;
-      }
-      .title {
-        margin-top: 1rem;
+        margin-bottom: 2px;
       }
       .str {
         font-size: large;
@@ -63,6 +99,10 @@
       }
       .str2 {
         font-weight: bold;
+      }
+      .bouten {
+        background: top left / 0.81em .5em repeat-x radial-gradient(circle, black 0.1em, rgba(0, 0, 0, 0) .1em);
+        padding-top: 0.5em;
       }
       .smalltext {
         font-size: 11pt;
@@ -217,7 +257,7 @@
       <header id="category-header">
         <nav aria-label="ページカテゴリナビゲーション">
           <ol class="sub-category">
-            <li><a href="/aboutme.html">about_me</a></li>
+            <li><a href="/aboutme.html">about</a></li>
             <li><a href="/txt/profile.html">profile</a></li>
             <li><a href="/txt/100phealth_introduction.html">introduction</a></li>  
           </ol>
@@ -233,12 +273,13 @@
         </nav>
       </header>
       <article id="textblock">
-        <h1 class="title"><ruby>100%health<rt>このサイト</rt>_<rt>の</rt>introduction<rt>説明ページ</rt></ruby></h1>
+        <div id="ogp-image"></div>
+        <div class="title-container"><h1 class="title">100%health_introduction</h1></div>
         <section id="about-this-site">
           <h2 class="heading_title">このサイトについて / <small title="about this site" lang="en">about this site</small><a href="#about-this-site" class="header-link">§</a></h2>
           <div class="section-item">
             <p>
-              このサイトは、 <a href="/aboutme.html">yuinoid / いど子</a> の個人サイトであり、<span class="str">創作系個人サイトのスタイルを意識したポートフォリオサイト</span>です。<br>
+              このサイトは、 <a href="/aboutme.html">yuinoid / いど子</a> の個人サイトであり、<span class="str">創作系個人サイトのスタイルを意識した<span class="bouten">ポートフォリオサイト</span></span>です。<br>
             </p>
             <p>
               このサイトは、<a href="https://neocities.org/site/yuinoid" target="_blank">neocities</a>によってホスティングされています。<br>

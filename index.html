@@ -62,7 +62,7 @@
       
       img {
         max-width: 200px;
-        filter: grayscale(80%);
+        filter: grayscale(100%);
         
         &:hover {
           filter: grayscale(10%);
@@ -81,6 +81,70 @@
         text-decoration: none;
         color: #999;
         font-size: 0.8em;
+      }
+
+      ul.index-links-banners {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      ul.index-links-banners > li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      ul.index-links-banners > li > a {
+        display: inline-block;
+        line-height: 0;
+      }
+
+      ul.index-links-banners > li:has(.banner-placeholder-label) {
+        width: 120px;
+        min-height: 40px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      ul.index-links-banners > li:has(.banner-placeholder-label) > a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 40px;
+        line-height: normal;
+        text-decoration: none;
+        color: #444;
+      }
+
+      ul.index-links-banners > li:has(.banner-placeholder-label) > a > img {
+        display: none !important;
+      }
+
+      ul.index-links-banners .banner-placeholder-label {
+        font-size: 0.52rem;
+        line-height: 1.2;
+        text-align: center;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        padding: 2px 4px;
+        max-width: 100%;
+      }
+
+      ul.index-links-banners > li#llxyo img {
+        max-width: 40px;
+        max-height: 40px;
+        width: auto;
+        height: auto;
       }
     }
   </style>
@@ -102,25 +166,45 @@
         <h1 id="sitetitle" title="site title">100%health</h1>
       </div>
       <div id="item2">
-        <nav class="section" id="about" aria-label="自己紹介セクション">
+        <nav class="section" id="about" aria-label="自己・サイト情報セクション">
           <h2 class="highlight">
             <a class="highlight-anchor" href="aboutme.html">
               <span title="about" lang="en">about</span> / <small>わたしについて</small><span class="internallink" aria-hidden="true">>></span>
             </a>
           </h2>
-          <p style="margin-bottom: 1rem;">ようこそ！<br>
-            わたしは&ensp;yuinoid&ensp;/&ensp;いど子&ensp;です<a href="all.html">。</a><br>
-            ここは&ensp;yuinoid&ensp;のwebページ&ensp;「100%health」&ensp;です。<br>
-            このサイトについては&ensp;<a href="txt/100phealth_introduction.html" style="text-decoration: underline;"><span aria-hidden="true">♥</span>こちら</a>&ensp;をご覧ください。<br>
-            <br>
-            わたしについては&ensp;<a href="/aboutme.html"><span aria-hidden="true">♥</span>こちら</a>をご覧ください。
-          </p>
-          <p title="about this site" lang="en">
-            Welcome!<br>
-            I am yuinoid&thinsp;/&thinsp;idoko.<br>
-            This is yuinoid's web page ''100%health''.<br>
-            About this site: <a href="txt/100phealth_introduction.html" style="text-decoration: underline;"><span aria-hidden="true">♥</span>here</a>.
-          </p>
+          <div id="aboutcontainer">
+            <h3 class="section-title">hello!</h3>
+            <p style="margin: 5px 0;">
+              ようこそ！<br>
+              わたしは <a href="/aboutme.html">yuinoid / いど子</a> です。
+            </p>
+            <p style="margin-bottom: 5px;">
+              ここはwebページ 「<span style="font-weight: bold;">100%health</span>」 です。
+            </p>
+            <p style="margin-bottom: 5px;">
+              このサイトについては <a href="txt/100phealth_introduction.html" style="text-decoration: underline;">100%health_introduction</a> をご覧ください。
+            </p>
+            <p title="about this site" lang="en">
+              Welcome!<br>
+              I am yuinoid / idoko.<br>
+              This is yuinoid's web page ''100%health''.<br>
+              About this site: <a href="txt/100phealth_introduction.html" style="text-decoration: underline;">100%health_introduction</a>.
+            </p>
+          </div>
+          <div id="indexcontainer">
+            <h3 class="section-title">index</h3>
+            <div id="indexlist">
+              <p><a href="/index.html">100%health</a></p>
+              <ul>
+                <li><a href="/aboutme.html">about</a></li>
+                <li><a href="/gallery/gallery_main.html">gallery</a></li>
+                <li><a href="/works/works_main.html">works</a></li>
+                <li><a href="/txt/txt_main.html">txt</a></li>
+                <li><a href="/links/links_main.html">links</a></li>
+                <li><a href="/changelog_main.html">changelog</a></li>
+              </ul>
+            </div>
+          </div>
         </nav>
         <nav class="section" id="changelog" aria-label="更新履歴セクション">
           <h2 class="highlight">
@@ -169,58 +253,53 @@
               <span title="links" lang="en">links</span> / <small>リンク</small><span class="internallink">>></span>
             </a>
           </h2>
+          <div id="social-links">
+            <div>
+              <h3 class="section-title">contact & sns</h3>
+              <p><a href="https://tanoshii.site/@health" target="_blank">@health@tanoshii.site</a></p>
+              <p><a href="https://discord.com/users/303985467810906126" target="_blank">@yuinoid</a> (<a href="https://discord.com" target="_blank">discord</a>)</p>  
+              <p><a href="https://yuinoid.tumblr.com" target="_blank">tumblr</a><br></p>
+              <p><a href="https://twitter.com/yuinoid" target="_blank">twitter</a><br></p>
+
+              <p style="margin-top: 0.5rem; font-size: 0.9rem; text-align: right;">その他のリンクは<a href="/aboutme.html">aboutme</a>、<a href="/txt/profile.html">profile</a>をご覧ください</p>
+            </div>
+          </div>
           <div id="mutual_links_gallery">
             <h3 class="section-title">friends & services</h3>
             <p style="text-align: right; font-size: 0.8rem;" lang="en">scroll to see more</p>
             <div id="mutual_links_gallery_container">
+              <script src="./js/inject-live-ul.js"></script>
               <script>
                 fetch('./links/links_main.html')
                   .then(response => response.text())
                   .then(html => {
                     const doc = new DOMParser().parseFromString(html, 'text/html');
                     const crosslinks = doc.getElementById('crosslinks');
+                    const favlinks = doc.getElementById('favlinks');
                     const registeredServicesContents = doc.querySelector('.registered_services_contents');
-                    
+
                     if (crosslinks) {
                       mutual_links_gallery_container.innerHTML = '';
-                      crosslinks.querySelectorAll('.favs').forEach(fav => {
-                        const bannerImg = fav.querySelector('.banner-img');
-                        if (bannerImg.querySelector('img')?.src.includes('empty.png')) {
-                          const placeholder = document.createElement('div');
-                          placeholder.className = 'empty_placeholder';
-                          placeholder.textContent = fav.querySelector('.site_name').textContent;
-                          bannerImg.querySelector('a').innerHTML = '';
-                          bannerImg.querySelector('a').appendChild(placeholder);
-                        }
-                        mutual_links_gallery_container.appendChild(bannerImg.cloneNode(true));
+                      const ul = document.createElement('ul');
+                      ul.className = 'index-links-banners';
+                      crosslinks.querySelectorAll(':scope > ul.banners > li').forEach((li) => {
+                        ul.appendChild(li.cloneNode(true));
                       });
+                      if (favlinks) {
+                        favlinks.querySelectorAll(':scope > ul.banners > li').forEach((li) => {
+                          ul.appendChild(li.cloneNode(true));
+                        });
+                      }
+                      mutual_links_gallery_container.appendChild(ul);
                     }
-                    
+
                     if (registeredServicesContents) {
-                      const registeredServicesContainer = document.createElement('div');
-                      registeredServicesContainer.innerHTML = registeredServicesContents.innerHTML;
-                      mutual_links_gallery_container.appendChild(registeredServicesContainer);
+                      appendLiveUlCopy(mutual_links_gallery_container, registeredServicesContents);
                     }
                   });
               </script>
             </div>
-            <p style="margin-top: 1rem; text-align: right;" lang="ja">詳細は<a href="links/links_main.html"><span aria-hidden="true">♥</span>こちら</a></p>
-          </div>
-          <div id="social-links">
-            <div>
-              <h3 class="section-title">my links</h3>
-              <p>><a href="https://tanoshii.site/@health" target="_blank">tanoshii.site</a><br></p>
-              <p>><a href="https://yuinoid.tumblr.com" target="_blank">tumblr</a><br></p>
-              <p>><a href="https://twitter.com/yuinoid" target="_blank">twitter</a><br></p>
-              <p>><a href="https://tanoshii.site/@health" target="_blank">@health@tanoshii.site</a> (fediverse)</p>
-
-              <p style="margin-top: 0.5rem; font-size: 0.9rem; text-align: right;">その他のリンクは<a href="/aboutme.html">aboutme</a>、<a href="/txt/profile.html">profile</a>をご覧ください</p>
-            </div>
-            <div>
-              <h3 class="section-title">contact</h3>
-              <p>><a href="https://tanoshii.site/@health" target="_blank">@health@tanoshii.site</a> (fediverse)</p>
-              <p>><a href="https://discord.com/users/303985467810906126" target="_blank">@yuinoid</a> (<a href="https://discord.com" target="_blank">discord</a>)</p>  
-            </div>
+            <p style="margin-top: 1rem; text-align: right;" lang="ja">詳細は<a href="links/links_main.html">こちら</a></p>
           </div>
           <div id="banner">
             <h3 class="section-title">my banners</h3>
@@ -242,6 +321,10 @@
             <div id="accesscounterhtml"></div>
             <p>>&thinsp;<span style="padding-left: 0.1rem;"></span>created: <time datetime="2019-07-18">2019/07/18</time></p>
             <div id="last-updatedhtml"></div>
+          </div>
+          <div style="margin-top: 1rem;">
+            <p><a href="/rss.xml">RSS Feed</a></p>
+            <p><a href="https://neocities.org/site/yuinoid" target="_blank">neocities profile</a></p>
           </div>
         </nav>
       </div>

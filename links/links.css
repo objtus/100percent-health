@@ -3,23 +3,19 @@
 =================== */
 
 /* ----文字装飾---- */
-h2 {
-  display: inline-block;
-  font-size: 1.2em;
-  border-bottom: dotted 3px #000;
-  margin-bottom: 15px;
-  line-height: 16px;
-}
-
-#crosslinks_header,
-#favlinks_header{
+#crosslinks-header,
+#favlinks-header {
   margin-top: 1.5em;
 }
+
+.section-header {
+  margin-bottom: 1.5em;
+}
   
-.site_name {
+.site-name {
   font-size: 14pt;
   font-weight: bold;
-  display: block;
+  display: inline-block;
   margin-bottom: -0.3em;
 
   &::after {
@@ -31,11 +27,15 @@ h2 {
   }
 }
   
-.url {
-  font-size: 10pt;
+.url > a {
+  font-size: 9pt;
   color: #666;
   text-decoration: none;
   word-break: break-all;
+
+  &:hover {
+    color: #fff;
+  }
 
   &::after {
     display: contents!important;
@@ -49,11 +49,6 @@ h2 {
 /* ----セクション全体のレイアウト---- */
 #galleryspace > div {
   margin: 0.5em 0;
-}
-
-.links_contents {
-  padding-left: 0;
-  margin-left: 0;
 }
   
 /* ----個別リンクカードのスタイル---- */
@@ -71,31 +66,38 @@ h2 {
   
 /* リンクカードのヘッダー部分 */
 .link_title_box {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 135px;
   align-items: center;
   margin-bottom: 0.5em;
   border-bottom: 2px dotted #ccc;
+
+  .banner-img {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
 }
+
   
-.title_and_url {
-  flex: 1;
-  min-width: 0; /* flexboxでの縮小を許可 */
-  margin-left: 5px;
-}
-  
-#crosslinks,
-#favlinks,
-#my_banner {
+#crosslinks-list,
+#favlinks-list,
+#my-banner {
+  & > ul {
+    list-style: none;
+  }
+
   .banner-img {
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 31px;
     background: #f5f5f5;
     border: 1px solid #ddd;
-    padding: 0.3em;
-    max-width: 120px;
+
+    a img {
+      vertical-align: middle;
+      line-height: 0;
+    }
 
     a:hover {
       background-color: transparent !important;
@@ -121,38 +123,38 @@ h2 {
     font-size: 0.6em;
     color: #999;
     width: 120px;
-    margin-left: -30%;
+    margin-left: -51%;
+    background-color: #f5f5f5;
+    padding-left: 31%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #ddd;
   }
 }
-
   
 /* キャプション部分 */
-.link_caption {
+.link-caption {
   font-size: 10pt;
   line-height: 1.3;
   color: #333;
-}
-  
-.link_caption p {
-  font-size: 10pt;
   text-indent: -1.5em;
   padding-left: 2em;
-}
-  
-.link_caption p::before {
-  content: '♥ ';
-  color: black;
-  margin-right: 0.5em;
+
+  &::before {
+    content: "♥ ";
+    color: black;
+    margin-right: 0.5em;
+  }
 }
   
 /* detailsタグのスタイル */
-.link_caption details {
+.link-caption details {
   margin-top: 0.8em;
   border-left: 3px solid #ddd;
   padding-left: 1em;
 }
   
-.link_caption summary {
+.link-caption summary {
   cursor: pointer;
   font-weight: bold;
   color: #666;
@@ -160,25 +162,25 @@ h2 {
 }
 
 /* rel属性による記号表示 */
-.favs:has(a[rel="friend"]) .site_name::after {
+h3.site-name:has(a[rel="friend"])::after {
   content: " [FRIEND]";
   font-size: 6pt;
   color: #666;
 }
   
-.favs:has(a[rel="acquaintance"]) .site_name::after {
+.site-name:has(a[rel="acquaintance"])::after {
   content: " [ACQUAINTANCE]";
   font-size: 6pt;
   color: #666;
 }
   
-.favs:has(a[rel="muse"]) .site_name::after {
+.site-name:has(a[rel="muse"])::after {
   content: " [INSPIRATION]";
   font-size: 6pt;
   color: #666;
 }
   
-.favs:has(a[rel="contact"]) .site_name::after {
+.site-name:has(a[rel="contact"])::after {
   content: " [CONTACT]";
   font-size: 6pt;
   color: #666;
@@ -188,6 +190,10 @@ h2 {
 #registered_services {
   margin-top: 1.5em;
   text-align: left;
+
+  ul {
+    list-style: none;
+  }
 
   .links_contents {
     padding: 1em;
@@ -247,7 +253,7 @@ h2 {
   
   
 /* このページについてセクション */
-#my_banner {
+#my-banner {
   p {
     font-size: 10pt;
   }
@@ -296,12 +302,25 @@ h2 {
     font-size: 1.1em;
     padding: 0.3em 0.4em;
   }
+
+  .link_title_box {
+    display: block;
+
+    .banner-img {
+      max-width: 200px;
+      margin-left: 50%;
+    }
+
+    .url {
+      text-align: right;
+    }
+  }
   
   .favs {
     margin-bottom: 2em;
   }
   
-  .link_caption {
+  .link-caption {
     font-size: 10pt;
   }
   

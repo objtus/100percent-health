@@ -1,3 +1,10 @@
+/****************************
+*  Tinkerbell Magic Sparkle *
+*(c)2005-13 mf2fm web-design*
+*  http://www.mf2fm.com/rv  *
+* DON'T EDIT BELOW THIS BOX *
+****************************/
+
 (function () {
 	var colour = ["#000", "#000"];
 	var sparkles = 40;

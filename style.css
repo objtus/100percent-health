@@ -6,6 +6,10 @@
   --color-secondary: #888;
   --color-tertiary: #ccc;
   --color-accent: #00f;
+  
+  /* サイトアイコンの背景色と文字色 */
+  --site-icon-bg: #fff;
+  --site-icon-color: #000;
 }
 
 * {
@@ -62,6 +66,7 @@ body {
   font-feature-settings: "palt"1;
   word-break: auto-phrase;
   overflow: hidden;
+  color: var(--color-sub);
 }
 
 a {
@@ -183,6 +188,13 @@ summary {
 
 #about {
   grid-area: 1 / 1 / 1 / 1;
+  width: 310px;
+
+  #aboutcontainer {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: dotted 2px var(--color-sub);
+  }
 }
 
 #changelog {
@@ -227,7 +239,7 @@ summary {
   }
 }
 
-@media screen and (width <= 850px) {
+@media screen and (width <= 855px) {
   #item2 {
     display: block;
   }
@@ -310,28 +322,32 @@ nav.section {
 /* ===================
   タイトルアイコン
 =================== */
-#sitetitle {
-  display: inline-block;
-  position: relative;
-  color: var(--color-sub);
-  font-size: 2rem;
-  margin-top: -5px;
-  margin-left: -2px;
-  margin-bottom: -3px;
-}
+#item1 {
+  margin-bottom: -8px;
 
-#sitetitle::after {
-  content: "";
-  display: inline-block;
-  position: absolute;
-  width: 35px;
-  height: 10px;
-  background-image: url("heart_3.webp");
-  image-rendering: pixelated;
-  background-repeat: no-repeat;
-  background-size: contain;
-  margin-left: -1px;
-  margin-top: 17px;
+  #sitetitle {
+    display: inline-block;
+    position: relative;
+    color: var(--color-sub);
+    font-size: 2.5rem;
+    margin-top: -8px;
+    margin-left: -2px;
+    scale: 1 0.8;
+  }
+
+  #sitetitle::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    width: 35px;
+    height: 10px;
+    background-image: url("heart_3.webp");
+    image-rendering: pixelated;
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-left: -1px;
+    margin-top: 25px;
+  }
 }
 
 .icon {
@@ -346,12 +362,17 @@ nav.section {
   display: inline-block;
   background-color: var(--color-sub);
   color: #fff;
-  padding-bottom: 1px;
+  padding-bottom: 0.5px;
   padding-right: 3px;
   line-height: 12px;
   margin: 1px 0;
   font-size: 1rem;
   font-weight: normal;
+  transition: 0.1s linear(0, 0.45, 0.48, 0.52, 0.55, 1), background-color 0.1s linear(0, 0.45, 0.48, 0.52, 0.55, 1);
+  
+  &:hover {
+    filter: invert(1);
+  }
 
   &::before {
     content: "";
@@ -359,8 +380,9 @@ nav.section {
     width: 16px;
     height: 16px;
     background-image: url("icon.webp");
+    background-color: var(--site-icon-bg);
     background-size: contain;
-    vertical-align: text-bottom;
+    vertical-align: -3px;
     image-rendering: pixelated;
   }
 }
@@ -371,7 +393,18 @@ nav.section {
   background-color: var(--color-secondary);
   font-size: 1rem;
   font-weight: normal;
-  padding: 0 20px;
+  clip-path: inset(1px 0 1px 0);
+
+  &::before {
+    content: "<";
+    padding-left: 1px;
+    margin-right: 3px;
+  }
+
+  &::after {
+    content: ">";
+    margin-left: 3px;
+  }
 }
 
 a.highlight-anchor {
@@ -403,20 +436,21 @@ h2 {
 #last-updatedhtml {
   text-indent: -0.6em;
   padding-left: 0.6em;
+  line-height: 1.1rem;
 }
 
 /* ===================
   links
 =================== */
 #social-links {
-  border-top: dotted 2px var(--color-sub);
-  padding-top: 10px;
-  margin-top: 10px;
-
   & > div {
     border-bottom: dotted 2px var(--color-sub);
     padding-bottom: 10px;
     margin-bottom: 10px;
+
+    p:not(:last-child)::before {
+      content: ">";
+    }
   }
 
   h4 {
@@ -427,11 +461,51 @@ h2 {
   a {
     text-decoration: underline;
   }
+}
 
-  & > div:nth-child(1) a {
-    &::before {
-      content: "♥";
-      font-size: 0.95rem;
+#mutual_links_gallery {
+    border-bottom: dotted 2px var(--color-sub);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+/* ===================
+  item2
+=================== */
+
+
+/* ===================
+  about and index
+=================== */
+#indexcontainer {
+  #indexlist {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 5px;
+  }
+
+  li {
+     a::before {
+      content: "";
+      display: inline-block;
+      background-image: url("icon.webp");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 10px;
+      height: 10px;
+      vertical-align: middle;
+      margin-right: 3px;
     }
   }
 }
@@ -500,6 +574,10 @@ h2 {
     display: flex;
     flex-direction: column-reverse;
     list-style: none;
+
+    a {
+      padding-left: 1px;
+    }
   }
 }
 
@@ -589,8 +667,8 @@ h2 {
     }
 
     a {
-      background-color: #fff;
-      color: #000;
+      background-color: var(--color-main);
+      color: var(--color-sub);
       padding-left: 5px;
     }
   }
@@ -615,6 +693,10 @@ h2 {
   padding-left: 21px;
   margin-top: 3px;
   margin-left: -0.14rem;
+
+  a {
+    padding-left: 1px;
+  }
 }
 
 #works-content {
@@ -659,6 +741,10 @@ h2 {
 
   ol {
     list-style-type: none;
+
+    a {
+      padding-left: 1px;
+    }
   }
 }
 
@@ -782,9 +868,26 @@ button:hover {
     flex: 0 1 100%;
     text-align: right;
     margin-right: 10%;
+    margin-bottom: -1px;
+
+    &::after {
+      margin-top: -7px;
+    }
   }
 
   #item2 {
+    #indexlist {
+      justify-content: normal;
+
+      & > p {
+        margin-right: 20px;
+      }
+    }
+
+    #about {
+      width: 100%;
+    }
+
     & > .section:nth-last-child(2) {
       padding-bottom: 10px;
       margin-bottom: 10px;

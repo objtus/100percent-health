@@ -163,6 +163,21 @@
         "colored",
         "1girl"
       ]
+    },
+    {
+      "id": "lovers-and-fundamental",
+      "path": "/gallery/image-page/lovers-and-fundamental.html",
+      "image_path": "../../img/original/lovers-and-fundamental.gif",
+      "date": "2026-02-14",
+      "series": "works",
+      "tags": [
+        "works",
+        "music",
+        "ex_happyender_girl",
+        "hatsune_miku",
+        "monochrome",
+        "1girl"
+      ]
     }
   ]
 }

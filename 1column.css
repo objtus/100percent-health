@@ -26,6 +26,22 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "UDEV Gothic HSNFLG";
+  src: url("/txt/UDEVGothicHSNFLG-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "UDEV Gothic HSNFLG";
+  src: url("/txt/UDEVGothicHSNFLG-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 .saitamaar-light {
   font-family: saitamaar, sans-serif;
   white-space: pre;
@@ -53,6 +69,7 @@ body {
   height: 100%;
   overflow: hidden auto;
   box-sizing: border-box;
+  color: light-dark(black, #fff);
   background-color: light-dark(white, #222);
   display: flex;
   flex-direction: column;
@@ -77,6 +94,7 @@ img {
 h1,
 h2 {
   padding-top: 1.5rem;
+  scale: 1 0.8;
 }
 
 h1.title {
@@ -336,19 +354,25 @@ a.addressbar {
     margin-top: 1rem;
     margin-left: 5px;
     list-style: none;
-    line-height: 1;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     gap: 5px;
     font-size: 0.8em;
+    z-index: -10;
+
+    li a {
+      padding-top: 2px;
+      padding-right: 2px;
+      margin-right: 0!important;
+      background-color: transparent;
+      text-decoration: none;
+    }
 
     li::before {
       content: "§";
-      margin-right: 2px;
-    }
-
-    a {
-      text-decoration: none;
+      padding-top: 2px;
+      padding-right: 2px;
+      background-color: transparent;
     }
   }
 }
@@ -483,6 +507,12 @@ nav {
     background-color: #000;
     color: #fff;
     text-decoration: none;
+    padding: 2px 4px;
+  }
+
+  .rightarrow {
+    padding-right: 2px!important;
+    padding-left: 5px!important;
   }
 }
 
@@ -979,12 +1009,15 @@ nav {
   image-rendering: pixelated;
 }
 
+/* ===================
+  ダークモード対応予定
 @media (prefers-color-scheme: dark) {
   #logo-footer {
     filter: invert(1);
     mix-blend-mode: lighten;
   }
 }
+================== */
 
 /* ===================
   シークレットモーダル
@@ -1149,7 +1182,7 @@ nav {
 
   body {
     font-size: 0.9rem;
-    line-height: 25px;
+    line-height: 20px;
   }
 
   h1 {
@@ -1187,13 +1220,6 @@ nav {
   
   #address {
     font-size: medium;
-  }
-  
-  article,
-  #galleryspace {
-    h1.title {
-      background-color: #ccc;
-    }
   }
 
   #foot-links {

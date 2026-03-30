@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gallery_index - 100%health</title>
+  <link rel="stylesheet" href="../1column.css">
+  <script src="../js/jquery-3.6.0.min.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+  <style>
+    #wrapper {
+      overflow-y: scroll;
+    }
+
+    div#galleryspace {
+      .gallery-map-section {
+        margin-bottom: 4rem;
+      }
+    }
+  
+    .tag-list-section {
+      text-align: right;
+      a{
+        display: inline-block;
+      }
+    }
+  
+    .tag-list {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .controls {
+      margin: 1rem 0;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .controls label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .controls select {
+      padding: 0.25rem 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #gallery-table-container {
+      margin-top: 2rem;
+      overflow-x: auto;
+      container-type: inline-size;
+      container-name: gallery-container;
+    }
+
+    #gallery-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      table-layout: fixed;
+    }
+    
+    /* 列幅の指定 */
+    #gallery-table th:nth-child(1),
+    #gallery-table tbody th[scope="row"]:nth-child(1),
+    #gallery-table td:nth-child(1) {
+      width: 50px;  /* No. */
+    }
+    
+    #gallery-table th:nth-child(2),
+    #gallery-table td:nth-child(2) {
+      width: 90px;  /* 日付 */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    #gallery-table th:nth-child(3),
+    #gallery-table tbody th[scope="row"] {
+      width: auto;  /* ID - 残りのスペース */
+    }
+    
+    #gallery-table th:nth-child(4),
+    #gallery-table td:nth-child(4) {
+      width: 140px;  /* シリーズ */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    #gallery-table caption {
+      padding: 0.5rem;
+      font-weight: bold;
+      text-align: left;
+      font-size: 1rem;
+      color: #333;
+      caption-side: top;
+    }
+
+    #gallery-table th {
+      background: #f5f5f5;
+      text-align: left;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+    }
+
+    #gallery-table tbody th[scope="row"] {
+      vertical-align: top;
+      text-align: left;
+      font-weight: bold;
+      background: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #gallery-table tbody th[scope="row"] a {
+      font-weight: bold;
+      display: inline;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .work-group {
+      border-bottom: 2px solid #ddd;
+    }
+
+    .work-group:hover tr {
+      background: #fafafa;
+    }
+
+    .work-main > td:nth-child(1) {
+      color: #888;
+
+      &::before {
+        content: "[";
+      }
+
+      &::after {
+        content: "]";
+      }
+    }
+
+    .work-tags {
+      display: table-row; /* 常に行として表示 */
+    }
+
+    .work-tags > td {
+      padding-top: 2px;
+    }
+
+    /* details/summary スタイル */
+    .tags-details {
+      padding: 0;
+    }
+
+    .tags-details summary {
+      height: 17px;
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+      float: right;
+      font-size: 0.85rem;
+      color: #666;
+      transition: all 0.2s;
+    }
+
+    .tags-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .tags-details summary::marker {
+      display: none;
+    }
+
+    .tags-details summary::before {
+      content: "[tags ";
+    }
+
+    .tags-details summary::after {
+      content: "+]";
+    }
+
+    .tags-details[open] summary::after {
+      content: "-]";
+    }
+
+    .tags-details .table-tags {
+      clear: both;
+    }
+
+    #gallery-table a:hover {
+      text-decoration: underline;
+    }
+
+
+    .table-thumbnail {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+    }
+
+    .table-series-badge {
+      display: inline-block;
+      font-size: 0.85rem;
+      text-decoration: underline;
+    }
+
+    .table-tags {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .table-tags li {
+      display: flex;
+      align-items: center;
+      gap: 0.15rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .table-tags li:hover {
+      text-decoration: underline;
+    }
+
+    .table-tags li.tag-active {
+      background: #eee;
+      border: 1px solid #ddd;
+    }
+
+    .tag-link {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .tag-link:hover {
+      text-decoration: underline;
+    }
+
+    .tag-filter-btn {
+      color: #888;
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      font-size: 0.7rem;
+
+      &:hover {
+        color: #fff;
+        background-color: #000;
+      }
+    }
+
+    .tag-expand-item {
+      display: flex;
+      align-items: center;
+    }
+
+    .tag-expand-btn {
+      color: #888;
+      background: #eee;
+      padding: 0 0.5rem;
+      cursor: pointer;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .table-tags li:hover .tag-filter-btn {
+      opacity: 1;
+    }
+
+    .tag-filter-btn:focus {
+      opacity: 1;
+      outline: 1px solid #0066cc;
+      outline-offset: 1px;
+    }
+
+    .tag-active .tag-filter-btn {
+      opacity: 1;
+      color: #000;
+
+      &:hover {
+        color: #fff;
+        background-color: #000;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .tag-filter-btn {
+        opacity: 1;
+      }
+    }
+
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: #888;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+      margin-right: 0.5rem;
+    }
+
+    .filter-chip button {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0;
+      margin: 0;
+    }
+
+    .filter-chip button:hover {
+      color: #ffe0e0;
+    }
+
+    /* ギャラリー統計 */
+    #gallery-stats {
+      margin: 1rem 0;
+      color: #666;
+    }
+
+    /* フィルタバー */
+    #filter-bar {
+      margin: 1rem 0;
+      padding: 1rem;
+      min-height: 2.5rem;
+      box-sizing: border-box;
+      border-bottom: 1px solid #888;
+    }
+
+    .filter-bar-header {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+
+      #toggle-tags {
+        font-family: "saitamaar";
+        background-color: #ddd;
+        color: #000;
+        cursor: pointer;
+        font-size: 0.9em;
+        white-space: nowrap;
+
+        &::before {
+          content: "[";
+        }
+
+        &::after {
+          content: "]";
+        }
+      }
+
+      #toggle-tags:hover {
+        background-color: #fffef8;
+      }
+
+      #clear-filters {
+        font-family: "saitamaar";
+        background-color: #ddd;
+        color: #000;
+        cursor: pointer;
+        font-size: 0.9em;
+
+        &::before {
+          content: "[";
+        }
+
+        &::after {
+          content: "]";
+        }
+      }
+
+      #clear-filters:hover {
+        background-color: #fff;
+      }
+    }
+
+    #filter-dropdowns {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .dropdown-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .dropdown-row select {
+      font-family: "saitamaar";
+      flex: 1;
+      padding: 0.2rem;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      background-color: white;
+      font-size: 0.9em;
+      max-width: 300px;
+    }
+
+    .dropdown-row select:focus {
+      outline: 2px solid #888;
+      outline-offset: 2px;
+    }
+
+    .dropdown-remove {
+      font-family: "saitamaar";
+      background-color: #888;
+      color: white;
+      border: none;
+      padding: 0.3rem 0.75rem 0.2rem 0.75rem;
+      border-radius: 2px;
+      cursor: pointer;
+      font-size: 0.9em;
+      min-width: 32px;
+    }
+
+    .dropdown-remove:hover {
+      background-color: #888;
+    }
+
+    #add-dropdown {
+      font-family: "saitamaar";
+      background-color: #888;
+      color: white;
+      border: none;
+      padding: 0.1rem 1rem 0.1rem 1rem;
+      border-radius: 2px;
+      cursor: pointer;
+      font-size: 1em;
+      align-self: flex-start;
+    }
+
+    #add-dropdown:hover {
+      background-color: #aaa;
+    }
+
+    #add-dropdown:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* メッセージ表示 */
+    .empty-message {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .no-tags-message {
+      color: #999;
+      font-size: 0.8rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    .error {
+      color: #d32f2f;
+      padding: 1rem;
+      background: #ffebee;
+      border-radius: 4px;
+      margin: 1rem 0;
+    }
+
+    /* コンテナクエリ: カード表示 */
+    @container gallery-container (max-width: 500px) {
+      #gallery-table {
+        display: block;
+        border: none;
+      }
+
+      #gallery-table caption {
+        display: block;
+        text-align: center;
+        padding: 1rem;
+        font-size: 1.2rem;
+      }
+
+      #gallery-table thead {
+        display: none;
+      }
+
+      #gallery-table tbody.work-group {
+        display: block;
+        position: relative;
+        margin-bottom: 1.5rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+      }
+
+      #gallery-table tbody.work-group:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      }
+
+      .work-main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 0.5rem 1rem;
+        padding: 1rem;
+        position: relative;
+      }
+
+      .work-main td,
+      .work-main th[scope="row"] {
+        padding: 0;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+      }
+
+      /* 1行目左：番号 */
+      .work-main td:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+        font-size: 0.9rem;
+        color: #888;
+        font-weight: bold;
+        text-align: left;
+      }
+
+      .work-main td:nth-child(1)::before {
+        content: "[";
+      }
+
+      .work-main td:nth-child(1)::after {
+        content: "]";
+      }
+
+      /* 1行目右：日付 */
+      .work-main td:nth-child(2) {
+        width: auto !important;
+        grid-column: 2;
+        grid-row: 1;
+        font-size: 0.85rem;
+        color: #666;
+        text-align: right;
+      }
+
+      /* 2行目：ID（全幅） */
+      .work-main th[scope="row"] {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        font-size: 1.1rem;
+        font-weight: bold;
+        text-align: left;
+      }
+
+      .work-main th[scope="row"] a {
+        color: #333;
+      }
+
+      /* 3行目左：シリーズ */
+      .work-main td:nth-child(4) {
+        width: max-content !important;
+        grid-column: 1;
+        grid-row: 3;
+        text-align: left !important;
+        
+        a::before {
+          content: "series=";
+        }
+      }
+
+      .work-main td:nth-child(4) a {
+        display: inline-block;
+        background: #f0f0f0;
+        padding: 0 0.5rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        text-decoration: none;
+      }
+
+      .work-tags {
+        display: block !important;
+        border-top: 1px solid #ddd;
+      }
+
+      .work-tags td {
+        display: block;
+        width: 100%;
+        padding: 0 !important;
+        text-align: left !important;
+      }
+
+      .tags-details {
+        padding: 0;
+      }
+
+      /* summary を3行目右側に配置 */
+      .tags-details summary {
+        position: absolute;
+        top: calc(1rem + 0.5rem + 0.9rem + 0.5rem + 1.1rem + 0.5rem);
+        right: 1rem;
+        display: inline-block;
+        float: none;
+        width: auto;
+        padding: 0.1rem 0.5rem;
+        background: #f0f0f0;
+        border-radius: 3px;
+        text-align: right;
+        font-size: 0.85rem;
+        transition: background 0.2s;
+      }
+
+      .tags-details summary:hover {
+        background: #e5e5e5;
+      }
+
+      .tags-details summary::before {
+        content: "タグを--表示";
+      }
+
+      .tags-details summary::after {
+        content: "+";
+        margin-left: 0.25rem;
+      }
+
+      .tags-details[open] summary::before {
+        content: "タグを非表示";
+      }
+
+      .tags-details[open] summary::after {
+        content: "-";
+        margin-left: 0.25rem;
+      }
+
+      .tags-details .table-tags {
+        margin-top: 0;
+        padding: 0.75rem 1rem;
+        background: #fafafa;
+        justify-content: flex-start;
+        width: 83vw;
+      }
+
+      .table-tags li {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="../index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <ol class="breadcrumb">
+            <li><a href="../index.html">100%health</a></li>
+            <li><a href="gallery_main.html">gallery</a></li>
+            <li aria-current="page"><a href="gallery_index.html">gallery_index</a></li>
+          </ol>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <header id="category-header">
+        <nav aria-label="ページカテゴリナビゲーション">
+          <ol class="main-category">
+            <li><a href="/aboutme.html">about</a></li>
+            <li><a href="/gallery/gallery_main.html">gallery</a></li>
+            <li><a href="/works/works_main.html">works</a></li>
+            <li><a href="/txt/txt_main.html">txt</a></li>
+            <li><a href="/links/links_main.html">links</a></li>
+          </ol>
+          <ol class="sub-category">
+            <li><a href="/gallery/gallery_main.html">gallery</a></li>
+            <li><a href="/gallery/gallery_index.html">index</a></li>
+            <li><a href="/gallery/tag-page/tags.html">tags</a></li>
+          </ol>
+        </nav>
+      </header>
+      <div id="galleryspace">
+        <h1 class="title">gallery index</h1>
+        <article>
+          <div id="gallery-stats"></div>
+          <div id="filter-bar">
+            <div class="filter-bar-header">
+              <button id="toggle-tags">全タグを表示</button>
+              <button id="clear-filters">すべてクリア</button>
+            </div>
+            <div id="filter-dropdowns"></div>
+            <button id="add-dropdown">+</button>
+          </div>
+          <div id="gallery-table-container">
+            <table id="gallery-table">
+              <caption>作品一覧インデックス</caption>
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>日付</th>
+                  <th>ID</th>
+                  <th>シリーズ</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </article>
+      </div>
+    </main>
+    <footer id="main-footer">
+      <!-- main.jsから#footerへfooter.htmlの挿入 -->
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <div id="lightbox">
+    <link rel="stylesheet" href="../luminous-basic.min.css">
+    <script src="../Luminous.min.js"></script>
+    <script>
+      new LuminousGallery(document.querySelectorAll('a[href$=jpg],a[href$=png],a[href$=gif],a[href$=webp]'));
+    </script>
+  </div>
+
+  <script>
+    // ギャラリーデータを管理するクラス
+    class GalleryIndex {
+      constructor() {
+        this.allWorks = [];
+        this.filteredWorks = [];
+        this.dataFiles = [
+          { path: '/gallery/data/original.json', key: 'original_series' },
+          { path: '/gallery/data/works.json', key: 'works_series' },
+          { path: '/gallery/data/fanart.json', key: 'fanart_series' },
+          { path: '/gallery/data/commission.json', key: 'commission_series' },
+          { path: '/gallery/data/groundpolis_paint.json', key: 'groundpolis_paint_series' }
+        ];
+      }
+
+      // すべてのJSONファイルを読み込む
+      async loadAllData() {
+        try {
+          const promises = this.dataFiles.map(file =>
+            fetch(file.path)
+              .then(response => {
+                if (!response.ok) throw new Error(`Failed to load ${file.path}`);
+                return response.json();
+              })
+              .then(data => data[file.key] || [])
+              .catch(err => {
+                console.warn(`Could not load ${file.path}:`, err);
+                return [];
+              })
+          );
+
+          const results = await Promise.all(promises);
+          this.allWorks = results.flat();
+          
+          // 古い順でソートして番号を付ける
+          const sortedByDate = [...this.allWorks].sort((a, b) => 
+            new Date(a.date) - new Date(b.date)
+          );
+          sortedByDate.forEach((work, index) => {
+            work.number = index + 1;
+          });
+          
+          this.filteredWorks = [...this.allWorks];
+          
+          console.log(`Loaded ${this.allWorks.length} works`);
+          return this.allWorks;
+        } catch (error) {
+          console.error('Error loading gallery data:', error);
+          throw error;
+        }
+      }
+
+      // フィルタリング
+      filterByCategory(category) {
+        if (category === 'all') {
+          this.filteredWorks = [...this.allWorks];
+        } else {
+          this.filteredWorks = this.allWorks.filter(work => work.series === category);
+        }
+        return this.filteredWorks;
+      }
+
+      // ソート
+      sortWorks(order) {
+        switch (order) {
+          case 'date-desc':
+            this.filteredWorks.sort((a, b) => new Date(b.date) - new Date(a.date));
+            break;
+          case 'date-asc':
+            this.filteredWorks.sort((a, b) => new Date(a.date) - new Date(b.date));
+            break;
+          case 'id':
+            this.filteredWorks.sort((a, b) => a.id.localeCompare(b.id));
+            break;
+        }
+        return this.filteredWorks;
+      }
+
+      // 統計情報を取得
+      getStats() {
+        const seriesCount = {};
+        this.allWorks.forEach(work => {
+          seriesCount[work.series] = (seriesCount[work.series] || 0) + 1;
+        });
+        return {
+          total: this.allWorks.length,
+          filtered: this.filteredWorks.length,
+          seriesCount
+        };
+      }
+    }
+
+    // UIを管理するクラス
+    class GalleryUI {
+      constructor(gallery) {
+        this.gallery = gallery;
+        this.table = document.getElementById('gallery-table');
+        this.statsElement = document.getElementById('gallery-stats');
+        this.filterBar = document.getElementById('filter-bar');
+        this.filterDropdownsContainer = document.getElementById('filter-dropdowns');
+        this.addDropdownBtn = document.getElementById('add-dropdown');
+        this.clearFiltersBtn = document.getElementById('clear-filters');
+        this.toggleTagsBtn = document.getElementById('toggle-tags');
+        this.activeFilters = [];
+        this.showTags = false; // タグの表示状態
+        this.MAX_DROPDOWNS = 5; // 最大ドロップダウン数
+        this.MIN_TAG_COUNT = 3; // タグ表示の最小使用回数
+        this.tagCounts = {}; // タグの使用回数キャッシュ
+        this.minVisibleDropdowns = 1; // 最低限表示するドロップダウン数
+      }
+
+      // イベントリスナーを設定
+      setupEventListeners() {
+        // フィルタクリアボタン
+        this.clearFiltersBtn.addEventListener('click', () => this.clearFilters());
+        
+        // タグ表示トグルボタン
+        this.toggleTagsBtn.addEventListener('click', () => this.toggleTagsVisibility());
+        
+        // ドロップダウン追加ボタン
+        this.addDropdownBtn.addEventListener('click', () => this.addDropdown());
+        
+        // タグフィルタボタン（イベント委譲）
+        this.table.addEventListener('click', (e) => {
+          const filterBtn = e.target.closest('.tag-filter-btn');
+          if (filterBtn) {
+            e.preventDefault();
+            const tag = filterBtn.dataset.tag;
+            this.toggleTagFilter(tag);
+          }
+          
+          // タグ展開ボタン
+          const expandBtn = e.target.closest('.tag-expand-btn');
+          if (expandBtn) {
+            e.preventDefault();
+            this.toggleTagExpansion(expandBtn);
+          }
+        });
+        
+        // 初期URLパラメータからフィルタを読み込み
+        this.loadFiltersFromURL();
+        
+        // ブラウザの戻る/進むボタン対応
+        window.addEventListener('popstate', (e) => {
+          if (e.state && e.state.filters) {
+            this.activeFilters = e.state.filters;
+            this.minVisibleDropdowns = Math.max(1, this.activeFilters.length);
+          } else {
+            this.activeFilters = [];
+            this.minVisibleDropdowns = 1;
+          }
+          this.update();
+        });
+      }
+
+      // URLからフィルタを読み込み
+      loadFiltersFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const tagParam = params.get('tag');
+        if (tagParam) {
+          this.activeFilters = tagParam.split(',').filter(t => t.trim());
+          // URLから復元した場合、フィルタ数分のドロップダウンを表示
+          this.minVisibleDropdowns = Math.max(1, this.activeFilters.length);
+        }
+      }
+
+      // タグフィルタの切り替え
+      toggleTagFilter(tag) {
+        const index = this.activeFilters.indexOf(tag);
+        if (index === -1) {
+          // フィルタに追加
+          this.activeFilters.push(tag);
+        } else {
+          // フィルタから削除
+          this.activeFilters.splice(index, 1);
+        }
+        
+        this.updateURL();
+        this.update();
+      }
+
+      // フィルタをクリア（ドロップダウンを初期状態に戻す）
+      clearFilters() {
+        this.activeFilters = [];
+        this.minVisibleDropdowns = 1; // 初期状態に戻す
+        this.updateURL();
+        this.update();
+      }
+
+      // タグ表示の切り替え
+      toggleTagsVisibility() {
+        this.showTags = !this.showTags;
+        this.applyTagsVisibility();
+      }
+      
+      // タグ展開の切り替え
+      toggleTagExpansion(btn) {
+        const tagsList = btn.closest('.table-tags');
+        const isExpanded = btn.dataset.expanded === 'true';
+        
+        if (isExpanded) {
+          // 折りたたむ
+          tagsList.querySelectorAll('.tag-item.hidden-tag').forEach(tag => {
+            tag.style.display = 'none';
+          });
+          btn.textContent = btn.dataset.collapsedText;
+          btn.dataset.expanded = 'false';
+        } else {
+          // 展開する
+          tagsList.querySelectorAll('.tag-item.hidden-tag').forEach(tag => {
+            tag.style.display = 'flex';
+          });
+          btn.textContent = '[−]';
+          btn.dataset.expanded = 'true';
+        }
+      }
+
+      // タグの表示状態を適用（フィルタリングとは独立）
+      applyTagsVisibility() {
+        const detailsElements = this.table.querySelectorAll('.tags-details');
+        
+        detailsElements.forEach(details => {
+          details.open = this.showTags;
+        });
+        
+        // ボタンのテキストを更新
+        this.toggleTagsBtn.textContent = this.showTags ? '全タグ非表示' : '全タグを表示';
+      }
+
+      // URLを更新（History API）
+      updateURL() {
+        const url = new URL(window.location);
+        
+        if (this.activeFilters.length > 0) {
+          url.searchParams.set('tag', this.activeFilters.join(','));
+        } else {
+          url.searchParams.delete('tag');
+        }
+        
+        history.pushState(
+          { filters: this.activeFilters }, 
+          '', 
+          url
+        );
+      }
+
+      // 表示を更新
+      update() {
+        // 最初にタグカウントを計算（renderWorksで使用するため）
+        this.getAllUniqueTags();
+        
+        this.gallery.filterByCategory('all'); // すべて表示
+        
+        // タグフィルタを適用
+        if (this.activeFilters.length > 0) {
+          this.gallery.filteredWorks = this.gallery.filteredWorks.filter(work => {
+            // AND条件: すべてのフィルタタグを持つ作品を表示
+            return this.activeFilters.every(filterTag => 
+              work.tags && work.tags.includes(filterTag)
+            );
+          });
+        }
+        
+        this.gallery.sortWorks('date-desc'); // 常に新しい順
+
+        this.renderWorks();
+        this.renderStats();
+        this.renderDropdowns();
+        
+        // タグの表示状態を再適用（フィルタリングとは独立）
+        this.applyTagsVisibility();
+      }
+
+      // 全ユニークタグを取得（出現回数順）
+      getAllUniqueTags() {
+        this.tagCounts = {}; // キャッシュをリセット
+        
+        // 全作品からタグをカウント
+        this.gallery.allWorks.forEach(work => {
+          if (work.tags) {
+            work.tags.forEach(tag => {
+              this.tagCounts[tag] = (this.tagCounts[tag] || 0) + 1;
+            });
+          }
+        });
+        
+        // タグを出現回数順にソート（多い順）
+        return Object.entries(this.tagCounts)
+          .sort((a, b) => b[1] - a[1])
+          .map(([tag, count]) => ({ tag, count }));
+      }
+      
+      // ドロップダウンを描画
+      renderDropdowns() {
+        const allTags = this.getAllUniqueTags();
+        
+        // 表示するドロップダウンの数を決定（activeFiltersとminVisibleDropdownsの大きい方）
+        const dropdownCount = Math.max(this.minVisibleDropdowns, this.activeFilters.length);
+        
+        // コンテナをクリア
+        this.filterDropdownsContainer.innerHTML = '';
+        
+        // ドロップダウンを生成
+        for (let i = 0; i < dropdownCount; i++) {
+          const selectedTag = this.activeFilters[i] || '';
+          this.createDropdownRow(i, selectedTag, allTags);
+        }
+        
+        // +ボタンの有効/無効を更新
+        this.updateAddButtonState();
+      }
+      
+      // ドロップダウン行を作成
+      createDropdownRow(index, selectedTag, allTags) {
+        const row = document.createElement('div');
+        row.className = 'dropdown-row';
+        row.dataset.index = index;
+        
+        // ドロップダウンを作成
+        const select = document.createElement('select');
+        
+        // 空のオプション
+        const emptyOption = document.createElement('option');
+        emptyOption.value = '';
+        emptyOption.textContent = 'タグを選択...';
+        select.appendChild(emptyOption);
+        
+        // タグのオプション
+        allTags.forEach(({ tag, count }) => {
+          const option = document.createElement('option');
+          option.value = tag;
+          option.textContent = `${tag} (${count})`;
+          if (tag === selectedTag) {
+            option.selected = true;
+          }
+          select.appendChild(option);
+        });
+        
+        // ドロップダウン変更イベント
+        select.addEventListener('change', () => {
+          this.onDropdownChange(index, select.value);
+        });
+        
+        // 削除ボタン
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'dropdown-remove';
+        removeBtn.textContent = '×';
+        removeBtn.addEventListener('click', () => {
+          this.removeDropdown(index);
+        });
+        
+        row.appendChild(select);
+        row.appendChild(removeBtn);
+        this.filterDropdownsContainer.appendChild(row);
+      }
+      
+      // ドロップダウンの値が変更されたとき
+      onDropdownChange(index, newValue) {
+        // 現在のフィルタを更新
+        if (newValue) {
+          // 値が選択された場合
+          if (index < this.activeFilters.length) {
+            // 既存のフィルタを更新
+            this.activeFilters[index] = newValue;
+          } else {
+            // 新しいフィルタを追加
+            this.activeFilters.push(newValue);
+          }
+        } else {
+          // 空に戻された場合
+          if (index < this.activeFilters.length) {
+            this.activeFilters.splice(index, 1);
+          }
+        }
+        
+        this.updateURL();
+        this.update();
+      }
+      
+      // ドロップダウンを追加
+      addDropdown() {
+        const currentCount = Math.max(this.minVisibleDropdowns, this.activeFilters.length);
+        
+        if (currentCount >= this.MAX_DROPDOWNS) {
+          return; // 最大数に達している
+        }
+        
+        // 最低限表示するドロップダウン数を増やす
+        this.minVisibleDropdowns = currentCount + 1;
+        
+        // 再描画
+        this.renderDropdowns();
+        
+        // 追加後、新しいドロップダウンにフォーカス
+        const dropdowns = this.filterDropdownsContainer.querySelectorAll('select');
+        if (dropdowns.length > 0) {
+          dropdowns[dropdowns.length - 1].focus();
+        }
+      }
+      
+      // ドロップダウンを削除
+      removeDropdown(index) {
+        const currentCount = Math.max(this.minVisibleDropdowns, this.activeFilters.length);
+        
+        // 最後の1つの場合、空のドロップダウンにリセット
+        if (currentCount <= 1) {
+          this.activeFilters = [];
+          this.minVisibleDropdowns = 1;
+          this.updateURL();
+          this.update();
+          return;
+        }
+        
+        // 指定されたインデックスのフィルタを削除
+        if (index < this.activeFilters.length) {
+          this.activeFilters.splice(index, 1);
+        }
+        
+        // minVisibleDropdownsを調整（削除後のドロップダウン数を維持）
+        this.minVisibleDropdowns = Math.max(1, currentCount - 1);
+        
+        this.updateURL();
+        this.update();
+      }
+      
+      // +ボタンの状態を更新
+      updateAddButtonState() {
+        const currentCount = this.filterDropdownsContainer.querySelectorAll('.dropdown-row').length;
+        if (currentCount >= this.MAX_DROPDOWNS) {
+          this.addDropdownBtn.disabled = true;
+        } else {
+          this.addDropdownBtn.disabled = false;
+        }
+      }
+
+      // 作品一覧を描画
+      renderWorks() {
+        const works = this.gallery.filteredWorks;
+        
+        // 既存のtbodyをすべて削除
+        const existingTbodies = this.table.querySelectorAll('tbody');
+        existingTbodies.forEach(tbody => tbody.remove());
+        
+        if (works.length === 0) {
+          const emptyTbody = document.createElement('tbody');
+          emptyTbody.innerHTML = '<tr><td colspan="4" class="empty-message">作品が見つかりませんでした</td></tr>';
+          this.table.appendChild(emptyTbody);
+          return;
+        }
+
+        // 各作品のtbodyを追加
+        const fragment = document.createDocumentFragment();
+        works.forEach(work => {
+          const tbody = document.createElement('tbody');
+          tbody.className = 'work-group';
+          tbody.innerHTML = this.createWorkRowContent(work);
+          fragment.appendChild(tbody);
+        });
+        this.table.appendChild(fragment);
+      }
+
+      // 作品行の内容を生成（tbodyタグは含まない）
+      createWorkRowContent(work) {
+        // タグを登録数順にソート（多い順）
+        const sortedTags = work.tags ? [...work.tags].sort((a, b) => {
+          const countA = this.tagCounts[a] || 0;
+          const countB = this.tagCounts[b] || 0;
+          return countB - countA; // 多い順
+        }) : [];
+        let tagsHtml;
+        
+        if (sortedTags && sortedTags.length > 0) {
+          // タグを「表示」と「省略」に分類
+          const visibleTags = [];
+          const hiddenTags = [];
+          
+          sortedTags.forEach(tag => {
+            const count = this.tagCounts[tag] || 0;
+            if (count >= this.MIN_TAG_COUNT) {
+              visibleTags.push(tag);
+            } else {
+              hiddenTags.push(tag);
+            }
+          });
+          
+          // タグアイテムを生成
+          const createTagItem = (tag, isHidden = false) => {
+            const tagPageUrl = `/gallery/tag-page/${this.escapeHtml(tag)}.html`;
+            const isActive = this.activeFilters.includes(tag) ? ' tag-active' : '';
+            const filterIcon = this.activeFilters.includes(tag) ? '✕' : '⊕';
+            const hiddenClass = isHidden ? ' hidden-tag' : '';
+            const hiddenStyle = isHidden ? ' style="display: none;"' : '';
+            
+            return `<li class="tag-item${isActive}${hiddenClass}" data-tag="${this.escapeHtml(tag)}"${hiddenStyle}>
+              <a href="${tagPageUrl}" class="tag-link">${this.escapeHtml(tag)}</a>
+              <button class="tag-filter-btn" data-tag="${this.escapeHtml(tag)}" aria-label="${this.escapeHtml(tag)}タグでフィルタ" title="このタグでフィルタリング">
+                <span class="filter-icon">${filterIcon}</span>
+              </button>
+            </li>`;
+          };
+          
+          // 表示するタグ
+          const visibleTagItems = visibleTags.map(tag => createTagItem(tag, false)).join('');
+          
+          // 省略されたタグ
+          const hiddenTagItems = hiddenTags.map(tag => createTagItem(tag, true)).join('');
+          
+          // 展開ボタン
+          let expandBtn = '';
+          if (hiddenTags.length > 0) {
+            expandBtn = `<li class="tag-expand-item">
+              <button class="tag-expand-btn" data-expanded="false" data-collapsed-text="[+${hiddenTags.length}]" title="${hiddenTags.length}個の省略されたタグを表示">[+${hiddenTags.length}]</button>
+            </li>`;
+          }
+          
+          tagsHtml = `<ul class="table-tags">${visibleTagItems}${hiddenTagItems}${expandBtn}</ul>`;
+        } else {
+          tagsHtml = '<span class="no-tags-message">タグなし</span>';
+        }
+
+        // シリーズのタグページへのリンクを生成
+        const seriesLink = `/gallery/tag-page/${this.escapeHtml(work.series)}.html`;
+
+        // 番号を3桁にパディング
+        const paddedNumber = work.number ? String(work.number).padStart(3, '0') : '';
+        
+        return `
+          <tr class="work-main">
+            <td>${paddedNumber}</td>
+            <td><time datetime="${this.escapeHtml(work.date)}">${this.formatDate(work.date)}</time></td>
+            <th scope="row"><a href="${this.escapeHtml(work.path)}">${this.escapeHtml(work.id)}</a></th>
+            <td><a href="${seriesLink}"><span class="table-series-badge">${this.escapeHtml(work.series)}</span></a></td>
+          </tr>
+          <tr class="work-tags">
+            <td colspan="4">
+              <details class="tags-details">
+                <summary></summary>
+                ${tagsHtml}
+              </details>
+            </td>
+          </tr>
+        `;
+      }
+
+      // 統計情報を描画
+      renderStats() {
+        const stats = this.gallery.getStats();
+        
+        if (this.activeFilters.length > 0) {
+          this.statsElement.innerHTML = `
+            全体: <strong>${stats.total}</strong> 作品 / フィルタ結果: <strong>${stats.filtered}</strong> 作品
+          `;
+        } else {
+          this.statsElement.innerHTML = `
+            全体: <strong>${stats.total}</strong> 作品
+          `;
+        }
+      }
+
+      // ローディング表示
+      showLoading() {
+        // 既存のtbodyをすべて削除
+        const existingTbodies = this.table.querySelectorAll('tbody');
+        existingTbodies.forEach(tbody => tbody.remove());
+        
+        const loadingTbody = document.createElement('tbody');
+        loadingTbody.innerHTML = '<tr><td colspan="4" class="loading">読み込み中...</td></tr>';
+        this.table.appendChild(loadingTbody);
+      }
+
+      // エラー表示
+      showError(message) {
+        // 既存のtbodyをすべて削除
+        const existingTbodies = this.table.querySelectorAll('tbody');
+        existingTbodies.forEach(tbody => tbody.remove());
+        
+        const errorTbody = document.createElement('tbody');
+        errorTbody.innerHTML = `<tr><td colspan="4" class="error">エラー: ${this.escapeHtml(message)}</td></tr>`;
+        this.table.appendChild(errorTbody);
+      }
+
+      // HTMLエスケープ
+      escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // 日付フォーマット
+      formatDate(dateStr) {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('ja-JP', { 
+          year: 'numeric', 
+          month: '2-digit', 
+          day: '2-digit' 
+        });
+      }
+    }
+
+    // 初期化
+    document.addEventListener('DOMContentLoaded', async () => {
+      const gallery = new GalleryIndex();
+      const ui = new GalleryUI(gallery);
+
+      ui.showLoading();
+      ui.setupEventListeners();
+
+      try {
+        await gallery.loadAllData();
+        ui.update();
+      } catch (error) {
+        ui.showError('ギャラリーデータの読み込みに失敗しました');
+        console.error('Gallery initialization error:', error);
+      }
+    });
+  </script>
+</body>
+
+</html>

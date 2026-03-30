@@ -1,3 +1,19 @@
+@font-face {
+	font-family: "UDEV Gothic HSNFLG";
+	src: url("/txt/UDEVGothicHSNFLG-Regular.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "UDEV Gothic HSNFLG";
+	src: url("/txt/UDEVGothicHSNFLG-Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
 #texthtml {
 	padding-left: 6.3em;
 	text-indent: -6.3em;
@@ -17,6 +33,10 @@ h3 {
 	border-bottom: 2px dotted;
 	margin-left: 20px;
 	margin-bottom: 1em;
+
+	a {
+		padding-left: 2px;
+	}
 }
 
 img {
@@ -27,6 +47,10 @@ img {
 	img {
 		image-rendering: pixelated!important;
 	}
+}
+
+.daily-article > div {
+	font-family: "UDEV Gothic HSNFLG", sans-serif;
 }
 
 article {
@@ -47,9 +71,9 @@ article {
 
 		&::before {
 			content: "¶";
+			color: black;
+			opacity: 0.2;
 			font-size: 1.1em;
-			vertical-align: middle;
-			margin-right: 0.1em;
 		}
 
 		&::first-line {
@@ -123,15 +147,15 @@ article {
 
 	hr {
 		border: none;
-		text-align: center;
-		font-size: 1em;
-		margin-right: 40px;
+		font-size: 1.5em;
+		color: #888;
 	}
 
 	hr::before {
+		display: flex;
+		justify-content: center;
 		content: "*****";
-		letter-spacing: 1em;
-		padding-left: 1em;
+		letter-spacing: 2em;
 	}
 
 	a {
@@ -196,12 +220,12 @@ article {
 			margin-right: 5px;
 		}
 
-		hr {
-			margin-right: 20px;
-		}
-
 		iframe {
 			width: 100%;
+		}
+
+		hr {
+			margin-left: 20px;
 		}
 	}
 }
@@ -265,7 +289,7 @@ article {
 		}
 
 		hr {
-			margin-right: 0;
+			margin-right: -14px;
 		}
 	}
 }

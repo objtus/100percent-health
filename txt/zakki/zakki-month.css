@@ -1,3 +1,19 @@
+@font-face {
+	font-family: "UDEV Gothic HSNFLG";
+	src: url("/txt/UDEVGothicHSNFLG-Regular.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "UDEV Gothic HSNFLG";
+	src: url("/txt/UDEVGothicHSNFLG-Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
 #texthtml {
 	padding-left: 6.3em;
 	text-indent: -6.3em;
@@ -10,6 +26,10 @@
 	}
 }
 
+h2 a {
+	padding-left: 1px;
+}
+
 h3 {
 	font-size: 14pt;
 	padding-left: 10px;
@@ -17,6 +37,14 @@ h3 {
 	border-bottom: 2px dotted;
 	margin-left: 20px;
 	margin-bottom: 1em;
+
+	a {
+		padding-left: 2px;
+	}
+}
+
+.daily-article > div > *:not(.article-ellipsis) {
+	font-family: "UDEV Gothic HSNFLG", sans-serif;
 }
 
 article {
@@ -88,14 +116,16 @@ article {
 
 	hr {
 		border: none;
-		text-align: center;
-		font-size: 1em;
+		font-size: 1.5em;
+		color: #888;
+		margin-left: 56px;
 	}
 
 	hr::before {
+		display: flex;
+		justify-content: center;
 		content: "*****";
-		letter-spacing: 1em;
-		padding-left: 1em;
+		letter-spacing: 2em;
 	}
 
 	h4 {
@@ -150,8 +180,6 @@ article {
 	
 	article {
 		padding-bottom: 50px;
-		border-top: 1px dotted;
-		border-bottom: 1px dotted;
 		margin-bottom: 5px;
 
 		h3 {
@@ -173,7 +201,11 @@ article {
 		}
 
 		hr {
-			margin-right: 0;
+			margin-right: 35px;
+
+			&::before {
+				letter-spacing: 1em;
+			}
 		}
 	}
 }
@@ -255,6 +287,18 @@ article {
 
 /* スマホサイズ */
 @media screen and (width <= 576px) {
+	.daily-article {
+		background-image: none;
+	}
+
+	.article-preview {
+		margin: 0;
+
+		h4 {
+			padding-top: 0;
+		}
+	}
+
 	#zakkizone {
 		.monthlist {
 			font-size: 0.8rem;

@@ -2363,8 +2363,8 @@ class MisskeyAdapter extends BaseSNSAdapter {
             body: JSON.stringify({
                 userId: userInfo.id,
                 limit: apiLimit,
-                includeReplies: this.config.includeReplies,
-                includeMyRenotes: this.config.includeReblogs
+                withReplies: this.config.includeReplies,
+                withRenotes: this.config.includeReblogs
             })
         });
         
@@ -2458,8 +2458,8 @@ class MisskeyAdapter extends BaseSNSAdapter {
             body: JSON.stringify({
                 userId: userInfo.id,
                 limit: apiLimit,
-                includeReplies: this.config.includeReplies,
-                includeMyRenotes: this.config.includeReblogs
+                withReplies: this.config.includeReplies,
+                withRenotes: this.config.includeReblogs
             })
         });
         
@@ -2493,8 +2493,8 @@ class MisskeyAdapter extends BaseSNSAdapter {
                 body: JSON.stringify({
                     userId: userInfo.id,
                     limit: apiLimit,
-                    includeReplies: this.config.includeReplies,
-                    includeMyRenotes: this.config.includeReblogs
+                    withReplies: this.config.includeReplies,
+                    withRenotes: this.config.includeReblogs
                 })
             });
             

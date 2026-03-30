@@ -62,7 +62,7 @@
     .profile-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12pt;
+      font-size: 0.95rem;
   
       th {
         position: relative;
@@ -143,34 +143,6 @@
       background-color: transparent;
       opacity: 1;
     }
-
-    /* 外部リンクアイコンのスタイル */
-    a[href^="http"]::after {
-      content: '';
-      display: inline-block;
-      background-image: url(/external_link-icon1x2.png);
-      image-rendering: auto;
-      margin-left: 3px;
-      vertical-align: middle;
-      transform: translateY(-2px);
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: inherit;
-    }
-    
-    #galleryspace a[href^="http"]::after {
-      width: 12px;
-      height: 20px;
-    }
-    
-    #footerhtml a[href^="http"]::after {
-      width: 10px;
-      height: 14px;
-    }
-    
-    a[href^="http"]:hover::after {
-      filter: invert(1);
-    }
   
     div#site_introduction,
     table.profile-table {
@@ -217,13 +189,10 @@
       }
 
       .table-wrapper {
-        margin-right: 0;
+        margin: 0 30px;
       }
 
       .service-table {
-        margin-left: 0;
-        width: auto;
-
         th,
         td {
           padding: 0 1px;
@@ -287,7 +256,7 @@
       <header id="category-header">
         <nav aria-label="ページカテゴリナビゲーション">
           <ol class="sub-category">
-            <li><a href="/aboutme.html">about_me</a></li>
+            <li><a href="/aboutme.html">about</a></li>
             <li><a href="/txt/profile.html">profile</a></li>
             <li><a href="/txt/100phealth_introduction.html">introduction</a></li>  
           </ol>
@@ -305,10 +274,14 @@
         <h1 class="title">プロフィールのページ</h1>
         <section id="profile">
           <h2 id="profile_header" class="highlight">前略プロフィール <a href="#profile" class="header-link">§</a></h2>
-            <div style="text-align: center;">
-              <img style="width: 360px;height: auto;user-select: none;-webkit-user-drag: none;" src="/img/idoko-profile.webp" alt="いど子のプロフィール画像" width="360" height="360">
-              <cite style="display: inline;;font-size: small;">from:<a href="https://wiki.sushi.ski/ja/%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC/idoko" target="_blank">すしすきーwiki</a></cite>
-            </div>
+            <figure>
+              <div style="text-align: center;">
+                <img style="width: 360px;height: auto;user-select: none;-webkit-user-drag: none;" src="/img/idoko-profile.webp" alt="いど子のプロフィール画像" width="360" height="360">
+              </div>
+              <figcaption>
+                <cite style="display: inline;;font-size: small;">from:<a href="https://wiki.sushi.ski/ja/%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC/idoko" target="_blank">すしすきーwiki</a></cite>
+              </figcaption>
+            </figure>
             <table class="profile-table" aria-label="プロフィール情報">
               <tbody>
                 <tr>
