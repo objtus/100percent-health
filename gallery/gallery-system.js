@@ -690,8 +690,19 @@ class RelatedWorksManager {
         const periodInfo = document.querySelector('[data-period-info]');
         if (periodInfo) {
             const year = this.getYearFromDate(this.currentData.date);
-            periodInfo.textContent = `${year}年制作`;
-            galleryConfig.debugLog(`Updated period info: ${year}年制作`);
+            periodInfo.replaceChildren();
+            periodInfo.appendChild(document.createTextNode(' '));
+            if (/^\d{4}$/.test(year)) {
+                const yearLink = document.createElement('a');
+                yearLink.href = `/gallery/tag-page/${year}.html`;
+                yearLink.textContent = `#${year}`;
+                periodInfo.appendChild(yearLink);
+                periodInfo.appendChild(document.createTextNode(' 年制作'));
+                galleryConfig.debugLog(`Updated period info: #${year} → /gallery/tag-page/${year}.html`);
+            } else {
+                periodInfo.appendChild(document.createTextNode(`#${year} 年制作`));
+                galleryConfig.debugLog(`Updated period info: #${year} 年制作 (no year tag link)`);
+            }
         }
 
         const topTags = this.getTopTwoFrequentTags(this.currentData, this.allData);
