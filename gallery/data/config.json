@@ -34,6 +34,12 @@
       "displayName": "groundpolis_paint",
       "galleryPath": "gallery/image-page/groundpolis_paint.html",
       "tagPath": "gallery/tag-page/"
+    },
+    "rakugaki_pao": {
+      "dataPath": "data/rakugaki_pao.json",
+      "displayName": "rakugaki_pao",
+      "galleryPath": "gallery/image-page/rakugaki_pao.html",
+      "tagPath": "gallery/tag-page/"
     }
   },
   "ui": {
@@ -52,7 +58,7 @@
   "tags": {
     "excludeFromDisplay": [],
     "priorityTags": ["1girl", "2girl", "original_character"],
-    "seriesTags": ["fanart", "original", "works", "commission"] 
+    "seriesTags": ["fanart", "original", "works", "commission", "rakugaki_pao"] 
   },
   "paths": {
     "imageBase": "/img/",
