@@ -20,7 +20,7 @@
       --graph-img-bg: light-dark(#eee, #333);
       --graph-fg: light-dark(#111, #eaeaea);
       --graph-muted: #888;
-      --graph-accent: light-dark(#00c, #6ae);
+      --graph-accent: light-dark(rgb(0, 0, 255), #6ae);
       --graph-accent-on: light-dark(#fff, #111);
       --graph-panel-border: light-dark(#ddd, #555);
       --graph-node-tag-hl-fill: light-dark(#dde8f8, #2a3440);
@@ -61,20 +61,18 @@
       gap: 0.5rem 1rem;
       padding: 0.5rem 0.85rem;
       border-bottom: 1px solid var(--graph-panel-border);
-      background: light-dark(#fafafa, #252525);
+      background: light-dark(var(--graph-bg-panel), #252525);
     }
 
     #graph-toolbar .graph-toolbar-title {
       font-size: 0.72rem;
       font-weight: normal;
-      color: var(--graph-muted);
       text-transform: none;
       letter-spacing: normal;
     }
 
     #graph-stats {
       font-size: 0.72rem;
-      color: var(--graph-muted);
     }
 
     #graph-sidebar-toggle {
@@ -108,12 +106,16 @@
       flex-direction: column;
       gap: 14px;
       scrollbar-width: thin;
+
+      h2 {
+        padding-top: 0;
+      }
     }
 
-    /* シリーズ（左列・縦結合）| タグで絞る（右列・縦結合） */
+    /* 左: プレビュー(2行ぶん) | 右: タグで絞る / シリーズ */
     .graph-sidebar-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
       grid-template-rows: auto auto;
       gap: 12px 16px;
       align-items: stretch;
@@ -124,24 +126,116 @@
       min-width: 0;
     }
 
-    .graph-sidebar-panel--series {
+    .graph-sidebar-preview {
       grid-column: 1;
       grid-row: 1 / span 2;
       align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+      margin: 0;
       border-inline-end: 1px solid var(--graph-panel-border);
       padding-inline-end: 12px;
     }
 
+    #graph-detail-placeholder {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      gap: 0;
+    }
+
+    #graph-detail-placeholder[hidden] {
+      display: none !important;
+    }
+
+    .graph-detail-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    /* サムネ枠 — 選択時画像も未選択設計図も同サイズ・同枠線 */
+
+    .graph-detail-thumb {
+      width: 100%;
+      aspect-ratio: 1;
+      min-height: 7rem;
+      box-sizing: border-box;
+      border: 1px solid #555;
+      overflow: hidden;
+    }
+
+    .graph-detail-thumb--blueprint {
+      position: relative;
+      padding: 0;
+      display: block;
+    }
+
+    .graph-blueprint-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .graph-detail-thumb--image {
+      display: grid;
+      place-items: center;
+      padding: 0;
+    }
+
+    #graph-detail-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      vertical-align: bottom;
+      image-rendering: auto;
+      display: block;
+    }
+
+    /* 詳細／プレースホルダ本文 — 共通カード */
+
+    .graph-detail-body {
+      border: 1px solid #555;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .graph-detail-body--empty {
+      gap: 0;
+    }
+
+    .graph-detail-hint {
+      margin: 0;
+      font-size: 0.62rem;
+      line-height: 1.5;
+    }
+
     .graph-sidebar-panel--tags {
       grid-column: 2;
-      grid-row: 1 / span 2;
-      align-self: stretch;
+      grid-row: 1;
+      align-self: start;
       display: flex;
       flex-direction: column;
       gap: 6px;
       min-height: 0;
       border-inline-start: none;
       padding-inline-start: 0;
+      border-bottom: 1px solid var(--graph-panel-border);
+      padding-bottom: 12px;
+    }
+
+    .graph-sidebar-panel--series {
+      grid-column: 2;
+      grid-row: 2;
+      align-self: start;
     }
 
     .graph-sidebar-panel--tags h2 {
@@ -193,15 +287,25 @@
         gap: 14px;
       }
 
+      .graph-sidebar-preview,
       .graph-sidebar-panel--series,
       .graph-sidebar-panel--tags {
         grid-column: 1;
         grid-row: auto;
       }
 
-      .graph-sidebar-panel--series {
+      .graph-sidebar-preview {
         border-inline-end: none;
         padding-inline-end: 0;
+      }
+
+      .graph-detail-thumb {
+        min-height: 5.5rem;
+      }
+
+      .graph-sidebar-panel--tags {
+        border-bottom: 1px solid var(--graph-panel-border);
+        padding-bottom: 12px;
       }
 
       .graph-sidebar-panel--tags .filter-tags {
@@ -235,8 +339,7 @@
       font-weight: normal;
       letter-spacing: normal;
       text-transform: none;
-      color: var(--graph-muted);
-      margin-bottom: 6px;
+      margin-bottom: 2px;
     }
 
     #graph-app .sidebar-section small {
@@ -274,35 +377,29 @@
     }
 
     #graph-detail-panel {
-      background: light-dark(#fff, #333);
-      border: 1px solid var(--graph-panel-border);
-      border-radius: 3px;
-      padding: 10px;
+      flex: 1 1 auto;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
       display: none;
     }
 
-    #graph-detail-panel.visible { display: block; }
-
-    #graph-detail-img {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: contain;
-      background: var(--graph-img-bg);
-      margin-bottom: 8px;
-      image-rendering: auto;
+    #graph-detail-panel.visible {
+      display: flex;
+      flex-direction: column;
     }
 
     #graph-detail-id {
-      font-size: 0.65rem;
-      color: var(--graph-accent);
-      margin-bottom: 4px;
       word-break: break-all;
     }
 
     #graph-detail-date {
       font-size: 0.65rem;
       color: var(--graph-muted);
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     #graph-detail-tags {
@@ -454,7 +551,6 @@
       font-family: var(--graph-font);
       background: none;
       border: none;
-      color: var(--graph-muted);
       font-size: 0.72rem;
       padding: 3px 0;
       cursor: pointer;
@@ -466,7 +562,6 @@
       transition: color 0.15s;
     }
 
-    #graph-app .series-btn:hover { color: var(--graph-fg); }
 
     #graph-app .series-btn.active {
       color: var(--graph-accent);
@@ -544,12 +639,43 @@
             <svg id="graph-svg" role="img" aria-label="作品とタグのネットワーク"></svg>
           </div>
 
-          <aside id="graph-sidebar" aria-label="シリーズ・タグ・詳細パネル">
+          <aside id="graph-sidebar" aria-label="プレビュー・シリーズ・タグ">
             <div class="graph-sidebar-grid">
-              <section class="graph-sidebar-panel graph-sidebar-panel--series sidebar-section" aria-labelledby="graph-series-heading">
-                <h2 id="graph-series-heading">シリーズ <small lang="en">series</small></h2>
-                <div id="graph-series-filters" class="series-filters"></div>
-              </section>
+              <div id="graph-sidebar-preview" class="graph-sidebar-preview sidebar-section" aria-labelledby="graph-preview-heading">
+                <h2 id="graph-preview-heading">プレビュー <small lang="en">preview</small></h2>
+                <div id="graph-detail-placeholder">
+                  <div class="graph-detail-stack">
+                    <div class="graph-detail-thumb graph-detail-thumb--blueprint" aria-hidden="true">
+                      <svg class="graph-blueprint-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                        <g fill="none" stroke="currentColor">
+                          <line vector-effect="non-scaling-stroke" x1="0" y1="0" x2="50" y2="50" stroke-width="0.25" opacity="1" />
+                          <line vector-effect="non-scaling-stroke" x1="100" y1="0" x2="50" y2="50" stroke-width="0.25" opacity="1" />
+                          <line vector-effect="non-scaling-stroke" x1="0" y1="100" x2="50" y2="50" stroke-width="0.25" opacity="1" />
+                          <line vector-effect="non-scaling-stroke" x1="100" y1="100" x2="50" y2="50" stroke-width="0.25" opacity="1" />
+                        </g>
+                      </svg>
+                    </div>
+                    <div class="graph-detail-body graph-detail-body--empty">
+                      <p class="graph-detail-hint">
+                        グラフのイラストをクリックすると、ここに画像と詳細が表示されます。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div id="graph-detail-panel">
+                  <div class="graph-detail-stack">
+                    <div class="graph-detail-thumb graph-detail-thumb--image">
+                      <img id="graph-detail-img" src="" alt="">
+                    </div>
+                    <div class="graph-detail-body graph-detail-body--filled">
+                      <div id="graph-detail-id"></div>
+                      <div id="graph-detail-date"></div>
+                      <div id="graph-detail-tags"></div>
+                      <a id="graph-detail-link" href="#" target="_blank" rel="noopener noreferrer">ページを開く →</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <section class="graph-sidebar-panel graph-sidebar-panel--tags sidebar-section" aria-labelledby="graph-tags-heading">
                 <h2 id="graph-tags-heading">
@@ -557,14 +683,11 @@
                 </h2>
                 <div id="graph-tag-filters" class="filter-tags"></div>
               </section>
-            </div>
 
-            <div id="graph-detail-panel">
-              <img id="graph-detail-img" src="" alt="">
-              <div id="graph-detail-id"></div>
-              <div id="graph-detail-date"></div>
-              <div id="graph-detail-tags"></div>
-              <a id="graph-detail-link" href="#" target="_blank" rel="noopener noreferrer">ページを開く →</a>
+              <section class="graph-sidebar-panel graph-sidebar-panel--series sidebar-section" aria-labelledby="graph-series-heading">
+                <h2 id="graph-series-heading">シリーズ <small lang="en">series</small></h2>
+                <div id="graph-series-filters" class="series-filters"></div>
+              </section>
             </div>
           </aside>
         </div>
@@ -620,7 +743,7 @@ function debounce(fn, ms) {
 
 const graphAppEl = document.getElementById('graph-app');
 const sidebarToggleEl = document.getElementById('graph-sidebar-toggle');
-const mqSidebarCollapse = window.matchMedia('(max-width: 768px)');
+const mqSidebarCollapse = window.matchMedia('(max-width: 576px)');
 
 function applySidebarBreakpointLayout() {
   if (mqSidebarCollapse.matches) {
@@ -839,26 +962,35 @@ function resetHL() {
 }
 
 function showDetail(art) {
+  const placeholder = document.getElementById('graph-detail-placeholder');
+  const previewEl = document.getElementById('graph-sidebar-preview');
   const base = 'https://yuinoid.neocities.org';
-  document.getElementById('graph-detail-img').src = base + art.image_path.replace('../../', '/');
+  const img = document.getElementById('graph-detail-img');
+  img.alt = art.id ? `thumbnail: ${art.id}` : '';
+  img.src = base + art.image_path.replace('../../', '/');
   document.getElementById('graph-detail-id').textContent = art.id;
   document.getElementById('graph-detail-date').textContent = art.date;
   document.getElementById('graph-detail-link').href = base + art.path;
   document.getElementById('graph-detail-tags').innerHTML =
     art.tags.map(t => `<span class="detail-tag">#${t}</span>`).join('');
+  if (placeholder) placeholder.hidden = true;
   document.getElementById('graph-detail-panel').classList.add('visible');
   if (mqSidebarCollapse.matches) {
     graphAppEl.classList.add('graph-app--sidebar-open');
     sidebarToggleEl.setAttribute('aria-expanded', 'true');
     requestAnimationFrame(() => {
-      const panel = document.getElementById('graph-detail-panel');
-      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (previewEl) previewEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
   }
 }
 
 function hideDetail() {
+  const placeholder = document.getElementById('graph-detail-placeholder');
+  const img = document.getElementById('graph-detail-img');
+  img.removeAttribute('src');
+  img.alt = '';
   document.getElementById('graph-detail-panel').classList.remove('visible');
+  if (placeholder) placeholder.hidden = false;
 }
 
 function buildTagFilters(artworks) {
