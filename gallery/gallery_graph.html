@@ -544,28 +544,48 @@
     #graph-app .series-filters {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      flex-wrap: wrap;
+      gap: 4px;
     }
 
     #graph-app .series-btn {
       font-family: var(--graph-font);
-      background: none;
-      border: none;
-      font-size: 0.72rem;
-      padding: 3px 0;
+      background: light-dark(#fff, #333);
+      border: 1px solid var(--graph-panel-border);
+      color: var(--graph-fg);
+      border-radius: 3px;
+      font-size: 0.65rem;
+      padding: 2px 6px;
       cursor: pointer;
-      text-align: left;
-      border-radius: 2px;
-      display: flex;
+      text-align: center;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      transition: color 0.15s;
+      gap: 5px;
+      max-width: 100%;
+      line-height: 1.35;
     }
 
+    #graph-app .series-btn:hover {
+      border-color: var(--graph-accent);
+      color: var(--graph-accent);
+    }
+
+    #graph-app .series-btn:hover .series-count {
+      color: inherit;
+      opacity: 0.9;
+    }
 
     #graph-app .series-btn.active {
-      color: var(--graph-accent);
-      font-weight: bold;
+      background: var(--graph-accent);
+      border-color: var(--graph-accent);
+      color: var(--graph-tag-btn-active-fg);
+      font-weight: normal;
+    }
+
+    #graph-app .series-btn.active .series-count {
+      color: inherit;
+      opacity: 0.88;
     }
 
     #graph-app .series-dot {
@@ -575,11 +595,17 @@
       flex-shrink: 0;
     }
 
+    #graph-app .series-label {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     #graph-app .series-btn .series-count {
       color: var(--graph-muted);
-      margin-left: auto;
       font-weight: normal;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -1033,7 +1059,7 @@ function buildSeriesFilters() {
   const allBtn = document.createElement('button');
   allBtn.type = 'button';
   allBtn.className = 'series-btn active';
-  allBtn.innerHTML = '<span class="series-dot" style="background:#888"></span><span>all</span>';
+  allBtn.innerHTML = '<span class="series-dot" style="background:#888"></span><span class="series-label">all</span>';
   allBtn.addEventListener('click', () => {
     activeSeriesFilter = null;
     queryGraph('.series-btn').forEach(b => b.classList.remove('active'));
@@ -1050,7 +1076,7 @@ function buildSeriesFilters() {
     btn.type = 'button';
     btn.className = 'series-btn';
     btn.innerHTML =
-      `<span class="series-dot" style="background:${color}"></span><span>${series}</span><span class="series-count">${count}</span>`;
+      `<span class="series-dot" style="background:${color}"></span><span class="series-label">${series}</span><span class="series-count">${count}</span>`;
     btn.addEventListener('click', () => {
       activeSeriesFilter = series;
       queryGraph('.series-btn').forEach(b => b.classList.remove('active'));
