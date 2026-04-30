@@ -355,8 +355,10 @@
     }
 
     #graph-app .node-artwork circle {
-      stroke: none;
-      transition: fill 0.2s, opacity 0.2s;
+      stroke: light-dark(rgb(255 255 255 / 0.75), rgb(0 0 0 / 0.4));
+      stroke-width: 1.35px;
+      paint-order: stroke fill;
+      transition: fill 0.2s, opacity 0.2s, stroke 0.2s;
     }
 
     #graph-app .node-artwork circle.highlighted {
@@ -586,14 +588,14 @@ const DATA_FILES = [
 ];
 
 const SERIES_COLORS = {
-  original: '#6d8f7a',
-  works: '#6e8eab',
-  fanart: '#9b7890',
-  commission: '#a8916e',
-  groundpolis_paint: '#8378aa',
-  rakugaki_pao: '#5fa89a',
+  original: '#369a62',
+  works: '#1f7dd8',
+  fanart: '#c7439f',
+  commission: '#c9891e',
+  groundpolis_paint: '#6952d4',
+  rakugaki_pao: '#12a090',
 };
-const FALLBACK_ARTWORK_FILL = '#9aa6b8';
+const FALLBACK_ARTWORK_FILL = '#4d6694';
 
 let allArtworks = [];
 let activeTagFilter = null;
@@ -733,7 +735,7 @@ function renderGraph(artworks) {
   nodeSel.filter(d => d.type === 'artwork')
     .append('circle').attr('r', 5)
     .style('fill', d => SERIES_COLORS[d.data.seriesName] || FALLBACK_ARTWORK_FILL)
-    .style('opacity', 0.92);
+    .style('opacity', 1);
 
   const tagG = nodeSel.filter(d => d.type === 'tag');
   tagG.append('circle').attr('r', d => Math.min(5 + d.count * 1.2, 18));
@@ -820,7 +822,7 @@ function applyHL(hlNodeIds, hlLinkPred) {
   lNodeDim.selectAll('.node-artwork circle').style('opacity', 0.12);
   lNodeDim.selectAll('.node-tag circle').attr('class', 'dimmed');
   lNodeDim.selectAll('.node-tag text').attr('class', 'dimmed');
-  lNodeHL.selectAll('.node-artwork circle').style('opacity', 0.92);
+  lNodeHL.selectAll('.node-artwork circle').style('opacity', 1);
   lNodeHL.selectAll('.node-tag circle').attr('class', '');
   lNodeHL.selectAll('.node-tag text').attr('class', '');
 }
@@ -831,7 +833,7 @@ function resetHL() {
   lLinkDim.selectAll('*').remove();
   lLinkHL.selectAll('*').remove();
   lLinkHL.selectAll('line').data(gLinks).join('line').attr('class', 'link');
-  lNodeHL.selectAll('.node-artwork circle').style('opacity', 0.92);
+  lNodeHL.selectAll('.node-artwork circle').style('opacity', 1);
   lNodeHL.selectAll('.node-tag circle').attr('class', '');
   lNodeHL.selectAll('.node-tag text').attr('class', '');
 }
