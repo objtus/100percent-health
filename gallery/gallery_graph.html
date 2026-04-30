@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gallery graph - 100%health</title>
+  <link rel="stylesheet" href="../1column.css">
+  <script src="../js/jquery-3.6.0.min.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="/js/mouse.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <style>
+    body.gallery-graph-page #wrapper {
+      overflow-y: auto;
+    }
+
+    body.gallery-graph-page {
+      --graph-bg-panel: light-dark(#f4f4f4, #1e1e1e);
+      --graph-bg-canvas: light-dark(#fff, #282828);
+      --graph-img-bg: light-dark(#eee, #333);
+      --graph-fg: light-dark(#111, #eaeaea);
+      --graph-muted: #888;
+      --graph-accent: light-dark(#00c, #6ae);
+      --graph-accent-on: light-dark(#fff, #111);
+      --graph-panel-border: light-dark(#ddd, #555);
+      --graph-node-tag-hl-fill: light-dark(#dde8f8, #2a3440);
+      --graph-tag-btn-active-fg: light-dark(#fff, #fff);
+      --graph-link-stroke-muted: light-dark(#e0e0e0, #333);
+      --graph-font: saitamaar, PikoA, "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+      --graph-canvas-height: clamp(260px, 58vh, 560px);
+    }
+
+    #graph-app *,
+    #graph-app *::before,
+    #graph-app *::after {
+      box-sizing: border-box;
+    }
+
+    #graph-app {
+      font-family: var(--graph-font);
+      font-size: 0.82rem;
+      line-height: 1.35;
+      color: var(--graph-fg);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto var(--graph-canvas-height) auto;
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      margin-top: 1rem;
+      border: 1px solid var(--graph-panel-border);
+      border-radius: 4px;
+      background: var(--graph-bg-panel);
+      overflow: visible;
+    }
+
+    #graph-toolbar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      padding: 0.5rem 0.85rem;
+      border-bottom: 1px solid var(--graph-panel-border);
+      background: light-dark(#fafafa, #252525);
+    }
+
+    #graph-toolbar .graph-toolbar-title {
+      font-size: 0.72rem;
+      font-weight: normal;
+      color: var(--graph-muted);
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    #graph-stats {
+      font-size: 0.72rem;
+      color: var(--graph-muted);
+    }
+
+    #graph-sidebar-toggle {
+      font-family: var(--graph-font);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.55rem;
+      margin-inline-start: auto;
+      font-size: 0.72rem;
+      line-height: 1.2;
+      color: var(--graph-fg);
+      background: light-dark(#fff, #333);
+      border: 1px solid var(--graph-panel-border);
+      border-radius: 3px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    #graph-sidebar-toggle:hover {
+      border-color: var(--graph-accent);
+      color: var(--graph-accent);
+    }
+
+    #graph-sidebar {
+      border-top: 1px solid var(--graph-panel-border);
+      padding: 10px;
+      overflow-y: visible;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scrollbar-width: thin;
+    }
+
+    /* シリーズ（左列・縦結合）| タグで絞る（右列・縦結合） */
+    .graph-sidebar-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      grid-template-rows: auto auto;
+      gap: 12px 16px;
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .graph-sidebar-panel {
+      min-width: 0;
+    }
+
+    .graph-sidebar-panel--series {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-self: stretch;
+      border-inline-end: 1px solid var(--graph-panel-border);
+      padding-inline-end: 12px;
+    }
+
+    .graph-sidebar-panel--tags {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 0;
+      border-inline-start: none;
+      padding-inline-start: 0;
+    }
+
+    .graph-sidebar-panel--tags h2 {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: nowrap;
+      gap: 0.5em;
+      margin-bottom: 4px;
+      min-width: 0;
+    }
+
+    .graph-sidebar-panel--tags .graph-sidebar-tags-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .graph-sidebar-panel--tags h2 small {
+      flex-shrink: 0;
+      white-space: nowrap;
+      color: var(--graph-muted);
+      font-size: 0.65rem;
+      font-weight: normal;
+    }
+    .graph-sidebar-panel--tags .filter-tags {
+      align-content: start;
+      flex: 1 1 auto;
+      min-height: 0;
+      max-height: min(320px, 40vh);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      padding-inline-end: 2px;
+    }
+
+    .graph-sidebar-panel--tags .filter-tags::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .graph-sidebar-panel--tags .filter-tags::-webkit-scrollbar-thumb {
+      background: var(--graph-muted);
+      border-radius: 3px;
+    }
+
+    @media screen and (width <= 480px) {
+      .graph-sidebar-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+      }
+
+      .graph-sidebar-panel--series,
+      .graph-sidebar-panel--tags {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .graph-sidebar-panel--series {
+        border-inline-end: none;
+        padding-inline-end: 0;
+      }
+
+      .graph-sidebar-panel--tags .filter-tags {
+        max-height: none;
+      }
+    }
+
+    @media screen and (width <= 576px) {
+      body.gallery-graph-page {
+        --graph-canvas-height: clamp(200px, 48vh, 440px);
+      }
+
+      #graph-sidebar-toggle {
+        display: inline-flex;
+      }
+
+      #graph-app:not(.graph-app--sidebar-open) #graph-sidebar {
+        display: none;
+      }
+    }
+
+    #graph-sidebar::-webkit-scrollbar { width: 5px; }
+    #graph-sidebar::-webkit-scrollbar-track { background: transparent; }
+    #graph-sidebar::-webkit-scrollbar-thumb {
+      background: var(--graph-muted);
+      border-radius: 3px;
+    }
+
+    #graph-app .sidebar-section h2 {
+      font-size: 0.76rem;
+      font-weight: normal;
+      letter-spacing: normal;
+      text-transform: none;
+      color: var(--graph-muted);
+      margin-bottom: 6px;
+    }
+
+    #graph-app .sidebar-section small {
+      font-size: 0.65rem;
+      color: var(--graph-muted);
+    }
+
+    #graph-app .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    #graph-app .tag-btn {
+      font-family: var(--graph-font);
+      background: light-dark(#fff, #333);
+      border: 1px solid var(--graph-panel-border);
+      color: var(--graph-fg);
+      border-radius: 3px;
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+
+    #graph-app .tag-btn:hover {
+      border-color: var(--graph-accent);
+      color: var(--graph-accent);
+    }
+
+    #graph-app .tag-btn.active {
+      background: var(--graph-accent);
+      border-color: var(--graph-accent);
+      color: var(--graph-tag-btn-active-fg);
+    }
+
+    #graph-detail-panel {
+      background: light-dark(#fff, #333);
+      border: 1px solid var(--graph-panel-border);
+      border-radius: 3px;
+      padding: 10px;
+      display: none;
+    }
+
+    #graph-detail-panel.visible { display: block; }
+
+    #graph-detail-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: contain;
+      background: var(--graph-img-bg);
+      margin-bottom: 8px;
+      image-rendering: auto;
+    }
+
+    #graph-detail-id {
+      font-size: 0.65rem;
+      color: var(--graph-accent);
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+
+    #graph-detail-date {
+      font-size: 0.65rem;
+      color: var(--graph-muted);
+      margin-bottom: 8px;
+    }
+
+    #graph-detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-bottom: 10px;
+    }
+
+    #graph-app .detail-tag {
+      font-size: 0.62rem;
+      padding: 1px 5px;
+      border: 1px solid var(--graph-panel-border);
+      color: var(--graph-muted);
+      border-radius: 2px;
+    }
+
+    #graph-detail-link {
+      display: block;
+      font-family: var(--graph-font);
+      font-size: 0.72rem;
+      color: var(--graph-accent);
+      text-decoration: none;
+      border: 1px solid var(--graph-accent);
+      border-radius: 3px;
+      padding: 4px 8px;
+      text-align: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    #graph-detail-link:hover {
+      background: var(--graph-accent);
+      color: var(--graph-accent-on);
+    }
+
+    #graph-canvas {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      min-height: 0;
+      height: var(--graph-canvas-height);
+      border-bottom: 1px solid var(--graph-panel-border);
+      background: var(--graph-bg-canvas);
+    }
+
+    #graph-canvas svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #graph-app .node-artwork circle {
+      stroke: none;
+      transition: fill 0.2s, opacity 0.2s;
+    }
+
+    #graph-app .node-artwork circle.highlighted {
+      stroke: var(--graph-accent);
+      stroke-width: 2px;
+    }
+
+    #graph-app .node-artwork circle.dimmed {
+      opacity: 0.12 !important;
+    }
+
+    #graph-app .node-tag circle {
+      fill: light-dark(#e6e6e6, #3a3a3a);
+      stroke: light-dark(#999, #666);
+      stroke-width: 1;
+      transition: fill 0.2s, stroke 0.2s;
+    }
+
+    #graph-app .node-tag circle.highlighted,
+    #graph-app .node-tag circle.dimmed.highlighted {
+      fill: var(--graph-node-tag-hl-fill);
+      stroke: var(--graph-accent);
+    }
+
+    #graph-app .node-tag circle.dimmed {
+      fill: light-dark(#f0f0f0, #2a2a2a);
+      stroke: light-dark(#ccc, #444);
+      opacity: 0.55;
+    }
+
+    #graph-app .node-tag text {
+      fill: light-dark(#252525, #eaeaea);
+      font-family: var(--graph-font);
+      font-size: 10px;
+      font-weight: 600;
+      pointer-events: none;
+      transition: fill 0.2s;
+    }
+
+    #graph-app .node-tag text.highlighted { fill: var(--graph-accent); }
+    #graph-app .node-tag text.dimmed { fill: light-dark(#8a8a8a, #707070); opacity: 1; font-weight: 500; }
+
+    #graph-app .link {
+      stroke: light-dark(#bbb, #555);
+      stroke-width: 1;
+      transition: stroke 0.2s;
+    }
+
+    #graph-app .link.highlighted {
+      stroke: var(--graph-accent);
+      stroke-opacity: 0.85;
+    }
+
+    #graph-app .link.dimmed {
+      stroke: var(--graph-link-stroke-muted);
+      stroke-opacity: 0.65;
+    }
+
+    #graph-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      color: var(--graph-muted);
+      font-size: 0.76rem;
+      background: light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.35));
+      z-index: 1;
+    }
+
+    #graph-loading .dot {
+      display: inline-block;
+      animation: graph-blink 1s infinite;
+    }
+
+    #graph-loading .dot:nth-child(2) { animation-delay: 0.2s; }
+    #graph-loading .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes graph-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+
+    #graph-app .series-filters {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    #graph-app .series-btn {
+      font-family: var(--graph-font);
+      background: none;
+      border: none;
+      color: var(--graph-muted);
+      font-size: 0.72rem;
+      padding: 3px 0;
+      cursor: pointer;
+      text-align: left;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s;
+    }
+
+    #graph-app .series-btn:hover { color: var(--graph-fg); }
+
+    #graph-app .series-btn.active {
+      color: var(--graph-accent);
+      font-weight: bold;
+    }
+
+    #graph-app .series-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    #graph-app .series-btn .series-count {
+      color: var(--graph-muted);
+      margin-left: auto;
+      font-weight: normal;
+      font-size: 0.65rem;
+    }
+  </style>
+</head>
+
+<body class="gallery-graph-page">
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="../index.html">&lt;</a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <ol class="breadcrumb">
+            <li><a href="../index.html">100%health</a></li>
+            <li><a href="gallery_main.html">gallery</a></li>
+            <li aria-current="page"><a href="gallery_graph.html">graph</a></li>
+          </ol>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <header id="category-header">
+        <nav aria-label="ページカテゴリナビゲーション">
+          <ol class="main-category">
+            <li><a href="/aboutme.html">about</a></li>
+            <li><a href="/gallery/gallery_main.html">gallery</a></li>
+            <li><a href="/works/works_main.html">works</a></li>
+            <li><a href="/txt/txt_main.html">txt</a></li>
+            <li><a href="/links/links_main.html">links</a></li>
+          </ol>
+          <ol class="sub-category">
+            <li><a href="/gallery/gallery_main.html">gallery</a></li>
+            <li><a href="/gallery/gallery_index.html">index</a></li>
+            <li><a href="/gallery/tag-page/tags.html">tags</a></li>
+            <li><a href="/gallery/gallery_graph.html">graph</a></li>
+          </ol>
+        </nav>
+      </header>
+
+      <div id="galleryspace">
+        <h1 class="title">タグラフ / <small title="tag relation graph" lang="en">tag_graph</small></h1>
+        <div id="graph-app" aria-label="タグ関連グラフビュー">
+          <div id="graph-toolbar">
+            <span class="graph-toolbar-title">gallery graph</span>
+            <span id="graph-stats" aria-live="polite">loading…</span>
+            <button type="button" id="graph-sidebar-toggle" aria-controls="graph-sidebar" aria-expanded="false">
+              <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M2 12h12v2H2v-2zm0-5h12v2H2V7zm0-5h12v2H2V2z"/></svg>
+              <span class="graph-sidebar-toggle-label">フィルタ</span>
+            </button>
+          </div>
+
+          <div id="graph-canvas">
+            <div id="graph-loading">
+              <span>loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></span>
+            </div>
+            <svg id="graph-svg" role="img" aria-label="作品とタグのネットワーク"></svg>
+          </div>
+
+          <aside id="graph-sidebar" aria-label="シリーズ・タグ・詳細パネル">
+            <div class="graph-sidebar-grid">
+              <section class="graph-sidebar-panel graph-sidebar-panel--series sidebar-section" aria-labelledby="graph-series-heading">
+                <h2 id="graph-series-heading">シリーズ <small lang="en">series</small></h2>
+                <div id="graph-series-filters" class="series-filters"></div>
+              </section>
+
+              <section class="graph-sidebar-panel graph-sidebar-panel--tags sidebar-section" aria-labelledby="graph-tags-heading">
+                <h2 id="graph-tags-heading">
+                  <span class="graph-sidebar-tags-title">タグで絞る</span><small lang="en">tag filter</small>
+                </h2>
+                <div id="graph-tag-filters" class="filter-tags"></div>
+              </section>
+            </div>
+
+            <div id="graph-detail-panel">
+              <img id="graph-detail-img" src="" alt="">
+              <div id="graph-detail-id"></div>
+              <div id="graph-detail-date"></div>
+              <div id="graph-detail-tags"></div>
+              <a id="graph-detail-link" href="#" target="_blank" rel="noopener noreferrer">ページを開く →</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <footer id="main-footer">
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+
+<script>
+const BASE = '';
+const DATA_FILES = [
+  { path: '/gallery/data/original.json', key: 'original_series' },
+  { path: '/gallery/data/works.json', key: 'works_series' },
+  { path: '/gallery/data/fanart.json', key: 'fanart_series' },
+  { path: '/gallery/data/commission.json', key: 'commission_series' },
+  { path: '/gallery/data/groundpolis_paint.json', key: 'groundpolis_paint_series' },
+  { path: '/gallery/data/rakugaki_pao.json', key: 'rakugaki_pao_series' },
+];
+
+const SERIES_COLORS = {
+  original: '#6d8f7a',
+  works: '#6e8eab',
+  fanart: '#9b7890',
+  commission: '#a8916e',
+  groundpolis_paint: '#8378aa',
+  rakugaki_pao: '#5fa89a',
+};
+const FALLBACK_ARTWORK_FILL = '#9aa6b8';
+
+let allArtworks = [];
+let activeTagFilter = null;
+let activeSeriesFilter = null;
+let simulation = null;
+let lLinkDim, lNodeDim, lLinkHL, lNodeHL;
+let gLinks = null;
+
+const rootEl = document.getElementById('graph-app');
+
+function queryGraph(selector) {
+  return rootEl ? rootEl.querySelectorAll(selector) : document.querySelectorAll(selector);
+}
+
+function debounce(fn, ms) {
+  let t;
+  return function debounced(...args) {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), ms);
+  };
+}
+
+const graphAppEl = document.getElementById('graph-app');
+const sidebarToggleEl = document.getElementById('graph-sidebar-toggle');
+const mqSidebarCollapse = window.matchMedia('(max-width: 768px)');
+
+function applySidebarBreakpointLayout() {
+  if (mqSidebarCollapse.matches) {
+    sidebarToggleEl.setAttribute(
+      'aria-expanded',
+      graphAppEl.classList.contains('graph-app--sidebar-open') ? 'true' : 'false'
+    );
+  } else {
+    graphAppEl.classList.remove('graph-app--sidebar-open');
+    sidebarToggleEl.setAttribute('aria-expanded', 'true');
+  }
+}
+
+sidebarToggleEl.addEventListener('click', () => {
+  if (!mqSidebarCollapse.matches) return;
+  const open = !graphAppEl.classList.contains('graph-app--sidebar-open');
+  graphAppEl.classList.toggle('graph-app--sidebar-open', open);
+  sidebarToggleEl.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+
+mqSidebarCollapse.addEventListener('change', () => {
+  graphAppEl.classList.remove('graph-app--sidebar-open');
+  applySidebarBreakpointLayout();
+  if (allArtworks.length) onGraphResize();
+});
+
+function tagLabelForSvg(label) {
+  if (label == null || label === '') return '';
+  const s = String(label);
+  return s.startsWith('#') ? s : `#${s}`;
+}
+
+async function loadData() {
+  const results = await Promise.allSettled(
+    DATA_FILES.map(f => fetch(BASE + f.path).then(r => r.json()).then(d => ({ ...f, data: d })))
+  );
+  results.forEach(r => {
+    if (r.status === 'fulfilled') {
+      const { key, data, path } = r.value;
+      const seriesName = path.split('/').pop().replace('.json', '');
+      const items = data[key] || [];
+      items.forEach(item => allArtworks.push({ ...item, seriesName }));
+    }
+  });
+  allArtworks.sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
+function buildGraph(artworks) {
+  const nodes = [];
+  const links = [];
+  const tagSet = new Map();
+  artworks.forEach(art => {
+    nodes.push({ id: art.id, type: 'artwork', data: art });
+    art.tags.forEach(tag => {
+      if (!tagSet.has(tag)) {
+        tagSet.set(tag, { id: `tag:${tag}`, type: 'tag', label: tag, count: 0 });
+        nodes.push(tagSet.get(tag));
+      }
+      tagSet.get(tag).count++;
+      links.push({ source: art.id, target: `tag:${tag}` });
+    });
+  });
+  return { nodes, links };
+}
+
+function renderGraph(artworks) {
+  if (simulation) simulation.stop();
+  const svg = d3.select('#graph-svg');
+  svg.selectAll('*').remove();
+  gLinks = null;
+
+  const { nodes, links } = buildGraph(artworks);
+  gLinks = links;
+
+  const canvas = document.getElementById('graph-canvas');
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+  svg.attr('viewBox', `0 0 ${width} ${height}`);
+
+  const g = svg.append('g');
+  svg.call(d3.zoom().scaleExtent([0.2, 4]).on('zoom', e => g.attr('transform', e.transform)));
+
+  lLinkDim = g.append('g').attr('class', 'l-link-dim');
+  lNodeDim = g.append('g').attr('class', 'l-node-dim');
+  lLinkHL  = g.append('g').attr('class', 'l-link-hl');
+  lNodeHL  = g.append('g').attr('class', 'l-node-hl');
+
+  const drag = d3.drag()
+    .on('start', (e, d) => {
+      if (!e.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    })
+    .on('drag', (e, d) => {
+      d.fx = e.x;
+      d.fy = e.y;
+    })
+    .on('end', (e, d) => {
+      if (!e.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    });
+
+  lLinkHL.selectAll('line')
+    .data(links).join('line').attr('class', 'link');
+
+  const nodeSel = lNodeHL.selectAll('g')
+    .data(nodes).join('g')
+    .attr('class', d => `node-${d.type}`)
+    .call(drag);
+
+  nodeSel.filter(d => d.type === 'artwork')
+    .append('circle').attr('r', 5)
+    .style('fill', d => SERIES_COLORS[d.data.seriesName] || FALLBACK_ARTWORK_FILL)
+    .style('opacity', 0.92);
+
+  const tagG = nodeSel.filter(d => d.type === 'tag');
+  tagG.append('circle').attr('r', d => Math.min(5 + d.count * 1.2, 18));
+  tagG.append('text')
+    .attr('dy', d => -(Math.min(5 + d.count * 1.2, 18) + 4))
+    .attr('text-anchor', 'middle')
+    .text(d => tagLabelForSvg(d.label));
+
+  nodeSel.filter(d => d.type === 'artwork').on('click', (e, d) => {
+    e.stopPropagation();
+    showDetail(d.data);
+    const connectedTagIds = new Set(
+      links.filter(l => l.source.id === d.id || l.target.id === d.id)
+        .map(l => (l.source.id === d.id ? l.target.id : l.source.id))
+    );
+    applyHL(new Set([d.id, ...connectedTagIds]),
+      l => l.source.id === d.id || l.target.id === d.id);
+  });
+
+  nodeSel.filter(d => d.type === 'tag').on('click', (e, d) => {
+    e.stopPropagation();
+    const tag = d.label;
+    const tagId = d.id;
+    if (activeTagFilter === tag) {
+      activeTagFilter = null;
+      queryGraph('.tag-btn').forEach(b => b.classList.remove('active'));
+      resetHL();
+    } else {
+      activeTagFilter = tag;
+      queryGraph('.tag-btn').forEach(b => b.classList.toggle('active', b.dataset.tag === tag));
+      const connectedArtIds = new Set(
+        links.filter(l => l.source.id === tagId || l.target.id === tagId)
+          .map(l => (l.source.id === tagId ? l.target.id : l.source.id))
+      );
+      applyHL(new Set([tagId, ...connectedArtIds]),
+        l => l.source.id === tagId || l.target.id === tagId);
+    }
+  });
+
+  svg.on('click', () => {
+    resetHL();
+    activeTagFilter = null;
+    queryGraph('.tag-btn').forEach(b => b.classList.remove('active'));
+    hideDetail();
+  });
+
+  simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.id).distance(60).strength(0.3))
+    .force('charge', d3.forceManyBody().strength(-120))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => (d.type === 'artwork' ? 8 : 20)))
+    .on('tick', () => {
+      [lLinkHL, lLinkDim].forEach(l =>
+        l.selectAll('line')
+          .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x).attr('y2', d => d.target.y)
+      );
+      [lNodeHL, lNodeDim].forEach(l =>
+        l.selectAll('g').attr('transform', d => `translate(${d.x},${d.y})`)
+      );
+    });
+}
+
+function applyHL(hlNodeIds, hlLinkPred) {
+  if (!lNodeHL || !gLinks) return;
+
+  Array.from(lNodeDim.node().children).forEach(el => lNodeHL.node().appendChild(el));
+  Array.from(lNodeHL.node().children).forEach(el => {
+    const dd = d3.select(el).datum();
+    if (dd && !hlNodeIds.has(dd.id)) lNodeDim.node().appendChild(el);
+  });
+
+  lLinkHL.selectAll('*').remove();
+  lLinkDim.selectAll('*').remove();
+  gLinks.forEach(lnk => {
+    const isHL = hlLinkPred(lnk);
+    (isHL ? lLinkHL : lLinkDim).append('line')
+      .attr('class', isHL ? 'link highlighted' : 'link dimmed')
+      .attr('x1', lnk.source.x).attr('y1', lnk.source.y)
+      .attr('x2', lnk.target.x).attr('y2', lnk.target.y)
+      .datum(lnk);
+  });
+
+  lNodeDim.selectAll('.node-artwork circle').style('opacity', 0.12);
+  lNodeDim.selectAll('.node-tag circle').attr('class', 'dimmed');
+  lNodeDim.selectAll('.node-tag text').attr('class', 'dimmed');
+  lNodeHL.selectAll('.node-artwork circle').style('opacity', 0.92);
+  lNodeHL.selectAll('.node-tag circle').attr('class', '');
+  lNodeHL.selectAll('.node-tag text').attr('class', '');
+}
+
+function resetHL() {
+  if (!lNodeHL || !lNodeDim || !lLinkHL || !lLinkDim || !gLinks) return;
+  Array.from(lNodeDim.node().children).forEach(el => lNodeHL.node().appendChild(el));
+  lLinkDim.selectAll('*').remove();
+  lLinkHL.selectAll('*').remove();
+  lLinkHL.selectAll('line').data(gLinks).join('line').attr('class', 'link');
+  lNodeHL.selectAll('.node-artwork circle').style('opacity', 0.92);
+  lNodeHL.selectAll('.node-tag circle').attr('class', '');
+  lNodeHL.selectAll('.node-tag text').attr('class', '');
+}
+
+function showDetail(art) {
+  const base = 'https://yuinoid.neocities.org';
+  document.getElementById('graph-detail-img').src = base + art.image_path.replace('../../', '/');
+  document.getElementById('graph-detail-id').textContent = art.id;
+  document.getElementById('graph-detail-date').textContent = art.date;
+  document.getElementById('graph-detail-link').href = base + art.path;
+  document.getElementById('graph-detail-tags').innerHTML =
+    art.tags.map(t => `<span class="detail-tag">#${t}</span>`).join('');
+  document.getElementById('graph-detail-panel').classList.add('visible');
+  if (mqSidebarCollapse.matches) {
+    graphAppEl.classList.add('graph-app--sidebar-open');
+    sidebarToggleEl.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(() => {
+      const panel = document.getElementById('graph-detail-panel');
+      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  }
+}
+
+function hideDetail() {
+  document.getElementById('graph-detail-panel').classList.remove('visible');
+}
+
+function buildTagFilters(artworks) {
+  const tagCount = new Map();
+  artworks.forEach(art => art.tags.forEach(tag => tagCount.set(tag, (tagCount.get(tag) || 0) + 1)));
+  const sorted = [...tagCount.entries()].sort((a, b) => b[1] - a[1]).slice(0, 30);
+  const container = document.getElementById('graph-tag-filters');
+  container.innerHTML = '';
+  sorted.forEach(([tag]) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tag-btn';
+    btn.dataset.tag = tag;
+    btn.textContent = `#${tag}`;
+    btn.addEventListener('click', () => {
+      if (activeTagFilter === tag) {
+        activeTagFilter = null;
+        btn.classList.remove('active');
+        resetHL();
+      } else {
+        activeTagFilter = tag;
+        queryGraph('.tag-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tagId = `tag:${tag}`;
+        const connectedArtIds = new Set(
+          gLinks.filter(l => l.source.id === tagId || l.target.id === tagId)
+            .map(l => (l.source.id === tagId ? l.target.id : l.source.id))
+        );
+        applyHL(new Set([tagId, ...connectedArtIds]),
+          l => l.source.id === tagId || l.target.id === tagId);
+      }
+    });
+    container.appendChild(btn);
+  });
+}
+
+function buildSeriesFilters() {
+  const container = document.getElementById('graph-series-filters');
+  container.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.type = 'button';
+  allBtn.className = 'series-btn active';
+  allBtn.innerHTML = '<span class="series-dot" style="background:#888"></span><span>all</span>';
+  allBtn.addEventListener('click', () => {
+    activeSeriesFilter = null;
+    queryGraph('.series-btn').forEach(b => b.classList.remove('active'));
+    allBtn.classList.add('active');
+    renderGraph(allArtworks);
+    document.getElementById('graph-stats').textContent = `${allArtworks.length} artworks`;
+  });
+  container.appendChild(allBtn);
+
+  Object.entries(SERIES_COLORS).forEach(([series, color]) => {
+    if (!allArtworks.some(a => a.seriesName === series)) return;
+    const count = allArtworks.filter(a => a.seriesName === series).length;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'series-btn';
+    btn.innerHTML =
+      `<span class="series-dot" style="background:${color}"></span><span>${series}</span><span class="series-count">${count}</span>`;
+    btn.addEventListener('click', () => {
+      activeSeriesFilter = series;
+      queryGraph('.series-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeTagFilter = null;
+      queryGraph('.tag-btn').forEach(b => b.classList.remove('active'));
+      const filtered = allArtworks.filter(a => a.seriesName === series);
+      renderGraph(filtered);
+      document.getElementById('graph-stats').textContent = `${filtered.length} artworks`;
+    });
+    container.appendChild(btn);
+  });
+}
+
+function onGraphResize() {
+  if (!allArtworks.length) return;
+  const artworks = activeSeriesFilter
+    ? allArtworks.filter(a => a.seriesName === activeSeriesFilter)
+    : allArtworks;
+  renderGraph(artworks);
+  document.getElementById('graph-stats').textContent = `${artworks.length} artworks`;
+}
+
+async function init() {
+  await loadData();
+  document.getElementById('graph-loading').style.display = 'none';
+  document.getElementById('graph-stats').textContent = `${allArtworks.length} artworks`;
+  buildSeriesFilters();
+  buildTagFilters(allArtworks);
+  renderGraph(allArtworks);
+
+  applySidebarBreakpointLayout();
+
+  window.addEventListener(
+    'resize',
+    debounce(onGraphResize, 200),
+    { passive: true }
+  );
+}
+
+init();
+</script>
+</body>
+</html>
