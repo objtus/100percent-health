@@ -361,6 +361,31 @@
       -webkit-user-drag: none;
     }
 
+    .mindmap-loupe-center-heart {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 11;
+      margin: 0;
+      padding: 0;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      font-family: inherit;
+      font-size: 2rem;
+      line-height: 1;
+      color: black;
+      opacity: 0;
+    }
+
+    .mindmap-stage.loupe-mode .mindmap-loupe-center-heart {
+      display: block;
+    }
+
+    .mindmap-stage.loupe-mode.loupe-mouse-moving .mindmap-loupe-center-heart {
+      opacity: 1;
+    }
+
     #change_log ul {
       list-style-type: none;
       font-size: 10pt;
@@ -448,6 +473,7 @@
                     <img src="/img/system-mindmap.jpg" alt="" width="6517" height="7286" decoding="async" fetchpriority="low">
                   </div>
                 </div>
+                <span id="mindmap-loupe-center-heart" class="mindmap-loupe-center-heart" aria-hidden="true">♥</span>
               </div>
             </div>
           </div>
@@ -479,12 +505,16 @@
       var stage = document.getElementById('mindmap-stage');
       var layer = document.getElementById('mindmap-layer');
       var scale = 1;
+      var scaleTarget = 1;
       var tx = 0;
       var ty = 0;
+      var layerTx = 0;
+      var layerTy = 0;
       var pointers = new Map();
       var drag = null;
       var pinchLastDist = 0;
       var LOUPE_MAG = 2.5;
+      var LOUPE_MAG_TARGET = 2.5;
       var LOUPE_MAG_MIN = 1.12;
       var LOUPE_MAG_MAX = 10;
       var loupeEl = document.getElementById('mindmap-loupe');
@@ -494,10 +524,14 @@
       var lastLoupe = { mx: 0, my: 0, valid: false };
       var loupeSmooth = { mx: 0, my: 0 };
       var loupeRaf = 0;
+      var loupeMagRaf = 0;
       var loupeOverStage = true;
       var loupeLeaveTimer = 0;
       var LOUPE_LEAVE_DELAY_MS = 100;
+      var LOUPE_HEART_IDLE_MS = 130;
+      var loupeMoveHeartTimer = 0;
       var LOUPE_SMOOTH = 0.22;
+      var LOUPE_MAG_SMOOTH = 0.175;
       var LOUPE_SMOOTH_EPS_SQ = 0.35 * 0.35;
       var zoomInBtn = document.getElementById('mindmap-zoom-in');
       var zoomOutBtn = document.getElementById('mindmap-zoom-out');
@@ -511,6 +545,17 @@
       var scalePad = document.getElementById('mindmap-scale-pad');
       var scaleNums = document.getElementById('mindmap-scale-nums');
       var scaleAux = document.getElementById('mindmap-scale-aux');
+
+      var panRaf = 0;
+      var PAN_SMOOTH = 0.2;
+      var PAN_EPS_SQ = 0.36;
+
+      var zoomRaf = 0;
+      var zoomPivotMx = 0;
+      var zoomPivotMy = 0;
+      var zoomPivotIx = 0;
+      var zoomPivotIy = 0;
+      var ZOOM_SCALE_SMOOTH = 0.175;
 
       function clamp(v, a, b) {
         return Math.max(a, Math.min(b, v));
@@ -584,14 +629,8 @@
 
       function loupeZoomBy(factor) {
         if (!loupeOn) return;
-        LOUPE_MAG = clamp(LOUPE_MAG * factor, LOUPE_MAG_MIN, LOUPE_MAG_MAX);
-        syncZoomSliderFromState();
-        if (loupeOverStage) {
-          snapLoupeSmoothToTarget();
-          updateLoupeFollow(loupeSmooth.mx, loupeSmooth.my);
-        } else {
-          updateLoupeOverview();
-        }
+        LOUPE_MAG_TARGET = clamp(LOUPE_MAG_TARGET * factor, LOUPE_MAG_MIN, LOUPE_MAG_MAX);
+        kickLoupeMagAnim();
       }
 
       function getFitTransform() {
@@ -605,10 +644,39 @@
         };
       }
 
+      function cancelLoupeMoveHeartTimer() {
+        if (loupeMoveHeartTimer) {
+          clearTimeout(loupeMoveHeartTimer);
+          loupeMoveHeartTimer = 0;
+        }
+      }
+
+      function hideLoupeCenterHeart() {
+        cancelLoupeMoveHeartTimer();
+        stage.classList.remove('loupe-mouse-moving');
+      }
+
+      function pulseLoupeCenterHeartOnMove() {
+        if (!loupeOn) return;
+        stage.classList.add('loupe-mouse-moving');
+        cancelLoupeMoveHeartTimer();
+        loupeMoveHeartTimer = setTimeout(function () {
+          loupeMoveHeartTimer = 0;
+          stage.classList.remove('loupe-mouse-moving');
+        }, LOUPE_HEART_IDLE_MS);
+      }
+
       function cancelLoupeAnim() {
         if (loupeRaf) {
           cancelAnimationFrame(loupeRaf);
           loupeRaf = 0;
+        }
+      }
+
+      function cancelLoupeMagAnim() {
+        if (loupeMagRaf) {
+          cancelAnimationFrame(loupeMagRaf);
+          loupeMagRaf = 0;
         }
       }
 
@@ -622,6 +690,7 @@
       function commitLoupeLeftStage() {
         if (!loupeOn) return;
         cancelLoupeAnim();
+        hideLoupeCenterHeart();
         loupeOverStage = false;
         updateLoupeOverview();
       }
@@ -661,6 +730,117 @@
         if (!loupeRaf) loupeRaf = requestAnimationFrame(loupeAnimStep);
       }
 
+      function renderMainLayer() {
+        if (loupeOn) return;
+        layer.style.transform = 'translate(' + layerTx + 'px,' + layerTy + 'px) scale(' + scale + ')';
+      }
+
+      function syncLayerPanToTarget() {
+        layerTx = tx;
+        layerTy = ty;
+        if (panRaf) {
+          cancelAnimationFrame(panRaf);
+          panRaf = 0;
+        }
+      }
+
+      function panAnimStep() {
+        panRaf = 0;
+        if (loupeOn) return;
+        var dx = tx - layerTx;
+        var dy = ty - layerTy;
+        if (dx * dx + dy * dy <= PAN_EPS_SQ) {
+          layerTx = tx;
+          layerTy = ty;
+          renderMainLayer();
+          return;
+        }
+        layerTx += dx * PAN_SMOOTH;
+        layerTy += dy * PAN_SMOOTH;
+        renderMainLayer();
+        panRaf = requestAnimationFrame(panAnimStep);
+      }
+
+      function kickPanAnim() {
+        if (loupeOn) return;
+        if (!panRaf) panRaf = requestAnimationFrame(panAnimStep);
+      }
+
+      function applySmoothPan() {
+        if (loupeOn) return;
+        cancelZoomAnim();
+        scaleTarget = scale;
+        clampPan();
+        kickPanAnim();
+      }
+
+      function cancelZoomAnim() {
+        if (zoomRaf) {
+          cancelAnimationFrame(zoomRaf);
+          zoomRaf = 0;
+        }
+      }
+
+      function zoomAnimStep() {
+        zoomRaf = 0;
+        if (loupeOn) return;
+        var d = scaleTarget - scale;
+        if (Math.abs(d) < 1e-5) {
+          scale = scaleTarget;
+          tx = zoomPivotMx - zoomPivotIx * scale;
+          ty = zoomPivotMy - zoomPivotIy * scale;
+          clampPan();
+          syncLayerPanToTarget();
+          renderMainLayer();
+          setScaleReadoutNormal();
+          syncZoomSliderFromState();
+          return;
+        }
+        scale += d * ZOOM_SCALE_SMOOTH;
+        tx = zoomPivotMx - zoomPivotIx * scale;
+        ty = zoomPivotMy - zoomPivotIy * scale;
+        clampPan();
+        syncLayerPanToTarget();
+        renderMainLayer();
+        setScaleReadoutNormal();
+        syncingSlider = true;
+        zoomSlider.value = String(scaleToSliderValue(scale));
+        syncingSlider = false;
+        zoomRaf = requestAnimationFrame(zoomAnimStep);
+      }
+
+      function kickZoomAnim() {
+        if (loupeOn) return;
+        if (!zoomRaf) zoomRaf = requestAnimationFrame(zoomAnimStep);
+      }
+
+      function loupeMagAnimStep() {
+        loupeMagRaf = 0;
+        if (!loupeOn) return;
+        var d = LOUPE_MAG_TARGET - LOUPE_MAG;
+        if (Math.abs(d) < 0.0025) {
+          LOUPE_MAG = LOUPE_MAG_TARGET;
+        } else {
+          LOUPE_MAG += d * LOUPE_MAG_SMOOTH;
+        }
+        syncingSlider = true;
+        zoomSlider.value = String(loupeMagToSliderValue(LOUPE_MAG));
+        syncingSlider = false;
+        if (loupeOverStage && lastLoupe.valid) {
+          updateLoupeFollow(loupeSmooth.mx, loupeSmooth.my);
+        } else {
+          updateLoupeOverview();
+        }
+        if (Math.abs(LOUPE_MAG_TARGET - LOUPE_MAG) >= 0.0025) {
+          loupeMagRaf = requestAnimationFrame(loupeMagAnimStep);
+        }
+      }
+
+      function kickLoupeMagAnim() {
+        if (!loupeOn) return;
+        if (!loupeMagRaf) loupeMagRaf = requestAnimationFrame(loupeMagAnimStep);
+      }
+
       function setScaleValDigits(n) {
         var s = String(Math.round(Number(n)));
         if (s.length > ZOOM_PCT_DIGITS) s = s.slice(-ZOOM_PCT_DIGITS);
@@ -696,7 +876,8 @@
       function apply() {
         if (!loupeOn) {
           clampPan();
-          layer.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+          syncLayerPanToTarget();
+          renderMainLayer();
           setScaleReadoutNormal();
           syncZoomSliderFromState();
         }
@@ -744,14 +925,17 @@
       }
 
       function fit() {
+        cancelZoomAnim();
         var F = getFitTransform();
         scale = F.s;
+        scaleTarget = F.s;
         tx = F.tx;
         ty = F.ty;
         apply();
       }
 
       function zoomAt(mx, my, factor) {
+        cancelZoomAnim();
         var ix = (mx - tx) / scale;
         var iy = (my - ty) / scale;
         var smin = mainScaleSliderMin();
@@ -759,6 +943,7 @@
         tx = mx - ix * newScale;
         ty = my - iy * newScale;
         scale = newScale;
+        scaleTarget = newScale;
         apply();
       }
 
@@ -803,14 +988,9 @@
           var dyL = ddyL;
           var factorL = Math.exp(-dyL * 0.0011);
           factorL = clamp(factorL, 0.88, 1.14);
-          LOUPE_MAG = clamp(LOUPE_MAG * factorL, LOUPE_MAG_MIN, LOUPE_MAG_MAX);
-          syncZoomSliderFromState();
-          if (loupeOverStage) {
-            snapLoupeSmoothToTarget();
-            updateLoupeFollow(loupeSmooth.mx, loupeSmooth.my);
-          } else {
-            updateLoupeOverview();
-          }
+          LOUPE_MAG_TARGET = clamp(LOUPE_MAG_TARGET * factorL, LOUPE_MAG_MIN, LOUPE_MAG_MAX);
+          kickLoupeMagAnim();
+          pulseLoupeCenterHeartOnMove();
           return;
         }
 
@@ -821,7 +1001,7 @@
         if (e.shiftKey) {
           tx -= wheelDeltaPixels(e.deltaX, e.deltaMode);
           ty -= wheelDeltaPixels(e.deltaY, e.deltaMode);
-          apply();
+          applySmoothPan();
           return;
         }
 
@@ -829,14 +1009,20 @@
         var ddy = wheelDeltaPixels(e.deltaY, e.deltaMode);
         if (Math.abs(ddx) >= Math.abs(ddy) && Math.abs(ddx) > 0.5) {
           tx -= ddx;
-          apply();
+          applySmoothPan();
           return;
         }
 
         var dy = ddy;
         var factor = Math.exp(-dy * 0.0011);
         factor = clamp(factor, 0.88, 1.14);
-        zoomAt(mx, my, factor);
+        var smin = mainScaleSliderMin();
+        zoomPivotMx = mx;
+        zoomPivotMy = my;
+        zoomPivotIx = (mx - tx) / scale;
+        zoomPivotIy = (my - ty) / scale;
+        scaleTarget = clamp(scaleTarget * factor, smin, MAX_S);
+        kickZoomAnim();
       }, { passive: false });
 
       stage.addEventListener('pointerdown', function (e) {
@@ -860,6 +1046,7 @@
           lastLoupe.mx = e.clientX - sr0.left;
           lastLoupe.my = e.clientY - sr0.top;
           lastLoupe.valid = true;
+          pulseLoupeCenterHeartOnMove();
           kickLoupeAnim();
           return;
         }
@@ -878,6 +1065,8 @@
           return;
         }
         if (drag && e.pointerId === drag.id) {
+          cancelZoomAnim();
+          scaleTarget = scale;
           tx += e.clientX - drag.lx;
           ty += e.clientY - drag.ly;
           drag.lx = e.clientX;
@@ -912,6 +1101,7 @@
 
       stage.addEventListener('pointerleave', function () {
         if (!loupeOn) return;
+        hideLoupeCenterHeart();
         cancelLoupeAnim();
         scheduleLoupeLeave();
       });
@@ -946,6 +1136,10 @@
         if (!loupeOn) {
           cancelPendingLoupeLeave();
           cancelLoupeAnim();
+          cancelLoupeMagAnim();
+          cancelZoomAnim();
+          hideLoupeCenterHeart();
+          scaleTarget = scale;
           loupeEl.style.display = 'none';
           lastLoupe.valid = false;
           loupeOverStage = true;
@@ -953,6 +1147,12 @@
         } else {
           cancelPendingLoupeLeave();
           cancelLoupeAnim();
+          cancelLoupeMagAnim();
+          cancelZoomAnim();
+          hideLoupeCenterHeart();
+          scale = scaleTarget;
+          clampPan();
+          LOUPE_MAG_TARGET = LOUPE_MAG;
           root.focus({ preventScroll: true });
           lastLoupe.valid = true;
           var br = stage.getBoundingClientRect();
@@ -968,7 +1168,10 @@
       zoomSlider.addEventListener('input', function () {
         if (syncingSlider) return;
         if (loupeOn) {
-          LOUPE_MAG = clamp(sliderValueToLoupeMag(zoomSlider.value), LOUPE_MAG_MIN, LOUPE_MAG_MAX);
+          var lm = clamp(sliderValueToLoupeMag(zoomSlider.value), LOUPE_MAG_MIN, LOUPE_MAG_MAX);
+          cancelLoupeMagAnim();
+          LOUPE_MAG = lm;
+          LOUPE_MAG_TARGET = lm;
           if (loupeOverStage) {
             snapLoupeSmoothToTarget();
             updateLoupeFollow(loupeSmooth.mx, loupeSmooth.my);
@@ -977,6 +1180,7 @@
           }
           return;
         }
+        cancelZoomAnim();
         var newS = sliderValueToScale(zoomSlider.value);
         var r = stage.getBoundingClientRect();
         var mx = r.width / 2;
@@ -986,6 +1190,7 @@
         tx = mx - ix * newS;
         ty = my - iy * newS;
         scale = newS;
+        scaleTarget = newS;
         apply();
       });
 
@@ -1024,18 +1229,22 @@
           if (e.key === 'ArrowRight') tx -= step;
           if (e.key === 'ArrowUp') ty += step;
           if (e.key === 'ArrowDown') ty -= step;
-          apply();
+          applySmoothPan();
         }
       });
 
       window.addEventListener('resize', function () {
         if (!loupeOn) {
+          cancelZoomAnim();
           var smin = mainScaleSliderMin();
           if (scale < smin) {
             scale = smin;
+            scaleTarget = smin;
             var r0 = stage.getBoundingClientRect();
             tx = (r0.width - IW * scale) / 2;
             ty = (r0.height - IH * scale) / 2;
+          } else {
+            scaleTarget = scale;
           }
           apply();
           return;
