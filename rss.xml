@@ -5,9 +5,17 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Tue, 28 Apr 2026 15:36:43 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 01 May 2026 07:46:55 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>galleryにグラフページを追加</title>
+      <link>https://yuinoid.neocities.org/gallery/gallery_graph.html</link>
+      <description>galleryにグラフページを追加しました。作品とタグの関連をグラフで表示するページです。</description>
+      <pubDate>Fri, 01 May 2026 07:46:55 GMT</pubDate>
+      <category>gallery</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#p630m7-20260501</guid>
+    </item>
     <item>
       <title>galleryにrakugaki_paoシリーズを追加</title>
       <link>https://yuinoid.neocities.org/gallery/tag-page/rakugaki_pao.html</link>

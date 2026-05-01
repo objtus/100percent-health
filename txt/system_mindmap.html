@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>system mindmap - 100%health</title>
+  <link rel="stylesheet" href="../1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="../js/jquery-3.6.0.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/mouse.js" defer></script>
+  <style>
+    #texthtml,
+    ol {
+      list-style-type: none;
+    }
+
+    #textblock .mindmap-lead {
+      margin-left: 1rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .header-link {
+      opacity: 0.2;
+      padding: 0 1em;
+      margin-left: 1em;
+      text-decoration: none;
+      color: black;
+      transition: opacity 0.2s;
+    }
+
+    .header-link:hover {
+      color: black;
+      background-color: transparent;
+      opacity: 1;
+    }
+
+    .mindmap-viewer {
+      margin: 1rem 0 2rem;
+      outline: none;
+    }
+
+    .mindmap-viewer:focus-visible {
+      box-shadow: 0 0 0 2px #666;
+    }
+
+    .mindmap-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .mindmap-toolbar button {
+      padding: 4px 10px;
+      border: 1px solid #686868;
+      background: #f0f0f0;
+      cursor: pointer;
+      font: inherit;
+      border-radius: 1px;
+    }
+
+    .mindmap-toolbar button:hover {
+      background: #e5e5e5;
+    }
+
+    .mindmap-toolbar button:active {
+      background: #ddd;
+    }
+
+    .mindmap-toolbar button.is-pressed {
+      background: #d4d4e6;
+      border-color: #444;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .mindmap-stage.loupe-mode {
+      cursor: crosshair;
+    }
+
+    .mindmap-stage.loupe-mode.dragging {
+      cursor: move;
+    }
+
+    #mindmap-scale {
+      min-width: 3.5em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mindmap-hint {
+      font-size: 0.8rem;
+      color: #555;
+      width: 100%;
+      flex-basis: 100%;
+    }
+
+    .mindmap-stage {
+      position: relative;
+      height: min(78vh, 920px);
+      border: 1px solid #ccc;
+      background: #eaeaea;
+      overflow: hidden;
+      overscroll-behavior: contain;
+      touch-action: none;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .mindmap-stage.dragging {
+      cursor: grabbing;
+    }
+
+    .mindmap-layer {
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+
+    .mindmap-layer img {
+      display: block;
+      width: auto;
+      max-width: none;
+      height: auto;
+      image-rendering: auto;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .mindmap-loupe {
+      position: absolute;
+      inset: 0;
+      width: auto;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      border-radius: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 10;
+      box-shadow: inset 0 0 0 1px light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.2));
+      display: none;
+    }
+
+    .mindmap-loupe-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0;
+    }
+
+    .mindmap-loupe-inner img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: block;
+      width: auto;
+      max-width: none;
+      height: auto;
+      image-rendering: auto;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    #change_log ul {
+      list-style-type: none;
+      font-size: 10pt;
+    }
+
+    @media screen and (max-width: 600px) {
+      .mindmap-stage {
+        height: min(70vh, 640px);
+      }
+
+      .mindmap-toolbar {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="../index.html">
+            &lt;
+          </a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <ol class="breadcrumb">
+            <li><a href="../index.html">100%health</a></li>
+            <li><a href="/txt/txt_main.html">txt</a></li>
+            <li aria-current="page"><a href="/txt/system_mindmap.html">system mindmap</a></li>
+          </ol>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <header id="category-header">
+        <nav aria-label="ページカテゴリナビゲーション">
+          <ol class="sub-category">
+            <li><a href="/aboutme.html">about</a></li>
+            <li><a href="/txt/profile.html">profile</a></li>
+            <li><a href="/txt/100phealth_introduction.html">introduction</a></li>
+          </ol>
+        </nav>
+        <nav id="toc" aria-label="目次">
+          <ol id="toc-list">
+            <li><a href="#mindmap-about">このページについて</a></li>
+            <li><a href="#mindmap-viewer-heading">マインドマップ</a></li>
+            <li><a href="#change_log">更新履歴</a></li>
+          </ol>
+        </nav>
+      </header>
+      <article id="textblock">
+        <h1 class="title">system mindmap / <small title="personal interest mind map" lang="en">system_mindmap</small></h1>
+
+        <section id="mindmap-about">
+          <h2 class="heading_title"><ruby>このページについて<rt>なにをみるところ</rt></ruby> / <small title="about this page" lang="en">about</small><a href="#mindmap-about" class="header-link">§</a></h2>
+          <div class="section-item">
+            <p class="mindmap-lead">
+              個人的に気になる分野や話題をつなげたマインドマップです。解像度が大きいので、下のビューアで閲覧できます。<strong>ルーペ</strong>をオンにすると、<strong>表示域いっぱい</strong>でカーソル位置を基準に拡大表示します（下の地図はいつも通り操作できます）。<strong>左ドラッグ／ホイールクリック＋ドラッグ</strong>で移動、<strong>ホイール</strong>でカーソル位置を基準に拡大縮小、トラックパッドは<strong>横スワイプ</strong>で横移動。<strong><kbd>Shift</kbd>＋ホイール</strong>で縦横にスクロール相当の移動。タッチは<strong>2本指ピンチ</strong>、<strong>ダブルクリック</strong>でその位置を拡大。ビューアをクリックしてフォーカスしたうえで、<kbd>←↑→↓</kbd>で移動（<kbd>Shift</kbd>で大きく）、<kbd>+</kbd>／<kbd>−</kbd>／<kbd>0</kbd>で拡大・縮小・全体表示。
+            </p>
+          </div>
+        </section>
+
+        <section id="mindmap-panel" aria-labelledby="mindmap-viewer-heading">
+          <h2 id="mindmap-viewer-heading" class="heading_title"><ruby>マインドマップ<rt>めちゃおおきいがぞう</rt></ruby> / <small title="mind map image" lang="en">viewer</small><a href="#mindmap-panel" class="header-link">§</a></h2>
+          <div class="section-item">
+            <div class="mindmap-viewer" id="mindmap-root" tabindex="0" role="region"
+              aria-label="マインドマップ画像ビューア。ルーペ・ドラッグ・ホイール拡縮・矢印キーで操作">
+              <div class="mindmap-toolbar">
+                <button type="button" id="mindmap-loupe-toggle" aria-pressed="false"
+                  aria-label="ルーペモード。オンにすると表示域全体でカーソル位置を基準に拡大表示">ルーペ</button>
+                <button type="button" id="mindmap-zoom-in" aria-label="拡大">＋</button>
+                <button type="button" id="mindmap-zoom-out" aria-label="縮小">−</button>
+                <button type="button" id="mindmap-reset" aria-label="全体が入るサイズに戻す">全体表示</button>
+                <span id="mindmap-scale" aria-live="polite">100%</span>
+                <p class="mindmap-hint">画像サイズ 6517×7286 px。<a href="/img/system-mindmap.jpg">JPEG を別タブで開く</a></p>
+              </div>
+              <div class="mindmap-stage" id="mindmap-stage">
+                <div class="mindmap-layer" id="mindmap-layer">
+                  <img src="/img/system-mindmap.jpg" alt="個人的関心分野をつないだマインドマップ" width="6517" height="7286" decoding="async" fetchpriority="low">
+                </div>
+                <div class="mindmap-loupe" id="mindmap-loupe" aria-hidden="true">
+                  <div class="mindmap-loupe-inner">
+                    <img src="/img/system-mindmap.jpg" alt="" width="6517" height="7286" decoding="async" fetchpriority="low">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="change_log">
+          <h2 class="heading_title"><ruby>更新履歴<rt>このページの変わった日</rt></ruby> / <small title="change log of this page" lang="en">change log</small><a href="#change_log" class="header-link">§</a></h2>
+          <div class="section-item">
+            <ul>
+              <li><time datetime="2026-05-01">2026年05月01日</time> 初版公開／操作の調整／ルーペモード追加</li>
+            </ul>
+          </div>
+        </section>
+      </article>
+    </main>
+    <footer id="main-footer">
+      <div id="texthtml"></div>
+      <div id="sitenavhtml"></div>
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+  <script>
+    (function () {
+      var IW = 6517;
+      var IH = 7286;
+      var MIN_S = 0.06;
+      var MAX_S = 10;
+      var root = document.getElementById('mindmap-root');
+      var stage = document.getElementById('mindmap-stage');
+      var layer = document.getElementById('mindmap-layer');
+      var scaleEl = document.getElementById('mindmap-scale');
+      var scale = 1;
+      var tx = 0;
+      var ty = 0;
+      var pointers = new Map();
+      var drag = null;
+      var pinchLastDist = 0;
+      var LOUPE_MAG = 2.5;
+      var loupeEl = document.getElementById('mindmap-loupe');
+      var loupeImg = loupeEl.querySelector('img');
+      var loupeToggle = document.getElementById('mindmap-loupe-toggle');
+      var loupeOn = false;
+      var lastLoupe = { mx: 0, my: 0, valid: false };
+
+      function clamp(v, a, b) {
+        return Math.max(a, Math.min(b, v));
+      }
+
+      function clampPan() {
+        var r = stage.getBoundingClientRect();
+        var sw = r.width;
+        var sh = r.height;
+        var iw = IW * scale;
+        var ih = IH * scale;
+        if (iw <= sw) tx = (sw - iw) / 2;
+        else tx = clamp(tx, sw - iw, 0);
+        if (ih <= sh) ty = (sh - ih) / 2;
+        else ty = clamp(ty, sh - ih, 0);
+      }
+
+      function apply() {
+        clampPan();
+        layer.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+        scaleEl.textContent = Math.round(scale * 100) + '%';
+        refreshLoupe();
+      }
+
+      function updateLoupe(mx, my) {
+        if (!loupeOn) return;
+        var ix = clamp((mx - tx) / scale, 0, IW);
+        var iy = clamp((my - ty) / scale, 0, IH);
+        loupeEl.style.display = 'block';
+        var imgW = IW * scale * LOUPE_MAG;
+        loupeImg.style.width = imgW + 'px';
+        loupeImg.style.height = 'auto';
+        loupeImg.style.left = (mx - ix * scale * LOUPE_MAG) + 'px';
+        loupeImg.style.top = (my - iy * scale * LOUPE_MAG) + 'px';
+      }
+
+      function refreshLoupe() {
+        if (!loupeOn || !lastLoupe.valid) return;
+        updateLoupe(lastLoupe.mx, lastLoupe.my);
+      }
+
+      function fit() {
+        var r = stage.getBoundingClientRect();
+        var sFit = Math.min(r.width / IW, r.height / IH);
+        scale = clamp(sFit * 0.9, MIN_S, MAX_S);
+        tx = (r.width - IW * scale) / 2;
+        ty = (r.height - IH * scale) / 2;
+        apply();
+      }
+
+      function zoomAt(mx, my, factor) {
+        var ix = (mx - tx) / scale;
+        var iy = (my - ty) / scale;
+        var newScale = clamp(scale * factor, MIN_S, MAX_S);
+        tx = mx - ix * newScale;
+        ty = my - iy * newScale;
+        scale = newScale;
+        apply();
+      }
+
+      function centerZoom(factor) {
+        var r = stage.getBoundingClientRect();
+        zoomAt(r.width / 2, r.height / 2, factor);
+      }
+
+      function wheelDeltaPixels(d, mode) {
+        if (mode === 1) return d * 16;
+        if (mode === 2) return d * 800;
+        return d;
+      }
+
+      function pointerDistance() {
+        var pts = Array.from(pointers.values());
+        if (pts.length < 2) return 0;
+        var dx = pts[0].x - pts[1].x;
+        var dy = pts[0].y - pts[1].y;
+        return Math.hypot(dx, dy);
+      }
+
+      function pinchCenterInStage() {
+        var pts = Array.from(pointers.values());
+        var r = stage.getBoundingClientRect();
+        var cx = (pts[0].x + pts[1].x) / 2 - r.left;
+        var cy = (pts[0].y + pts[1].y) / 2 - r.top;
+        return { mx: cx, my: cy };
+      }
+
+      stage.addEventListener('pointerdown', function () {
+        root.focus({ preventScroll: true });
+      });
+
+      stage.addEventListener('wheel', function (e) {
+        e.preventDefault();
+        var r = stage.getBoundingClientRect();
+        var mx = e.clientX - r.left;
+        var my = e.clientY - r.top;
+
+        if (e.shiftKey) {
+          tx -= wheelDeltaPixels(e.deltaX, e.deltaMode);
+          ty -= wheelDeltaPixels(e.deltaY, e.deltaMode);
+          apply();
+          return;
+        }
+
+        var ddx = wheelDeltaPixels(e.deltaX, e.deltaMode);
+        var ddy = wheelDeltaPixels(e.deltaY, e.deltaMode);
+        if (Math.abs(ddx) >= Math.abs(ddy) && Math.abs(ddx) > 0.5) {
+          tx -= ddx;
+          apply();
+          return;
+        }
+
+        var dy = ddy;
+        var factor = Math.exp(-dy * 0.0011);
+        factor = clamp(factor, 0.88, 1.14);
+        zoomAt(mx, my, factor);
+      }, { passive: false });
+
+      stage.addEventListener('pointerdown', function (e) {
+        if (e.button !== 0 && e.button !== 1) return;
+        if (e.button === 1) e.preventDefault();
+        stage.setPointerCapture(e.pointerId);
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (pointers.size === 2) {
+          drag = null;
+          pinchLastDist = pointerDistance();
+        } else if (pointers.size === 1) {
+          drag = { id: e.pointerId, lx: e.clientX, ly: e.clientY };
+        }
+      });
+
+      stage.addEventListener('pointermove', function (e) {
+        if (pointers.has(e.pointerId)) {
+          var p = pointers.get(e.pointerId);
+          p.x = e.clientX;
+          p.y = e.clientY;
+        }
+        if (pointers.size === 2) {
+          var d = pointerDistance();
+          if (d > 0 && pinchLastDist > 0) {
+            var c = pinchCenterInStage();
+            zoomAt(c.mx, c.my, d / pinchLastDist);
+            pinchLastDist = d;
+          }
+          return;
+        }
+        if (drag && e.pointerId === drag.id) {
+          tx += e.clientX - drag.lx;
+          ty += e.clientY - drag.ly;
+          drag.lx = e.clientX;
+          drag.ly = e.clientY;
+          apply();
+        }
+        if (loupeOn && pointers.size <= 1) {
+          var sr = stage.getBoundingClientRect();
+          lastLoupe.mx = e.clientX - sr.left;
+          lastLoupe.my = e.clientY - sr.top;
+          lastLoupe.valid = true;
+          updateLoupe(lastLoupe.mx, lastLoupe.my);
+        }
+      });
+
+      function endPointer(e) {
+        pointers.delete(e.pointerId);
+        if (drag && e.pointerId === drag.id) drag = null;
+        if (pointers.size < 2) pinchLastDist = 0;
+        if (pointers.size === 1) {
+          var id = pointers.keys().next().value;
+          var p = pointers.get(id);
+          drag = { id: id, lx: p.x, ly: p.y };
+        }
+        if (pointers.size === 0) stage.classList.remove('dragging');
+      }
+
+      stage.addEventListener('pointerleave', function () {
+        if (!loupeOn) return;
+        loupeEl.style.display = 'none';
+        lastLoupe.valid = false;
+      });
+
+      stage.addEventListener('pointerup', endPointer);
+      stage.addEventListener('pointercancel', endPointer);
+
+      stage.addEventListener('pointerdown', function () {
+        if (pointers.size === 1) stage.classList.add('dragging');
+      });
+      stage.addEventListener('pointerup', function () {
+        if (pointers.size === 0) stage.classList.remove('dragging');
+      });
+
+      stage.addEventListener('dblclick', function (e) {
+        e.preventDefault();
+        var r = stage.getBoundingClientRect();
+        zoomAt(e.clientX - r.left, e.clientY - r.top, 1.35);
+      });
+
+      loupeToggle.addEventListener('click', function () {
+        loupeOn = !loupeOn;
+        loupeToggle.setAttribute('aria-pressed', loupeOn ? 'true' : 'false');
+        loupeToggle.classList.toggle('is-pressed', loupeOn);
+        stage.classList.toggle('loupe-mode', loupeOn);
+        loupeEl.setAttribute('aria-hidden', loupeOn ? 'false' : 'true');
+        if (!loupeOn) {
+          loupeEl.style.display = 'none';
+          lastLoupe.valid = false;
+        } else {
+          root.focus({ preventScroll: true });
+          refreshLoupe();
+        }
+      });
+
+      document.getElementById('mindmap-zoom-in').addEventListener('click', function () {
+        root.focus({ preventScroll: true });
+        centerZoom(1.22);
+      });
+      document.getElementById('mindmap-zoom-out').addEventListener('click', function () {
+        root.focus({ preventScroll: true });
+        centerZoom(1 / 1.22);
+      });
+      document.getElementById('mindmap-reset').addEventListener('click', function () {
+        root.focus({ preventScroll: true });
+        fit();
+      });
+
+      root.addEventListener('keydown', function (e) {
+        if (e.key === '+' || e.key === '=') {
+          e.preventDefault();
+          centerZoom(1.18);
+        } else if (e.key === '-' || e.key === '_') {
+          e.preventDefault();
+          centerZoom(1 / 1.18);
+        } else if (e.key === '0') {
+          e.preventDefault();
+          fit();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          var step = e.shiftKey ? 192 : 48;
+          if (e.key === 'ArrowLeft') tx += step;
+          if (e.key === 'ArrowRight') tx -= step;
+          if (e.key === 'ArrowUp') ty += step;
+          if (e.key === 'ArrowDown') ty -= step;
+          apply();
+        }
+      });
+
+      window.addEventListener('load', fit);
+    }());
+  </script>
+</body>
+
+</html>
