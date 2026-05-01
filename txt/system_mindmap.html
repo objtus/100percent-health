@@ -72,10 +72,13 @@
       background: #ddd;
     }
 
-    .mindmap-toolbar button.is-pressed {
-      background: #d4d4e6;
-      border-color: #444;
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+    .mindmap-toolbar button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .mindmap-viewer.loupe-active .mindmap-layer {
+      visibility: hidden;
     }
 
     .mindmap-stage.loupe-mode {
@@ -230,7 +233,7 @@
           <h2 class="heading_title"><ruby>このページについて<rt>なにをみるところ</rt></ruby> / <small title="about this page" lang="en">about</small><a href="#mindmap-about" class="header-link">§</a></h2>
           <div class="section-item">
             <p class="mindmap-lead">
-              個人的に気になる分野や話題をつなげたマインドマップです。解像度が大きいので、下のビューアで閲覧できます。<strong>ルーペ</strong>をオンにすると、<strong>表示域いっぱい</strong>でカーソル位置を基準に拡大表示します（下の地図はいつも通り操作できます）。<strong>左ドラッグ／ホイールクリック＋ドラッグ</strong>で移動、<strong>ホイール</strong>でカーソル位置を基準に拡大縮小、トラックパッドは<strong>横スワイプ</strong>で横移動。<strong><kbd>Shift</kbd>＋ホイール</strong>で縦横にスクロール相当の移動。タッチは<strong>2本指ピンチ</strong>、<strong>ダブルクリック</strong>でその位置を拡大。ビューアをクリックしてフォーカスしたうえで、<kbd>←↑→↓</kbd>で移動（<kbd>Shift</kbd>で大きく）、<kbd>+</kbd>／<kbd>−</kbd>／<kbd>0</kbd>で拡大・縮小・全体表示。
+              個人的に気になる分野や話題をつなげたマインドマップです。解像度が大きいので、下のビューアで閲覧できます。<strong>ルーペ</strong>をオンにすると本体は隠れ、<strong>常に「全体が描画域に収まった」ときと同じ座標</strong>でカーソル位置を拡大表示します（<strong>ホイール</strong>でルーペの拡大率のみ変更可。ルーペ中はパン・本体ズーム不可。オフにすると直前の表示に戻ります）。オフのとき:<strong>左ドラッグ／ホイールクリック＋ドラッグ</strong>で移動、<strong>ホイール</strong>で拡大縮小、<strong>横スワイプ</strong>で横移動、<strong><kbd>Shift</kbd>＋ホイール</strong>でスクロール相当の移動、<strong>2本指ピンチ</strong>、<strong>ダブルクリック</strong>で拡大、<kbd>←↑→↓</kbd>と<kbd>+</kbd>／<kbd>−</kbd>／<kbd>0</kbd>も利用できます。
             </p>
           </div>
         </section>
@@ -239,10 +242,10 @@
           <h2 id="mindmap-viewer-heading" class="heading_title"><ruby>マインドマップ<rt>めちゃおおきいがぞう</rt></ruby> / <small title="mind map image" lang="en">viewer</small><a href="#mindmap-panel" class="header-link">§</a></h2>
           <div class="section-item">
             <div class="mindmap-viewer" id="mindmap-root" tabindex="0" role="region"
-              aria-label="マインドマップ画像ビューア。ルーペ・ドラッグ・ホイール拡縮・矢印キーで操作">
+              aria-label="マインドマップ画像ビューア。ルーペモード時はフィット基準の拡大表示。通常時はドラッグ・ホイール等で操作">
               <div class="mindmap-toolbar">
                 <button type="button" id="mindmap-loupe-toggle" aria-pressed="false"
-                  aria-label="ルーペモード。オンにすると表示域全体でカーソル位置を基準に拡大表示">ルーペ</button>
+                  aria-label="ルーペモード。オンで本体を隠し、全体表示と同じ座標基準でカーソル付近を拡大">ルーペ</button>
                 <button type="button" id="mindmap-zoom-in" aria-label="拡大">＋</button>
                 <button type="button" id="mindmap-zoom-out" aria-label="縮小">−</button>
                 <button type="button" id="mindmap-reset" aria-label="全体が入るサイズに戻す">全体表示</button>
@@ -267,7 +270,7 @@
           <h2 class="heading_title"><ruby>更新履歴<rt>このページの変わった日</rt></ruby> / <small title="change log of this page" lang="en">change log</small><a href="#change_log" class="header-link">§</a></h2>
           <div class="section-item">
             <ul>
-              <li><time datetime="2026-05-01">2026年05月01日</time> 初版公開／操作の調整／ルーペモード追加</li>
+              <li><time datetime="2026-05-01">2026年05月01日</time> 初版〜操作調整／ルーペ（全体フィット基準・本体非表示）</li>
             </ul>
           </div>
         </section>
@@ -296,14 +299,74 @@
       var drag = null;
       var pinchLastDist = 0;
       var LOUPE_MAG = 2.5;
+      var LOUPE_MAG_MIN = 1.12;
+      var LOUPE_MAG_MAX = 8;
       var loupeEl = document.getElementById('mindmap-loupe');
       var loupeImg = loupeEl.querySelector('img');
       var loupeToggle = document.getElementById('mindmap-loupe-toggle');
       var loupeOn = false;
       var lastLoupe = { mx: 0, my: 0, valid: false };
+      var loupeSmooth = { mx: 0, my: 0 };
+      var loupeRaf = 0;
+      var LOUPE_SMOOTH = 0.22;
+      var LOUPE_SMOOTH_EPS_SQ = 0.35 * 0.35;
+      var zoomInBtn = document.getElementById('mindmap-zoom-in');
+      var zoomOutBtn = document.getElementById('mindmap-zoom-out');
+      var resetBtn = document.getElementById('mindmap-reset');
 
       function clamp(v, a, b) {
         return Math.max(a, Math.min(b, v));
+      }
+
+      function getFitTransform() {
+        var r = stage.getBoundingClientRect();
+        var sFit = Math.min(r.width / IW, r.height / IH);
+        var s = clamp(sFit * 0.9, MIN_S, MAX_S);
+        return {
+          s: s,
+          tx: (r.width - IW * s) / 2,
+          ty: (r.height - IH * s) / 2
+        };
+      }
+
+      function setMainToolbarDisabled(disabled) {
+        zoomInBtn.disabled = disabled;
+        zoomOutBtn.disabled = disabled;
+        resetBtn.disabled = disabled;
+      }
+
+      function cancelLoupeAnim() {
+        if (loupeRaf) {
+          cancelAnimationFrame(loupeRaf);
+          loupeRaf = 0;
+        }
+      }
+
+      function snapLoupeSmoothToTarget() {
+        loupeSmooth.mx = lastLoupe.mx;
+        loupeSmooth.my = lastLoupe.my;
+      }
+
+      function loupeAnimStep() {
+        loupeRaf = 0;
+        if (!loupeOn || !lastLoupe.valid) return;
+        var dx = lastLoupe.mx - loupeSmooth.mx;
+        var dy = lastLoupe.my - loupeSmooth.my;
+        if (dx * dx + dy * dy <= LOUPE_SMOOTH_EPS_SQ) {
+          loupeSmooth.mx = lastLoupe.mx;
+          loupeSmooth.my = lastLoupe.my;
+          updateLoupe(loupeSmooth.mx, loupeSmooth.my);
+          return;
+        }
+        loupeSmooth.mx += dx * LOUPE_SMOOTH;
+        loupeSmooth.my += dy * LOUPE_SMOOTH;
+        updateLoupe(loupeSmooth.mx, loupeSmooth.my);
+        loupeRaf = requestAnimationFrame(loupeAnimStep);
+      }
+
+      function kickLoupeAnim() {
+        if (!loupeOn || !lastLoupe.valid) return;
+        if (!loupeRaf) loupeRaf = requestAnimationFrame(loupeAnimStep);
       }
 
       function clampPan() {
@@ -319,35 +382,38 @@
       }
 
       function apply() {
-        clampPan();
-        layer.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
-        scaleEl.textContent = Math.round(scale * 100) + '%';
+        if (!loupeOn) {
+          clampPan();
+          layer.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+          scaleEl.textContent = Math.round(scale * 100) + '%';
+        }
         refreshLoupe();
       }
 
       function updateLoupe(mx, my) {
         if (!loupeOn) return;
-        var ix = clamp((mx - tx) / scale, 0, IW);
-        var iy = clamp((my - ty) / scale, 0, IH);
+        var F = getFitTransform();
+        var ix = clamp((mx - F.tx) / F.s, 0, IW);
+        var iy = clamp((my - F.ty) / F.s, 0, IH);
         loupeEl.style.display = 'block';
-        var imgW = IW * scale * LOUPE_MAG;
+        var imgW = IW * F.s * LOUPE_MAG;
         loupeImg.style.width = imgW + 'px';
         loupeImg.style.height = 'auto';
-        loupeImg.style.left = (mx - ix * scale * LOUPE_MAG) + 'px';
-        loupeImg.style.top = (my - iy * scale * LOUPE_MAG) + 'px';
+        loupeImg.style.left = (mx - ix * F.s * LOUPE_MAG) + 'px';
+        loupeImg.style.top = (my - iy * F.s * LOUPE_MAG) + 'px';
+        scaleEl.textContent = '×' + Math.round(LOUPE_MAG * 100) + '%';
       }
 
       function refreshLoupe() {
         if (!loupeOn || !lastLoupe.valid) return;
-        updateLoupe(lastLoupe.mx, lastLoupe.my);
+        updateLoupe(loupeSmooth.mx, loupeSmooth.my);
       }
 
       function fit() {
-        var r = stage.getBoundingClientRect();
-        var sFit = Math.min(r.width / IW, r.height / IH);
-        scale = clamp(sFit * 0.9, MIN_S, MAX_S);
-        tx = (r.width - IW * scale) / 2;
-        ty = (r.height - IH * scale) / 2;
+        var F = getFitTransform();
+        scale = F.s;
+        tx = F.tx;
+        ty = F.ty;
         apply();
       }
 
@@ -394,6 +460,20 @@
 
       stage.addEventListener('wheel', function (e) {
         e.preventDefault();
+        if (loupeOn) {
+          if (e.shiftKey) return;
+          var ddxL = wheelDeltaPixels(e.deltaX, e.deltaMode);
+          var ddyL = wheelDeltaPixels(e.deltaY, e.deltaMode);
+          if (Math.abs(ddxL) >= Math.abs(ddyL) && Math.abs(ddxL) > 0.5) return;
+          var dyL = ddyL;
+          var factorL = Math.exp(-dyL * 0.0011);
+          factorL = clamp(factorL, 0.88, 1.14);
+          LOUPE_MAG = clamp(LOUPE_MAG * factorL, LOUPE_MAG_MIN, LOUPE_MAG_MAX);
+          snapLoupeSmoothToTarget();
+          updateLoupe(loupeSmooth.mx, loupeSmooth.my);
+          return;
+        }
+
         var r = stage.getBoundingClientRect();
         var mx = e.clientX - r.left;
         var my = e.clientY - r.top;
@@ -420,6 +500,7 @@
       }, { passive: false });
 
       stage.addEventListener('pointerdown', function (e) {
+        if (loupeOn) return;
         if (e.button !== 0 && e.button !== 1) return;
         if (e.button === 1) e.preventDefault();
         stage.setPointerCapture(e.pointerId);
@@ -433,6 +514,14 @@
       });
 
       stage.addEventListener('pointermove', function (e) {
+        if (loupeOn) {
+          var sr0 = stage.getBoundingClientRect();
+          lastLoupe.mx = e.clientX - sr0.left;
+          lastLoupe.my = e.clientY - sr0.top;
+          lastLoupe.valid = true;
+          kickLoupeAnim();
+          return;
+        }
         if (pointers.has(e.pointerId)) {
           var p = pointers.get(e.pointerId);
           p.x = e.clientX;
@@ -454,13 +543,6 @@
           drag.ly = e.clientY;
           apply();
         }
-        if (loupeOn && pointers.size <= 1) {
-          var sr = stage.getBoundingClientRect();
-          lastLoupe.mx = e.clientX - sr.left;
-          lastLoupe.my = e.clientY - sr.top;
-          lastLoupe.valid = true;
-          updateLoupe(lastLoupe.mx, lastLoupe.my);
-        }
       });
 
       function endPointer(e) {
@@ -477,6 +559,7 @@
 
       stage.addEventListener('pointerleave', function () {
         if (!loupeOn) return;
+        cancelLoupeAnim();
         loupeEl.style.display = 'none';
         lastLoupe.valid = false;
       });
@@ -493,6 +576,7 @@
 
       stage.addEventListener('dblclick', function (e) {
         e.preventDefault();
+        if (loupeOn) return;
         var r = stage.getBoundingClientRect();
         zoomAt(e.clientX - r.left, e.clientY - r.top, 1.35);
       });
@@ -501,31 +585,46 @@
         loupeOn = !loupeOn;
         loupeToggle.setAttribute('aria-pressed', loupeOn ? 'true' : 'false');
         loupeToggle.classList.toggle('is-pressed', loupeOn);
+        root.classList.toggle('loupe-active', loupeOn);
         stage.classList.toggle('loupe-mode', loupeOn);
         loupeEl.setAttribute('aria-hidden', loupeOn ? 'false' : 'true');
+        layer.setAttribute('aria-hidden', loupeOn ? 'true' : 'false');
+        setMainToolbarDisabled(loupeOn);
         if (!loupeOn) {
+          cancelLoupeAnim();
           loupeEl.style.display = 'none';
           lastLoupe.valid = false;
+          apply();
         } else {
+          cancelLoupeAnim();
           root.focus({ preventScroll: true });
-          refreshLoupe();
+          var br = stage.getBoundingClientRect();
+          lastLoupe.mx = br.width / 2;
+          lastLoupe.my = br.height / 2;
+          lastLoupe.valid = true;
+          snapLoupeSmoothToTarget();
+          updateLoupe(loupeSmooth.mx, loupeSmooth.my);
         }
       });
 
-      document.getElementById('mindmap-zoom-in').addEventListener('click', function () {
+      zoomInBtn.addEventListener('click', function () {
+        if (loupeOn) return;
         root.focus({ preventScroll: true });
         centerZoom(1.22);
       });
-      document.getElementById('mindmap-zoom-out').addEventListener('click', function () {
+      zoomOutBtn.addEventListener('click', function () {
+        if (loupeOn) return;
         root.focus({ preventScroll: true });
         centerZoom(1 / 1.22);
       });
-      document.getElementById('mindmap-reset').addEventListener('click', function () {
+      resetBtn.addEventListener('click', function () {
+        if (loupeOn) return;
         root.focus({ preventScroll: true });
         fit();
       });
 
       root.addEventListener('keydown', function (e) {
+        if (loupeOn) return;
         if (e.key === '+' || e.key === '=') {
           e.preventDefault();
           centerZoom(1.18);
@@ -543,6 +642,13 @@
           if (e.key === 'ArrowUp') ty += step;
           if (e.key === 'ArrowDown') ty -= step;
           apply();
+        }
+      });
+
+      window.addEventListener('resize', function () {
+        if (loupeOn && lastLoupe.valid) {
+          snapLoupeSmoothToTarget();
+          refreshLoupe();
         }
       });
 
