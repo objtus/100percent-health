@@ -50,31 +50,186 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 0.5rem 0.75rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
+      gap: 0.3rem 0.45rem;
+      margin-bottom: 0.3rem;
+      font-size: 0.8125rem;
+      --mm-edge: light-dark(#c8c8c8, #4a4a4a);
+      --mm-fill: light-dark(#f5f5f5, #262626);
+      --mm-hover: light-dark(#ebebeb, #333);
+      --mm-active: light-dark(#e0e0e0, #3d3d3d);
+      --mm-track: light-dark(#bdbdbd, #5a5a5a);
+      --mm-thumb: light-dark(#222, #d0d0d0);
+      --mm-label: light-dark(#555, #b0b0b0);
     }
 
-    .mindmap-toolbar button {
-      padding: 4px 10px;
-      border: 1px solid #686868;
-      background: #f0f0f0;
+    .mindmap-zoom-bar {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 0;
+      padding: 0 1px;
+      border: 1px solid var(--mm-edge);
+      border-radius: 1px;
+      background: var(--mm-fill);
+    }
+
+    .mindmap-zoom-bar .mindmap-zoom-btn {
+      flex-shrink: 0;
+      width: 1.35rem;
+      height: 1.35rem;
+      padding: 0;
+      margin: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 400;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mindmap-zoom-bar .mindmap-zoom-btn:hover:not(:disabled) {
+      background: var(--mm-hover);
+    }
+
+    .mindmap-zoom-bar .mindmap-zoom-btn:active:not(:disabled) {
+      background: var(--mm-active);
+    }
+
+    .mindmap-zoom-bar .mindmap-zoom-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .mindmap-zoom-bar input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: clamp(96px, 26vw, 240px);
+      height: 1.2rem;
+      margin: 0 2px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .mindmap-zoom-bar input[type="range"]:focus {
+      outline: none;
+    }
+
+    .mindmap-zoom-bar input[type="range"]:focus-visible {
+      outline: 1px solid light-dark(#333, #888);
+      outline-offset: 1px;
+    }
+
+    .mindmap-zoom-bar input[type="range"]::-webkit-slider-runnable-track {
+      height: 3px;
+      border-radius: 0;
+      background: var(--mm-track);
+    }
+
+    .mindmap-zoom-bar input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 11px;
+      height: 11px;
+      margin-top: -4px;
+      border-radius: 0;
+      background: var(--mm-thumb);
+      border: 1px solid var(--mm-edge);
+      box-shadow: none;
+    }
+
+    .mindmap-zoom-bar input[type="range"]::-moz-range-track {
+      height: 3px;
+      border-radius: 0;
+      background: var(--mm-track);
+    }
+
+    .mindmap-zoom-bar input[type="range"]::-moz-range-thumb {
+      width: 11px;
+      height: 11px;
+      border: 1px solid var(--mm-edge);
+      border-radius: 0;
+      background: var(--mm-thumb);
+      box-shadow: none;
+    }
+
+    .mindmap-zoom-pct {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+      align-items: baseline;
+      min-width: 12em;
+      margin-right: 2px;
+      padding-left: 2px;
+      font-size: 0.75rem;
+      color: var(--mm-label);
+      white-space: nowrap;
+    }
+
+    .mindmap-zoom-pct-inner {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      align-items: baseline;
+      font-family: ui-monospace, "Cascadia Mono", "Consolas", monospace;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .mindmap-zoom-pct-val {
+      display: inline-block;
+      white-space: pre;
+    }
+
+    .mindmap-zoom-pct-pad {
+      opacity: 0.4;
+      user-select: none;
+    }
+
+    .mindmap-zoom-pct-sym {
+      flex: none;
+    }
+
+    .mindmap-scale-aux {
+      visibility: hidden;
+      white-space: pre;
+    }
+
+    .mindmap-scale-aux.is-visible {
+      visibility: visible;
+    }
+
+    .mindmap-toolbar .mindmap-tb-action {
+      padding: 0.18rem 0.45rem;
+      border: 1px solid var(--mm-edge);
+      border-radius: 1px;
+      background: var(--mm-fill);
+      color: inherit;
       cursor: pointer;
       font: inherit;
-      border-radius: 1px;
+      font-size: 0.75rem;
     }
 
-    .mindmap-toolbar button:hover {
-      background: #e5e5e5;
+    .mindmap-toolbar .mindmap-tb-action:hover:not(:disabled) {
+      background: var(--mm-hover);
     }
 
-    .mindmap-toolbar button:active {
-      background: #ddd;
+    .mindmap-toolbar .mindmap-tb-action:active:not(:disabled) {
+      background: var(--mm-active);
     }
 
-    .mindmap-toolbar button:disabled {
-      opacity: 0.5;
+    .mindmap-toolbar .mindmap-tb-action:disabled {
+      opacity: 0.45;
       cursor: not-allowed;
+    }
+
+    .mindmap-toolbar .mindmap-tb-action.is-pressed {
+      background: var(--mm-active);
+      border-color: var(--mm-label);
     }
 
     .mindmap-viewer.loupe-active .mindmap-layer {
@@ -89,16 +244,12 @@
       cursor: move;
     }
 
-    #mindmap-scale {
-      min-width: 3.5em;
-      font-variant-numeric: tabular-nums;
-    }
-
     .mindmap-hint {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #555;
       width: 100%;
       flex-basis: 100%;
+      margin: 0.1rem 0 0;
     }
 
     .mindmap-stage {
@@ -174,6 +325,7 @@
       user-select: none;
       -webkit-user-drag: none;
     }
+
     #change_log ul {
       list-style-type: none;
       font-size: 10pt;
@@ -185,7 +337,7 @@
       }
 
       .mindmap-toolbar {
-        font-size: 0.85rem;
+        font-size: 0.78rem;
       }
     }
   </style>
@@ -241,12 +393,15 @@
             <div class="mindmap-viewer" id="mindmap-root" tabindex="0" role="region"
               aria-label="マインドマップ画像ビューア。ルーペモード時はフィット基準の拡大表示。通常時はドラッグ・ホイール等で操作">
               <div class="mindmap-toolbar">
-                <button type="button" id="mindmap-loupe-toggle" aria-pressed="false"
+                <div class="mindmap-zoom-bar" id="mindmap-zoom-bar" role="group" aria-label="ズーム">
+                  <button type="button" class="mindmap-zoom-btn" id="mindmap-zoom-out" aria-label="縮小">−</button>
+                  <input type="range" id="mindmap-zoom-slider" min="0" max="1000" value="0" aria-label="表示のズーム（通常は倍率、ルーペ時は拡大率）">
+                  <button type="button" class="mindmap-zoom-btn" id="mindmap-zoom-in" aria-label="拡大">＋</button>
+                  <span class="mindmap-zoom-pct" id="mindmap-scale" aria-live="polite"><span class="mindmap-zoom-pct-inner"><span class="mindmap-zoom-pct-val" id="mindmap-scale-val"><span class="mindmap-zoom-pct-pad" id="mindmap-scale-pad" aria-hidden="true"></span><span id="mindmap-scale-nums">100</span></span><span class="mindmap-zoom-pct-sym">%</span></span><span id="mindmap-scale-aux" class="mindmap-scale-aux"></span></span>
+                </div>
+                <button type="button" class="mindmap-tb-action" id="mindmap-reset" aria-label="全体が入るサイズに戻す">全体表示</button>
+                <button type="button" class="mindmap-tb-action" id="mindmap-loupe-toggle" aria-pressed="false"
                   aria-label="ルーペモード。オンで本体を隠し、全体表示と同じ座標基準でカーソル付近を拡大">ルーペ</button>
-                <button type="button" id="mindmap-zoom-in" aria-label="拡大">＋</button>
-                <button type="button" id="mindmap-zoom-out" aria-label="縮小">−</button>
-                <button type="button" id="mindmap-reset" aria-label="全体が入るサイズに戻す">全体表示</button>
-                <span id="mindmap-scale" aria-live="polite">100%</span>
                 <p class="mindmap-hint">画像サイズ 6517×7286 px&emsp;<a href="/img/system-mindmap.jpg" target="_blank" rel="noopener noreferrer">JPEG を別タブで開く</a></p>
               </div>
               <div class="mindmap-stage" id="mindmap-stage">
@@ -288,7 +443,6 @@
       var root = document.getElementById('mindmap-root');
       var stage = document.getElementById('mindmap-stage');
       var layer = document.getElementById('mindmap-layer');
-      var scaleEl = document.getElementById('mindmap-scale');
       var scale = 1;
       var tx = 0;
       var ty = 0;
@@ -313,9 +467,96 @@
       var zoomInBtn = document.getElementById('mindmap-zoom-in');
       var zoomOutBtn = document.getElementById('mindmap-zoom-out');
       var resetBtn = document.getElementById('mindmap-reset');
+      var zoomSlider = document.getElementById('mindmap-zoom-slider');
+      var zoomBar = document.getElementById('mindmap-zoom-bar');
+      var syncingSlider = false;
+
+      var ZOOM_PCT_DIGITS = 4;
+      var ZOOM_PCT_PAD = '\u00B7';
+      var scalePad = document.getElementById('mindmap-scale-pad');
+      var scaleNums = document.getElementById('mindmap-scale-nums');
+      var scaleAux = document.getElementById('mindmap-scale-aux');
 
       function clamp(v, a, b) {
         return Math.max(a, Math.min(b, v));
+      }
+
+      function mainScaleSliderMin() {
+        return getFitTransform().s;
+      }
+
+      function scaleToSliderValue(s) {
+        var smin = mainScaleSliderMin();
+        var smax = MAX_S;
+        if (smax <= smin * 1.000001) return 0;
+        s = clamp(s, smin, smax);
+        var lo = Math.log(smin);
+        var hi = Math.log(smax);
+        return Math.round(1000 * (Math.log(s) - lo) / (hi - lo));
+      }
+
+      function sliderValueToScale(t) {
+        var smin = mainScaleSliderMin();
+        var smax = MAX_S;
+        if (smax <= smin) return smin;
+        var lo = Math.log(smin);
+        var hi = Math.log(smax);
+        var r = clamp(Number(t), 0, 1000) / 1000;
+        return Math.exp(lo + r * (hi - lo));
+      }
+
+      function syncZoomSliderFromState() {
+        syncingSlider = true;
+        if (loupeOn) {
+          zoomSlider.value = String(loupeMagToSliderValue(LOUPE_MAG));
+        } else {
+          zoomSlider.value = String(scaleToSliderValue(scale));
+        }
+        syncingSlider = false;
+      }
+
+      function setZoomBarModeLabels() {
+        if (loupeOn) {
+          zoomBar.setAttribute('aria-label', 'ルーペ拡大率');
+          zoomSlider.setAttribute('aria-label', 'ルーペの拡大率（対数スケール）');
+          zoomInBtn.setAttribute('aria-label', 'ルーペで拡大');
+          zoomOutBtn.setAttribute('aria-label', 'ルーペで縮小');
+        } else {
+          zoomBar.setAttribute('aria-label', 'ズーム');
+          zoomSlider.setAttribute('aria-label', '表示のズーム（対数スケール）');
+          zoomInBtn.setAttribute('aria-label', '拡大');
+          zoomOutBtn.setAttribute('aria-label', '縮小');
+        }
+      }
+
+      function setLoupeOnlyChrome(disabled) {
+        resetBtn.disabled = disabled;
+      }
+
+      function loupeMagToSliderValue(m) {
+        var lo = Math.log(LOUPE_MAG_MIN);
+        var hi = Math.log(LOUPE_MAG_MAX);
+        m = clamp(m, LOUPE_MAG_MIN, LOUPE_MAG_MAX);
+        return Math.round(1000 * (Math.log(m) - lo) / (hi - lo));
+      }
+
+      function sliderValueToLoupeMag(t) {
+        var lo = Math.log(LOUPE_MAG_MIN);
+        var hi = Math.log(LOUPE_MAG_MAX);
+        var r = clamp(Number(t), 0, 1000) / 1000;
+        return Math.exp(lo + r * (hi - lo));
+      }
+
+      function loupeZoomBy(factor) {
+        if (!loupeOn) return;
+        LOUPE_MAG = clamp(LOUPE_MAG * factor, LOUPE_MAG_MIN, LOUPE_MAG_MAX);
+        syncZoomSliderFromState();
+        if (loupeOverStage) {
+          snapLoupeSmoothToTarget();
+          updateLoupeFollow(loupeSmooth.mx, loupeSmooth.my);
+        } else {
+          updateLoupeOverview();
+        }
       }
 
       function getFitTransform() {
@@ -327,12 +568,6 @@
           tx: (r.width - IW * s) / 2,
           ty: (r.height - IH * s) / 2
         };
-      }
-
-      function setMainToolbarDisabled(disabled) {
-        zoomInBtn.disabled = disabled;
-        zoomOutBtn.disabled = disabled;
-        resetBtn.disabled = disabled;
       }
 
       function cancelLoupeAnim() {
@@ -391,6 +626,26 @@
         if (!loupeRaf) loupeRaf = requestAnimationFrame(loupeAnimStep);
       }
 
+      function setScaleValDigits(n) {
+        var s = String(Math.round(Number(n)));
+        if (s.length > ZOOM_PCT_DIGITS) s = s.slice(-ZOOM_PCT_DIGITS);
+        var padLen = ZOOM_PCT_DIGITS - s.length;
+        scalePad.textContent = padLen ? ZOOM_PCT_PAD.repeat(padLen) : '';
+        scaleNums.textContent = s;
+      }
+
+      function setScaleReadoutNormal() {
+        setScaleValDigits(scale * 100);
+        scaleAux.textContent = '';
+        scaleAux.classList.remove('is-visible');
+      }
+
+      function setScaleReadoutLoupe(showOverviewSuffix) {
+        setScaleValDigits(LOUPE_MAG * 100);
+        scaleAux.textContent = ' · 全体';
+        scaleAux.classList.toggle('is-visible', showOverviewSuffix);
+      }
+
       function clampPan() {
         var r = stage.getBoundingClientRect();
         var sw = r.width;
@@ -407,7 +662,8 @@
         if (!loupeOn) {
           clampPan();
           layer.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
-          scaleEl.textContent = Math.round(scale * 100) + '%';
+          setScaleReadoutNormal();
+          syncZoomSliderFromState();
         }
         refreshLoupe();
       }
@@ -425,7 +681,7 @@
         loupeImg.style.height = 'auto';
         loupeImg.style.left = ((sw - w) / 2) + 'px';
         loupeImg.style.top = ((sh - h) / 2) + 'px';
-        scaleEl.textContent = '×' + Math.round(LOUPE_MAG * 100) + '% · 全体';
+        setScaleReadoutLoupe(true);
       }
 
       function updateLoupeFollow(mx, my) {
@@ -439,7 +695,7 @@
         loupeImg.style.height = 'auto';
         loupeImg.style.left = (mx - ix * F.s * LOUPE_MAG) + 'px';
         loupeImg.style.top = (my - iy * F.s * LOUPE_MAG) + 'px';
-        scaleEl.textContent = '×' + Math.round(LOUPE_MAG * 100) + '%';
+        setScaleReadoutLoupe(false);
       }
 
       function refreshLoupe() {
@@ -463,7 +719,8 @@
       function zoomAt(mx, my, factor) {
         var ix = (mx - tx) / scale;
         var iy = (my - ty) / scale;
-        var newScale = clamp(scale * factor, MIN_S, MAX_S);
+        var smin = mainScaleSliderMin();
+        var newScale = clamp(scale * factor, smin, MAX_S);
         tx = mx - ix * newScale;
         ty = my - iy * newScale;
         scale = newScale;
@@ -512,6 +769,7 @@
           var factorL = Math.exp(-dyL * 0.0011);
           factorL = clamp(factorL, 0.88, 1.14);
           LOUPE_MAG = clamp(LOUPE_MAG * factorL, LOUPE_MAG_MIN, LOUPE_MAG_MAX);
+          syncZoomSliderFromState();
           if (loupeOverStage) {
             snapLoupeSmoothToTarget();
             updateLoupeFollow(loupeSmooth.mx, loupeSmooth.my);
@@ -648,7 +906,8 @@
         stage.classList.toggle('loupe-mode', loupeOn);
         loupeEl.setAttribute('aria-hidden', loupeOn ? 'false' : 'true');
         layer.setAttribute('aria-hidden', loupeOn ? 'true' : 'false');
-        setMainToolbarDisabled(loupeOn);
+        setLoupeOnlyChrome(loupeOn);
+        setZoomBarModeLabels();
         if (!loupeOn) {
           cancelPendingLoupeLeave();
           cancelLoupeAnim();
@@ -667,19 +926,45 @@
           snapLoupeSmoothToTarget();
           loupeOverStage = false;
           updateLoupeOverview();
+          syncZoomSliderFromState();
         }
       });
 
+      zoomSlider.addEventListener('input', function () {
+        if (syncingSlider) return;
+        if (loupeOn) {
+          LOUPE_MAG = clamp(sliderValueToLoupeMag(zoomSlider.value), LOUPE_MAG_MIN, LOUPE_MAG_MAX);
+          if (loupeOverStage) {
+            snapLoupeSmoothToTarget();
+            updateLoupeFollow(loupeSmooth.mx, loupeSmooth.my);
+          } else {
+            updateLoupeOverview();
+          }
+          return;
+        }
+        var newS = sliderValueToScale(zoomSlider.value);
+        var r = stage.getBoundingClientRect();
+        var mx = r.width / 2;
+        var my = r.height / 2;
+        var ix = (mx - tx) / scale;
+        var iy = (my - ty) / scale;
+        tx = mx - ix * newS;
+        ty = my - iy * newS;
+        scale = newS;
+        apply();
+      });
+
       zoomInBtn.addEventListener('click', function () {
-        if (loupeOn) return;
         root.focus({ preventScroll: true });
-        centerZoom(1.22);
+        if (loupeOn) loupeZoomBy(1.22);
+        else centerZoom(1.22);
       });
       zoomOutBtn.addEventListener('click', function () {
-        if (loupeOn) return;
         root.focus({ preventScroll: true });
-        centerZoom(1 / 1.22);
+        if (loupeOn) loupeZoomBy(1 / 1.22);
+        else centerZoom(1 / 1.22);
       });
+
       resetBtn.addEventListener('click', function () {
         if (loupeOn) return;
         root.focus({ preventScroll: true });
@@ -709,7 +994,17 @@
       });
 
       window.addEventListener('resize', function () {
-        if (!loupeOn) return;
+        if (!loupeOn) {
+          var smin = mainScaleSliderMin();
+          if (scale < smin) {
+            scale = smin;
+            var r0 = stage.getBoundingClientRect();
+            tx = (r0.width - IW * scale) / 2;
+            ty = (r0.height - IH * scale) / 2;
+          }
+          apply();
+          return;
+        }
         if (loupeOverStage && lastLoupe.valid) {
           snapLoupeSmoothToTarget();
           refreshLoupe();
@@ -718,6 +1013,8 @@
         }
       });
 
+      setLoupeOnlyChrome(false);
+      setZoomBarModeLabels();
       window.addEventListener('load', fit);
     }());
   </script>
