@@ -204,42 +204,39 @@
           <ol class="breadcrumb">
             <li><a href="../index.html">100%health</a></li>
             <li><a href="/txt/txt_main.html">txt</a></li>
-            <li aria-current="page"><a href="/txt/system_mindmap.html">system mindmap</a></li>
+            <li aria-current="page"><a href="/txt/system_mindmap.html">system_mindmap</a></li>
           </ol>
         </nav>
       </div>
     </header>
     <main id="main">
       <header id="category-header">
-        <nav aria-label="ページカテゴリナビゲーション">
-          <ol class="sub-category">
-            <li><a href="/aboutme.html">about</a></li>
-            <li><a href="/txt/profile.html">profile</a></li>
-            <li><a href="/txt/100phealth_introduction.html">introduction</a></li>
-          </ol>
-        </nav>
         <nav id="toc" aria-label="目次">
           <ol id="toc-list">
             <li><a href="#mindmap-about">このページについて</a></li>
-            <li><a href="#mindmap-viewer-heading">マインドマップ</a></li>
+            <li><a href="#mindmap-viewer-heading">マインドマップビューア</a></li>
             <li><a href="#change_log">更新履歴</a></li>
           </ol>
         </nav>
       </header>
       <article id="textblock">
-        <h1 class="title">system mindmap / <small title="personal interest mind map" lang="en">system_mindmap</small></h1>
+        <h1 class="title">system_mindmap</h1>
 
         <section id="mindmap-about">
-          <h2 class="heading_title"><ruby>このページについて<rt>なにをみるところ</rt></ruby> / <small title="about this page" lang="en">about</small><a href="#mindmap-about" class="header-link">§</a></h2>
+          <h2 class="heading_title">このページについて<a href="#mindmap-about" class="header-link">§</a></h2>
           <div class="section-item">
             <p class="mindmap-lead">
-              個人的に気になる分野や話題をつなげたマインドマップです。解像度が大きいので、下のビューアで閲覧できます。<strong>ルーペ</strong>をオンにすると本体は隠れ、キャンバス<strong>上</strong>ではフィット基準の座標で、ホイールで決めた倍率を掛けた拡大をカーソルに追従させます。キャンバス<strong>外</strong>では画像<strong>全体</strong>だけを、収まりきりの倍率（フィット）で見せます（境界では「外れた」判定をすこし遅らせ、ちらつきにくくしています）。ホイールで決めた倍率の<strong>数値は維持</strong>され、キャンバスに戻ると再び反映されます（外にいるあいだの表示ラベルは「·全体」付き）。ルーペ中は本体のパン・ズーム不可。オフで直前の表示へ。オフのとき:<strong>左ドラッグ／ホイールクリック＋ドラッグ</strong>、<strong>ホイール</strong>、<strong>横スワイプ</strong>、<strong><kbd>Shift</kbd>＋ホイール</strong>、<strong>2本指ピンチ</strong>、<strong>ダブルクリック</strong>、<kbd>←↑→↓</kbd>と<kbd>+</kbd>／<kbd>−</kbd>／<kbd>0</kbd>も利用できます。
+              個人的に気になる分野や話題をつなげたマインドマップです。当初は「システム思考」関連のトピックをまとめるというテーマで作成しましたが、現在はより広い範囲のトピックを扱うようになっています。<br>
+              <br>
+              解像度が大きいので、下のビューアで閲覧できます。<strong>ルーペ</strong>をオンにするとマウスカーソルに追従して拡大するようになります（スクロールで拡大率変化）。<br>
+              <br>
+              マインドマップは<a href="https://xmind.com/ja/" target="_blank" rel="noopener noreferrer">Xmind</a>で作成しています。
             </p>
           </div>
         </section>
 
         <section id="mindmap-panel" aria-labelledby="mindmap-viewer-heading">
-          <h2 id="mindmap-viewer-heading" class="heading_title"><ruby>マインドマップ<rt>めちゃおおきいがぞう</rt></ruby> / <small title="mind map image" lang="en">viewer</small><a href="#mindmap-panel" class="header-link">§</a></h2>
+          <h2 id="mindmap-viewer-heading" class="heading_title">マインドマップビューア<a href="#mindmap-panel" class="header-link">§</a></h2>
           <div class="section-item">
             <div class="mindmap-viewer" id="mindmap-root" tabindex="0" role="region"
               aria-label="マインドマップ画像ビューア。ルーペモード時はフィット基準の拡大表示。通常時はドラッグ・ホイール等で操作">
@@ -250,7 +247,7 @@
                 <button type="button" id="mindmap-zoom-out" aria-label="縮小">−</button>
                 <button type="button" id="mindmap-reset" aria-label="全体が入るサイズに戻す">全体表示</button>
                 <span id="mindmap-scale" aria-live="polite">100%</span>
-                <p class="mindmap-hint">画像サイズ 6517×7286 px。<a href="/img/system-mindmap.jpg">JPEG を別タブで開く</a></p>
+                <p class="mindmap-hint">画像サイズ 6517×7286 px&emsp;<a href="/img/system-mindmap.jpg" target="_blank" rel="noopener noreferrer">JPEG を別タブで開く</a></p>
               </div>
               <div class="mindmap-stage" id="mindmap-stage">
                 <div class="mindmap-layer" id="mindmap-layer">
@@ -267,10 +264,10 @@
         </section>
 
         <section id="change_log">
-          <h2 class="heading_title"><ruby>更新履歴<rt>このページの変わった日</rt></ruby> / <small title="change log of this page" lang="en">change log</small><a href="#change_log" class="header-link">§</a></h2>
+          <h2 class="heading_title">更新履歴<a href="#change_log" class="header-link">§</a></h2>
           <div class="section-item">
             <ul>
-              <li><time datetime="2026-05-01">2026年05月01日</time> 初版〜／ルーペ（全体俯瞰・境界は外れ判定を遅延）</li>
+              <li><time datetime="2026-05-01">2026年05月01日</time> 初版</li>
             </ul>
           </div>
         </section>
@@ -287,7 +284,7 @@
       var IW = 6517;
       var IH = 7286;
       var MIN_S = 0.06;
-      var MAX_S = 10;
+      var MAX_S = 3;
       var root = document.getElementById('mindmap-root');
       var stage = document.getElementById('mindmap-stage');
       var layer = document.getElementById('mindmap-layer');
@@ -300,7 +297,7 @@
       var pinchLastDist = 0;
       var LOUPE_MAG = 2.5;
       var LOUPE_MAG_MIN = 1.12;
-      var LOUPE_MAG_MAX = 8;
+      var LOUPE_MAG_MAX = 10;
       var loupeEl = document.getElementById('mindmap-loupe');
       var loupeImg = loupeEl.querySelector('img');
       var loupeToggle = document.getElementById('mindmap-loupe-toggle');
