@@ -1100,6 +1100,14 @@ function buildSeriesFilters() {
     btn.innerHTML =
       `<span class="series-dot" style="background:${color}"></span><span class="series-label">${series}</span><span class="series-count">${count}</span>`;
     btn.addEventListener('click', () => {
+      if (activeSeriesFilter === series) {
+        activeSeriesFilter = null;
+        queryGraph('.series-btn').forEach(b => b.classList.remove('active'));
+        allBtn.classList.add('active');
+        renderGraph(allArtworks);
+        document.getElementById('graph-stats').textContent = `${allArtworks.length} artworks`;
+        return;
+      }
       activeSeriesFilter = series;
       queryGraph('.series-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
