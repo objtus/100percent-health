@@ -1008,8 +1008,9 @@ function showDetail(art) {
   const previewEl = document.getElementById('graph-sidebar-preview');
   const base = 'https://yuinoid.neocities.org';
   const img = document.getElementById('graph-detail-img');
+  const imageUrl = base + art.image_path.replace('../../', '/');
+
   img.alt = art.id ? `thumbnail: ${art.id}` : '';
-  img.src = base + art.image_path.replace('../../', '/');
   document.getElementById('graph-detail-id').textContent = art.id;
   document.getElementById('graph-detail-date').textContent = art.date;
   document.getElementById('graph-detail-link').href = base + art.path;
@@ -1020,15 +1021,23 @@ function showDetail(art) {
       return `<a class="detail-tag" href="${href}">#${safeLabel}</a>`;
     })
     .join('');
-  if (placeholder) placeholder.hidden = true;
-  document.getElementById('graph-detail-panel').classList.add('visible');
+
+  /* iOS WebKit は display:none 内の <img> に src を足しても取得を開始しないことがある。
+     狭い画面では #graph-sidebar ごと非表示のため、先に開いてから次フレームで src を付ける。 */
   if (mqSidebarCollapse.matches) {
     graphAppEl.classList.add('graph-app--sidebar-open');
     sidebarToggleEl.setAttribute('aria-expanded', 'true');
-    requestAnimationFrame(() => {
-      if (previewEl) previewEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
   }
+  if (placeholder) placeholder.hidden = true;
+  document.getElementById('graph-detail-panel').classList.add('visible');
+
+  img.removeAttribute('src');
+  requestAnimationFrame(() => {
+    img.src = imageUrl;
+    if (mqSidebarCollapse.matches && previewEl) {
+      previewEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  });
 }
 
 function hideDetail() {

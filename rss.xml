@@ -5,9 +5,17 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 01 May 2026 07:46:55 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 01 May 2026 11:30:58 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>systemにマインドマップページを追加</title>
+      <link>https://yuinoid.neocities.org/txt/system_mindmap.html</link>
+      <description>txtコーナーにマインドマップページを追加しました。趣味のマインドマップを表示するページです。</description>
+      <pubDate>Fri, 01 May 2026 11:30:58 GMT</pubDate>
+      <category>txt</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#evd8a4-20260501</guid>
+    </item>
     <item>
       <title>galleryにグラフページを追加</title>
       <link>https://yuinoid.neocities.org/gallery/gallery_graph.html</link>
