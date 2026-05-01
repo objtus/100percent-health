@@ -233,7 +233,7 @@
           <h2 class="heading_title"><ruby>このページについて<rt>なにをみるところ</rt></ruby> / <small title="about this page" lang="en">about</small><a href="#mindmap-about" class="header-link">§</a></h2>
           <div class="section-item">
             <p class="mindmap-lead">
-              個人的に気になる分野や話題をつなげたマインドマップです。解像度が大きいので、下のビューアで閲覧できます。<strong>ルーペ</strong>をオンにすると本体は隠れ、キャンバス<strong>上</strong>ではフィット基準の座標で、ホイールで決めた倍率を掛けた拡大をカーソルに追従させます。キャンバス<strong>外</strong>では画像<strong>全体</strong>だけを、収まりきりの倍率（フィット）で見せます。ホイールで決めた倍率の<strong>数値は維持</strong>され、キャンバスに戻ると再び反映されます（外にいるあいだの表示ラベルは「·全体」付き）。ルーペ中は本体のパン・ズーム不可。オフで直前の表示へ。オフのとき:<strong>左ドラッグ／ホイールクリック＋ドラッグ</strong>、<strong>ホイール</strong>、<strong>横スワイプ</strong>、<strong><kbd>Shift</kbd>＋ホイール</strong>、<strong>2本指ピンチ</strong>、<strong>ダブルクリック</strong>、<kbd>←↑→↓</kbd>と<kbd>+</kbd>／<kbd>−</kbd>／<kbd>0</kbd>も利用できます。
+              個人的に気になる分野や話題をつなげたマインドマップです。解像度が大きいので、下のビューアで閲覧できます。<strong>ルーペ</strong>をオンにすると本体は隠れ、キャンバス<strong>上</strong>ではフィット基準の座標で、ホイールで決めた倍率を掛けた拡大をカーソルに追従させます。キャンバス<strong>外</strong>では画像<strong>全体</strong>だけを、収まりきりの倍率（フィット）で見せます（境界では「外れた」判定をすこし遅らせ、ちらつきにくくしています）。ホイールで決めた倍率の<strong>数値は維持</strong>され、キャンバスに戻ると再び反映されます（外にいるあいだの表示ラベルは「·全体」付き）。ルーペ中は本体のパン・ズーム不可。オフで直前の表示へ。オフのとき:<strong>左ドラッグ／ホイールクリック＋ドラッグ</strong>、<strong>ホイール</strong>、<strong>横スワイプ</strong>、<strong><kbd>Shift</kbd>＋ホイール</strong>、<strong>2本指ピンチ</strong>、<strong>ダブルクリック</strong>、<kbd>←↑→↓</kbd>と<kbd>+</kbd>／<kbd>−</kbd>／<kbd>0</kbd>も利用できます。
             </p>
           </div>
         </section>
@@ -270,7 +270,7 @@
           <h2 class="heading_title"><ruby>更新履歴<rt>このページの変わった日</rt></ruby> / <small title="change log of this page" lang="en">change log</small><a href="#change_log" class="header-link">§</a></h2>
           <div class="section-item">
             <ul>
-              <li><time datetime="2026-05-01">2026年05月01日</time> 初版〜操作調整／ルーペ（全体フィット基準・本体非表示・キャンバス外は全体俯瞰と倍率維持）</li>
+              <li><time datetime="2026-05-01">2026年05月01日</time> 初版〜／ルーペ（全体俯瞰・境界は外れ判定を遅延）</li>
             </ul>
           </div>
         </section>
@@ -309,6 +309,8 @@
       var loupeSmooth = { mx: 0, my: 0 };
       var loupeRaf = 0;
       var loupeOverStage = true;
+      var loupeLeaveTimer = 0;
+      var LOUPE_LEAVE_DELAY_MS = 100;
       var LOUPE_SMOOTH = 0.22;
       var LOUPE_SMOOTH_EPS_SQ = 0.35 * 0.35;
       var zoomInBtn = document.getElementById('mindmap-zoom-in');
@@ -341,6 +343,28 @@
           cancelAnimationFrame(loupeRaf);
           loupeRaf = 0;
         }
+      }
+
+      function cancelPendingLoupeLeave() {
+        if (loupeLeaveTimer) {
+          clearTimeout(loupeLeaveTimer);
+          loupeLeaveTimer = 0;
+        }
+      }
+
+      function commitLoupeLeftStage() {
+        if (!loupeOn) return;
+        cancelLoupeAnim();
+        loupeOverStage = false;
+        updateLoupeOverview();
+      }
+
+      function scheduleLoupeLeave() {
+        cancelPendingLoupeLeave();
+        loupeLeaveTimer = setTimeout(function () {
+          loupeLeaveTimer = 0;
+          commitLoupeLeftStage();
+        }, LOUPE_LEAVE_DELAY_MS);
       }
 
       function snapLoupeSmoothToTarget() {
@@ -586,6 +610,7 @@
 
       stage.addEventListener('pointerenter', function (e) {
         if (!loupeOn) return;
+        cancelPendingLoupeLeave();
         loupeOverStage = true;
         var sr = stage.getBoundingClientRect();
         lastLoupe.mx = e.clientX - sr.left;
@@ -598,8 +623,7 @@
       stage.addEventListener('pointerleave', function () {
         if (!loupeOn) return;
         cancelLoupeAnim();
-        loupeOverStage = false;
-        updateLoupeOverview();
+        scheduleLoupeLeave();
       });
 
       stage.addEventListener('pointerup', endPointer);
@@ -629,12 +653,14 @@
         layer.setAttribute('aria-hidden', loupeOn ? 'true' : 'false');
         setMainToolbarDisabled(loupeOn);
         if (!loupeOn) {
+          cancelPendingLoupeLeave();
           cancelLoupeAnim();
           loupeEl.style.display = 'none';
           lastLoupe.valid = false;
           loupeOverStage = true;
           apply();
         } else {
+          cancelPendingLoupeLeave();
           cancelLoupeAnim();
           root.focus({ preventScroll: true });
           lastLoupe.valid = true;
