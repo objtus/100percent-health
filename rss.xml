@@ -5,9 +5,17 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 01 May 2026 11:30:58 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 11 May 2026 11:03:21 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>miscコーナーを新設、ゲストブックページを作成</title>
+      <link>https://yuinoid.neocities.org/guestbook/index.html</link>
+      <description>ゲストブックページをあらたに作成しました。また、ゲストブックページを含むコーナーとして「misc.」を新設しました。これまでどのコーナーにも属していなかったplanetページをmisc.コーナーに配置したほか、changelogページもmisc.コーナー配下としました。</description>
+      <pubDate>Mon, 11 May 2026 11:03:21 GMT</pubDate>
+      <category>misc</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#ek5dtt-20260511</guid>
+    </item>
     <item>
       <title>systemにマインドマップページを追加</title>
       <link>https://yuinoid.neocities.org/txt/system_mindmap.html</link>

@@ -182,19 +182,23 @@
       height: 100%;
     }
 
+    /* grid + height:100% は iOS Safari で％高さが解決せず実高 0 になりやすい */
     .graph-detail-thumb--image {
-      display: grid;
-      place-items: center;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 0;
+      background: var(--graph-img-bg);
     }
 
     #graph-detail-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      vertical-align: bottom;
-      image-rendering: auto;
       display: block;
+      width: 100%;
+      height: auto;
+      max-height: min(24rem, 60vh);
+      object-fit: contain;
+      image-rendering: auto;
     }
 
     /* 詳細／プレースホルダ本文 — 共通カード */
@@ -280,9 +284,12 @@
       border-radius: 3px;
     }
 
+    /* 親の grid-template-rows: 175px auto を引きずると1列でも1行目が 175px 固定になりプレビューが溢れて下段と重なる */
     @media screen and (width <= 480px) {
       .graph-sidebar-grid {
         grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        grid-auto-rows: auto;
         gap: 14px;
       }
 
@@ -644,6 +651,7 @@
             <li><a href="/works/works_main.html">works</a></li>
             <li><a href="/txt/txt_main.html">txt</a></li>
             <li><a href="/links/links_main.html">links</a></li>
+            <li><a href="/misc/index.html">misc</a></li>
           </ol>
           <ol class="sub-category">
             <li><a href="/gallery/gallery_main.html">gallery</a></li>

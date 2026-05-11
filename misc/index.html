@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>misc - 100%health</title>
+  <meta name="description" content="100%health における、その他のページへの目次。各ページのURLは独立しています。">
+  <link rel="stylesheet" href="/1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="/js/jquery-3.6.0.min.js" defer></script>
+  <script src="/js/main.js" defer></script>
+  <script src="/js/mouse.js" defer></script>
+  <style>
+    #back, #address {
+      backdrop-filter: none;
+    }
+
+    #main h1.title {
+      padding-top: 0;
+      scale: 1 1;
+      margin-bottom: 1.25rem;
+    }
+
+    h1.title .title-en {
+      font-size: 0.65em;
+      font-weight: normal;
+      opacity: 0.85;
+    }
+
+    .misc-lead {
+      margin: 0 0 2rem;
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    .misc-entries {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .misc-entries > li {
+      margin: 1.35rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1rem;
+      align-items: baseline;
+      line-height: 1.55;
+    }
+
+    .misc-entries .misc-name {
+      flex: 0 0 auto;
+      min-width: 7.5rem;
+    }
+
+    .misc-entries .misc-name a {
+      font-weight: bold;
+    }
+
+    .misc-entries .misc-desc {
+      flex: 1 1 12rem;
+      font-size: 0.92rem;
+      opacity: 0.92;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="/index.html">&lt;</a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <ol class="breadcrumb">
+            <li><a href="/index.html">100%health</a></li>
+            <li aria-current="page"><a href="/misc/index.html">misc</a></li>
+          </ol>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <header id="category-header">
+        <nav aria-label="カテゴリナビゲーション">
+          <ol class="main-category">
+            <li><a href="/aboutme.html">about</a></li>
+            <li><a href="/gallery/gallery_main.html">gallery</a></li>
+            <li><a href="/works/works_main.html">works</a></li>
+            <li><a href="/txt/txt_main.html">txt</a></li>
+            <li><a href="/links/links_main.html">links</a></li>
+            <li><a href="/misc/index.html">misc</a></li>
+          </ol>
+          <ol class="sub-category">
+            <li aria-current="page"><a href="/misc/index.html">misc</a></li>
+            <li><a href="/changelog_main.html">changelog</a></li>
+            <li><a href="/guestbook/">guestbook</a></li>
+            <li><a href="/planet/index.html">planet</a></li>
+          </ol>
+        </nav>
+      </header>
+
+      <article id="textblock">
+        <h1 class="title">misc / <span class="title-en" lang="en" title="miscellaneous index">miscellaneous</span></h1>
+
+        <p class="misc-lead">
+          主要なコーナー（about / gallery / txt / links など）に分けにくいページへの目次です。<br>
+          リンク先のパスはこの階層に依存しません。
+        </p>
+
+        <section aria-labelledby="misc-list-heading">
+          <h2 id="misc-list-heading" class="visually-hidden">一覧</h2>
+          <ul class="misc-entries">
+            <li>
+              <span class="misc-name"><a href="/changelog_main.html">changelog</a></span>
+              <span class="misc-desc">このサイトの更新履歴です。</span>
+            </li>
+            <li>
+              <span class="misc-name"><a href="/guestbook/">guestbook</a></span>
+              <span class="misc-desc">サイト訪問者向けのゲストブックです。掲示板的な使い方も可。なんでも書いてね。</span>
+            </li>
+            <li>
+              <span class="misc-name"><a href="/planet/index.html">planet yuinoid</a></span>
+              <span class="misc-desc">yuinoid / いど子 のアクティビティをまとめて閲覧できるページです。過去30日分のデータを閲覧できます。一日3回自動更新されます。</span>
+            </li>
+          </ul>
+        </section>
+      </article>
+    </main>
+
+    <footer id="main-footer">
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+</body>
+
+</html>
