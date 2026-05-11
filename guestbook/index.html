@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>guestbook - 100%health</title>
+  <link rel="alternate" type="application/rss+xml" title="guestbook RSS" href="https://gb.idoko.org/api/guestbook-rss">
+  <link rel="stylesheet" href="/1column.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="/js/jquery-3.6.0.min.js" defer></script>
+  <script src="/js/main.js" defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <style>
+    /* ===========================
+       ゲストブック固有スタイル
+       1column.cssと統合する差分定義
+    =========================== */
+
+    /* フォーム・エントリーで使う変数を1column.cssのlight-darkに合わせて定義 */
+    :root {
+      --gb-fg:       light-dark(#0a0a0a, #e8e8e8);
+      --gb-fg-muted: light-dark(#4a4a4a, #aaaaaa);
+      --gb-fg-faint: light-dark(#8a8a8a, #666666);
+      --gb-bg:       light-dark(#ffffff, #222222);
+      --gb-line:     light-dark(#cccccc, #444444);
+      --gb-line-soft:light-dark(#d4d4d4, #383838);
+      --gb-surface:  light-dark(#f7f7f7, #2a2a2a);
+      --gb-font: saitamaar, PikoA, "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+    }
+
+    /* ページタイトル（txt_main.htmlに合わせる） */
+    h1.title {
+      font-size: clamp(1.05rem, 2.5vw, 1.2rem);
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      text-align: right;
+      margin-bottom: 0.25rem;
+      scale: none; /* 1column.cssのscale: 1 0.8を上書き */
+      padding-top: 0;
+    }
+
+    .guestbook-intro {
+      font-family: var(--gb-font);
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      color: var(--gb-fg-muted);
+      margin: 0.65rem 0 0;
+      max-width: 42em;
+      text-align: left;
+    }
+
+    .guestbook-intro + .guestbook-intro {
+      margin-top: 0.45rem;
+    }
+
+    .guestbook-intro code {
+      font-size: 0.9em;
+      padding: 0.05em 0.3em;
+      background: var(--gb-surface);
+      border: 1px solid var(--gb-line-soft);
+    }
+
+    /* ポスターフィルターバナー */
+    #poster-filter-banner {
+      display: none;
+      font-family: var(--gb-font);
+      font-size: 0.8125rem;
+      color: var(--gb-fg-muted);
+      margin: 1rem 0 1.25rem;
+      padding: 0.5rem 0 0.65rem;
+      border-bottom: 1px dashed var(--gb-line-soft);
+    }
+
+    /* ===========================
+       投稿フォーム
+    =========================== */
+    #post-form {
+      margin-top: 2rem;
+      margin-bottom: 2.75rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--gb-line-soft);
+    }
+
+    #post-form h2,
+    #comments-section h2 {
+      font-family: var(--gb-font);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gb-fg-muted);
+      margin-bottom: 1rem;
+      padding-top: 0;
+      scale: none;
+    }
+
+    #fields-panel .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-bottom: 0.25rem;
+    }
+
+    #fields-panel .form-row:last-child > label::after {
+      content: " *";
+      color: var(--gb-fg-muted);
+    }
+
+    label {
+      font-family: var(--gb-font);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gb-fg-muted);
+    }
+
+    input[type="text"],
+    textarea {
+      font-family: var(--gb-font);
+      width: 100%;
+      border: 1px solid var(--gb-line);
+      border-radius: 0;
+      padding: 0.2rem 0.5rem;
+      background: var(--gb-bg);
+      color: var(--gb-fg);
+      appearance: none;
+      resize: vertical;
+      line-height: 1.45;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: var(--gb-fg-faint);
+      opacity: 1;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: 1px solid var(--gb-fg);
+      outline-offset: 1px;
+    }
+
+    textarea {
+      min-height: 7rem;
+      tab-size: 2;
+    }
+
+    .form-row-meta {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.75rem;
+    }
+
+    .form-compose-time {
+      font-family: var(--gb-font);
+      font-size: 0.6875rem;
+      color: var(--gb-fg-faint);
+      letter-spacing: 0.02em;
+      flex: 0 1 auto;
+      cursor: pointer;
+    }
+
+    .form-compose-time:hover {
+      color: var(--gb-fg-muted);
+    }
+
+    .char-count {
+      font-family: var(--gb-font);
+      font-size: 0.6875rem;
+      color: var(--gb-fg-faint);
+      text-align: right;
+      letter-spacing: 0.02em;
+      margin-left: auto;
+      flex: 0 1 auto;
+    }
+
+    .char-count.warn {
+      color: var(--gb-fg);
+      font-weight: 600;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    /* ブラケットボタン（gb.idoko.orgスタイルを踏襲）
+       背景は background-image の帯だけにし、position で文字・ブラケットとの縦関係だけ調整できるようにする */
+    .btn {
+      --btn-fill: light-dark(#cccccc, #444444);
+      --btn-fill-height: 1.05em; /* 帯の高さ（小さくすると上下に余白が出る） */
+      --btn-fill-pos-y: calc(50% - 2px); /* 帯を上へ: 2px を大きく / 下へ: 小さく or 負の付け足し */
+
+      font-family: var(--gb-font);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      color: var(--gb-fg);
+      appearance: none;
+      background-color: transparent;
+      background-image: linear-gradient(var(--btn-fill), var(--btn-fill));
+      background-repeat: no-repeat;
+      background-size: 100% var(--btn-fill-height);
+      background-position: 0 var(--btn-fill-pos-y);
+    }
+
+    .btn::before {
+      content: "[";
+      margin-inline-start: -0.1em;
+      margin-inline-end: 0.18em;
+    }
+
+    .btn::after {
+      content: "]";
+      margin-inline-start: 0.18em;
+      margin-inline-end: -0.1em;
+    }
+
+    .btn:hover:not(:disabled) {
+      --btn-fill: light-dark(#ffffff, #555555);
+    }
+
+    .btn-primary {
+      font-weight: 600;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      --btn-fill: light-dark(#b3b3b3, #555555);
+    }
+
+    .btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--gb-fg);
+      outline-offset: 2px;
+    }
+
+    /* プレビューパネル */
+    #preview-panel {
+      display: none;
+      margin-bottom: 1rem;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--gb-line-soft);
+      background: var(--gb-surface);
+      font-family: var(--gb-font);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #preview-panel.is-visible {
+      display: block;
+    }
+
+    #form-status {
+      font-family: var(--gb-font);
+      font-size: 0.8125rem;
+      margin-top: 0.65rem;
+      min-height: 1.35em;
+      color: var(--gb-fg-muted);
+    }
+
+    #form-status.err {
+      color: light-dark(#a22000, #ff6644);
+      font-weight: 600;
+    }
+
+    .cf-turnstile {
+      margin-top: 0.75rem;
+      transform: scale(0.9);
+      transform-origin: left center;
+    }
+
+    /* ===========================
+       コメント一覧
+    =========================== */
+    #comments-section {
+      border-top: 1px solid var(--gb-line-soft);
+      padding-top: 1.75rem;
+    }
+
+    .guestbook-entry {
+      padding: 0.15rem 0 0 2rem;
+      border-bottom: 1px solid var(--gb-line-soft);
+    }
+
+    .guestbook-entry:last-child {
+      border-bottom: none;
+    }
+
+    .guestbook-head {
+      font-family: var(--gb-font);
+      font-size: 0.75rem;
+      line-height: 1.55;
+      word-break: break-word;
+      color: var(--gb-fg);
+    }
+
+    .guestbook-head-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0 1rem;
+      margin-bottom: 0.05em;
+    }
+
+    .guestbook-head-id {
+      flex: 0 0 auto;
+      margin-left: -2.1em;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gb-fg);
+      text-decoration: none;
+    }
+
+    .guestbook-head-id:hover {
+      background-color: var(--gb-fg);
+      color: var(--gb-bg);
+      text-decoration: none;
+    }
+
+    .guestbook-head-meta {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      column-gap: 1em;
+      row-gap: 0;
+      line-height: 1.2;
+      align-items: baseline;
+    }
+
+    .guestbook-meta-k {
+      color: var(--gb-fg-faint);
+      white-space: nowrap;
+    }
+
+    .guestbook-meta-v {
+      color: var(--gb-fg);
+      word-break: break-word;
+    }
+
+    .guestbook-head a {
+      text-decoration: none;
+    }
+
+    .guestbook-head a:hover {
+      text-decoration: underline;
+    }
+
+    .p-author {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .guestbook-body {
+      font-family: var(--gb-font);
+      font-size: 1rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-top: 0;
+      color: var(--gb-fg);
+      border-left: 2em solid var(--gb-line-soft);
+      margin-left: -2em;
+      padding: 5px 0;
+    }
+
+    .guestbook-body a.body-link {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      word-break: break-all;
+    }
+
+    .guestbook-body a.body-link:hover {
+      background-color: var(--gb-fg);
+      color: var(--gb-bg);
+      text-decoration: none;
+    }
+
+    .guestbook-stats {
+      font-family: var(--gb-font);
+      color: var(--gb-fg-faint);
+      flex: 1 1 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: baseline;
+      gap: 0 1.25em;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .guestbook-stats-id a {
+      text-decoration: none;
+      color: var(--gb-fg-faint);
+    }
+
+    .guestbook-stats-id a:hover {
+      background-color: var(--gb-fg);
+      color: var(--gb-bg);
+    }
+
+    .reply-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0;
+    }
+
+    /* 未来No.参照は薄く */
+    .ref-link--stale {
+      opacity: 0.4;
+    }
+
+    /* ページネーション */
+    .comments-pagination {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gb-line-soft);
+    }
+
+    .pagination-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      font-family: var(--gb-font);
+      font-size: 0.8125rem;
+    }
+
+    .pagination-meta {
+      color: var(--gb-fg-faint);
+    }
+
+    .pagination-link {
+      text-decoration: none;
+      color: var(--gb-fg-muted);
+    }
+
+    .pagination-link:hover {
+      background-color: var(--gb-fg);
+      color: var(--gb-bg);
+    }
+
+    .pagination-link--disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* ===========================
+       個別ページ（?id=NNN）コンテキストビュー
+    =========================== */
+    .guestbook-context-nav {
+      margin-bottom: 1rem;
+      font-family: var(--gb-font);
+      font-size: 0.8125rem;
+    }
+
+    .guestbook-context-block {
+      margin-top: 1.75rem;
+    }
+
+    .guestbook-context-block:first-of-type {
+      margin-top: 0.75rem;
+    }
+
+    .guestbook-context-h2 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem;
+      font-family: var(--gb-font);
+      padding-top: 0;
+      scale: none;
+    }
+
+    .guestbook-context-empty {
+      color: var(--gb-fg-faint);
+      font-size: 0.8125rem;
+    }
+
+    .guestbook-context-block--parents {
+      padding: 0.85rem 0.95rem;
+      background: var(--gb-surface);
+    }
+
+    .guestbook-context-block--parents > .guestbook-context-h2 {
+      font-size: 0.8125rem;
+      opacity: 0.5;
+      margin-bottom: 0.3rem;
+    }
+
+    .guestbook-context-block--parents .guestbook-entry > header {
+      opacity: 0.5;
+    }
+
+    .guestbook-context-block--parents .guestbook-body {
+      border-left-color: transparent;
+    }
+
+    .guestbook-context-block--parents .guestbook-meta-k,
+    .guestbook-context-block--parents .guestbook-meta-v {
+      display: none;
+    }
+
+    .guestbook-context-block--parents .guestbook-meta-k:first-child,
+    .guestbook-context-block--parents .guestbook-meta-v:has(.p-author) {
+      display: inline;
+    }
+
+    .guestbook-context-block--focus > .guestbook-context-h2 {
+      font-size: 1rem;
+    }
+
+    .guestbook-context-block--focus .guestbook-head-id {
+      margin-left: 0 !important;
+    }
+
+    .guestbook-context-block--replies {
+        margin: 3.5rem 2rem;
+
+        & > .guestbook-context-h2 {
+            color: var(--gb-fg-faint);
+            font-size: 0.75rem;
+            margin-bottom: 0;
+        }
+
+        .guestbook-head-id {
+            color: var(--gb-fg-faint);
+            &:hover {
+                color: white;
+                background-color: var(--gb-fg-faint);
+            }
+        }
+
+        .p-author {
+            color: var(--gb-fg-faint);
+        }
+
+        .guestbook-body {
+            border-left-color: transparent;
+        }
+
+        .guestbook-meta-k,
+        .guestbook-meta-v {
+            display: none;
+        }
+        
+        .guestbook-meta-k:first-child,
+        .guestbook-meta-v:has(.p-author) {
+            display: inline;
+        }
+        }
+
+    .guestbook-replies .guestbook-entry {
+        margin-top: 1rem;
+    }
+
+    .guestbook-replies .guestbook-entry:first-child {
+        margin-top: 0;
+    }
+
+    /* ローディング・空表示 */
+    #loading,
+    #no-comments {
+      font-family: var(--gb-font);
+      color: var(--gb-fg-faint);
+      font-size: 0.8125rem;
+      letter-spacing: 0.05em;
+    }
+
+    #no-comments {
+      display: none;
+    }
+
+    /* ホバープレビュー（>>No.） */
+    #ref-preview {
+      position: fixed;
+      z-index: 200;
+      max-width: min(340px, 80vw);
+      padding: 0.6rem 0.8rem;
+      background: var(--gb-bg);
+      border: 1px solid var(--gb-line);
+      font-family: var(--gb-font);
+      font-size: 0.75rem;
+      line-height: 1.5;
+      pointer-events: none;
+      display: none;
+      word-break: break-word;
+      white-space: pre-wrap;
+      box-shadow: 2px 2px 0 var(--gb-line);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="/index.html">&lt;</a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <ol class="breadcrumb">
+            <li><a href="/index.html">100%health</a></li>
+            <li aria-current="page"><a href="/guestbook/">guestbook</a></li>
+          </ol>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <header id="category-header">
+        <nav aria-label="カテゴリナビゲーション">
+          <ol class="main-category">
+            <li><a href="/aboutme.html">about</a></li>
+            <li><a href="/gallery/gallery_main.html">gallery</a></li>
+            <li><a href="/works/works_main.html">works</a></li>
+            <li><a href="/txt/txt_main.html">txt</a></li>
+            <li><a href="/links/links_main.html">links</a></li>
+            <li><a href="/misc/index.html">misc</a></li>
+          </ol>
+          <ol class="sub-category">
+            <li><a href="/misc/index.html">misc</a></li>
+            <li><a href="/changelog_main.html">changelog</a></li>
+            <li aria-current="page"><a href="/guestbook/">guestbook</a></li>
+            <li><a href="/planet/index.html">planet</a></li>
+          </ol>
+        </nav>
+      </header>
+
+      <h1 class="title">guestbook</h1>
+
+      <!-- 個別ページ（?id=NNN）のときはここにコンテキストビューを描画 -->
+      <div id="context-view" style="display:none"></div>
+
+      <!-- 一覧ページのみ表示 -->
+      <div id="list-view">
+        <p class="guestbook-intro">
+          このサイトのゲストブックです。短いメッセージや返信など、自由にどうぞ。送信前に <strong>Review</strong> で表示を確認できます。本文では <code>&gt;&gt;番号</code>（例: <code>&gt;&gt;001</code>）で他の投稿へリンクできます。
+        </p>
+        <p class="guestbook-intro" lang="en">
+          Public guestbook for short notes and replies. Use <strong>Review</strong> before you post. In the message, reference another post with <code>&gt;&gt;number</code> (e.g. <code>&gt;&gt;001</code>).
+        </p>
+        <p id="poster-filter-banner" role="status"></p>
+
+        <section id="post-form">
+          <h2>Write</h2>
+          <input type="hidden" id="input-reply-to" value="">
+
+          <div id="fields-panel">
+            <!-- ハニーポット -->
+            <div class="form-row visually-hidden" aria-hidden="true">
+              <label for="input-website">website</label>
+              <input type="text" id="input-website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="form-row">
+              <label for="input-name">name</label>
+              <input type="text" id="input-name" maxlength="50" placeholder="Anonymous" autocomplete="off">
+            </div>
+            <div class="form-row">
+              <label for="input-subject">subject</label>
+              <input type="text" id="input-subject" maxlength="120" placeholder="(no subject)" autocomplete="off">
+            </div>
+            <div class="form-row">
+              <label for="input-message">message</label>
+              <textarea id="input-message" maxlength="1000" placeholder="message..."></textarea>
+              <div class="form-row-meta" aria-label="現在時刻と文字数">
+                <time id="form-compose-time" class="form-compose-time" role="button" tabindex="0" datetime=""></time>
+                <div class="char-count" id="char-count">0 chars / 0 bytes · max 1000 chars</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="preview-panel" aria-live="polite"></div>
+
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAADIZD04CPzXtviYs" data-theme="auto"></div>
+
+          <div class="form-actions">
+            <button type="button" class="btn" id="clear-btn">Clear</button>
+            <button type="button" class="btn" id="preview-btn">Review</button>
+            <button type="button" class="btn" id="edit-btn" style="display:none">Edit</button>
+            <button type="button" class="btn btn-primary" id="submit-btn" style="display:none">Post</button>
+          </div>
+          <div id="form-status"></div>
+        </section>
+
+        <section id="comments-section">
+          <h2>messages</h2>
+          <div id="loading">loading...</div>
+          <div id="no-comments">No comments yet.</div>
+          <div id="comments-list"></div>
+          <nav id="comments-pagination" class="comments-pagination" aria-label="ページ送り" hidden></nav>
+        </section>
+      </div>
+    </main>
+
+    <footer id="main-footer">
+        <div id="footerhtml"></div>
+    </footer>
+  </div>
+
+  <!-- ホバープレビュー用オーバーレイ -->
+  <div id="ref-preview" role="tooltip" aria-live="polite"></div>
+
+  <script>
+    const API = 'https://gb.idoko.org/api/comments';
+    const BASE_URL = '/guestbook/';
+    const MESSAGE_MAX = 1000;
+    const MESSAGE_WARN_THRESHOLD = 900;
+    let globalMaxId = 0;
+    let posterFilter = '';
+    let listPage = 1;
+    let listLimit = null;
+
+    /* ===========================
+       ユーティリティ
+    =========================== */
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+    function escAttr(str) {
+      return escHtml(str).replace(/'/g, '&#39;');
+    }
+    function utf8Bytes(s) {
+      return new TextEncoder().encode(s).length;
+    }
+    function charCountUnicode(s) {
+      return [...String(s)].length;
+    }
+    function displaySubjectRow(c) {
+      return c.subject && String(c.subject).trim() ? String(c.subject).trim() : '(no subject)';
+    }
+    function isoDatetimeAttr(iso) {
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return '';
+      return d.toISOString();
+    }
+    function unixTimestamp(iso) {
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return '';
+      return Math.floor(d.getTime() / 1000);
+    }
+    function formatLocalHuman(iso) {
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return String(iso);
+      return d.toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false,
+      });
+    }
+    const relFmt = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+    function formatRelative(iso) {
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return String(iso);
+      const diff = Math.round((d.getTime() - Date.now()) / 1000);
+      const past = diff < 0;
+      const s = Math.abs(diff);
+      if (s < 45) return 'just now';
+      if (s < 3600) { const m = Math.max(1, Math.round(s / 60)); return relFmt.format(past ? -m : m, 'minute'); }
+      if (s < 86400) { const h = Math.max(1, Math.round(s / 3600)); return relFmt.format(past ? -h : h, 'hour'); }
+      if (s < 86400 * 7) { const days = Math.max(1, Math.round(s / 86400)); return relFmt.format(past ? -days : days, 'day'); }
+      if (s < 86400 * 30) { const w = Math.max(1, Math.round(s / (86400 * 7))); return relFmt.format(past ? -w : w, 'week'); }
+      if (s < 86400 * 365) { const mo = Math.max(1, Math.round(s / (86400 * 30))); return relFmt.format(past ? -mo : mo, 'month'); }
+      const y = Math.max(1, Math.round(s / (86400 * 365)));
+      return relFmt.format(past ? -y : y, 'year');
+    }
+    function toggleTimeDisplay(timeEl) {
+      const iso = timeEl.getAttribute('datetime');
+      if (!iso) return;
+      if (timeEl.dataset.displayMode === 'relative') {
+        timeEl.dataset.displayMode = 'absolute';
+        timeEl.textContent = formatLocalHuman(iso);
+        timeEl.title = 'Click to show relative time';
+      } else {
+        timeEl.dataset.displayMode = 'relative';
+        timeEl.textContent = formatRelative(iso);
+        timeEl.title = 'Click to show date and time';
+      }
+    }
+
+    /* ===========================
+       ありがとうメッセージ
+    =========================== */
+    function thankYouMessage() {
+      const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Tokyo', hour: 'numeric', hour12: false });
+      const h = parseInt(fmt.formatToParts(new Date()).find(p => p.type === 'hour').value, 10);
+      if (h >= 5 && h < 12) return 'Thank you for posting this morning.';
+      if (h >= 12 && h < 18) return 'Thank you.';
+      if (h >= 18 && h < 22) return 'Thank you—and take it easy tonight.';
+      return 'Thanks for posting so late.';
+    }
+
+    /* ===========================
+       URLビルダー
+    =========================== */
+    function permUrl(id) {
+      return `${BASE_URL}?id=${String(id).padStart(3, '0')}`;
+    }
+    function buildListHref(page) {
+      const p = new URLSearchParams();
+      if (posterFilter) p.set('poster', posterFilter);
+      if (listLimit != null) p.set('limit', String(listLimit));
+      if (page > 1) p.set('page', String(page));
+      const s = p.toString();
+      return s ? `${BASE_URL}?${s}` : BASE_URL;
+    }
+    function buildPosterHref(posterId) {
+      const p = new URLSearchParams();
+      p.set('poster', posterId);
+      if (listLimit != null) p.set('limit', String(listLimit));
+      return `${BASE_URL}?${p.toString()}`;
+    }
+
+    /* ===========================
+       テキスト処理
+    =========================== */
+    function linkifyUrls(escaped) {
+      return escaped.replace(/https?:\/\/[^\s<]+/gi, (raw) => {
+        let u = raw, suffix = '';
+        while (u.length && /[.,;:!?。、]+$/.test(u)) { suffix = u.slice(-1) + suffix; u = u.slice(0, -1); }
+        const href = u.replace(/&amp;/g, '&');
+        let parsed;
+        try { parsed = new URL(href); } catch { return raw; }
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return raw;
+        return `<a class="body-link" href="${escAttr(href)}" rel="noopener noreferrer" target="_blank">${u}</a>${suffix}`;
+      });
+    }
+    function linkifyRefs(escaped, maxId) {
+      return escaped.replace(/&gt;&gt;(\d+)/g, (_, digits) => {
+        const n = parseInt(digits, 10);
+        const stale = n > maxId;
+        const cls = stale ? 'ref-link ref-link--stale' : 'ref-link';
+        return `<a class="${cls}" href="${escAttr(permUrl(n))}" data-ref-id="${n}">&gt;&gt;${digits}</a>`;
+      });
+    }
+    function bodyHtml(c, maxId) {
+      return linkifyRefs(linkifyUrls(escHtml(String(c.message || ''))), maxId);
+    }
+
+    /* ===========================
+       APIデータ正規化
+    =========================== */
+    function normalizePayload(raw) {
+      if (Array.isArray(raw)) {
+        return { comments: raw, max_id: raw.length ? Math.max(...raw.map(x => x.id)) : 0,
+          page: 1, page_size: raw.length, total_count: raw.length, total_pages: 1, has_prev: false, has_next: false };
+      }
+      const comments = raw.comments || [];
+      return {
+        comments,
+        max_id: raw.max_id != null ? raw.max_id : 0,
+        page: raw.page != null ? raw.page : 1,
+        page_size: raw.page_size != null ? raw.page_size : 25,
+        total_count: raw.total_count != null ? raw.total_count : comments.length,
+        total_pages: raw.total_pages != null ? raw.total_pages : 1,
+        has_prev: !!raw.has_prev,
+        has_next: !!raw.has_next,
+      };
+    }
+    function replyTargetIds(c) {
+      if (Array.isArray(c.reply_target_ids) && c.reply_target_ids.length > 0) {
+        const seen = new Set(), out = [];
+        for (const raw of c.reply_target_ids) {
+          const n = Number(raw);
+          if (!Number.isInteger(n) || n < 1 || seen.has(n)) continue;
+          seen.add(n); out.push(n);
+        }
+        return out;
+      }
+      if (c.reply_to_id != null) {
+        const n = Number(c.reply_to_id);
+        if (Number.isInteger(n) && n > 0) return [n];
+      }
+      return [];
+    }
+
+    /* ===========================
+       エントリーHTML生成
+    =========================== */
+    function renderEntry(c, maxId) {
+      const id = c.id;
+      const subj = displaySubjectRow(c);
+      const subjAttr = c.subject && String(c.subject).trim() ? String(c.subject).trim() : '(no subject)';
+      const author = escHtml(c.display_name || ((c.name && String(c.name).trim()) ? c.name : 'Anonymous'));
+      const star = c.is_admin ? ' ★' : '';
+      const whenIso = isoDatetimeAttr(c.created_at);
+      const unix = unixTimestamp(c.created_at);
+      const pid = String(c.poster_id || '');
+      const posterLink = pid
+        ? `<a rel="tag" href="${escAttr(buildPosterHref(pid))}">${escHtml(pid)}</a>`
+        : '—';
+      const body = bodyHtml(c, maxId);
+      const replyTo = replyTargetIds(c)
+        .map(tid => `<a class="u-in-reply-to" href="${escAttr(permUrl(tid))}"></a>`).join('');
+      const idDisp = '#' + String(id).padStart(3, '0');
+      const msgRaw = String(c.message || '');
+      return `
+<article class="h-entry guestbook-entry" id="comment-${id}">
+  <a class="u-uid" href="${escAttr(permUrl(id))}"></a>
+  ${replyTo}
+  <header>
+    <div class="guestbook-head">
+      <div class="guestbook-head-line">
+        <a class="guestbook-head-id" href="${escAttr(permUrl(id))}" aria-label="${escAttr(`Permalink for ${idDisp}`)}">${escHtml(idDisp)}</a>
+        <div class="guestbook-stats">
+          <span class="guestbook-stats-meta">${charCountUnicode(msgRaw)} chars / ${utf8Bytes(msgRaw)} bytes</span>
+          <span class="guestbook-stats-id">ID: ${posterLink}</span>
+        </div>
+      </div>
+      <div class="guestbook-head-meta">
+        <span class="guestbook-meta-k">From :</span>
+        <span class="guestbook-meta-v"><span class="p-author">${author}</span>${escHtml(star)}</span>
+        <span class="guestbook-meta-k">Date :</span>
+        <span class="guestbook-meta-v">
+          <time class="dt-published time-toggle" tabindex="0" role="button"
+            title="Click to show relative time"
+            datetime="${escAttr(whenIso)}">${escHtml(formatLocalHuman(c.created_at))}</time>
+          <span class="guestbook-unix" style="color:var(--gb-fg-faint);font-size:0.6875rem;margin-left:0.5em">[${unix}]</span>
+        </span>
+        <span class="guestbook-meta-k">Subject :</span>
+        <span class="guestbook-meta-v">${escHtml(subj)}</span>
+      </div>
+    </div>
+    <data class="p-name" value="${escAttr(subjAttr)}"></data>
+  </header>
+  <div class="e-content guestbook-body">${body}</div>
+  <div class="reply-row">
+    <button type="button" class="btn reply-btn"
+      data-reply-id="${id}"
+      data-subject="${escAttr(subjAttr)}"
+      aria-label="Reply">reply</button>
+  </div>
+</article>`;
+    }
+
+    /* ===========================
+       返信ボタン
+    =========================== */
+    function bindReplyButtons(container) {
+      container.querySelectorAll('.reply-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const rid = btn.getAttribute('data-reply-id');
+          const sub = btn.getAttribute('data-subject') || '(no subject)';
+          document.getElementById('input-reply-to').value = rid;
+          const reSub = sub.startsWith('re: ') ? sub : `re: ${sub}`;
+          document.getElementById('input-subject').value = reSub;
+          const msg = document.getElementById('input-message');
+          const line = `>>${rid} `;
+          msg.value = msg.value.trim().length ? `${line}\n${msg.value}` : `${line}\n`;
+          // 一覧ページでないとき（個別ページ）はlist-viewが隠れているのでフォームへのスクロールは不要
+          const postForm = document.getElementById('post-form');
+          if (postForm) {
+            postForm.scrollIntoView({ behavior: 'smooth' });
+            msg.focus();
+          }
+          syncFormCharCount();
+        });
+      });
+    }
+
+    /* ===========================
+       ページネーション
+    =========================== */
+    function renderPagination(meta) {
+      const nav = document.getElementById('comments-pagination');
+      if (!nav) return;
+      if (meta.total_pages <= 1) { nav.hidden = true; nav.innerHTML = ''; return; }
+      nav.hidden = false;
+      const prev = meta.has_prev
+        ? `<a rel="prev" class="pagination-link" href="${escAttr(buildListHref(meta.page - 1))}">Previous</a>`
+        : '<span class="pagination-link pagination-link--disabled" aria-disabled="true">Previous</span>';
+      const next = meta.has_next
+        ? `<a rel="next" class="pagination-link" href="${escAttr(buildListHref(meta.page + 1))}">Next</a>`
+        : '<span class="pagination-link pagination-link--disabled" aria-disabled="true">Next</span>';
+      nav.innerHTML = `<div class="pagination-row">${prev}<span class="pagination-meta">${meta.page} / ${meta.total_pages}</span>${next}</div>`;
+    }
+
+    /* ===========================
+       コメント一覧読み込み
+    =========================== */
+    function readQueryState() {
+      const sp = new URLSearchParams(window.location.search);
+      const p = parseInt(sp.get('page') || '1', 10);
+      listPage = Number.isInteger(p) && p >= 1 ? p : 1;
+      const limRaw = sp.get('limit');
+      if (limRaw != null && String(limRaw).trim() !== '') {
+        const lm = parseInt(limRaw, 10);
+        listLimit = (Number.isInteger(lm) && lm >= 1 && lm <= 100) ? lm : null;
+      } else {
+        listLimit = null;
+      }
+      const qPoster = sp.get('poster');
+      posterFilter = qPoster && qPoster.trim() ? qPoster.trim() : '';
+      const banner = document.getElementById('poster-filter-banner');
+      if (!posterFilter) { banner.style.display = 'none'; banner.textContent = ''; return; }
+      banner.style.display = 'block';
+      banner.innerHTML = `Showing posts by ${escHtml(posterFilter)} only. <a href="${escAttr(BASE_URL)}">Show all</a>`;
+    }
+
+    async function loadComments() {
+      const loading = document.getElementById('loading');
+      const list = document.getElementById('comments-list');
+      const noComments = document.getElementById('no-comments');
+      try {
+        readQueryState();
+        const params = new URLSearchParams();
+        params.set('page', String(listPage));
+        if (posterFilter) params.set('poster', posterFilter);
+        if (listLimit != null) params.set('limit', String(listLimit));
+        const res = await fetch(`${API}?${params}`);
+        const raw = await res.json();
+        if (!res.ok) {
+          loading.textContent = raw.error || 'Failed to load comments.';
+          renderPagination({ total_pages: 1, has_prev: false, has_next: false, page: 1 });
+          return;
+        }
+        const payload = normalizePayload(raw);
+        const { comments: data, max_id: mid } = payload;
+        globalMaxId = mid || 0;
+        loading.style.display = 'none';
+        renderPagination(payload);
+        if (!data.length) {
+          noComments.style.display = 'block';
+          noComments.textContent = posterFilter ? 'No posts from this ID yet.' : 'No comments yet.';
+          list.innerHTML = '';
+          return;
+        }
+        noComments.style.display = 'none';
+        list.innerHTML = data.map(c => renderEntry(c, globalMaxId)).join('');
+        bindReplyButtons(list);
+      } catch (e) {
+        loading.textContent = 'Failed to load comments.';
+      }
+    }
+
+    /* ===========================
+       個別ページ（?id=NNN）
+    =========================== */
+    async function loadContext(id) {
+      document.getElementById('list-view').style.display = 'none';
+      const view = document.getElementById('context-view');
+      view.style.display = 'block';
+      view.innerHTML = '<p id="loading">loading...</p>';
+
+      try {
+        // 全件取得してフロントでフィルタ（APIに個別エンドポイントがあればそちらを推奨）
+        const res = await fetch(`${API}?limit=100`);
+        const raw = await res.json();
+        if (!res.ok) { view.innerHTML = '<p>Failed to load.</p>'; return; }
+        const payload = normalizePayload(raw);
+        const all = payload.comments;
+        const maxId = payload.max_id || 0;
+
+        const focus = all.find(c => Number(c.id) === id);
+        if (!focus) { view.innerHTML = `<p><a href="${escAttr(BASE_URL)}">← Back to list</a></p><p>#${String(id).padStart(3,'0')} was not found.</p>`; return; }
+
+        // 返信元（focusが参照しているID群）
+        const parentIds = replyTargetIds(focus);
+        const parents = parentIds.map(pid => all.find(c => Number(c.id) === pid)).filter(Boolean);
+
+        // 返信先（focusを参照している投稿群）
+        const replies = all.filter(c => replyTargetIds(c).map(Number).includes(id));
+
+        let html = `<nav class="guestbook-context-nav"><a href="${escAttr(BASE_URL)}">← List</a> · <a href="#guestbook-focus">This post</a></nav>`;
+
+        // 返信元
+        html += `<div class="guestbook-context-block guestbook-context-block--parents">
+          <h2 class="guestbook-context-h2">Parent posts</h2>
+          ${parents.length
+            ? parents.map(c => renderEntry(c, maxId)).join('')
+            : '<p class="guestbook-context-empty">No parent posts.</p>'}
+        </div>`;
+
+        // フォーカス投稿
+        html += `<div id="guestbook-focus" class="guestbook-context-block guestbook-context-block--focus">
+          <h2 class="guestbook-context-h2">This post</h2>
+          ${renderEntry(focus, maxId)}
+        </div>`;
+
+        // 返信先
+        html += `<div class="guestbook-context-block guestbook-context-block--replies">
+          <h2 class="guestbook-context-h2">Replies</h2>
+          ${replies.length
+            ? `<div class="guestbook-replies">${replies.map(c => renderEntry(c, maxId)).join('')}</div>`
+            : '<p class="guestbook-context-empty">No replies yet.</p>'}
+        </div>`;
+
+        view.innerHTML = html;
+        bindReplyButtons(view);
+
+        // フォーカス投稿へスクロール
+        const focusEl = view.querySelector(`#comment-${id}`);
+        if (focusEl) focusEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      } catch (e) {
+        view.innerHTML = '<p>Failed to load.</p>';
+      }
+    }
+
+    /* ===========================
+       ホバープレビュー（>>No.）
+    =========================== */
+    let refPreviewData = {};
+    const refPreviewEl = document.getElementById('ref-preview');
+
+    function showRefPreview(el, refId) {
+      const c = refPreviewData[refId];
+      if (!c) { refPreviewEl.style.display = 'none'; return; }
+      const subj = displaySubjectRow(c);
+      const author = (c.display_name || c.name || 'Anonymous');
+      const body = String(c.message || '').slice(0, 200) + (String(c.message || '').length > 200 ? '…' : '');
+      refPreviewEl.textContent = `#${String(refId).padStart(3,'0')} ${author} — ${subj}\n${body}`;
+      refPreviewEl.style.display = 'block';
+      positionRefPreview(el);
+    }
+
+    function positionRefPreview(el) {
+      const rect = el.getBoundingClientRect();
+      const pw = refPreviewEl.offsetWidth || 340;
+      const ph = refPreviewEl.offsetHeight || 80;
+      let left = rect.left;
+      let top = rect.bottom + 4;
+      if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+      if (top + ph > window.innerHeight - 8) top = rect.top - ph - 4;
+      refPreviewEl.style.left = left + 'px';
+      refPreviewEl.style.top = top + 'px';
+    }
+
+    function hideRefPreview() {
+      refPreviewEl.style.display = 'none';
+    }
+
+    async function fetchRefPreviewData() {
+      try {
+        const res = await fetch(`${API}?limit=100`);
+        const raw = await res.json();
+        const payload = normalizePayload(raw);
+        payload.comments.forEach(c => { refPreviewData[c.id] = c; });
+      } catch (e) {}
+    }
+
+    document.addEventListener('mouseover', e => {
+      const a = e.target.closest('a.ref-link');
+      if (!a) return;
+      const refId = parseInt(a.dataset.refId, 10);
+      if (!refId) return;
+      showRefPreview(a, refId);
+    });
+    document.addEventListener('mouseout', e => {
+      if (!e.target.closest('a.ref-link')) return;
+      hideRefPreview();
+    });
+    // タッチデバイス対応
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a.ref-link');
+      if (!a) return;
+      const refId = parseInt(a.dataset.refId, 10);
+      if (!refId) return;
+      if (refPreviewEl.style.display === 'block' && refPreviewEl.dataset.refId == refId) {
+        hideRefPreview();
+        return;
+      }
+      refPreviewEl.dataset.refId = refId;
+      showRefPreview(a, refId);
+    });
+
+    /* ===========================
+       フォーム
+    =========================== */
+    function syncFormCharCount() {
+      const el = document.getElementById('input-message');
+      const cc = document.getElementById('char-count');
+      if (!el || !cc) return;
+      const v = el.value;
+      const cu = charCountUnicode(v);
+      cc.textContent = `${cu} chars / ${utf8Bytes(v)} bytes · max ${MESSAGE_MAX} chars`;
+      cc.classList.toggle('warn', cu > MESSAGE_WARN_THRESHOLD);
+    }
+
+    function syncFormComposeTime() {
+      const el = document.getElementById('form-compose-time');
+      if (!el) return;
+      const now = new Date();
+      el.dateTime = now.toISOString();
+      if (el.dataset.displayMode === 'relative') {
+        el.textContent = formatRelative(el.dateTime);
+        el.title = 'Click to show date and time';
+      } else {
+        el.textContent = formatLocalHuman(now.toISOString());
+        el.title = 'Click to show relative time';
+      }
+    }
+
+    const msgInput = document.getElementById('input-message');
+    const previewPanel = document.getElementById('preview-panel');
+    const fieldsPanel = document.getElementById('fields-panel');
+    const previewBtn = document.getElementById('preview-btn');
+    const editBtn = document.getElementById('edit-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const clearBtn = document.getElementById('clear-btn');
+
+    function setComposeMode(isPreview) {
+      previewPanel.classList.toggle('is-visible', isPreview);
+      previewPanel.style.display = isPreview ? 'block' : 'none';
+      fieldsPanel.style.display = isPreview ? 'none' : '';
+      previewBtn.style.display = isPreview ? 'none' : '';
+      clearBtn.style.display = isPreview ? 'none' : '';
+      editBtn.style.display = isPreview ? '' : 'none';
+      submitBtn.style.display = isPreview ? '' : 'none';
+    }
+
+    function resetPreview() {
+      setComposeMode(false);
+      previewPanel.textContent = '';
+    }
+
+    msgInput.addEventListener('input', syncFormCharCount);
+
+    clearBtn.addEventListener('click', () => {
+      document.getElementById('input-name').value = '';
+      document.getElementById('input-subject').value = '';
+      document.getElementById('input-website').value = '';
+      document.getElementById('input-reply-to').value = '';
+      msgInput.value = '';
+      syncFormCharCount();
+      const st = document.getElementById('form-status');
+      st.textContent = ''; st.className = '';
+      resetPreview();
+      try { turnstile.reset(); } catch (e) {}
+    });
+
+    previewBtn.addEventListener('click', () => {
+      const status = document.getElementById('form-status');
+      const message = msgInput.value.trim();
+      if (!message) {
+        status.textContent = 'Enter a message.';
+        status.className = 'err';
+        return;
+      }
+      status.textContent = ''; status.className = '';
+      const name = document.getElementById('input-name').value.trim() || 'Anonymous';
+      const subject = document.getElementById('input-subject').value.trim() || '(no subject)';
+      const replyTo = document.getElementById('input-reply-to').value.trim();
+      const previewText = [
+        `Name: ${name}`,
+        `Subject: ${subject}`,
+        replyTo ? `Reply to: #${replyTo}` : '',
+        '',
+        message,
+        '',
+        `${charCountUnicode(message)} chars / ${utf8Bytes(message)} bytes`,
+      ].filter(Boolean).join('\n');
+      previewPanel.textContent = previewText;
+      setComposeMode(true);
+    });
+
+    editBtn.addEventListener('click', () => resetPreview());
+
+    submitBtn.addEventListener('click', async () => {
+      const name = document.getElementById('input-name').value.trim();
+      const subject = document.getElementById('input-subject').value.trim();
+      const message = msgInput.value.trim();
+      const honeypot = document.getElementById('input-website').value;
+      const replyTo = document.getElementById('input-reply-to').value.trim();
+      const status = document.getElementById('form-status');
+
+      if (!message) {
+        status.textContent = 'Enter a message.';
+        status.className = 'err';
+        return;
+      }
+
+      const tokenEl = document.querySelector('[name="cf-turnstile-response"]');
+      const turnstileToken = tokenEl ? tokenEl.value : '';
+      if (!turnstileToken) {
+        status.textContent = 'Turnstile check is not complete.';
+        status.className = 'err';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      status.textContent = 'Sending…';
+      status.className = '';
+
+      const payload = { name, subject, message, turnstileToken, website: honeypot };
+      if (replyTo) payload.reply_to_id = replyTo;
+
+      try {
+        const res = await fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          status.textContent = thankYouMessage();
+          status.className = 'ok';
+          document.getElementById('input-name').value = '';
+          document.getElementById('input-subject').value = '';
+          document.getElementById('input-website').value = '';
+          document.getElementById('input-reply-to').value = '';
+          msgInput.value = '';
+          syncFormCharCount();
+          resetPreview();
+          try { turnstile.reset(); } catch (e) {}
+          await loadComments();
+        } else {
+          status.textContent = data.error || 'Failed to send.';
+          status.className = 'err';
+          try { turnstile.reset(); } catch (e) {}
+        }
+      } catch (e) {
+        status.textContent = 'Failed to send.';
+        status.className = 'err';
+        try { turnstile.reset(); } catch (e) {}
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    /* ===========================
+       イベントバインド（time toggle）
+    =========================== */
+    document.addEventListener('click', e => {
+      const t = e.target.closest('time.time-toggle');
+      if (!t) return;
+      toggleTimeDisplay(t);
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const t = e.target.closest('time.time-toggle');
+      if (!t) return;
+      e.preventDefault();
+      toggleTimeDisplay(t);
+    });
+
+    /* ===========================
+       エントリーポイント
+    =========================== */
+    (async () => {
+      const sp = new URLSearchParams(window.location.search);
+      const idParam = sp.get('id');
+      if (idParam) {
+        const id = parseInt(idParam, 10);
+        if (Number.isInteger(id) && id >= 1) {
+          await fetchRefPreviewData();
+          await loadContext(id);
+          return;
+        }
+      }
+      // 一覧ページ
+      syncFormComposeTime();
+      setInterval(syncFormComposeTime, 1000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') syncFormComposeTime();
+      });
+      await fetchRefPreviewData();
+      await loadComments();
+    })();
+  </script>
+</body>
+</html>
