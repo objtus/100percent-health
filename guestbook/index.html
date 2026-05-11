@@ -69,7 +69,12 @@
       color: var(--gb-fg-muted);
       margin: 1rem 0 1.25rem;
       padding: 0.5rem 0 0.65rem;
+      border-top: 1px dashed var(--gb-line-soft);
       border-bottom: 1px dashed var(--gb-line-soft);
+
+      .show-all-link {
+        font-weight: bold;
+      }
     }
 
     /* ===========================
@@ -1018,7 +1023,7 @@
       const banner = document.getElementById('poster-filter-banner');
       if (!posterFilter) { banner.style.display = 'none'; banner.textContent = ''; return; }
       banner.style.display = 'block';
-      banner.innerHTML = `Showing posts by ${escHtml(posterFilter)} only. <a href="${escAttr(BASE_URL)}">Show all</a>`;
+      banner.innerHTML = `Showing posts by ${escHtml(posterFilter)} only. <a href="${escAttr(BASE_URL)}" class="show-all-link">Show all</a>`;
     }
 
     async function loadComments() {
