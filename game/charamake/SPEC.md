@@ -91,7 +91,8 @@ HTML+CSS+JavaScriptでキャラクターの着せ替え＆キャラクリエイ�
           "image": "専用カラー画像パス"
         }
       },
-      "unlocks": ["表示するパーツID配列"],
+      "unlocks": ["表示するカテゴリ/パーツID配列"],
+      "hides": ["非表示にするカテゴリ/パーツID配列"],
       "requires": "必須パーツID"
     }
   ],
@@ -134,7 +135,8 @@ HTML+CSS+JavaScriptでキャラクターの着せ替え＆キャラクリエイ�
 | zIndex | number | ✓ | 基本の重ね順序 |
 | layers | array | ✓ | 画像レイヤーの配列 |
 | colors | object | - | 色変更設定（後述） |
-| unlocks | array | - | このパーツ選択時に表示されるパーツID |
+| unlocks | array | - | このパーツ選択時に表示されるカテゴリ/パーツ ID |
+| hides | array | - | このパーツ選択時に非表示にするカテゴリ/パーツ ID（詳細は [SPEC-dependencies.md](./SPEC-dependencies.md)） |
 | requires | string | - | 必須となるパーツID（簡易依存関係） |
 
 #### layers配列の要素
@@ -213,14 +215,18 @@ HTML+CSS+JavaScriptでキャラクターの着せ替え＆キャラクリエイ�
 
 ### 4.3 依存関係機能
 
+詳細は [SPEC-dependencies.md](./SPEC-dependencies.md) を参照。
+
 #### 4.3.1 シンプルな依存関係（Phase 1）
 ```json
 {
   "id": "tshirt_plain",
-  "unlocks": ["tshirt_pattern"]
+  "unlocks": ["tshirt_pattern"],
+  "hides": ["eye-highlight"]
 }
 ```
-- `unlocks`: このパーツ選択時に表示されるカテゴリ/パーツ
+- `unlocks`: このパーツ選択時に表示されるカテゴリ/パーツ（ゲーム v1 はカテゴリ `hidden` 解放が主）
+- `hides`: このパーツ選択時に非表示にするカテゴリ/パーツ（ID の種別で振り分け。`unlocks` が優先）
 - `requires`: このパーツを表示するために必要なパーツ
 
 #### 4.3.2 将来の拡張（Phase 4）

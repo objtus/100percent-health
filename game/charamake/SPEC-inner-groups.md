@@ -165,7 +165,7 @@ activeMaskGroups = ⋃ part.masksInnerGroups
 - **OR 集約**: いずれか1つでも IG を指定していれば、その IG はマスク対象
 - マスク指定パーツがすべて外れたら `activeMaskGroups` は空 → 全レイヤー `file`
 
-`hides` / `unlocks` による非表示カテゴリのパーツは、既存どおり描画対象外（マスク算出にも含めない）。
+`hides` / `unlocks` による非表示カテゴリ、および `hides` による非表示パーツ（`isPartVisible` が false）は、既存どおり描画対象外（マスク算出にも含めない）。
 
 ### 5.2 レイヤーごとの画像パス決定
 

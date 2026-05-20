@@ -9,7 +9,8 @@
         "id": "inner_group_1",
         "name": "インナーグループ1"
       }
-    ]
+    ],
+    "secrets": []
   },
   "parts": [
     {
@@ -1636,7 +1637,7 @@
     {
       "id": "glasses-none",
       "name": "none",
-      "category": "accessories_head",
+      "category": "glasses",
       "zIndex": 250,
       "layers": [
         {
@@ -1651,7 +1652,7 @@
     {
       "id": "glasses1",
       "name": "眼鏡1",
-      "category": "accessories_head",
+      "category": "glasses",
       "zIndex": 250,
       "layers": [
         {
@@ -1669,7 +1670,7 @@
     {
       "id": "glasses2",
       "name": "眼鏡2",
-      "category": "accessories_head",
+      "category": "glasses",
       "zIndex": 250,
       "layers": [
         {
@@ -1811,8 +1812,14 @@
       "zIndex": 100,
       "layers": [
         {
-          "file": "parts/hair/ahoge/odango1.png",
-          "animated": false
+          "file": "parts/hair/ahoge/odango1L.png",
+          "animated": false,
+          "side": "left"
+        },
+        {
+          "file": "parts/hair/ahoge/odango1R.png",
+          "animated": false,
+          "side": "right"
         }
       ],
       "order": 60
@@ -2082,6 +2089,63 @@
         }
       ],
       "order": 20
+    },
+    {
+      "id": "eyepatch1",
+      "name": "眼帯1",
+      "category": "face-accessories",
+      "zIndex": 200,
+      "layers": [
+        {
+          "file": "parts/accessories/face/eyepatch1.png",
+          "animated": false
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "face-accessories-none",
+      "name": "なし",
+      "category": "face-accessories",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "head-accessories-none",
+      "name": "なし",
+      "category": "head-accessories",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "babushka1",
+      "name": "バブーシュカ1",
+      "category": "head-accessories",
+      "zIndex": 350,
+      "layers": [
+        {
+          "file": "parts/accessories/head/babushka1.png",
+          "animated": false
+        },
+        {
+          "file": "parts/accessories/head/babushka1back.png",
+          "animated": false,
+          "zIndex": 290
+        }
+      ],
+      "order": 20
     }
   ],
   "categories": [
@@ -2103,8 +2167,8 @@
       "colorGroup": "skin"
     },
     {
-      "id": "accessories_head",
-      "name": "頭アクセサリー",
+      "id": "glasses",
+      "name": "眼鏡",
       "order": 50,
       "selectionMode": "multiple",
       "group": "accessories",
@@ -2301,6 +2365,22 @@
       "order": 250,
       "selectionMode": "single",
       "group": "cloches",
+      "hidden": false
+    },
+    {
+      "id": "face-accessories",
+      "name": "顔アクセサリー",
+      "order": 70,
+      "selectionMode": "multiple",
+      "group": "accessories",
+      "hidden": false
+    },
+    {
+      "id": "head-accessories",
+      "name": "頭アクセサリー",
+      "order": 60,
+      "selectionMode": "multiple",
+      "group": "accessories",
       "hidden": false
     }
   ],

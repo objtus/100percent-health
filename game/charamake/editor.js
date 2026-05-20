@@ -1096,9 +1096,9 @@ function showPartEditor() {
                 <button id="addUnlockBtn" class="btn btn-small">+ 追加</button>
             </div>
             <div class="form-group">
-                <label>非表示にするカテゴリ:</label>
+                <label>非表示にするカテゴリ/パーツ:</label>
                 <small style="display:block; color:#6c757d; margin-bottom:0.25rem;">
-                    このパーツ選択中、指定カテゴリを一覧から隠します（unlocks側が優先）
+                    カテゴリ ID → 左一覧からカテゴリごと非表示。パーツ ID → そのカテゴリ内の当該パーツのみ非表示。unlocks が同じ ID なら表示優先。
                 </small>
                 <div id="hidesList"></div>
                 <button id="addHidesBtn" class="btn btn-small">+ 追加</button>
@@ -1378,7 +1378,7 @@ function renderUnlocksList() {
     });
 }
 
-// hides一覧の描画（カテゴリのみ対象）
+// hides一覧の描画（カテゴリ・パーツ対象）
 function renderHidesList() {
     const list = document.getElementById('hidesList');
     list.innerHTML = '';
@@ -1395,13 +1395,27 @@ function renderHidesList() {
         select.style.flex = '1';
         select.onchange = (e) => updateHides(index, e.target.value);
         
+        const catGroup = document.createElement('optgroup');
+        catGroup.label = 'カテゴリ';
         state.data.categories.forEach(cat => {
             const option = document.createElement('option');
             option.value = cat.id;
             option.textContent = cat.name;
             if (cat.id === hideId) option.selected = true;
-            select.appendChild(option);
+            catGroup.appendChild(option);
         });
+        select.appendChild(catGroup);
+        
+        const partGroup = document.createElement('optgroup');
+        partGroup.label = 'パーツ';
+        state.data.parts.forEach(part => {
+            const option = document.createElement('option');
+            option.value = part.id;
+            option.textContent = `${part.name} (${part.id})`;
+            if (part.id === hideId) option.selected = true;
+            partGroup.appendChild(option);
+        });
+        select.appendChild(partGroup);
         
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn btn-small';
@@ -2530,6 +2544,25 @@ function validatePart(part) {
             const partExists = state.data.parts.some(p => p.id === unlockId);
             if (!categoryExists && !partExists) {
                 warnings.push(`unlock「${unlockId}」が存在しません`);
+            }
+        });
+    }
+
+    // hides存在チェック
+    if (part.hides && part.hides.length > 0) {
+        const Dep = window.CharamakeDependencies;
+        part.hides.forEach(hideId => {
+            if (Dep) {
+                const kind = Dep.classifyHideTargetId(hideId, state.data);
+                if (kind === 'unknown') {
+                    warnings.push(`hide「${hideId}」が存在しません`);
+                }
+            } else {
+                const categoryExists = state.data.categories.some(c => c.id === hideId);
+                const partExists = state.data.parts.some(p => p.id === hideId);
+                if (!categoryExists && !partExists) {
+                    warnings.push(`hide「${hideId}」が存在しません`);
+                }
             }
         });
     }

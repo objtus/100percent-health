@@ -10,6 +10,7 @@ const state = {
     multiSelectActive: {},  // カテゴリID: true/false（複数選択モードが有効か）
     previouslyUnlockedCategories: new Set(), // 以前解放されていたカテゴリを追跡
     hiddenByParts: new Set(), // hides により動的に非表示になっているカテゴリ
+    hiddenPartIds: new Set(), // hides により動的に非表示になっているパーツ
     unlockedSecrets: new Set(), // パスワードで解放したシークレット束 ID
     previouslyUnlockedSecrets: new Set() // 新規解放時の先頭自動選択用
 };
@@ -224,7 +225,9 @@ function isSecretUnlocked(secretId) {
 
 function isPartVisible(part) {
     if (!part) return false;
-    return isSecretUnlocked(part.secret);
+    if (!isSecretUnlocked(part.secret)) return false;
+    if (state.hiddenPartIds && state.hiddenPartIds.has(part.id)) return false;
+    return true;
 }
 
 function getVisiblePartsInCategory(categoryId) {
@@ -635,54 +638,89 @@ function initPartColorState(part) {
     }
 }
 
+// 選択中の全パーツ ID を列挙
+function getSelectedPartIds() {
+    const ids = [];
+    if (!state.partsData) return ids;
+    for (const [categoryId, selection] of Object.entries(state.selectedParts)) {
+        const category = state.partsData.categories.find(c => c.id === categoryId);
+        if (category && category.selectionMode === 'multiple') {
+            if (Array.isArray(selection)) ids.push(...selection);
+        } else if (selection) {
+            ids.push(selection);
+        }
+    }
+    return ids;
+}
+
+// hides で非表示になったパーツの選択を修正
+function sanitizeHiddenPartSelections() {
+    if (!state.partsData) return;
+
+    state.partsData.categories.forEach(category => {
+        if (!isCategoryVisible(category)) return;
+
+        const selection = state.selectedParts[category.id];
+        if (!selection) return;
+
+        if (category.selectionMode === 'multiple' && Array.isArray(selection)) {
+            const filtered = selection.filter(partId => {
+                const part = state.partsData.parts.find(p => p.id === partId);
+                return isPartVisible(part);
+            });
+            if (filtered.length > 0) {
+                state.selectedParts[category.id] = filtered;
+            } else {
+                delete state.selectedParts[category.id];
+            }
+            return;
+        }
+
+        const part = state.partsData.parts.find(p => p.id === selection);
+        if (!isPartVisible(part)) {
+            const firstPart = getFirstVisiblePartInCategory(category.id);
+            if (firstPart) {
+                state.selectedParts[category.id] = firstPart.id;
+                if (!state.selectedColors[firstPart.id]) {
+                    state.selectedColors[firstPart.id] = 'normal';
+                }
+            } else {
+                delete state.selectedParts[category.id];
+            }
+        }
+    });
+}
+
 // 依存関係の処理
 function processDependencies() {
     if (!state.partsData) return;
-    
-    // 選択中の全パーツIDを列挙するヘルパー
-    function getSelectedPartIds() {
-        const ids = [];
-        for (const [categoryId, selection] of Object.entries(state.selectedParts)) {
-            const category = state.partsData.categories.find(c => c.id === categoryId);
-            if (category && category.selectionMode === 'multiple') {
-                ids.push(...selection);
-            } else if (selection) {
-                ids.push(selection);
-            }
-        }
-        return ids;
-    }
-    
-    // 1. 現在解放されているカテゴリ・非表示にすべきカテゴリを収集
-    const unlockedCategories = new Set();
-    const hiddenByParts = new Set(); // hides で動的に非表示になるカテゴリ
-    
-    getSelectedPartIds().forEach(partId => {
-        const part = state.partsData.parts.find(p => p.id === partId);
-        if (!part) return;
-        if (part.unlocks) part.unlocks.forEach(id => unlockedCategories.add(id));
-        if (part.hides)   part.hides.forEach(id => hiddenByParts.add(id));
-    });
-    
-    // unlocks が hides より優先（両方に含まれる場合は表示する）
-    hiddenByParts.forEach(id => {
-        if (unlockedCategories.has(id)) hiddenByParts.delete(id);
-    });
-    
-    // 2. 新しく解放されたカテゴリを検出して最初のパーツを自動選択
-    //    ただし既に選択が保持されている場合はそのまま復元（何もしない）
+
+    const Dep = window.CharamakeDependencies;
+    const selectedIds = getSelectedPartIds();
+    const sets = Dep
+        ? Dep.collectDependencySets(selectedIds, state.partsData)
+        : {
+            unlockedCategories: new Set(),
+            hiddenCategoryIds: new Set(),
+            hiddenPartIds: new Set()
+        };
+
+    const unlockedCategories = sets.unlockedCategories;
+    const hiddenByParts = sets.hiddenCategoryIds;
+    const hiddenPartIds = sets.hiddenPartIds;
+
+    state.hiddenByParts = hiddenByParts;
+    state.hiddenPartIds = hiddenPartIds;
+
+    // 新しく解放されたカテゴリを検出して最初の表示可能パーツを自動選択
     unlockedCategories.forEach(categoryId => {
         if (!state.previouslyUnlockedCategories.has(categoryId)) {
             const category = state.partsData.categories.find(c => c.id === categoryId);
-            // 選択がすでにあれば（保持されていれば）自動選択しない
             const hasSelection = category && category.selectionMode === 'multiple'
                 ? (state.selectedParts[categoryId] && state.selectedParts[categoryId].length > 0)
                 : !!state.selectedParts[categoryId];
             if (category && !hasSelection) {
-                const PO = window.CharamakePartsOrder;
-                const firstPart = PO
-                    ? PO.getFirstPartInCategory(state.partsData.parts, categoryId)
-                    : state.partsData.parts.find(p => p.category === categoryId);
+                const firstPart = getFirstVisiblePartInCategory(categoryId);
                 if (firstPart) {
                     if (category.selectionMode === 'multiple') {
                         state.selectedParts[categoryId] = [firstPart.id];
@@ -694,23 +732,23 @@ function processDependencies() {
             }
         }
     });
-    
-    // 3. hidden: true のカテゴリで解放されていないものをデセレクト
+
+    // hidden: true のカテゴリで解放されていないものをデセレクト
     state.partsData.categories.forEach(category => {
         if (category.hidden && !unlockedCategories.has(category.id)) {
             deselectCategory(category);
         }
     });
-    
-    // 4. hides によって動的に非表示になるカテゴリをデセレクト
+
+    // hides によって動的に非表示になるカテゴリをデセレクト
     hiddenByParts.forEach(categoryId => {
         const category = state.partsData.categories.find(c => c.id === categoryId);
         if (category) deselectCategory(category);
     });
-    
-    // 5. 現在の状態を記録（次回の比較用）
+
+    sanitizeHiddenPartSelections();
+
     state.previouslyUnlockedCategories = unlockedCategories;
-    state.hiddenByParts = hiddenByParts; // renderCategories で参照
 }
 
 // カテゴリを非表示にする（選択状態はそのまま保持）

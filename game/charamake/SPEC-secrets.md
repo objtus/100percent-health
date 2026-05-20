@@ -73,11 +73,16 @@
 
 優先順（カテゴリ）:
 
-1. `hides`（既存）
+1. `hides`（カテゴリ ID — 動的非表示）
 2. `hidden` + `unlocks`（既存）
 3. `secret` 未解放 → 非表示
 
-パーツ: `isPartVisible(part)` — `part.secret` が未解放なら一覧・描画から除外。
+パーツ: `isPartVisible(part)` —
+
+1. `part.secret` 未解放 → 非表示
+2. `hides`（パーツ ID — `hiddenPartIds`）→ 非表示
+
+詳細は [SPEC-dependencies.md](./SPEC-dependencies.md)。
 
 `hidden` / `unlocks` との **v1 併用は非推奨**（実装は独立。作者はどちらか一方の運用を推奨）。
 

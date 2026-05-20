@@ -54,7 +54,7 @@ game/charamake/
 - [x] `parts-data.json` の自動読込
 - [x] カテゴリグループ付きカテゴリ選択 UI
 - [x] 単一選択 / 複数選択カテゴリ
-- [x] 条件付きカテゴリ表示（hidden / unlocks / hides）
+- [x] 条件付きカテゴリ表示（hidden / unlocks / hides・パーツ単位 hides 含む）
 - [x] 色プリセット・カスタム色（ブレンド・不透明度・色相シフト）
 - [x] カラーグループ連動（髪色・肌色など）
 - [x] 左右別レイヤー（side 指定パーツの表示切替）
@@ -106,8 +106,8 @@ game/charamake/
 6. **色設定**: ブレンドモードまたは専用画像でプリセット追加、`allowCustomColor` の ON/OFF
 7. **依存関係**:
    - `requires`: 必須パーツ
-   - `unlocks`: 選択時に表示するカテゴリ
-   - `hides`: 選択時に非表示にするカテゴリ（unlocks が優先）
+   - `unlocks`: 選択時に表示するカテゴリ/パーツ（ゲームはカテゴリ解放が主）
+   - `hides`: 選択時に非表示にするカテゴリ/パーツ（unlocks が優先）— `SPEC-dependencies.md`
 8. **インナーグループ**: メタデータ編集で IG マスタ登録 → レイヤーに IG・マスク画像 → アウターにマスク指定
 9. **ポーズ差し替え**: 体型パーツに `poseId` → 服レイヤーに `poseFiles`（必要なら `poseMaskedFiles`）。プレビューは「プレビュー用ポーズ」または他パーツ重ねで体型を選択
 10. **プレビュー**: 右カラムのキャンバス。**マスク確認は「他パーツと重ねて表示」** でアウターも選択
@@ -128,7 +128,7 @@ game/charamake/
 
 詳細は `SPEC.md` を参照。
 
-インナーグループ（服の重ね着マスク）の詳細は [SPEC-inner-groups.md](SPEC-inner-groups.md)、ポーズ差し替えは [SPEC-pose-files.md](SPEC-pose-files.md)、シークレットは [SPEC-secrets.md](SPEC-secrets.md) を参照。
+インナーグループ（服の重ね着マスク）の詳細は [SPEC-inner-groups.md](SPEC-inner-groups.md)、ポーズ差し替えは [SPEC-pose-files.md](SPEC-pose-files.md)、依存関係は [SPEC-dependencies.md](SPEC-dependencies.md)、シークレットは [SPEC-secrets.md](SPEC-secrets.md) を参照。
 
 ### parts-data.json
 
