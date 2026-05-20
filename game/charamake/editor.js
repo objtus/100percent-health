@@ -5,7 +5,8 @@ const state = {
             version: "2.0",
             canvasWidth: 800,
             canvasHeight: 900,
-            projectRoot: "" // プロジェクトルートパス
+            projectRoot: "",
+            innerGroups: []
         },
         categoryGroups: [], // カテゴリグループ
         parts: [],
@@ -498,10 +499,20 @@ function editMetadata() {
         </details>
         
         <details open>
+            <summary>インナーグループ</summary>
+            <p style="font-size: 0.85rem; color: #6c757d; margin: 0.5rem 0;">
+                服の重ね着時、マスク画像差し替えの単位。レイヤー・アウターのマスク指定で参照します。
+            </p>
+            <div id="innerGroupsMetaList"></div>
+            <button type="button" class="btn btn-small" id="addInnerGroupMetaBtn">+ インナーグループ追加</button>
+        </details>
+        
+        <details open>
             <summary>統計情報</summary>
             <div style="padding: 0.5rem;">
                 <p>カテゴリ数: ${state.data.categories.length}</p>
                 <p>パーツ数: ${state.data.parts.length}</p>
+                <p>インナーグループ数: ${(state.data.meta.innerGroups || []).length}</p>
                 <p>総レイヤー数: ${state.data.parts.reduce((sum, p) => sum + (p.layers ? p.layers.length : 0), 0)}</p>
             </div>
         </details>
@@ -512,8 +523,89 @@ function editMetadata() {
         </div>
     `;
     
+    if (!state.data.meta.innerGroups) {
+        state.data.meta.innerGroups = [];
+    }
+    renderInnerGroupsMetaList();
+    
     document.getElementById('saveMetaBtn').addEventListener('click', saveMetadata);
     document.getElementById('cancelMetaBtn').addEventListener('click', hideEditor);
+    document.getElementById('addInnerGroupMetaBtn').addEventListener('click', addInnerGroupMeta);
+}
+
+function renderInnerGroupsMetaList() {
+    const list = document.getElementById('innerGroupsMetaList');
+    if (!list) return;
+
+    if (!state.data.meta.innerGroups) {
+        state.data.meta.innerGroups = [];
+    }
+
+    list.innerHTML = '';
+
+    if (state.data.meta.innerGroups.length === 0) {
+        list.innerHTML = '<p style="color:#6c757d; font-size:0.9rem;">インナーグループがありません</p>';
+        return;
+    }
+
+    state.data.meta.innerGroups.forEach((group, index) => {
+        const row = document.createElement('div');
+        row.className = 'inner-group-meta-row';
+        row.style.cssText = 'display:flex; gap:0.5rem; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap;';
+        row.innerHTML = `
+            <input type="text" placeholder="ID" value="${escapeHtmlAttr(group.id || '')}"
+                   onchange="updateInnerGroupMeta(${index}, 'id', this.value)" style="width:140px;">
+            <input type="text" placeholder="表示名" value="${escapeHtmlAttr(group.name || '')}"
+                   onchange="updateInnerGroupMeta(${index}, 'name', this.value)" style="flex:1; min-width:120px;">
+            <button type="button" class="btn btn-small" onclick="deleteInnerGroupMeta(${index})">×</button>
+        `;
+        list.appendChild(row);
+    });
+}
+
+function escapeHtmlAttr(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;');
+}
+
+function addInnerGroupMeta() {
+    if (!state.data.meta.innerGroups) {
+        state.data.meta.innerGroups = [];
+    }
+    const n = state.data.meta.innerGroups.length + 1;
+    state.data.meta.innerGroups.push({
+        id: `inner_group_${n}`,
+        name: `インナーグループ${n}`
+    });
+    renderInnerGroupsMetaList();
+}
+
+function updateInnerGroupMeta(index, field, value) {
+    if (!state.data.meta.innerGroups || !state.data.meta.innerGroups[index]) return;
+    state.data.meta.innerGroups[index][field] = value.trim();
+}
+
+function deleteInnerGroupMeta(index) {
+    if (!state.data.meta.innerGroups) return;
+    const group = state.data.meta.innerGroups[index];
+    const msg = group
+        ? `インナーグループ「${group.name || group.id}」を削除しますか？\n参照中のパーツがある場合は警告が出ます。`
+        : 'このインナーグループを削除しますか？';
+    if (!confirm(msg)) return;
+    state.data.meta.innerGroups.splice(index, 1);
+    renderInnerGroupsMetaList();
+}
+
+function getInnerGroupOptionsHtml(selectedId) {
+    const groups = (state.data.meta && state.data.meta.innerGroups) || [];
+    let html = '<option value="">なし</option>';
+    groups.forEach(g => {
+        const sel = g.id === selectedId ? ' selected' : '';
+        html += `<option value="${escapeHtmlAttr(g.id)}"${sel}>${escapeHtmlAttr(g.name || g.id)}</option>`;
+    });
+    return html;
 }
 
 // プロジェクトルート選択（フォルダ選択は制限があるため、最初の画像から推測）
@@ -537,10 +629,25 @@ function saveMetadata() {
     state.data.meta.canvasWidth = parseInt(document.getElementById('metaCanvasWidth').value);
     state.data.meta.canvasHeight = parseInt(document.getElementById('metaCanvasHeight').value);
     state.data.meta.projectRoot = document.getElementById('metaProjectRoot').value;
+
+    if (!state.data.meta.innerGroups) {
+        state.data.meta.innerGroups = [];
+    }
+    state.data.meta.innerGroups = state.data.meta.innerGroups.filter(g => g.id && String(g.id).trim());
+    state.data.meta.innerGroups.forEach(g => {
+        g.id = String(g.id).trim();
+        g.name = (g.name && String(g.name).trim()) || g.id;
+    });
+
+    const igWarnings = window.CharamakeInnerGroups
+        ? window.CharamakeInnerGroups.validateInnerGroupData(state.data)
+        : [];
+    if (igWarnings.length > 0) {
+        const proceed = confirm(`インナーグループ関連の警告:\n${igWarnings.slice(0, 8).join('\n')}${igWarnings.length > 8 ? '\n...' : ''}\n\n保存しますか？`);
+        if (!proceed) return;
+    }
     
-    // キャンバスサイズを適用
     applyCanvasSize();
-    
     saveToLocalStorage();
     hideEditor();
     alert('メタデータを保存しました');
@@ -586,11 +693,14 @@ function createPartCard(part) {
     const hasUnlocks = part.unlocks && part.unlocks.length > 0;
     const hasHides = part.hides && part.hides.length > 0;
     const hasRequires = part.requires;
+    const hasMasksInnerGroups = part.masksInnerGroups && part.masksInnerGroups.length > 0;
+    const hasInnerGroupLayers = part.layers && part.layers.some(l => l.innerGroup);
     
-    // アイコン行を作成
     let icons = '';
     if (hasColors) icons += '<span class="part-icon" title="色変更可能">🎨</span>';
     if (hasAnimation) icons += '<span class="part-icon" title="GIFアニメ">📽️</span>';
+    if (hasInnerGroupLayers) icons += '<span class="part-icon" title="インナーグループ付きレイヤー">👕</span>';
+    if (hasMasksInnerGroups) icons += '<span class="part-icon" title="マスク指定パーツ">🧥</span>';
     if (hasUnlocks) icons += '<span class="part-icon" title="他カテゴリを解放">🔓</span>';
     if (hasHides) icons += '<span class="part-icon" title="カテゴリを非表示">🙈</span>';
     if (hasRequires) icons += '<span class="part-icon" title="依存関係あり">🔗</span>';
@@ -607,6 +717,7 @@ function createPartCard(part) {
         ${hasUnlocks ? `<div class="part-card-unlocks">解放: ${part.unlocks.join(', ')}</div>` : ''}
         ${hasHides ? `<div class="part-card-unlocks" style="color:#e67e22;">非表示: ${part.hides.join(', ')}</div>` : ''}
         ${hasRequires ? `<div class="part-card-requires">必須: ${part.requires}</div>` : ''}
+        ${hasMasksInnerGroups ? `<div class="part-card-unlocks" style="color:#5b6abf;">マスク: ${part.masksInnerGroups.join(', ')}</div>` : ''}
         <div class="part-card-actions">
             <button class="btn btn-small" onclick="duplicatePart('${part.id}')">複製</button>
             <button class="btn btn-small" onclick="deletePart('${part.id}')">削除</button>
@@ -717,6 +828,25 @@ function showPartEditor() {
             </div>
         </details>
 
+        <!-- インナーグループ / マスク指定 -->
+        <details>
+            <summary>インナーグループ / マスク指定</summary>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="maskPartCheckbox" ${(state.editingPart.masksInnerGroups && state.editingPart.masksInnerGroups.length > 0) ? 'checked' : ''}>
+                    マスク指定パーツ（他パーツの IG をマスク対象にする）
+                </label>
+            </div>
+            <div id="masksInnerGroupsArea" style="${(state.editingPart.masksInnerGroups && state.editingPart.masksInnerGroups.length > 0) ? '' : 'display:none;'}">
+                <label>マスク対象インナーグループ:</label>
+                <small style="display:block; color:#6c757d; margin-bottom:0.5rem;">
+                    このパーツが着用されている間、列挙した IG のレイヤーは maskedFile に差し替わります
+                </small>
+                <div id="masksInnerGroupsList"></div>
+                <button type="button" id="addMasksInnerGroupBtn" class="btn btn-small">+ 追加</button>
+            </div>
+        </details>
+
         <!-- 依存関係 -->
         <details>
             <summary>依存関係</summary>
@@ -773,8 +903,90 @@ function showPartEditor() {
             state.editingPart.requires = e.target.value || undefined;
         }
     });
+
+    const maskPartCheckbox = document.getElementById('maskPartCheckbox');
+    const masksInnerGroupsArea = document.getElementById('masksInnerGroupsArea');
+    if (maskPartCheckbox) {
+        maskPartCheckbox.addEventListener('change', () => {
+            if (maskPartCheckbox.checked) {
+                if (!state.editingPart.masksInnerGroups) {
+                    state.editingPart.masksInnerGroups = [];
+                }
+                masksInnerGroupsArea.style.display = 'block';
+                if (state.editingPart.masksInnerGroups.length === 0) {
+                    addMasksInnerGroup();
+                } else {
+                    renderMasksInnerGroupsList();
+                }
+            } else {
+                delete state.editingPart.masksInnerGroups;
+                masksInnerGroupsArea.style.display = 'none';
+            }
+            updatePreview();
+        });
+    }
+    const addMasksInnerGroupBtn = document.getElementById('addMasksInnerGroupBtn');
+    if (addMasksInnerGroupBtn) {
+        addMasksInnerGroupBtn.addEventListener('click', addMasksInnerGroup);
+    }
+    renderMasksInnerGroupsList();
     
     updateWarningsDisplay();
+}
+
+function renderMasksInnerGroupsList() {
+    const list = document.getElementById('masksInnerGroupsList');
+    if (!list || !state.editingPart) return;
+
+    if (!state.editingPart.masksInnerGroups) {
+        state.editingPart.masksInnerGroups = [];
+    }
+
+    list.innerHTML = '';
+    const groups = (state.data.meta && state.data.meta.innerGroups) || [];
+
+    state.editingPart.masksInnerGroups.forEach((igId, index) => {
+        const row = document.createElement('div');
+        row.className = 'masks-inner-group-row';
+        row.style.cssText = 'display:flex; gap:0.5rem; margin-bottom:0.5rem; align-items:center;';
+
+        let options = '<option value="">選択...</option>';
+        groups.forEach(g => {
+            const sel = g.id === igId ? ' selected' : '';
+            options += `<option value="${escapeHtmlAttr(g.id)}"${sel}>${escapeHtmlAttr(g.name || g.id)}</option>`;
+        });
+
+        row.innerHTML = `
+            <select onchange="updateMasksInnerGroup(${index}, this.value)" style="flex:1;">${options}</select>
+            <button type="button" class="btn btn-small" onclick="deleteMasksInnerGroup(${index})">×</button>
+        `;
+        list.appendChild(row);
+    });
+}
+
+function addMasksInnerGroup() {
+    if (!state.editingPart) return;
+    if (!state.editingPart.masksInnerGroups) {
+        state.editingPart.masksInnerGroups = [];
+    }
+    const groups = (state.data.meta && state.data.meta.innerGroups) || [];
+    const defaultValue = groups.length > 0 ? groups[0].id : '';
+    state.editingPart.masksInnerGroups.push(defaultValue);
+    renderMasksInnerGroupsList();
+    updatePreview();
+}
+
+function deleteMasksInnerGroup(index) {
+    if (!state.editingPart || !state.editingPart.masksInnerGroups) return;
+    state.editingPart.masksInnerGroups.splice(index, 1);
+    renderMasksInnerGroupsList();
+    updatePreview();
+}
+
+function updateMasksInnerGroup(index, value) {
+    if (!state.editingPart || !state.editingPart.masksInnerGroups) return;
+    state.editingPart.masksInnerGroups[index] = value;
+    updatePreview();
 }
 
 // エディタ表示
@@ -1082,6 +1294,25 @@ function createLayerCard(layer, index) {
                 <option value="luminosity"   ${layer.blendMode === 'luminosity'   ? 'selected' : ''}>luminosity</option>
             </select>
         </div>
+        <div class="form-group">
+            <label>インナーグループ (省略可):</label>
+            <select id="layerInnerGroup_${index}" onchange="updateLayer(${index}, 'innerGroup', this.value)">
+                ${getInnerGroupOptionsHtml(layer.innerGroup || '')}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>マスク画像 (省略可):</label>
+            <div style="display: flex; gap: 0.5rem;">
+                <input type="text" id="layerMaskedFile_${index}" value="${escapeHtmlAttr(layer.maskedFile || '')}"
+                       onchange="updateLayer(${index}, 'maskedFile', this.value)" style="flex: 1;"
+                       ${layer.innerGroup ? '' : 'disabled'}>
+                <button type="button" class="btn btn-small" onclick="selectMaskedLayerFile(${index})"
+                        ${layer.innerGroup ? '' : 'disabled'}>参照</button>
+            </div>
+            <small style="display:block; color:#6c757d; margin-top:0.25rem;">
+                アウター着用時に file の代わりに表示する画像
+            </small>
+        </div>
     `;
     
     return card;
@@ -1153,23 +1384,78 @@ function selectLayerFile(index) {
     input.click();
 }
 
+function selectMaskedLayerFile(index) {
+    const layer = state.editingPart && state.editingPart.layers && state.editingPart.layers[index];
+    if (!layer || !layer.innerGroup) return;
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const inputField = document.getElementById(`layerMaskedFile_${index}`);
+        let relativePath = file.webkitRelativePath || file.name;
+
+        if (state.data.meta.projectRoot) {
+            let fullPath = prompt(
+                'マスク画像の完全なパスを入力してください:\n（エクスプローラーのアドレスバーからコピー&ペーストできます）\n\n' +
+                'ファイル名: ' + file.name,
+                state.data.meta.projectRoot + '/parts/'
+            );
+            if (fullPath) {
+                fullPath = fullPath.replace(/^["']|["']$/g, '').trim();
+                const rootPath = state.data.meta.projectRoot.replace(/\\/g, '/');
+                const normalizedPath = fullPath.replace(/\\/g, '/');
+                if (normalizedPath.startsWith(rootPath)) {
+                    relativePath = normalizedPath.substring(rootPath.length + 1);
+                } else {
+                    relativePath = normalizedPath;
+                }
+            }
+        } else {
+            relativePath = file.name;
+        }
+
+        if (inputField) {
+            inputField.value = relativePath;
+            updateLayer(index, 'maskedFile', relativePath);
+        }
+    };
+    input.click();
+}
+
 // レイヤー更新
 function updateLayer(index, field, value) {
     if (!state.editingPart.layers[index]) return;
     
     if (field === 'zIndex') {
         state.editingPart.layers[index][field] = value ? parseInt(value) : undefined;
-    } else if (field === 'blendMode' || field === 'side') {
+    } else if (field === 'blendMode' || field === 'side' || field === 'innerGroup') {
         if (value) {
             state.editingPart.layers[index][field] = value;
         } else {
             delete state.editingPart.layers[index][field];
         }
+        if (field === 'innerGroup' && !value) {
+            delete state.editingPart.layers[index].maskedFile;
+        }
+        if (field === 'innerGroup') {
+            renderLayers();
+        }
+    } else if (field === 'maskedFile') {
+        const trimmed = value ? String(value).trim() : '';
+        if (trimmed) {
+            state.editingPart.layers[index].maskedFile = trimmed;
+        } else {
+            delete state.editingPart.layers[index].maskedFile;
+        }
     } else {
         state.editingPart.layers[index][field] = value;
     }
     
-    updatePreview(); // プレビュー更新
+    updatePreview();
 }
 
 // レイヤー追加
@@ -1582,6 +1868,25 @@ function savePart() {
     if (state.editingPart.unlocks && state.editingPart.unlocks.length === 0) {
         delete state.editingPart.unlocks;
     }
+    if (state.editingPart.masksInnerGroups && state.editingPart.masksInnerGroups.length === 0) {
+        delete state.editingPart.masksInnerGroups;
+    } else if (state.editingPart.masksInnerGroups) {
+        state.editingPart.masksInnerGroups = state.editingPart.masksInnerGroups.filter(id => id && String(id).trim());
+        if (state.editingPart.masksInnerGroups.length === 0) {
+            delete state.editingPart.masksInnerGroups;
+        }
+    }
+
+    if (state.editingPart.layers) {
+        state.editingPart.layers.forEach(layer => {
+            if (!layer.innerGroup) {
+                delete layer.innerGroup;
+                delete layer.maskedFile;
+            } else if (!layer.maskedFile || !String(layer.maskedFile).trim()) {
+                delete layer.maskedFile;
+            }
+        });
+    }
     
     // 既存パーツを更新 or 新規追加
     const existingIndex = state.data.parts.findIndex(p => p.id === state.editingPart.id);
@@ -1659,6 +1964,10 @@ function validatePart(part) {
             }
         });
     }
+
+    if (window.CharamakeInnerGroups) {
+        warnings.push(...window.CharamakeInnerGroups.validatePartInnerGroups(part, state.data.meta));
+    }
     
     return warnings;
 }
@@ -1688,6 +1997,14 @@ function validateAllData() {
     if (cycles.length > 0) {
         warnings.push('循環依存が検出されました:');
         warnings.push(...cycles.map(c => '  - ' + c));
+    }
+
+    if (window.CharamakeInnerGroups) {
+        const igWarnings = window.CharamakeInnerGroups.validateInnerGroupData(state.data);
+        if (igWarnings.length > 0) {
+            warnings.push('インナーグループ:');
+            warnings.push(...igWarnings.map(w => '  - ' + w));
+        }
     }
     
     return warnings;
@@ -1872,17 +2189,12 @@ function updatePreview() {
                 colorSettings = part.colors[state.selectedColorPreset];
             }
             
-            part.layers.forEach(layer => {
-                layers.push({
-                    file: layer.file,
-                    zIndex: layer.zIndex || part.zIndex,
-                    animated: layer.animated,
-                    blendMode: layer.blendMode,
-                    side: layer.side,
-                    colorSettings: colorSettings,
-                    partId: part.id
-                });
-            });
+            const IG = window.CharamakeInnerGroups;
+            const activeMaskGroups = IG
+                ? IG.computeActiveMaskGroupsFromParts([part])
+                : new Set();
+
+            editorPushPartLayers(part, layers, activeMaskGroups, colorSettings);
         }
     }
     
@@ -1897,59 +2209,92 @@ function updatePreview() {
     });
 }
 
-// 全レイヤーを収集（他パーツと重ねて表示用）
-function collectAllLayers(layers) {
+// プレビュー用: 他パーツ重ね表示の選択マップを構築
+function getEditorPreviewSelectedPartsMap() {
     const otherPartsSelector = document.getElementById('otherPartsSelector');
-    
-    // 各カテゴリで選択されているパーツを取得
-    const selects = otherPartsSelector.querySelectorAll('select');
     const selectedParts = {};
-    
-    selects.forEach(select => {
-        const categoryId = select.dataset.category;
-        const partId = select.value;
-        if (partId) {
-            selectedParts[categoryId] = partId;
-        }
-    });
-    
-    // 編集中/選択中のパーツも追加（編集中のカテゴリを優先）
+
+    if (otherPartsSelector) {
+        otherPartsSelector.querySelectorAll('select').forEach(select => {
+            const categoryId = select.dataset.category;
+            const partId = select.value;
+            if (partId) selectedParts[categoryId] = partId;
+        });
+    }
+
     if (state.editingPart) {
-        // 編集中のパーツは常に最新の状態を使用
-        selectedParts[state.editingPart.category] = '__EDITING__'; // 特殊マーカー
+        selectedParts[state.editingPart.category] = '__EDITING__';
     } else if (state.selectedPart) {
         const part = state.data.parts.find(p => p.id === state.selectedPart);
-        if (part) {
-            selectedParts[part.category] = part.id;
+        if (part) selectedParts[part.category] = part.id;
+    }
+
+    return selectedParts;
+}
+
+// パーツのレイヤーをプレビュー用 layers 配列に追加
+function editorPushPartLayers(part, layers, activeMaskGroups, colorSettings) {
+    if (!part || !part.layers) return;
+
+    const IG = window.CharamakeInnerGroups;
+    const maskGroups = activeMaskGroups || new Set();
+
+    part.layers.forEach(layer => {
+        const resolvedFile = IG
+            ? IG.resolveLayerFile(layer, maskGroups)
+            : layer.file;
+
+        layers.push({
+            file: resolvedFile,
+            zIndex: layer.zIndex || part.zIndex,
+            animated: layer.animated,
+            blendMode: layer.blendMode,
+            side: layer.side,
+            colorSettings: colorSettings,
+            partColors: part.colors,
+            partId: part.id
+        });
+    });
+}
+
+// プレビュー用: 選択中パーツオブジェクト一覧（編集中は未保存データを優先）
+function getEditorPreviewPartObjects(selectedPartsMap) {
+    const parts = [];
+    for (const [categoryId, partId] of Object.entries(selectedPartsMap)) {
+        if (partId === '__EDITING__' && state.editingPart && state.editingPart.category === categoryId) {
+            parts.push(state.editingPart);
+        } else {
+            const part = state.data.parts.find(p => p.id === partId);
+            if (part) parts.push(part);
         }
     }
-    
-    // レイヤーを収集
-    for (let [categoryId, partId] of Object.entries(selectedParts)) {
+    return parts;
+}
+
+// 全レイヤーを収集（他パーツと重ねて表示用）
+function collectAllLayers(layers) {
+    const selectedPartsMap = getEditorPreviewSelectedPartsMap();
+    const IG = window.CharamakeInnerGroups;
+    const previewParts = getEditorPreviewPartObjects(selectedPartsMap);
+    const activeMaskGroups = IG
+        ? IG.computeActiveMaskGroupsFromParts(previewParts)
+        : new Set();
+
+    for (const [categoryId, partId] of Object.entries(selectedPartsMap)) {
         let part;
-        
-        // 編集中のパーツかチェック
         if (partId === '__EDITING__' && state.editingPart && state.editingPart.category === categoryId) {
-            // 編集中のパーツ（未保存の変更を含む）
             part = state.editingPart;
         } else {
-            // 保存済みのパーツ
             part = state.data.parts.find(p => p.id === partId);
         }
-        
-        if (part && part.layers) {
-            part.layers.forEach(layer => {
-                layers.push({
-                    file: layer.file,
-                    zIndex: layer.zIndex || part.zIndex,
-                    animated: layer.animated,
-                    blendMode: layer.blendMode,
-                    side: layer.side,
-                    partColors: part.colors,
-                    partId: part.id
-                });
-            });
+
+        let colorSettings = null;
+        if (part && part.id === state.selectedPart && state.selectedColorPreset &&
+            state.selectedColorPreset !== 'default' && part.colors && part.colors[state.selectedColorPreset]) {
+            colorSettings = part.colors[state.selectedColorPreset];
         }
+
+        editorPushPartLayers(part, layers, activeMaskGroups, colorSettings);
     }
 }
 
@@ -2287,6 +2632,13 @@ function createOtherPartSelector(category, container) {
     container.appendChild(div);
 }
 
+function normalizeMetaInnerGroups() {
+    if (!state.data.meta) state.data.meta = {};
+    if (!Array.isArray(state.data.meta.innerGroups)) {
+        state.data.meta.innerGroups = [];
+    }
+}
+
 // JSON読込
 function loadJson() {
     elements.fileInput.click();
@@ -2300,8 +2652,8 @@ function handleJsonFileSelect(e) {
     reader.onload = (event) => {
         try {
             state.data = JSON.parse(event.target.result);
+            normalizeMetaInnerGroups();
             
-            // キャンバスサイズを適用
             applyCanvasSize();
             
             renderCategories();
@@ -2338,8 +2690,7 @@ function loadFromLocalStorage() {
     if (saved) {
         try {
             state.data = JSON.parse(saved);
-            
-            // キャンバスサイズを適用
+            normalizeMetaInnerGroups();
             applyCanvasSize();
         } catch (error) {
             console.error('LocalStorageの読み込みに失敗:', error);

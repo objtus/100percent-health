@@ -3,7 +3,8 @@
     "version": "2.0",
     "canvasWidth": 600,
     "canvasHeight": 845,
-    "projectRoot": "D:\\web\\100percent-health\\game\\charamake2"
+    "projectRoot": "D:\\web\\100percent-health\\game\\charamake2",
+    "innerGroups": []
   },
   "parts": [
     {

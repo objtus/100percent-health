@@ -952,25 +952,49 @@ function updatePreview() {
     drawLayers(ctx, layers);
 }
 
+// 描画・マスク算出対象の選択中パーツ ID（非表示カテゴリは除外）
+function getVisibleSelectedPartIds() {
+    const ids = [];
+    if (!state.partsData) return ids;
+
+    for (const [categoryId, selection] of Object.entries(state.selectedParts)) {
+        const category = state.partsData.categories.find(c => c.id === categoryId);
+        if (!isCategoryVisible(category)) continue;
+
+        if (category && category.selectionMode === 'multiple') {
+            if (Array.isArray(selection)) ids.push(...selection);
+        } else if (selection) {
+            ids.push(selection);
+        }
+    }
+    return ids;
+}
+
 // 全レイヤーを収集
 function collectAllLayers() {
     const layers = [];
-    
-    for (let [categoryId, selection] of Object.entries(state.selectedParts)) {
+    if (!state.partsData) return layers;
+
+    const IG = window.CharamakeInnerGroups;
+    const visiblePartIds = getVisibleSelectedPartIds();
+    const activeMaskGroups = IG
+        ? IG.computeActiveMaskGroups(visiblePartIds, state.partsData.parts)
+        : new Set();
+
+    for (const [categoryId, selection] of Object.entries(state.selectedParts)) {
         const category = state.partsData.categories.find(c => c.id === categoryId);
-        
-        // 非表示カテゴリのパーツは描画しない（選択状態は保持）
+
         if (!isCategoryVisible(category)) continue;
-        
+
         if (category && category.selectionMode === 'multiple') {
             selection.forEach(partId => {
-                addPartLayers(partId, layers);
+                addPartLayers(partId, layers, activeMaskGroups);
             });
         } else {
-            addPartLayers(selection, layers);
+            addPartLayers(selection, layers, activeMaskGroups);
         }
     }
-    
+
     return layers;
 }
 
@@ -980,20 +1004,24 @@ function hasSidedLayers(part) {
 }
 
 // パーツのレイヤーを追加（side フィルタリング込み）
-function addPartLayers(partId, layers) {
+function addPartLayers(partId, layers, activeMaskGroups) {
     const part = state.partsData.parts.find(p => p.id === partId);
     if (!part || !part.layers) return;
-    
+
+    const IG = window.CharamakeInnerGroups;
+    const maskGroups = activeMaskGroups || new Set();
     const colorSettings = getColorSettings(part);
     const selectedSide = state.selectedSide[partId] || 'both';
-    
+
     part.layers.forEach(layer => {
-        // side 指定がないレイヤーは常に描画
-        // side 指定があるレイヤーは selectedSide が 'both' または一致する場合のみ描画
         if (layer.side && selectedSide !== 'both' && layer.side !== selectedSide) return;
-        
+
+        const resolvedFile = IG
+            ? IG.resolveLayerFile(layer, maskGroups)
+            : layer.file;
+
         layers.push({
-            file: layer.file,
+            file: resolvedFile,
             zIndex: layer.zIndex || part.zIndex,
             animated: layer.animated,
             blendMode: layer.blendMode,

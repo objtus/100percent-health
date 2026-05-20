@@ -14,6 +14,7 @@ game/charamake/
 ├── game.html            # 着せ替えゲーム本体
 ├── game.css
 ├── game.js
+├── inner-groups.js      # インナーグループ共有ロジック
 ├── parts-data.json      # パーツマスターデータ（ゲームが自動読込）
 ├── sampledata.json      # 小さなサンプルデータ（エディタの動作確認用）
 ├── SPEC.md              # 詳細仕様書
@@ -37,7 +38,8 @@ game/charamake/
 - [x] レイヤー管理（追加・削除・並び替え、zIndex / side / blendMode / animated）
 - [x] 色設定（ブレンドモード＋専用画像、色相シフト対応）
 - [x] 依存関係（requires / unlocks / hides）
-- [x] バリデーション（警告表示、循環依存検出）
+- [x] インナーグループ（meta / レイヤー maskedFile / masksInnerGroups）
+- [x] バリデーション（警告表示、循環依存検出、IG 参照チェック）
 - [x] プレビュー（他パーツと重ねて表示）
 - [x] JSON 読込 / 出力、LocalStorage 自動保存
 
@@ -54,6 +56,7 @@ game/charamake/
 - [x] キャラクター保存 / 読込（`character.json`）
 - [x] PNG 出力
 - [x] モバイル向けタブ UI
+- [x] インナーグループ（服の重ね着マスク差し替え）— 詳細は `SPEC-inner-groups.md`
 
 ### 未着手・将来
 
@@ -96,8 +99,9 @@ game/charamake/
    - `requires`: 必須パーツ
    - `unlocks`: 選択時に表示するカテゴリ
    - `hides`: 選択時に非表示にするカテゴリ（unlocks が優先）
-7. **プレビュー**: 右カラムのキャンバス、「他パーツと重ねて表示」で組み合わせ確認
-8. **保存**: 「パーツを保存」で編集中パーツを確定、「JSON出力」で `parts-data.json` をダウンロード
+7. **インナーグループ**: メタデータ編集で IG マスタ登録 → レイヤーに IG・マスク画像 → アウターにマスク指定
+8. **プレビュー**: 右カラムのキャンバス。**マスク確認は「他パーツと重ねて表示」** でアウターも選択
+9. **保存**: 「パーツを保存」で編集中パーツを確定、「JSON出力」で `parts-data.json` をダウンロード
 
 ### ゲーム
 
@@ -112,16 +116,17 @@ game/charamake/
 
 詳細は `SPEC.md` を参照。
 
-服の重ね着時のインナーはみ出し対策（インナーグループ）は、未実装の設計ドラフトとして `SPEC-inner-groups.md` に記載しています。
+インナーグループ（服の重ね着マスク）の詳細は [SPEC-inner-groups.md](SPEC-inner-groups.md) を参照。
 
 ### parts-data.json
 
 | セクション | 内容 |
 |-----------|------|
-| `meta` | バージョン、キャンバスサイズ |
+| `meta` | バージョン、キャンバスサイズ、`innerGroups`（IG マスタ） |
 | `categoryGroups` | UI 上のグループ（基本・顔・髪・服など） |
 | `categories` | 着せ替えカテゴリ（selectionMode, hidden, colorGroup 等） |
-| `parts` | パーツ定義（layers, colors, unlocks, hides 等） |
+| `parts` | パーツ定義（layers, colors, unlocks, hides, `masksInnerGroups` 等） |
+| `layers[]` | `innerGroup`, `maskedFile`（任意） |
 
 ### character.json（保存データ）
 
