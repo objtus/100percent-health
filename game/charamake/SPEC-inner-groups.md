@@ -169,7 +169,9 @@ activeMaskGroups = ⋃ part.masksInnerGroups
 
 ### 5.2 レイヤーごとの画像パス決定
 
-各レイヤーについて、描画に使うパス `resolvedFile` を次の順で決める。
+> **ポーズ差し替えとの関係**: ポーズ用の第1段解決（`poseFiles`）の**後**に、本節の IG マスク（第2段）を適用する。詳細は [SPEC-pose-files.md](./SPEC-pose-files.md)。
+
+各レイヤーについて、描画に使うパス `resolvedFile` を次の順で決める（IG のみの場合）。
 
 ```
 1. innerGroup が無い

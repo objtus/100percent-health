@@ -15,7 +15,8 @@ const state = {
     selectedCategory: null,
     selectedPart: null,
     editingPart: null,
-    selectedColorPreset: null // 選択中の色プリセット（プレビュー用）
+    selectedColorPreset: null, // 選択中の色プリセット（プレビュー用）
+    previewPoseId: null // 単体プレビュー用 poseId（体型未選択時）
 };
 
 let draggedPartId = null;
@@ -85,6 +86,14 @@ function setupEventListeners() {
         updateOtherPartsSelector();
         updatePreview();
     });
+
+    const previewPoseSelect = document.getElementById('previewPoseSelect');
+    if (previewPoseSelect) {
+        previewPoseSelect.addEventListener('change', () => {
+            state.previewPoseId = previewPoseSelect.value || null;
+            updatePreview();
+        });
+    }
 }
 
 // カテゴリ一覧の描画
@@ -702,11 +711,17 @@ function createPartCard(part) {
     const hasRequires = part.requires;
     const hasMasksInnerGroups = part.masksInnerGroups && part.masksInnerGroups.length > 0;
     const hasInnerGroupLayers = part.layers && part.layers.some(l => l.innerGroup);
+    const hasPoseLayers = part.layers && part.layers.some(l =>
+        (l.poseFiles && Object.keys(l.poseFiles).length > 0) ||
+        (l.poseMaskedFiles && Object.keys(l.poseMaskedFiles).length > 0)
+    );
     
     let icons = '';
     if (hasColors) icons += '<span class="part-icon" title="色変更可能">🎨</span>';
     if (hasAnimation) icons += '<span class="part-icon" title="GIFアニメ">📽️</span>';
     if (hasInnerGroupLayers) icons += '<span class="part-icon" title="インナーグループ付きレイヤー">👕</span>';
+    if (hasPoseLayers) icons += '<span class="part-icon" title="ポーズ差し替え付きレイヤー">✋</span>';
+    if (part.poseId) icons += '<span class="part-icon" title="体型ポーズID">🧍</span>';
     if (hasMasksInnerGroups) icons += '<span class="part-icon" title="マスク指定パーツ">🧥</span>';
     if (hasUnlocks) icons += '<span class="part-icon" title="他カテゴリを解放">🔓</span>';
     if (hasHides) icons += '<span class="part-icon" title="カテゴリを非表示">🙈</span>';
@@ -825,6 +840,10 @@ function editPart(partId) {
     
     state.editingPart = JSON.parse(JSON.stringify(part)); // ディープコピー
     state.selectedPart = partId;
+
+    if (state.editingPart.poseId) {
+        state.previewPoseId = state.editingPart.poseId;
+    }
     
     // 色プリセットは常にデフォルトを選択
     state.selectedColorPreset = 'default';
@@ -861,6 +880,13 @@ function showPartEditor() {
             <div class="form-group">
                 <label>zIndex:</label>
                 <input type="number" id="partZIndex" value="100">
+            </div>
+            <div class="form-group" id="partPoseIdArea" style="display:none;">
+                <label>poseId (省略可):</label>
+                <input type="text" id="partPoseId" placeholder="例: peace（体型選択が他レイヤーの poseFiles キーになる）">
+                <small style="display:block; color:#6c757d; margin-top:0.25rem;">
+                    基本→体型の選択でポーズ差し替えを有効化。meta.poseGroups は不要。
+                </small>
             </div>
         </details>
 
@@ -1098,6 +1124,14 @@ function populateEditor() {
         }
         categorySelect.appendChild(option);
     });
+
+    categorySelect.onchange = () => {
+        state.editingPart.category = categorySelect.value;
+        updatePartPoseIdVisibility();
+    };
+
+    updatePartPoseIdVisibility();
+    updatePreviewPoseSelector();
     
     // 色プレビュー用キャンバスのサイズを設定
     setupColorPreviewCanvas();
@@ -1304,7 +1338,11 @@ function renderLayers() {
     state.editingPart.layers.forEach((layer, index) => {
         const card = createLayerCard(layer, index);
         layersList.appendChild(card);
+        renderPoseFilesList(index);
+        renderPoseMaskedFilesList(index);
     });
+
+    updatePreviewPoseSelector();
 }
 
 // レイヤーカードの作成
@@ -1389,9 +1427,307 @@ function createLayerCard(layer, index) {
                 アウター着用時に file の代わりに表示する画像
             </small>
         </div>
+        <div class="form-group">
+            <label>ポーズ差し替え (poseFiles):</label>
+            <small style="display:block; color:#6c757d; margin-bottom:0.35rem;">
+                体型の poseId がキー。タイト長袖などポーズのみ必要なとき
+            </small>
+            <div id="poseFilesList_${index}"></div>
+            <button type="button" class="btn btn-small" onclick="addPoseFileEntry(${index})">+ poseFiles 追加</button>
+        </div>
+        <div class="form-group" id="poseMaskedFilesArea_${index}" style="${layer.innerGroup ? '' : 'display:none;'}">
+            <label>ポーズ+マスク (poseMaskedFiles):</label>
+            <small style="display:block; color:#6c757d; margin-bottom:0.35rem;">
+                ポーズと IG マスクの両方が必要なときのみ
+            </small>
+            <div id="poseMaskedFilesList_${index}"></div>
+            <button type="button" class="btn btn-small" onclick="addPoseMaskedFileEntry(${index})">+ poseMaskedFiles 追加</button>
+        </div>
     `;
     
     return card;
+}
+
+function ensureLayerPoseMaps(layer) {
+    if (!layer.poseFiles || typeof layer.poseFiles !== 'object') layer.poseFiles = {};
+    if (!layer.poseMaskedFiles || typeof layer.poseMaskedFiles !== 'object') layer.poseMaskedFiles = {};
+}
+
+function renderPoseFilesList(index) {
+    const list = document.getElementById(`poseFilesList_${index}`);
+    if (!list || !state.editingPart || !state.editingPart.layers[index]) return;
+
+    const layer = state.editingPart.layers[index];
+    ensureLayerPoseMaps(layer);
+    list.innerHTML = '';
+
+    Object.keys(layer.poseFiles).forEach(key => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex; gap:0.35rem; margin-bottom:0.35rem; flex-wrap:wrap; align-items:center;';
+        row.innerHTML = `
+            <input type="text" placeholder="poseId" value="${escapeHtmlAttr(key)}"
+                   onchange="updatePoseFileKey(${index}, '${escapeHtmlAttr(key)}', this.value)" style="width:90px;">
+            <input type="text" placeholder="画像パス" value="${escapeHtmlAttr(layer.poseFiles[key] || '')}"
+                   onchange="updatePoseFilePath(${index}, '${escapeHtmlAttr(key)}', this.value)" style="flex:1; min-width:120px;">
+            <button type="button" class="btn btn-small" onclick="selectPoseLayerFile(${index}, '${escapeHtmlAttr(key)}', false)">参照</button>
+            <button type="button" class="btn btn-small" onclick="deletePoseFileEntry(${index}, '${escapeHtmlAttr(key)}')">×</button>
+        `;
+        list.appendChild(row);
+    });
+}
+
+function renderPoseMaskedFilesList(index) {
+    const list = document.getElementById(`poseMaskedFilesList_${index}`);
+    const area = document.getElementById(`poseMaskedFilesArea_${index}`);
+    if (!list || !state.editingPart || !state.editingPart.layers[index]) return;
+
+    const layer = state.editingPart.layers[index];
+    if (area) area.style.display = layer.innerGroup ? '' : 'none';
+    if (!layer.innerGroup) return;
+
+    ensureLayerPoseMaps(layer);
+    list.innerHTML = '';
+
+    Object.keys(layer.poseMaskedFiles).forEach(key => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex; gap:0.35rem; margin-bottom:0.35rem; flex-wrap:wrap; align-items:center;';
+        row.innerHTML = `
+            <input type="text" placeholder="poseId" value="${escapeHtmlAttr(key)}"
+                   onchange="updatePoseMaskedFileKey(${index}, '${escapeHtmlAttr(key)}', this.value)" style="width:90px;">
+            <input type="text" placeholder="画像パス" value="${escapeHtmlAttr(layer.poseMaskedFiles[key] || '')}"
+                   onchange="updatePoseMaskedFilePath(${index}, '${escapeHtmlAttr(key)}', this.value)" style="flex:1; min-width:120px;">
+            <button type="button" class="btn btn-small" onclick="selectPoseLayerFile(${index}, '${escapeHtmlAttr(key)}', true)">参照</button>
+            <button type="button" class="btn btn-small" onclick="deletePoseMaskedFileEntry(${index}, '${escapeHtmlAttr(key)}')">×</button>
+        `;
+        list.appendChild(row);
+    });
+}
+
+function addPoseFileEntry(index) {
+    if (!state.editingPart.layers[index]) return;
+    ensureLayerPoseMaps(state.editingPart.layers[index]);
+    const layer = state.editingPart.layers[index];
+    let n = 1;
+    while (layer.poseFiles[`pose_${n}`] !== undefined) n++;
+    layer.poseFiles[`pose_${n}`] = '';
+    renderLayers();
+    updatePreviewPoseSelector();
+    updatePreview();
+}
+
+function addPoseMaskedFileEntry(index) {
+    if (!state.editingPart.layers[index] || !state.editingPart.layers[index].innerGroup) return;
+    ensureLayerPoseMaps(state.editingPart.layers[index]);
+    const layer = state.editingPart.layers[index];
+    let n = 1;
+    while (layer.poseMaskedFiles[`pose_${n}`] !== undefined) n++;
+    layer.poseMaskedFiles[`pose_${n}`] = '';
+    renderLayers();
+    updatePreview();
+}
+
+function updatePoseFileKey(index, oldKey, newKey) {
+    const layer = state.editingPart.layers[index];
+    if (!layer || !layer.poseFiles) return;
+    const nk = newKey ? String(newKey).trim() : '';
+    if (!nk || nk === oldKey) return;
+    const val = layer.poseFiles[oldKey];
+    delete layer.poseFiles[oldKey];
+    layer.poseFiles[nk] = val || '';
+    renderLayers();
+    updatePreview();
+}
+
+function updatePoseFilePath(index, key, path) {
+    const layer = state.editingPart.layers[index];
+    if (!layer || !layer.poseFiles) return;
+    const trimmed = path ? String(path).trim() : '';
+    if (trimmed) layer.poseFiles[key] = trimmed;
+    else delete layer.poseFiles[key];
+    updatePreviewPoseSelector();
+    updatePreview();
+}
+
+function deletePoseFileEntry(index, key) {
+    const layer = state.editingPart.layers[index];
+    if (!layer || !layer.poseFiles) return;
+    delete layer.poseFiles[key];
+    if (Object.keys(layer.poseFiles).length === 0) delete layer.poseFiles;
+    renderLayers();
+    updatePreviewPoseSelector();
+    updatePreview();
+}
+
+function updatePoseMaskedFileKey(index, oldKey, newKey) {
+    const layer = state.editingPart.layers[index];
+    if (!layer || !layer.poseMaskedFiles) return;
+    const nk = newKey ? String(newKey).trim() : '';
+    if (!nk || nk === oldKey) return;
+    const val = layer.poseMaskedFiles[oldKey];
+    delete layer.poseMaskedFiles[oldKey];
+    layer.poseMaskedFiles[nk] = val || '';
+    renderLayers();
+    updatePreview();
+}
+
+function updatePoseMaskedFilePath(index, key, path) {
+    const layer = state.editingPart.layers[index];
+    if (!layer || !layer.poseMaskedFiles) return;
+    const trimmed = path ? String(path).trim() : '';
+    if (trimmed) layer.poseMaskedFiles[key] = trimmed;
+    else delete layer.poseMaskedFiles[key];
+    updatePreview();
+}
+
+function deletePoseMaskedFileEntry(index, key) {
+    const layer = state.editingPart.layers[index];
+    if (!layer || !layer.poseMaskedFiles) return;
+    delete layer.poseMaskedFiles[key];
+    if (Object.keys(layer.poseMaskedFiles).length === 0) delete layer.poseMaskedFiles;
+    renderLayers();
+    updatePreview();
+}
+
+function selectPoseLayerFile(index, poseKey, isMasked) {
+    const layer = state.editingPart.layers[index];
+    if (!layer) return;
+    if (isMasked && !layer.innerGroup) return;
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        let relativePath = file.webkitRelativePath || file.name;
+        if (state.data.meta.projectRoot) {
+            let fullPath = prompt(
+                '画像の完全なパスを入力してください:\n\nファイル名: ' + file.name,
+                state.data.meta.projectRoot + '/parts/'
+            );
+            if (fullPath) {
+                fullPath = fullPath.replace(/^["']|["']$/g, '').trim();
+                const rootPath = state.data.meta.projectRoot.replace(/\\/g, '/');
+                const normalizedPath = fullPath.replace(/\\/g, '/');
+                if (normalizedPath.startsWith(rootPath)) {
+                    relativePath = normalizedPath.substring(rootPath.length + 1);
+                } else {
+                    relativePath = normalizedPath;
+                }
+            }
+        }
+
+        if (isMasked) {
+            updatePoseMaskedFilePath(index, poseKey, relativePath);
+        } else {
+            updatePoseFilePath(index, poseKey, relativePath);
+        }
+        renderLayers();
+    };
+    input.click();
+}
+
+function partUsesPosePreview(part) {
+    if (!part || !part.layers) return false;
+    return part.layers.some(l =>
+        (l.poseFiles && Object.keys(l.poseFiles).some(k => l.poseFiles[k])) ||
+        (l.poseMaskedFiles && Object.keys(l.poseMaskedFiles).some(k => l.poseMaskedFiles[k]))
+    );
+}
+
+function getEditorPreviewPartIdsFromMap(selectedPartsMap) {
+    const ids = [];
+    for (const partId of Object.values(selectedPartsMap)) {
+        if (partId === '__EDITING__' && state.editingPart) {
+            ids.push(state.editingPart.id);
+        } else if (partId) {
+            ids.push(partId);
+        }
+    }
+    return ids;
+}
+
+function getEditorActivePoseId() {
+    const LR = window.CharamakeLayerResolve;
+    if (!LR) return null;
+
+    const previewWithOthers = document.getElementById('previewWithOthers') &&
+        document.getElementById('previewWithOthers').checked;
+
+    if (previewWithOthers) {
+        const map = getEditorPreviewSelectedPartsMap();
+        const partIds = getEditorPreviewPartIdsFromMap(map);
+        const poseFromBody = LR.getActivePoseId(partIds, state.data.parts);
+        if (poseFromBody) return poseFromBody;
+    }
+
+    const sel = document.getElementById('previewPoseSelect');
+    if (sel && sel.value) return sel.value;
+    return state.previewPoseId || null;
+}
+
+function updatePreviewPoseSelector() {
+    const control = document.getElementById('previewPoseControl');
+    const select = document.getElementById('previewPoseSelect');
+    if (!control || !select) return;
+
+    const LR = window.CharamakeLayerResolve;
+    const part = state.editingPart;
+    const show = part && partUsesPosePreview(part);
+    control.style.display = show ? 'block' : 'none';
+    if (!show || !LR) return;
+
+    const known = LR.collectKnownPoseIds(state.data.parts);
+    const current = getEditorActivePoseId();
+
+    select.innerHTML = '<option value="">なし（通常 file）</option>';
+    known.forEach(id => {
+        const opt = document.createElement('option');
+        opt.value = id;
+        opt.textContent = id;
+        if (id === current) opt.selected = true;
+        select.appendChild(opt);
+    });
+
+    if (current && !known.includes(current)) {
+        const opt = document.createElement('option');
+        opt.value = current;
+        opt.textContent = current;
+        opt.selected = true;
+        select.appendChild(opt);
+    }
+}
+
+function updatePartPoseIdVisibility() {
+    const area = document.getElementById('partPoseIdArea');
+    const input = document.getElementById('partPoseId');
+    if (!area || !input || !state.editingPart) return;
+
+    const isBody = state.editingPart.category === (window.CharamakeLayerResolve
+        ? window.CharamakeLayerResolve.BODY_CATEGORY_ID
+        : 'body');
+    area.style.display = isBody ? 'block' : 'none';
+    if (isBody) {
+        input.value = state.editingPart.poseId || '';
+    }
+}
+
+function cleanupLayerPoseFields(layer) {
+    if (layer.poseFiles && typeof layer.poseFiles === 'object') {
+        Object.keys(layer.poseFiles).forEach(k => {
+            if (!k || !String(layer.poseFiles[k]).trim()) delete layer.poseFiles[k];
+        });
+        if (Object.keys(layer.poseFiles).length === 0) delete layer.poseFiles;
+    }
+    if (!layer.innerGroup) {
+        delete layer.poseMaskedFiles;
+    } else if (layer.poseMaskedFiles && typeof layer.poseMaskedFiles === 'object') {
+        Object.keys(layer.poseMaskedFiles).forEach(k => {
+            if (!k || !String(layer.poseMaskedFiles[k]).trim()) delete layer.poseMaskedFiles[k];
+        });
+        if (Object.keys(layer.poseMaskedFiles).length === 0) delete layer.poseMaskedFiles;
+    }
 }
 
 // レイヤーファイル選択
@@ -1516,6 +1852,7 @@ function updateLayer(index, field, value) {
         }
         if (field === 'innerGroup' && !value) {
             delete state.editingPart.layers[index].maskedFile;
+            delete state.editingPart.layers[index].poseMaskedFiles;
         }
         if (field === 'innerGroup') {
             renderLayers();
@@ -1923,6 +2260,18 @@ function savePart() {
     state.editingPart.name = document.getElementById('partName').value;
     state.editingPart.category = document.getElementById('partCategory').value;
     state.editingPart.zIndex = parseInt(document.getElementById('partZIndex').value);
+
+    const bodyCat = window.CharamakeLayerResolve
+        ? window.CharamakeLayerResolve.BODY_CATEGORY_ID
+        : 'body';
+    if (state.editingPart.category === bodyCat) {
+        const poseInput = document.getElementById('partPoseId');
+        const pid = poseInput ? String(poseInput.value).trim() : '';
+        if (pid) state.editingPart.poseId = pid;
+        else delete state.editingPart.poseId;
+    } else {
+        delete state.editingPart.poseId;
+    }
     
     if (document.getElementById('allowCustomColorCheckbox').checked) {
         delete state.editingPart.allowCustomColor;
@@ -1961,6 +2310,7 @@ function savePart() {
             } else if (!layer.maskedFile || !String(layer.maskedFile).trim()) {
                 delete layer.maskedFile;
             }
+            cleanupLayerPoseFields(layer);
         });
     }
 
@@ -2050,6 +2400,10 @@ function validatePart(part) {
     if (window.CharamakeInnerGroups) {
         warnings.push(...window.CharamakeInnerGroups.validatePartInnerGroups(part, state.data.meta));
     }
+
+    if (window.CharamakeLayerResolve) {
+        warnings.push(...window.CharamakeLayerResolve.validatePartPose(part, state.data.parts));
+    }
     
     return warnings;
 }
@@ -2086,6 +2440,14 @@ function validateAllData() {
         if (igWarnings.length > 0) {
             warnings.push('インナーグループ:');
             warnings.push(...igWarnings.map(w => '  - ' + w));
+        }
+    }
+
+    if (window.CharamakeLayerResolve) {
+        const poseWarnings = window.CharamakeLayerResolve.validatePoseData(state.data);
+        if (poseWarnings.length > 0) {
+            warnings.push('ポーズ差し替え:');
+            warnings.push(...poseWarnings.map(w => '  - ' + w));
         }
     }
     
@@ -2280,8 +2642,9 @@ function updatePreview() {
             const activeMaskGroups = IG
                 ? IG.computeActiveMaskGroupsFromParts([part])
                 : new Set();
+            const activePoseId = getEditorActivePoseId();
 
-            editorPushPartLayers(part, layers, activeMaskGroups, colorSettings);
+            editorPushPartLayers(part, layers, activeMaskGroups, colorSettings, activePoseId);
         }
     }
     
@@ -2320,15 +2683,16 @@ function getEditorPreviewSelectedPartsMap() {
 }
 
 // パーツのレイヤーをプレビュー用 layers 配列に追加
-function editorPushPartLayers(part, layers, activeMaskGroups, colorSettings) {
+function editorPushPartLayers(part, layers, activeMaskGroups, colorSettings, activePoseId) {
     if (!part || !part.layers) return;
 
-    const IG = window.CharamakeInnerGroups;
+    const LR = window.CharamakeLayerResolve;
     const maskGroups = activeMaskGroups || new Set();
+    const poseId = activePoseId != null ? activePoseId : null;
 
     part.layers.forEach(layer => {
-        const resolvedFile = IG
-            ? IG.resolveLayerFile(layer, maskGroups)
+        const resolvedFile = LR
+            ? LR.resolveLayerFile(layer, { poseId, activeMaskGroups: maskGroups })
             : layer.file;
 
         layers.push({
@@ -2366,6 +2730,15 @@ function collectAllLayers(layers) {
     const activeMaskGroups = IG
         ? IG.computeActiveMaskGroupsFromParts(previewParts)
         : new Set();
+    const partIds = getEditorPreviewPartIdsFromMap(selectedPartsMap);
+    const LR = window.CharamakeLayerResolve;
+    const activePoseId = LR ? LR.getActivePoseId(partIds, state.data.parts) : getEditorActivePoseId();
+    if (activePoseId) {
+        state.previewPoseId = activePoseId;
+        const sel = document.getElementById('previewPoseSelect');
+        if (sel) sel.value = activePoseId;
+    }
+    updatePreviewPoseSelector();
 
     for (const [categoryId, partId] of Object.entries(selectedPartsMap)) {
         let part;
@@ -2381,7 +2754,7 @@ function collectAllLayers(layers) {
             colorSettings = part.colors[state.selectedColorPreset];
         }
 
-        editorPushPartLayers(part, layers, activeMaskGroups, colorSettings);
+        editorPushPartLayers(part, layers, activeMaskGroups, colorSettings, activePoseId);
     }
 }
 
@@ -2700,7 +3073,19 @@ function createOtherPartSelector(category, container) {
     
     const select = document.createElement('select');
     select.dataset.category = category.id;
-    select.addEventListener('change', updatePreview);
+    select.addEventListener('change', () => {
+        const LR = window.CharamakeLayerResolve;
+        const bodyCat = LR ? LR.BODY_CATEGORY_ID : 'body';
+        if (category.id === bodyCat && select.value) {
+            const bodyPart = state.data.parts.find(p => p.id === select.value);
+            if (bodyPart && bodyPart.poseId) {
+                state.previewPoseId = bodyPart.poseId;
+                const poseSel = document.getElementById('previewPoseSelect');
+                if (poseSel) poseSel.value = bodyPart.poseId;
+            }
+        }
+        updatePreview();
+    });
     select.style.fontSize = '0.85rem';
     
     const noneOption = document.createElement('option');

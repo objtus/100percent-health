@@ -1001,10 +1001,14 @@ function collectAllLayers() {
     if (!state.partsData) return layers;
 
     const IG = window.CharamakeInnerGroups;
+    const LR = window.CharamakeLayerResolve;
     const visiblePartIds = getVisibleSelectedPartIds();
     const activeMaskGroups = IG
         ? IG.computeActiveMaskGroups(visiblePartIds, state.partsData.parts)
         : new Set();
+    const activePoseId = LR
+        ? LR.getActivePoseId(visiblePartIds, state.partsData.parts)
+        : null;
 
     for (const [categoryId, selection] of Object.entries(state.selectedParts)) {
         const category = state.partsData.categories.find(c => c.id === categoryId);
@@ -1013,10 +1017,10 @@ function collectAllLayers() {
 
         if (category && category.selectionMode === 'multiple') {
             selection.forEach(partId => {
-                addPartLayers(partId, layers, activeMaskGroups);
+                addPartLayers(partId, layers, activeMaskGroups, activePoseId);
             });
         } else {
-            addPartLayers(selection, layers, activeMaskGroups);
+            addPartLayers(selection, layers, activeMaskGroups, activePoseId);
         }
     }
 
@@ -1029,20 +1033,21 @@ function hasSidedLayers(part) {
 }
 
 // パーツのレイヤーを追加（side フィルタリング込み）
-function addPartLayers(partId, layers, activeMaskGroups) {
+function addPartLayers(partId, layers, activeMaskGroups, activePoseId) {
     const part = state.partsData.parts.find(p => p.id === partId);
     if (!part || !part.layers) return;
 
-    const IG = window.CharamakeInnerGroups;
+    const LR = window.CharamakeLayerResolve;
     const maskGroups = activeMaskGroups || new Set();
+    const poseId = activePoseId != null ? activePoseId : null;
     const colorSettings = getColorSettings(part);
     const selectedSide = state.selectedSide[partId] || 'both';
 
     part.layers.forEach(layer => {
         if (layer.side && selectedSide !== 'both' && layer.side !== selectedSide) return;
 
-        const resolvedFile = IG
-            ? IG.resolveLayerFile(layer, maskGroups)
+        const resolvedFile = LR
+            ? LR.resolveLayerFile(layer, { poseId, activeMaskGroups: maskGroups })
             : layer.file;
 
         layers.push({

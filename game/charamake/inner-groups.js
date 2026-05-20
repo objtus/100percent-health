@@ -48,7 +48,8 @@
     }
 
     /**
-     * レイヤーの描画用ファイルパスを決定（§5.2）
+     * レイヤーの描画用ファイルパスを決定（§5.2、IG マスクのみ）
+     * @deprecated ポーズ対応は layer-resolve.js の resolveLayerFile を使用
      * @param {object} layer
      * @param {Set<string>} activeMaskGroups
      * @returns {string}

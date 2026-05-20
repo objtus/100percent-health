@@ -48,6 +48,10 @@
                         <canvas id="previewCanvas" width="800" height="900"></canvas>
                     </div>
                     <div class="preview-controls">
+                        <div id="previewPoseControl" class="form-group" style="display:none; margin-bottom:0.5rem;">
+                            <label for="previewPoseSelect" style="font-size:0.85rem;">プレビュー用ポーズ:</label>
+                            <select id="previewPoseSelect" style="font-size:0.85rem; width:100%; max-width:240px;"></select>
+                        </div>
                         <label>
                             <input type="checkbox" id="previewWithOthers">
                             他パーツと重ねて表示
@@ -148,6 +152,7 @@
     <input type="file" id="fileInput" accept=".json" style="display:none;">
 
     <script src="inner-groups.js"></script>
+    <script src="layer-resolve.js"></script>
     <script src="parts-order.js"></script>
     <script src="editor.js"></script>
 </body>

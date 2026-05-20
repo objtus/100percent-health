@@ -1009,6 +1009,7 @@
       "id": "body_peace",
       "name": "通常体型 (ピース)",
       "category": "body",
+      "poseId": "peace",
       "zIndex": 100,
       "layers": [
         {

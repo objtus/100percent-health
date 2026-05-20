@@ -15,6 +15,7 @@ game/charamake/
 ├── game.css
 ├── game.js
 ├── inner-groups.js      # インナーグループ共有ロジック
+├── layer-resolve.js     # レイヤー画像解決（ポーズ + IG 2段階）
 ├── parts-order.js       # パーツ一覧 order 共有ロジック
 ├── parts-data.json      # パーツマスターデータ（ゲームが自動読込）
 ├── sampledata.json      # 小さなサンプルデータ（エディタの動作確認用）
@@ -41,6 +42,7 @@ game/charamake/
 - [x] 色設定（ブレンドモード＋専用画像、色相シフト対応）
 - [x] 依存関係（requires / unlocks / hides）
 - [x] インナーグループ（meta / レイヤー maskedFile / masksInnerGroups）
+- [x] ポーズ差し替え（体型 `poseId` / レイヤー `poseFiles`・`poseMaskedFiles`）— `SPEC-pose-files.md`
 - [x] バリデーション（警告表示、循環依存検出、IG 参照チェック）
 - [x] プレビュー（他パーツと重ねて表示）
 - [x] JSON 読込 / 出力、LocalStorage 自動保存
@@ -59,6 +61,7 @@ game/charamake/
 - [x] PNG 出力
 - [x] モバイル向けタブ UI
 - [x] インナーグループ（服の重ね着マスク差し替え）— 詳細は `SPEC-inner-groups.md`
+- [x] ポーズ差し替え（体型選択で袖などを差し替え）— 詳細は `SPEC-pose-files.md`
 
 ### 未着手・将来
 
@@ -103,8 +106,9 @@ game/charamake/
    - `unlocks`: 選択時に表示するカテゴリ
    - `hides`: 選択時に非表示にするカテゴリ（unlocks が優先）
 8. **インナーグループ**: メタデータ編集で IG マスタ登録 → レイヤーに IG・マスク画像 → アウターにマスク指定
-9. **プレビュー**: 右カラムのキャンバス。**マスク確認は「他パーツと重ねて表示」** でアウターも選択
-10. **保存**: 「パーツを保存」で編集中パーツを確定、「JSON出力」で `parts-data.json` をダウンロード
+9. **ポーズ差し替え**: 体型パーツに `poseId` → 服レイヤーに `poseFiles`（必要なら `poseMaskedFiles`）。プレビューは「プレビュー用ポーズ」または他パーツ重ねで体型を選択
+10. **プレビュー**: 右カラムのキャンバス。**マスク確認は「他パーツと重ねて表示」** でアウターも選択
+11. **保存**: 「パーツを保存」で編集中パーツを確定、「JSON出力」で `parts-data.json` をダウンロード
 
 ### ゲーム
 
@@ -119,7 +123,7 @@ game/charamake/
 
 詳細は `SPEC.md` を参照。
 
-インナーグループ（服の重ね着マスク）の詳細は [SPEC-inner-groups.md](SPEC-inner-groups.md) を参照。
+インナーグループ（服の重ね着マスク）の詳細は [SPEC-inner-groups.md](SPEC-inner-groups.md)、ポーズ差し替えは [SPEC-pose-files.md](SPEC-pose-files.md) を参照。
 
 ### parts-data.json
 
@@ -128,8 +132,8 @@ game/charamake/
 | `meta` | バージョン、キャンバスサイズ、`innerGroups`（IG マスタ） |
 | `categoryGroups` | UI 上のグループ（基本・顔・髪・服など） |
 | `categories` | 着せ替えカテゴリ（selectionMode, hidden, colorGroup 等） |
-| `parts` | パーツ定義（`order`, layers, colors, unlocks, hides, `masksInnerGroups` 等） |
-| `layers[]` | `innerGroup`, `maskedFile`（任意） |
+| `parts` | パーツ定義（`order`, `poseId`（体型）, layers, colors, unlocks, hides, `masksInnerGroups` 等） |
+| `layers[]` | `poseFiles`, `poseMaskedFiles`, `innerGroup`, `maskedFile`（任意） |
 
 ### character.json（保存データ）
 
