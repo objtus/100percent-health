@@ -6,7 +6,8 @@ const state = {
             canvasWidth: 800,
             canvasHeight: 900,
             projectRoot: "",
-            innerGroups: []
+            innerGroups: [],
+            secrets: []
         },
         categoryGroups: [], // カテゴリグループ
         parts: [],
@@ -272,6 +273,13 @@ function showCategoryEditor() {
                     他のパーツのunlocksで指定されたときのみ表示
                 </small>
             </div>
+            <div class="form-group">
+                <label>シークレット (省略可):</label>
+                <select id="categorySecret">${getSecretOptionsHtml(category.secret || '')}</select>
+                <small style="display: block; color: #6c757d; margin-top: 0.25rem;">
+                    ゲームでパスワード入力後に表示。hidden との併用は非推奨
+                </small>
+            </div>
         </details>
         
         <div class="editor-actions">
@@ -298,6 +306,9 @@ function saveCategory() {
     category.order = parseInt(document.getElementById('categoryOrder').value);
     category.selectionMode = document.getElementById('categorySelectionMode').value;
     category.hidden = document.getElementById('categoryHidden').checked;
+    const secretVal = document.getElementById('categorySecret').value.trim();
+    if (secretVal) category.secret = secretVal;
+    else delete category.secret;
     
     renderCategories();
     renderParts();
@@ -521,11 +532,21 @@ function editMetadata() {
         </details>
         
         <details open>
+            <summary>シークレット</summary>
+            <p style="font-size: 0.85rem; color: #6c757d; margin: 0.5rem 0;">
+                パスワード（保存時に SHA-256 ハッシュ化）。カテゴリ・パーツの secret で参照します。
+            </p>
+            <div id="secretsMetaList"></div>
+            <button type="button" class="btn btn-small" id="addSecretMetaBtn">+ シークレット追加</button>
+        </details>
+        
+        <details open>
             <summary>統計情報</summary>
             <div style="padding: 0.5rem;">
                 <p>カテゴリ数: ${state.data.categories.length}</p>
                 <p>パーツ数: ${state.data.parts.length}</p>
                 <p>インナーグループ数: ${(state.data.meta.innerGroups || []).length}</p>
+                <p>シークレット数: ${(state.data.meta.secrets || []).length}</p>
                 <p>総レイヤー数: ${state.data.parts.reduce((sum, p) => sum + (p.layers ? p.layers.length : 0), 0)}</p>
             </div>
         </details>
@@ -539,11 +560,90 @@ function editMetadata() {
     if (!state.data.meta.innerGroups) {
         state.data.meta.innerGroups = [];
     }
+    if (!state.data.meta.secrets) {
+        state.data.meta.secrets = [];
+    }
     renderInnerGroupsMetaList();
+    renderSecretsMetaList();
     
-    document.getElementById('saveMetaBtn').addEventListener('click', saveMetadata);
+    document.getElementById('saveMetaBtn').addEventListener('click', () => saveMetadata());
     document.getElementById('cancelMetaBtn').addEventListener('click', hideEditor);
     document.getElementById('addInnerGroupMetaBtn').addEventListener('click', addInnerGroupMeta);
+    document.getElementById('addSecretMetaBtn').addEventListener('click', addSecretMeta);
+}
+
+function renderSecretsMetaList() {
+    const list = document.getElementById('secretsMetaList');
+    if (!list) return;
+
+    if (!state.data.meta.secrets) {
+        state.data.meta.secrets = [];
+    }
+
+    list.innerHTML = '';
+
+    if (state.data.meta.secrets.length === 0) {
+        list.innerHTML = '<p style="color:#6c757d; font-size:0.9rem;">シークレットがありません</p>';
+        return;
+    }
+
+    state.data.meta.secrets.forEach((entry, index) => {
+        const row = document.createElement('div');
+        row.className = 'secret-meta-row';
+        row.style.cssText = 'display:flex; gap:0.5rem; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap;';
+        const hashLabel = entry.passwordHash && String(entry.passwordHash).trim()
+            ? '設定済み'
+            : '未設定';
+        row.innerHTML = `
+            <input type="text" placeholder="ID" value="${escapeHtmlAttr(entry.id || '')}"
+                   onchange="updateSecretMeta(${index}, 'id', this.value)" style="width:120px;">
+            <input type="text" placeholder="表示名" value="${escapeHtmlAttr(entry.name || '')}"
+                   onchange="updateSecretMeta(${index}, 'name', this.value)" style="flex:1; min-width:100px;">
+            <input type="password" id="secretPassword_${index}" placeholder="パスワード（変更時のみ）" style="width:160px;">
+            <span style="font-size:0.8rem; color:#6c757d;">${hashLabel}</span>
+            <button type="button" class="btn btn-small" onclick="deleteSecretMeta(${index})">×</button>
+        `;
+        list.appendChild(row);
+    });
+}
+
+function addSecretMeta() {
+    if (!state.data.meta.secrets) {
+        state.data.meta.secrets = [];
+    }
+    const n = state.data.meta.secrets.length + 1;
+    state.data.meta.secrets.push({
+        id: `secret_${n}`,
+        name: `シークレット${n}`,
+        passwordHash: ''
+    });
+    renderSecretsMetaList();
+}
+
+function updateSecretMeta(index, field, value) {
+    if (!state.data.meta.secrets || !state.data.meta.secrets[index]) return;
+    state.data.meta.secrets[index][field] = value.trim();
+}
+
+function deleteSecretMeta(index) {
+    if (!state.data.meta.secrets) return;
+    const entry = state.data.meta.secrets[index];
+    const msg = entry
+        ? `シークレット「${entry.name || entry.id}」を削除しますか？`
+        : 'このシークレットを削除しますか？';
+    if (!confirm(msg)) return;
+    state.data.meta.secrets.splice(index, 1);
+    renderSecretsMetaList();
+}
+
+function getSecretOptionsHtml(selectedId) {
+    const secrets = (state.data.meta && state.data.meta.secrets) || [];
+    let html = '<option value="">なし</option>';
+    secrets.forEach(s => {
+        const sel = s.id === selectedId ? ' selected' : '';
+        html += `<option value="${escapeHtmlAttr(s.id)}"${sel}>${escapeHtmlAttr(s.name || s.id)}</option>`;
+    });
+    return html;
 }
 
 function renderInnerGroupsMetaList() {
@@ -637,7 +737,7 @@ function selectProjectRoot() {
 }
 
 // メタデータ保存
-function saveMetadata() {
+async function saveMetadata() {
     state.data.meta.version = document.getElementById('metaVersion').value;
     state.data.meta.canvasWidth = parseInt(document.getElementById('metaCanvasWidth').value);
     state.data.meta.canvasHeight = parseInt(document.getElementById('metaCanvasHeight').value);
@@ -652,11 +752,35 @@ function saveMetadata() {
         g.name = (g.name && String(g.name).trim()) || g.id;
     });
 
-    const igWarnings = window.CharamakeInnerGroups
-        ? window.CharamakeInnerGroups.validateInnerGroupData(state.data)
-        : [];
-    if (igWarnings.length > 0) {
-        const proceed = confirm(`インナーグループ関連の警告:\n${igWarnings.slice(0, 8).join('\n')}${igWarnings.length > 8 ? '\n...' : ''}\n\n保存しますか？`);
+    if (!state.data.meta.secrets) {
+        state.data.meta.secrets = [];
+    }
+    const S = window.CharamakeSecrets;
+    for (let index = 0; index < state.data.meta.secrets.length; index++) {
+        const entry = state.data.meta.secrets[index];
+        entry.id = String(entry.id || '').trim();
+        entry.name = (entry.name && String(entry.name).trim()) || entry.id;
+        const pwdInput = document.getElementById(`secretPassword_${index}`);
+        if (pwdInput && pwdInput.value.trim() && S) {
+            entry.passwordHash = await S.hashPassword(pwdInput.value);
+        }
+    }
+    state.data.meta.secrets = state.data.meta.secrets.filter(s => s.id);
+    state.data.meta.secrets.forEach(s => {
+        if (!s.passwordHash || !String(s.passwordHash).trim()) {
+            delete s.passwordHash;
+        }
+    });
+
+    const warnings = [];
+    if (window.CharamakeInnerGroups) {
+        warnings.push(...window.CharamakeInnerGroups.validateInnerGroupData(state.data));
+    }
+    if (window.CharamakeSecrets) {
+        warnings.push(...window.CharamakeSecrets.validateSecretData(state.data));
+    }
+    if (warnings.length > 0) {
+        const proceed = confirm(`警告:\n${warnings.slice(0, 10).join('\n')}${warnings.length > 10 ? '\n...' : ''}\n\n保存しますか？`);
         if (!proceed) return;
     }
     
@@ -722,6 +846,7 @@ function createPartCard(part) {
     if (hasInnerGroupLayers) icons += '<span class="part-icon" title="インナーグループ付きレイヤー">👕</span>';
     if (hasPoseLayers) icons += '<span class="part-icon" title="ポーズ差し替え付きレイヤー">✋</span>';
     if (part.poseId) icons += '<span class="part-icon" title="体型ポーズID">🧍</span>';
+    if (part.secret) icons += '<span class="part-icon" title="シークレット">🔐</span>';
     if (hasMasksInnerGroups) icons += '<span class="part-icon" title="マスク指定パーツ">🧥</span>';
     if (hasUnlocks) icons += '<span class="part-icon" title="他カテゴリを解放">🔓</span>';
     if (hasHides) icons += '<span class="part-icon" title="カテゴリを非表示">🙈</span>';
@@ -886,6 +1011,13 @@ function showPartEditor() {
                 <input type="text" id="partPoseId" placeholder="例: peace（体型選択が他レイヤーの poseFiles キーになる）">
                 <small style="display:block; color:#6c757d; margin-top:0.25rem;">
                     基本→体型の選択でポーズ差し替えを有効化。meta.poseGroups は不要。
+                </small>
+            </div>
+            <div class="form-group">
+                <label>シークレット (省略可):</label>
+                <select id="partSecret">${getSecretOptionsHtml(state.editingPart.secret || '')}</select>
+                <small style="display:block; color:#6c757d; margin-top:0.25rem;">
+                    パスワード解放後にゲームで表示
                 </small>
             </div>
         </details>
@@ -2272,6 +2404,11 @@ function savePart() {
     } else {
         delete state.editingPart.poseId;
     }
+
+    const secretSelect = document.getElementById('partSecret');
+    const secretVal = secretSelect ? secretSelect.value.trim() : '';
+    if (secretVal) state.editingPart.secret = secretVal;
+    else delete state.editingPart.secret;
     
     if (document.getElementById('allowCustomColorCheckbox').checked) {
         delete state.editingPart.allowCustomColor;
@@ -2404,6 +2541,16 @@ function validatePart(part) {
     if (window.CharamakeLayerResolve) {
         warnings.push(...window.CharamakeLayerResolve.validatePartPose(part, state.data.parts));
     }
+
+    if (window.CharamakeSecrets) {
+        const sid = part.secret && String(part.secret).trim();
+        if (sid) {
+            const valid = window.CharamakeSecrets.getSecretIdSet(state.data.meta || {});
+            if (valid.size > 0 && !valid.has(sid)) {
+                warnings.push(`未知の secret「${sid}」`);
+            }
+        }
+    }
     
     return warnings;
 }
@@ -2448,6 +2595,14 @@ function validateAllData() {
         if (poseWarnings.length > 0) {
             warnings.push('ポーズ差し替え:');
             warnings.push(...poseWarnings.map(w => '  - ' + w));
+        }
+    }
+
+    if (window.CharamakeSecrets) {
+        const secretWarnings = window.CharamakeSecrets.validateSecretData(state.data);
+        if (secretWarnings.length > 0) {
+            warnings.push('シークレット:');
+            warnings.push(...secretWarnings.map(w => '  - ' + w));
         }
     }
     
@@ -3111,6 +3266,13 @@ function normalizeMetaInnerGroups() {
     }
 }
 
+function normalizeMetaSecrets() {
+    if (!state.data.meta) state.data.meta = {};
+    if (!Array.isArray(state.data.meta.secrets)) {
+        state.data.meta.secrets = [];
+    }
+}
+
 function applyPartOrdersMigration() {
     const PO = window.CharamakePartsOrder;
     if (PO && state.data && state.data.parts) {
@@ -3140,6 +3302,7 @@ function handleJsonFileSelect(e) {
         try {
             state.data = JSON.parse(event.target.result);
             normalizeMetaInnerGroups();
+            normalizeMetaSecrets();
             applyPartOrdersMigration();
             
             applyCanvasSize();
@@ -3179,6 +3342,7 @@ function loadFromLocalStorage() {
         try {
             state.data = JSON.parse(saved);
             normalizeMetaInnerGroups();
+            normalizeMetaSecrets();
             applyPartOrdersMigration();
             applyCanvasSize();
         } catch (error) {

@@ -16,6 +16,7 @@ game/charamake/
 ├── game.js
 ├── inner-groups.js      # インナーグループ共有ロジック
 ├── layer-resolve.js     # レイヤー画像解決（ポーズ + IG 2段階）
+├── secrets.js           # シークレット解放（パスワードハッシュ照合）
 ├── parts-order.js       # パーツ一覧 order 共有ロジック
 ├── parts-data.json      # パーツマスターデータ（ゲームが自動読込）
 ├── sampledata.json      # 小さなサンプルデータ（エディタの動作確認用）
@@ -43,6 +44,7 @@ game/charamake/
 - [x] 依存関係（requires / unlocks / hides）
 - [x] インナーグループ（meta / レイヤー maskedFile / masksInnerGroups）
 - [x] ポーズ差し替え（体型 `poseId` / レイヤー `poseFiles`・`poseMaskedFiles`）— `SPEC-pose-files.md`
+- [x] シークレット解放（`meta.secrets` / パスワード / カテゴリ・パーツ `secret`）— `SPEC-secrets.md`
 - [x] バリデーション（警告表示、循環依存検出、IG 参照チェック）
 - [x] プレビュー（他パーツと重ねて表示）
 - [x] JSON 読込 / 出力、LocalStorage 自動保存
@@ -62,6 +64,7 @@ game/charamake/
 - [x] モバイル向けタブ UI
 - [x] インナーグループ（服の重ね着マスク差し替え）— 詳細は `SPEC-inner-groups.md`
 - [x] ポーズ差し替え（体型選択で袖などを差し替え）— 詳細は `SPEC-pose-files.md`
+- [x] シークレット解放（パスワード入力）— 詳細は `SPEC-secrets.md`
 
 ### 未着手・将来
 
@@ -108,13 +111,15 @@ game/charamake/
 8. **インナーグループ**: メタデータ編集で IG マスタ登録 → レイヤーに IG・マスク画像 → アウターにマスク指定
 9. **ポーズ差し替え**: 体型パーツに `poseId` → 服レイヤーに `poseFiles`（必要なら `poseMaskedFiles`）。プレビューは「プレビュー用ポーズ」または他パーツ重ねで体型を選択
 10. **プレビュー**: 右カラムのキャンバス。**マスク確認は「他パーツと重ねて表示」** でアウターも選択
-11. **保存**: 「パーツを保存」で編集中パーツを確定、「JSON出力」で `parts-data.json` をダウンロード
+11. **シークレット**: メタデータで束登録（パスワードはハッシュ保存）→ カテゴリ/パーツに `secret` 指定。ゲームヘッダーでパスワード入力
+12. **保存**: 「パーツを保存」で編集中パーツを確定、「JSON出力」で `parts-data.json` をダウンロード
 
 ### ゲーム
 
 1. `game.html` をブラウザで開く（`parts-data.json` が同フォルダにあること）
 2. 左のカテゴリから部位を選び、右でパーツと色を変更
 3. ヘッダーの操作:
+   - **シークレット**: パスワード入力 →「解放」（セッション内のみ。キャラ保存で `unlockedSecrets` を引き継ぎ）
    - **JSONを再読込**: 別の `parts-data.json` を手動読込
    - **キャラ読込 / キャラ保存**: `character.json` の読み書き
    - **PNG出力**: 現在のプレビューを PNG でダウンロード
@@ -123,21 +128,21 @@ game/charamake/
 
 詳細は `SPEC.md` を参照。
 
-インナーグループ（服の重ね着マスク）の詳細は [SPEC-inner-groups.md](SPEC-inner-groups.md)、ポーズ差し替えは [SPEC-pose-files.md](SPEC-pose-files.md) を参照。
+インナーグループ（服の重ね着マスク）の詳細は [SPEC-inner-groups.md](SPEC-inner-groups.md)、ポーズ差し替えは [SPEC-pose-files.md](SPEC-pose-files.md)、シークレットは [SPEC-secrets.md](SPEC-secrets.md) を参照。
 
 ### parts-data.json
 
 | セクション | 内容 |
 |-----------|------|
-| `meta` | バージョン、キャンバスサイズ、`innerGroups`（IG マスタ） |
+| `meta` | バージョン、キャンバスサイズ、`innerGroups`、`secrets`（パスワードハッシュ） |
 | `categoryGroups` | UI 上のグループ（基本・顔・髪・服など） |
-| `categories` | 着せ替えカテゴリ（selectionMode, hidden, colorGroup 等） |
-| `parts` | パーツ定義（`order`, `poseId`（体型）, layers, colors, unlocks, hides, `masksInnerGroups` 等） |
+| `categories` | 着せ替えカテゴリ（selectionMode, hidden, `secret`, colorGroup 等） |
+| `parts` | パーツ定義（`order`, `poseId`, `secret`, layers, colors, unlocks, hides, `masksInnerGroups` 等） |
 | `layers[]` | `poseFiles`, `poseMaskedFiles`, `innerGroup`, `maskedFile`（任意） |
 
 ### character.json（保存データ）
 
-カテゴリ ID をキーに、選択したパーツ ID と色設定を保存します。複数選択カテゴリは配列、カスタム色は blend / colorValue / opacity 等を含みます。
+カテゴリ ID をキーに、選択したパーツ ID と色設定を保存します。`unlockedSecrets` に解放済みシークレット束 ID の配列を含みます。複数選択カテゴリは配列、カスタム色は blend / colorValue / opacity 等を含みます。
 
 ## 開発メモ
 

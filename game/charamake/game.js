@@ -9,7 +9,9 @@ const state = {
     selectedSide: {},       // パーツID: 'both' | 'left' | 'right'
     multiSelectActive: {},  // カテゴリID: true/false（複数選択モードが有効か）
     previouslyUnlockedCategories: new Set(), // 以前解放されていたカテゴリを追跡
-    hiddenByParts: new Set() // hides により動的に非表示になっているカテゴリ
+    hiddenByParts: new Set(), // hides により動的に非表示になっているカテゴリ
+    unlockedSecrets: new Set(), // パスワードで解放したシークレット束 ID
+    previouslyUnlockedSecrets: new Set() // 新規解放時の先頭自動選択用
 };
 
 // DOM要素
@@ -56,8 +58,10 @@ function loadDefaultPartsData() {
                 elements.previewCanvas.height = state.partsData.meta.canvasHeight || 900;
             }
             
-            // 各カテゴリの最初のパーツをデフォルト選択
+            // 各カテゴリの最初のパーツをデフォルト選択（非 hidden）
+            // 続けて依存関係を処理し、解放済みの条件付きカテゴリも先頭パーツを選ぶ
             initializeDefaultSelections();
+            processDependencies();
             
             // カテゴリ一覧を表示
             renderCategories();
@@ -93,12 +97,11 @@ function initializeDefaultSelections() {
     const PO = window.CharamakePartsOrder;
     
     state.partsData.categories.forEach(category => {
-        // hidden属性のないカテゴリのみ
+        // hidden / secret カテゴリはスキップ
         if (category.hidden) return;
-        
-        const firstPart = PO
-            ? PO.getFirstPartInCategory(state.partsData.parts, category.id)
-            : state.partsData.parts.find(p => p.category === category.id);
+        if (category.secret && !isSecretUnlocked(category.secret)) return;
+
+        const firstPart = getFirstVisiblePartInCategory(category.id);
         
         if (firstPart) {
             if (category.selectionMode === 'multiple') {
@@ -145,6 +148,17 @@ function setupEventListeners() {
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
+
+    const submitSecretBtn = document.getElementById('submitSecretBtn');
+    const secretPasswordInput = document.getElementById('secretPasswordInput');
+    if (submitSecretBtn) {
+        submitSecretBtn.addEventListener('click', () => submitSecretPassword());
+    }
+    if (secretPasswordInput) {
+        secretPasswordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitSecretPassword();
+        });
+    }
 }
 
 // モバイル用タブ切り替え
@@ -203,12 +217,32 @@ function handleDataFileSelect(e) {
     reader.readAsText(file);
 }
 
+function isSecretUnlocked(secretId) {
+    const S = window.CharamakeSecrets;
+    return S ? S.isSecretUnlocked(secretId, state.unlockedSecrets) : true;
+}
+
+function isPartVisible(part) {
+    if (!part) return false;
+    return isSecretUnlocked(part.secret);
+}
+
+function getVisiblePartsInCategory(categoryId) {
+    return getSortedPartsInCategory(categoryId).filter(isPartVisible);
+}
+
+function getFirstVisiblePartInCategory(categoryId) {
+    const parts = getVisiblePartsInCategory(categoryId);
+    return parts.length > 0 ? parts[0] : null;
+}
+
 // カテゴリが現在表示すべきかを判定
 function isCategoryVisible(category) {
     // hides による動的非表示が最優先（ただし unlocks が勝つのは processDependencies で処理済み）
     if (state.hiddenByParts && state.hiddenByParts.has(category.id)) return false;
     // hidden: true のカテゴリはアンロックされていなければ非表示
     if (category.hidden && !isCategoryUnlocked(category.id)) return false;
+    if (category.secret && !isSecretUnlocked(category.secret)) return false;
     return true;
 }
 
@@ -257,6 +291,9 @@ function renderCategories() {
             if (category.hidden && isCategoryUnlocked(category.id)) {
                 div.classList.add('unlocked-category');
             }
+            if (category.secret && isSecretUnlocked(category.secret)) {
+                div.classList.add('secret-category');
+            }
             
             if (state.currentCategory === category.id) {
                 div.classList.add('active');
@@ -285,6 +322,9 @@ function createCategoryItem(category) {
     // 条件付き表示カテゴリ（hidden: true でアンロック済み）は専用スタイル
     if (category.hidden) {
         div.classList.add('unlocked-category');
+    }
+    if (category.secret && isSecretUnlocked(category.secret)) {
+        div.classList.add('secret-category');
     }
     
     const multiTag = category.selectionMode === 'multiple'
@@ -419,7 +459,7 @@ function renderParts() {
     const category = state.partsData.categories.find(c => c.id === state.currentCategory);
     elements.currentCategoryName.textContent = category.name;
     
-    const parts = getSortedPartsInCategory(state.currentCategory);
+    const parts = getVisiblePartsInCategory(state.currentCategory);
     
     if (parts.length === 0) {
         elements.partsGrid.innerHTML = '<p class="placeholder">パーツがありません</p>';
@@ -478,6 +518,9 @@ function createPartItem(part, isMultipleCapable, isMultiActive) {
     
     if (isSelected) {
         div.classList.add('selected');
+    }
+    if (part.secret && isSecretUnlocked(part.secret)) {
+        div.classList.add('secret-part');
     }
     
     // 色設定が表示されているパーツにインジケータ
@@ -674,6 +717,119 @@ function processDependencies() {
 // ※ selectedParts は削除しない。collectAllLayers でスキップすることで描画から除外する
 function deselectCategory(category) {
     // 何もしない：選択状態を保持したまま renderCategories / collectAllLayers 側でスキップ
+}
+
+// シークレット未解放の選択を除去
+function sanitizeSecretSelections() {
+    if (!state.partsData) return;
+
+    for (const [categoryId, selection] of Object.entries(state.selectedParts)) {
+        const category = state.partsData.categories.find(c => c.id === categoryId);
+        if (!category || !isCategoryVisible(category)) {
+            delete state.selectedParts[categoryId];
+            continue;
+        }
+
+        if (category.selectionMode === 'multiple' && Array.isArray(selection)) {
+            const filtered = selection.filter(partId => {
+                const part = state.partsData.parts.find(p => p.id === partId);
+                return isPartVisible(part);
+            });
+            if (filtered.length > 0) {
+                state.selectedParts[categoryId] = filtered;
+            } else {
+                delete state.selectedParts[categoryId];
+            }
+        } else if (selection) {
+            const part = state.partsData.parts.find(p => p.id === selection);
+            if (!isPartVisible(part)) {
+                delete state.selectedParts[categoryId];
+            }
+        }
+    }
+}
+
+function processSecretUnlocks() {
+    if (!state.partsData) return;
+
+    const PO = window.CharamakePartsOrder;
+
+    state.unlockedSecrets.forEach(secretId => {
+        if (state.previouslyUnlockedSecrets.has(secretId)) return;
+
+        state.partsData.categories.forEach(category => {
+            if (category.secret !== secretId) return;
+            if (!isCategoryVisible(category)) return;
+
+            const hasSelection = category.selectionMode === 'multiple'
+                ? (state.selectedParts[category.id] && state.selectedParts[category.id].length > 0)
+                : !!state.selectedParts[category.id];
+
+            if (hasSelection) return;
+
+            const firstPart = getFirstVisiblePartInCategory(category.id);
+            if (!firstPart) return;
+
+            if (category.selectionMode === 'multiple') {
+                state.selectedParts[category.id] = [firstPart.id];
+            } else {
+                state.selectedParts[category.id] = firstPart.id;
+                state.selectedColors[firstPart.id] = 'normal';
+            }
+        });
+    });
+
+    state.previouslyUnlockedSecrets = new Set(state.unlockedSecrets);
+}
+
+let secretMessageTimer = null;
+
+function showSecretMessage(text, isOk) {
+    const el = document.getElementById('secretMessage');
+    if (!el) return;
+    el.textContent = text;
+    el.className = 'secret-message ' + (isOk ? 'ok' : 'err');
+    if (secretMessageTimer) clearTimeout(secretMessageTimer);
+    secretMessageTimer = setTimeout(() => {
+        el.textContent = '';
+        el.className = 'secret-message';
+    }, 3500);
+}
+
+async function submitSecretPassword() {
+    const input = document.getElementById('secretPasswordInput');
+    const S = window.CharamakeSecrets;
+    if (!input || !S || !state.partsData) return;
+
+    const plain = input.value.trim();
+    if (!plain) {
+        showSecretMessage('パスワードを入力', false);
+        return;
+    }
+
+    const secretId = await S.findSecretByPassword(state.partsData.meta, plain);
+    if (!secretId) {
+        showSecretMessage('パスワードが違います', false);
+        return;
+    }
+
+    if (state.unlockedSecrets.has(secretId)) {
+        showSecretMessage('すでに解放済み', true);
+        input.value = '';
+        return;
+    }
+
+    state.unlockedSecrets.add(secretId);
+    processSecretUnlocks();
+    renderCategories();
+    if (state.currentCategory) renderParts();
+    updatePreview();
+
+    const secrets = S.getSecrets(state.partsData.meta);
+    const entry = secrets.find(s => s.id === secretId);
+    const label = entry && entry.name ? entry.name : secretId;
+    showSecretMessage(`「${label}」を解放`, true);
+    input.value = '';
 }
 
 // パーツの JSON で allowCustomColor: false のときのみゲーム内カスタム色を禁止（省略時は許可）
@@ -987,9 +1143,15 @@ function getVisibleSelectedPartIds() {
         if (!isCategoryVisible(category)) continue;
 
         if (category && category.selectionMode === 'multiple') {
-            if (Array.isArray(selection)) ids.push(...selection);
+            if (Array.isArray(selection)) {
+                selection.forEach(partId => {
+                    const part = state.partsData.parts.find(p => p.id === partId);
+                    if (isPartVisible(part)) ids.push(partId);
+                });
+            }
         } else if (selection) {
-            ids.push(selection);
+            const part = state.partsData.parts.find(p => p.id === selection);
+            if (isPartVisible(part)) ids.push(selection);
         }
     }
     return ids;
@@ -1035,7 +1197,7 @@ function hasSidedLayers(part) {
 // パーツのレイヤーを追加（side フィルタリング込み）
 function addPartLayers(partId, layers, activeMaskGroups, activePoseId) {
     const part = state.partsData.parts.find(p => p.id === partId);
-    if (!part || !part.layers) return;
+    if (!part || !part.layers || !isPartVisible(part)) return;
 
     const LR = window.CharamakeLayerResolve;
     const maskGroups = activeMaskGroups || new Set();
@@ -1276,6 +1438,7 @@ function lerp(a, b, t) { return a + (b - a) * t; }
 // キャラクター保存
 function saveCharacter() {
     const characterData = {
+        unlockedSecrets: [...state.unlockedSecrets],
         character: {}
     };
     
@@ -1349,13 +1512,19 @@ function handleCharacterFileSelect(e) {
         try {
             const data = JSON.parse(event.target.result);
             
+            state.unlockedSecrets = new Set(
+                Array.isArray(data.unlockedSecrets) ? data.unlockedSecrets.filter(id => id) : []
+            );
+            state.previouslyUnlockedSecrets = new Set();
+
             // パーツ選択を復元
             state.selectedParts = {};
             state.selectedColors = {};
             state.customColors = {};
             state.selectedSide = {};
             
-            for (let [categoryId, partInfo] of Object.entries(data.character)) {
+            const charData = data.character || {};
+            for (let [categoryId, partInfo] of Object.entries(charData)) {
                 const category = state.partsData.categories.find(c => c.id === categoryId);
                 
                 if (category && category.selectionMode === 'multiple') {
@@ -1395,8 +1564,10 @@ function handleCharacterFileSelect(e) {
             }
             
             coerceAllDisallowedCustomColors();
+            sanitizeSecretSelections();
             
             processDependencies();
+            processSecretUnlocks();
             renderCategories();
             renderParts();
             updatePreview();

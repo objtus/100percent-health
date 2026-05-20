@@ -12,6 +12,12 @@
         <header class="header">
             <h1>Character Creator</h1>
             <div class="header-actions">
+                <div class="secret-unlock-bar">
+                    <input type="password" id="secretPasswordInput" class="secret-password-input"
+                           placeholder="シークレット" autocomplete="off">
+                    <button type="button" id="submitSecretBtn" class="btn btn-small">解放</button>
+                    <span id="secretMessage" class="secret-message" aria-live="polite"></span>
+                </div>
                 <button id="loadDataBtn" class="btn">JSONを再読込</button>
                 <button id="loadCharacterBtn" class="btn">キャラ読込</button>
                 <button id="saveCharacterBtn" class="btn btn-primary">キャラ保存</button>
@@ -122,6 +128,7 @@
 
     <script src="inner-groups.js"></script>
     <script src="layer-resolve.js"></script>
+    <script src="secrets.js"></script>
     <script src="parts-order.js"></script>
     <script src="game.js"></script>
 </body>

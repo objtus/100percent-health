@@ -4,7 +4,12 @@
     "canvasWidth": 600,
     "canvasHeight": 845,
     "projectRoot": "D:\\web\\100percent-health\\game\\charamake2",
-    "innerGroups": []
+    "innerGroups": [
+      {
+        "id": "inner_group_1",
+        "name": "インナーグループ1"
+      }
+    ]
   },
   "parts": [
     {
@@ -1088,12 +1093,13 @@
         },
         {
           "file": "parts/basics/body/handpeace1.png",
-          "zIndex": 600,
+          "zIndex": 500,
           "animated": false
         },
         {
           "file": "parts/basics/body/handpeace2.png",
-          "animated": false
+          "animated": false,
+          "zIndex": 450
         }
       ],
       "colors": {
@@ -1103,7 +1109,8 @@
           "opacity": 1
         }
       },
-      "order": 20
+      "order": 20,
+      "poseId": "peace"
     },
     {
       "id": "backhair1",
@@ -1841,7 +1848,7 @@
         }
       ],
       "allowCustomColor": false,
-      "order": 10
+      "order": 30
     },
     {
       "id": "halfpants1",
@@ -1855,7 +1862,7 @@
         },
         {
           "file": "parts\\clothes\\bottoms\\halfpants1overray.png",
-          "zIndex": 500,
+          "zIndex": 550,
           "animated": false
         }
       ],
@@ -1873,11 +1880,11 @@
         },
         {
           "file": "parts\\clothes\\bottoms\\schooluniform_pleatedskirt1overray.png",
-          "zIndex": 510,
+          "zIndex": 550,
           "animated": false
         }
       ],
-      "order": 30
+      "order": 10
     },
     {
       "id": "socks-none",
@@ -1937,7 +1944,8 @@
       ],
       "order": 10,
       "unlocks": [
-        "shirts1-collar"
+        "shirts1-collar",
+        "shirts1-sleeve"
       ]
     },
     {
@@ -1965,6 +1973,115 @@
         }
       ],
       "order": 10
+    },
+    {
+      "id": "shirts1-collar2",
+      "name": "シャツ1襟2",
+      "category": "shirts1-collar",
+      "zIndex": 250,
+      "layers": [
+        {
+          "file": "parts/clothes/tops/shirts1-collar/shirts1-collar2.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "shirts1-collar3",
+      "name": "シャツ1襟3",
+      "category": "shirts1-collar",
+      "zIndex": 250,
+      "layers": [
+        {
+          "file": "parts/clothes/tops/shirts1-collar/shirts1-collar3.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "frame-test",
+      "name": "枠なし",
+      "category": "frame",
+      "zIndex": 1000,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "shirts1-sleeve1",
+      "name": "シャツ1-袖1",
+      "category": "shirts1-sleeve",
+      "zIndex": 240,
+      "layers": [
+        {
+          "file": "parts/clothes/tops/shirts1-sleeve/shirts1-sleeve1.png",
+          "animated": false,
+          "innerGroup": "inner_group_1",
+          "maskedFile": "parts/clothes/tops/shirts1-sleeve/shirts1-sleeve1-masked.png"
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "shirts1-sleeve-none",
+      "name": "袖なし",
+      "category": "shirts1-sleeve",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "jacket1",
+      "name": "ジャケット1",
+      "category": "outer",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/clothes/outer/jacket1.png",
+          "animated": false
+        },
+        {
+          "file": "parts/none.png",
+          "animated": false,
+          "poseFiles": {
+            "peace": "parts/clothes/outer/jacket1hand.png"
+          },
+          "zIndex": 540
+        },
+        {
+          "file": "parts/clothes/outer/jacket1collar.png",
+          "zIndex": 90,
+          "animated": false
+        }
+      ],
+      "order": 10,
+      "masksInnerGroups": [
+        "inner_group_1"
+      ]
+    },
+    {
+      "id": "outer-none",
+      "name": "アウターなし",
+      "category": "outer",
+      "zIndex": 98,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 20
     }
   ],
   "categories": [
@@ -2157,7 +2274,8 @@
       "order": 210,
       "selectionMode": "single",
       "group": "cloches",
-      "hidden": false
+      "hidden": false,
+      "colorGroup": "shirts"
     },
     {
       "id": "shirts1-collar",
@@ -2165,7 +2283,25 @@
       "order": 220,
       "selectionMode": "single",
       "hidden": true,
-      "group": "cloches"
+      "group": "cloches",
+      "colorGroup": "shirts"
+    },
+    {
+      "id": "shirts1-sleeve",
+      "name": "シャツ1-袖",
+      "order": 220,
+      "selectionMode": "single",
+      "hidden": true,
+      "group": "cloches",
+      "colorGroup": "shirts"
+    },
+    {
+      "id": "outer",
+      "name": "アウター",
+      "order": 250,
+      "selectionMode": "single",
+      "group": "cloches",
+      "hidden": false
     }
   ],
   "categoryGroups": [

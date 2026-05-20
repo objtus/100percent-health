@@ -35,6 +35,43 @@ body {
 .header-actions {
     display: flex;
     gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.secret-unlock-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-right: 0.25rem;
+}
+
+.secret-password-input {
+    width: 120px;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid #5d6d7e;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+.secret-password-input::placeholder {
+    color: #95a5a6;
+}
+
+.secret-message {
+    font-size: 0.8rem;
+    color: #bdc3c7;
+    min-width: 4rem;
+}
+
+.secret-message.ok {
+    color: #a8e6cf;
+}
+
+.secret-message.err {
+    color: #f5b7b1;
 }
 
 /* ボタン */
@@ -146,6 +183,30 @@ body {
     background: #f39c12;
     color: white;
     border-left-color: #c87f0a;
+}
+
+/* シークレット解放済みカテゴリ */
+.category-item.secret-category {
+    background: #f3f0fa;
+    border-left: 3px solid #8e7cc3;
+    padding-left: calc(0.75rem - 3px);
+    color: #4a3f6b;
+}
+
+.category-item.secret-category::before {
+    content: '✦ ';
+    font-size: 0.75rem;
+    opacity: 0.85;
+}
+
+.category-item.secret-category:hover {
+    background: #ebe6f5;
+}
+
+.category-item.secret-category.active {
+    background: #8e7cc3;
+    color: white;
+    border-left-color: #6c5a9a;
 }
 
 .category-item.hidden {
@@ -317,6 +378,22 @@ body {
 .part-item.selected {
     border-color: #3498db;
     background: #d4e6f5;
+}
+
+.part-item.secret-part {
+    border-color: #c5b8e0;
+    background: #faf8fd;
+}
+
+.part-item.secret-part .part-name::before {
+    content: '✦ ';
+    font-size: 0.7rem;
+    opacity: 0.75;
+}
+
+.part-item.secret-part.selected {
+    border-color: #8e7cc3;
+    background: #ebe6f5;
 }
 
 .part-item.color-focused {

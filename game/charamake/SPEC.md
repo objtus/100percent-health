@@ -1002,6 +1002,7 @@ function checkUnlockCondition(categoryId) {
 
 - [SPEC-inner-groups.md](./SPEC-inner-groups.md) — 服の重ね着時のインナーはみ出し防止（インナーグループ / マスク画像差し替え）。**v1 実装済み**
 - [SPEC-pose-files.md](./SPEC-pose-files.md) — 体型選択によるポーズ差し替え（`poseId` / `poseFiles` / `poseMaskedFiles`、IG マスクの後に適用）。**v1 実装済み**
+- [SPEC-secrets.md](./SPEC-secrets.md) — パスワードによるシークレット解放（`meta.secrets` / `secret`、SHA-256 ハッシュ）。**v1 実装済み**
 
 ### 10.4 CSS Blend Modes
 ```css
