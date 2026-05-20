@@ -9,6 +9,9 @@ const state = {
     selectedSide: {},       // パーツID: 'both' | 'left' | 'right'
     multiSelectActive: {},  // カテゴリID: true/false（複数選択モードが有効か）
     previouslyUnlockedCategories: new Set(), // 以前解放されていたカテゴリを追跡
+    previouslyHiddenCategories: new Set(), // 以前 hides で非表示だったカテゴリ
+    previouslyHiddenPartIds: new Set(), // 以前 hides で非表示だったパーツ
+    dependencyFeedReady: false, // 初回 processDependencies ではフィードを出さない
     hiddenByParts: new Set(), // hides により動的に非表示になっているカテゴリ
     hiddenPartIds: new Set(), // hides により動的に非表示になっているパーツ
     unlockedSecrets: new Set(), // パスワードで解放したシークレット束 ID
@@ -61,6 +64,7 @@ function loadDefaultPartsData() {
             
             // 各カテゴリの最初のパーツをデフォルト選択（非 hidden）
             // 続けて依存関係を処理し、解放済みの条件付きカテゴリも先頭パーツを選ぶ
+            resetDependencyFeedSnapshot();
             initializeDefaultSelections();
             processDependencies();
             
@@ -691,6 +695,91 @@ function sanitizeHiddenPartSelections() {
     });
 }
 
+function resetDependencyFeedSnapshot() {
+    state.previouslyUnlockedCategories = new Set();
+    state.previouslyHiddenCategories = new Set();
+    state.previouslyHiddenPartIds = new Set();
+    state.dependencyFeedReady = false;
+    renderDependencyFeed([]);
+}
+
+function getCategoryDisplayName(categoryId) {
+    if (!state.partsData) return categoryId;
+    const cat = state.partsData.categories.find(c => c.id === categoryId);
+    return (cat && cat.name) ? cat.name : categoryId;
+}
+
+function getPartDisplayName(partId) {
+    if (!state.partsData) return partId;
+    const part = state.partsData.parts.find(p => p.id === partId);
+    return (part && part.name) ? part.name : partId;
+}
+
+function collectDependencyFeedMessages(prevUnlocked, prevHiddenCat, prevHiddenParts, unlocked, hiddenCat, hiddenParts) {
+    const messages = [];
+
+    unlocked.forEach(id => {
+        if (!prevUnlocked.has(id)) {
+            messages.push({
+                kind: 'unlock',
+                text: `「${getCategoryDisplayName(id)}」が表示されました`
+            });
+        }
+    });
+
+    hiddenCat.forEach(id => {
+        if (!prevHiddenCat.has(id)) {
+            messages.push({
+                kind: 'hide',
+                text: `「${getCategoryDisplayName(id)}」が非表示になりました`
+            });
+        }
+    });
+
+    prevHiddenCat.forEach(id => {
+        if (!hiddenCat.has(id)) {
+            messages.push({
+                kind: 'show',
+                text: `「${getCategoryDisplayName(id)}」が再表示されました`
+            });
+        }
+    });
+
+    hiddenParts.forEach(id => {
+        if (!prevHiddenParts.has(id)) {
+            messages.push({
+                kind: 'hide',
+                text: `「${getPartDisplayName(id)}」が選択肢から外れました`
+            });
+        }
+    });
+
+    prevHiddenParts.forEach(id => {
+        if (!hiddenParts.has(id)) {
+            messages.push({
+                kind: 'show',
+                text: `「${getPartDisplayName(id)}」が再表示されました`
+            });
+        }
+    });
+
+    return messages.slice(0, 3);
+}
+
+function renderDependencyFeed(messages) {
+    const el = document.getElementById('dependencyFeed');
+    if (!el) return;
+    el.innerHTML = '';
+    if (!messages || messages.length === 0) return;
+
+    messages.forEach(msg => {
+        const line = document.createElement('p');
+        line.className = 'dependency-feed-line dependency-feed-line--' + msg.kind;
+        line.textContent = msg.text;
+        el.appendChild(line);
+    });
+}
+
 // 依存関係の処理
 function processDependencies() {
     if (!state.partsData) return;
@@ -708,6 +797,18 @@ function processDependencies() {
     const unlockedCategories = sets.unlockedCategories;
     const hiddenByParts = sets.hiddenCategoryIds;
     const hiddenPartIds = sets.hiddenPartIds;
+
+    if (state.dependencyFeedReady) {
+        const feedMessages = collectDependencyFeedMessages(
+            state.previouslyUnlockedCategories,
+            state.previouslyHiddenCategories,
+            state.previouslyHiddenPartIds,
+            unlockedCategories,
+            hiddenByParts,
+            hiddenPartIds
+        );
+        renderDependencyFeed(feedMessages);
+    }
 
     state.hiddenByParts = hiddenByParts;
     state.hiddenPartIds = hiddenPartIds;
@@ -748,7 +849,10 @@ function processDependencies() {
 
     sanitizeHiddenPartSelections();
 
-    state.previouslyUnlockedCategories = unlockedCategories;
+    state.previouslyUnlockedCategories = new Set(unlockedCategories);
+    state.previouslyHiddenCategories = new Set(hiddenByParts);
+    state.previouslyHiddenPartIds = new Set(hiddenPartIds);
+    state.dependencyFeedReady = true;
 }
 
 // カテゴリを非表示にする（選択状態はそのまま保持）
@@ -1603,6 +1707,7 @@ function handleCharacterFileSelect(e) {
             
             coerceAllDisallowedCustomColors();
             sanitizeSecretSelections();
+            resetDependencyFeedSnapshot();
             
             processDependencies();
             processSecretUnlocks();

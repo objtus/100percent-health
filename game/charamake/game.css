@@ -287,6 +287,48 @@ body {
         50% / 20px 20px;
 }
 
+.dependency-feed {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    min-height: 0;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    border-radius: 4px;
+    background: #f4f6f8;
+    border: 1px solid #e9ecef;
+    align-self: stretch;
+    box-sizing: border-box;
+}
+
+.dependency-feed:empty {
+    display: none;
+}
+
+.dependency-feed-line {
+    margin: 0;
+    padding: 0.15rem 0;
+}
+
+.dependency-feed-line + .dependency-feed-line {
+    border-top: 1px solid #e9ecef;
+    margin-top: 0.2rem;
+    padding-top: 0.35rem;
+}
+
+.dependency-feed-line--unlock {
+    color: #1e7e4a;
+}
+
+.dependency-feed-line--show {
+    color: #2c6fad;
+}
+
+.dependency-feed-line--hide {
+    color: #6c757d;
+}
+
 /* 右カラム: コントロール */
 .control-section {
     background: white;

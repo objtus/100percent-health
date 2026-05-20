@@ -10,7 +10,13 @@
         "name": "インナーグループ1"
       }
     ],
-    "secrets": []
+    "secrets": [
+      {
+        "id": "secret_1",
+        "name": "シークレット1",
+        "passwordHash": "0684ca5025a00966cba51e026adcef1e93ed35545984e0ccb588430cbe3f965b"
+      }
+    ]
   },
   "parts": [
     {
@@ -165,7 +171,15 @@
           "animated": false
         }
       ],
-      "order": 20
+      "order": 20,
+      "unlocks": [
+        "iris"
+      ],
+      "hides": [
+        "iris3",
+        "eye-highlight9",
+        "eye-highlight10"
+      ]
     },
     {
       "id": "pupil3",
@@ -2052,7 +2066,7 @@
       "id": "jacket1",
       "name": "ジャケット1",
       "category": "outer",
-      "zIndex": 300,
+      "zIndex": 295,
       "layers": [
         {
           "file": "parts/clothes/outer/jacket1.png",
@@ -2154,7 +2168,12 @@
         "sidehair5",
         "sidehair8",
         "sidehair10",
-        "sidehair11"
+        "sidehair11",
+        "sidehair12",
+        "ahoge1",
+        "ahoge2",
+        "ahoge3",
+        "ahoge4"
       ]
     },
     {
@@ -2245,6 +2264,82 @@
         }
       ],
       "order": 40
+    },
+    {
+      "id": "underwear-none",
+      "name": "下着なし",
+      "category": "underwear",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 40,
+      "secret": "secret_1"
+    },
+    {
+      "id": "hair-highlight1",
+      "name": "髪ハイライト1",
+      "category": "hair-highlight",
+      "zIndex": 340,
+      "layers": [
+        {
+          "file": "parts/hair/hairhighlight/hairhighlight1.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "hair-highlight2",
+      "name": "髪ハイライト2",
+      "category": "hair-highlight",
+      "zIndex": 340,
+      "layers": [
+        {
+          "file": "parts/hair/hairhighlight/hairhighlight2.png",
+          "animated": false
+        },
+        {
+          "file": "parts/hair/hairhighlight/おでこガード.png",
+          "zIndex": 200,
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "hair-highlight3",
+      "name": "髪ハイライト3",
+      "category": "hair-highlight",
+      "zIndex": 340,
+      "layers": [
+        {
+          "file": "parts/hair/hairhighlight/hairhighlight3.png",
+          "animated": false
+        },
+        {
+          "file": "parts/hair/hairhighlight/おでこガード.png",
+          "zIndex": 200,
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "hair-highlight4",
+      "name": "髪ハイライト4",
+      "category": "hair-highlight",
+      "zIndex": 340,
+      "layers": [
+        {
+          "file": "parts/hair/hairhighlight/hairhighlight4.png",
+          "animated": false
+        }
+      ],
+      "order": 10
     }
   ],
   "categories": [
@@ -2365,7 +2460,7 @@
     {
       "id": "backhair",
       "name": "後ろ髪",
-      "order": 50,
+      "order": 60,
       "selectionMode": "single",
       "group": "hair",
       "hidden": false,
@@ -2374,7 +2469,7 @@
     {
       "id": "bangs",
       "name": "前髪",
-      "order": 150,
+      "order": 30,
       "selectionMode": "single",
       "group": "hair",
       "hidden": false,
@@ -2383,7 +2478,7 @@
     {
       "id": "sidehair",
       "name": "横髪",
-      "order": 160,
+      "order": 40,
       "selectionMode": "multiple",
       "group": "hair",
       "hidden": false,
@@ -2392,7 +2487,7 @@
     {
       "id": "basehair",
       "name": "ベース髪",
-      "order": 10,
+      "order": 50,
       "selectionMode": "single",
       "group": "hair",
       "colorGroup": "hair",
@@ -2409,7 +2504,7 @@
     {
       "id": "ahoge",
       "name": "アホ毛とつけ毛",
-      "order": 190,
+      "order": 10,
       "selectionMode": "multiple",
       "group": "hair",
       "hidden": false,
@@ -2480,6 +2575,14 @@
       "order": 60,
       "selectionMode": "multiple",
       "group": "accessories",
+      "hidden": false
+    },
+    {
+      "id": "hair-highlight",
+      "name": "髪ハイライト",
+      "order": 20,
+      "selectionMode": "single",
+      "group": "hair",
       "hidden": false
     }
   ],
