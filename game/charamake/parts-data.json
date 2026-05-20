@@ -16,14 +16,8 @@
           "file": "parts/none.png"
         }
       ],
-      "unlocks": [],
-      "colors": {
-        "black": {
-          "blend": "color",
-          "color": "#000000",
-          "opacity": 0
-        }
-      }
+      "colors": {},
+      "allowCustomColor": false
     },
     {
       "id": "body_normal",
@@ -52,14 +46,13 @@
       "id": "bg_white",
       "name": "背景（白）",
       "category": "background",
-      "zIndex": 100,
+      "zIndex": 0,
       "layers": [
         {
           "file": "parts/basics/background/white.png",
           "animated": false
         }
       ],
-      "unlocks": [],
       "colors": {
         "黒": {
           "blend": "multiply",
@@ -77,14 +70,13 @@
       "id": "bg_gray",
       "name": "背景（グレー）",
       "category": "background",
-      "zIndex": 100,
+      "zIndex": 0,
       "layers": [
         {
           "file": "parts/basics/background/gray.png",
           "animated": false
         }
       ],
-      "unlocks": [],
       "colors": {
         "黒": {
           "blend": "multiply",
@@ -385,7 +377,7 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "allowCustomColor": false
     },
     {
       "id": "iris1",
@@ -632,13 +624,7 @@
           "animated": false
         }
       ],
-      "colors": {
-        "白目1": {
-          "blend": "lighten",
-          "color": "#eafbfb",
-          "opacity": 1
-        }
-      }
+      "colors": {}
     },
     {
       "id": "blush1",
@@ -1045,7 +1031,7 @@
       "id": "backhair1",
       "name": "後ろ髪1",
       "category": "backhair",
-      "zIndex": 0,
+      "zIndex": 10,
       "layers": [
         {
           "file": "parts/hair/backhair/backhair1.png",
@@ -1057,7 +1043,7 @@
       "id": "backhair2",
       "name": "後ろ髪2",
       "category": "backhair",
-      "zIndex": 0,
+      "zIndex": 10,
       "layers": [
         {
           "file": "parts/hair/backhair/backhair2.png",
@@ -1069,7 +1055,7 @@
       "id": "backhair3",
       "name": "後ろ髪3",
       "category": "backhair",
-      "zIndex": 0,
+      "zIndex": 10,
       "layers": [
         {
           "file": "parts/hair/backhair/backhair3.png",
@@ -1081,7 +1067,7 @@
       "id": "backhair4",
       "name": "後ろ髪4",
       "category": "backhair",
-      "zIndex": 0,
+      "zIndex": 10,
       "layers": [
         {
           "file": "parts/hair/backhair/backhair4.png",
@@ -1093,7 +1079,7 @@
       "id": "backhair5",
       "name": "後ろ髪5",
       "category": "backhair",
-      "zIndex": 0,
+      "zIndex": 10,
       "layers": [
         {
           "file": "parts/hair/backhair/backhair5.png",
@@ -1105,7 +1091,7 @@
       "id": "backhair6",
       "name": "後ろ髪6",
       "category": "backhair",
-      "zIndex": 0,
+      "zIndex": 10,
       "layers": [
         {
           "file": "parts/hair/backhair/backhair6.png",
@@ -1117,7 +1103,7 @@
       "id": "backhair7",
       "name": "後ろ髪7",
       "category": "backhair",
-      "zIndex": 0,
+      "zIndex": 10,
       "layers": [
         {
           "file": "parts/hair/backhair/backhair7.png",
@@ -1129,7 +1115,7 @@
       "id": "backhair8",
       "name": "後ろ髪8",
       "category": "backhair",
-      "zIndex": 0,
+      "zIndex": 10,
       "layers": [
         {
           "file": "parts/hair/backhair/backhair8.png",
@@ -1141,7 +1127,7 @@
       "id": "backhair9",
       "name": "後ろ髪9",
       "category": "backhair",
-      "zIndex": 0,
+      "zIndex": 10,
       "layers": [
         {
           "file": "parts/hair/backhair/backhair9.png",
@@ -1153,7 +1139,7 @@
       "id": "backhair10",
       "name": "後ろ髪10",
       "category": "backhair",
-      "zIndex": 0,
+      "zIndex": 10,
       "layers": [
         {
           "file": "parts/hair/backhair/backhair10.png",
@@ -1448,6 +1434,362 @@
           "animated": false
         }
       ]
+    },
+    {
+      "id": "bangs9",
+      "name": "前髪9",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs9.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs10",
+      "name": "前髪10",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs10.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs11",
+      "name": "前髪11",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs11.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "bangs12",
+      "name": "前髪12",
+      "category": "bangs",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs12.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "backhair11",
+      "name": "後ろ髪11",
+      "category": "backhair",
+      "zIndex": 10,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair11.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "sidehair11",
+      "name": "横髪11",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair11R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair11L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ]
+    },
+    {
+      "id": "glasses-none",
+      "name": "none",
+      "category": "glasses",
+      "zIndex": 250,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "colors": {},
+      "allowCustomColor": false
+    },
+    {
+      "id": "glasses1",
+      "name": "眼鏡1",
+      "category": "glasses",
+      "zIndex": 250,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses1-black.png",
+          "animated": false
+        }
+      ],
+      "colors": {
+        "白": {
+          "image": "parts/accessories/head/glasses/glasses1-white.png"
+        }
+      }
+    },
+    {
+      "id": "glasses2",
+      "name": "眼鏡2",
+      "category": "glasses",
+      "zIndex": 250,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses2.png",
+          "animated": false
+        }
+      ],
+      "colors": {}
+    },
+    {
+      "id": "camisole1",
+      "name": "キャミソール1",
+      "category": "underwear",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/clothes/underwear/camisole1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "innerwear1",
+      "name": "下着1",
+      "category": "underwear",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/clothes/underwear/innerwear1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "sportsbra1",
+      "name": "スポーツブラ1",
+      "category": "underwear",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/clothes/underwear/sportsbra1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "sclera2",
+      "name": "白目2",
+      "category": "sclera",
+      "zIndex": 110,
+      "layers": [
+        {
+          "file": "parts/face/sclera/sclera2.png",
+          "animated": false
+        }
+      ],
+      "colors": {
+        "白目1": {
+          "blend": "lighten",
+          "color": "#eafbfb",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "ahoge_none",
+      "name": "none",
+      "category": "ahoge",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts\\none.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "ahoge1",
+      "name": "アホ毛1",
+      "category": "ahoge",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/hair/ahoge/ahoge1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "ahoge2",
+      "name": "アホ毛2",
+      "category": "ahoge",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/hair/ahoge/ahoge2.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "ahoge3",
+      "name": "アホ毛3",
+      "category": "ahoge",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/hair/ahoge/ahoge3.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "ahoge4",
+      "name": "アホ毛4",
+      "category": "ahoge",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/hair/ahoge/ahoge4.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "odango1",
+      "name": "おだんご1",
+      "category": "ahoge",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/hair/ahoge/odango1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "petittail",
+      "name": "ミニツインテール",
+      "category": "ahoge",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/hair/ahoge/petittailL.png",
+          "animated": false,
+          "side": "left"
+        },
+        {
+          "file": "parts/hair/ahoge/petittailR.png",
+          "animated": false,
+          "side": "right"
+        }
+      ]
+    },
+    {
+      "id": "bottoms-none",
+      "name": "none",
+      "category": "bottoms",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "allowCustomColor": false
+    },
+    {
+      "id": "halfpants1",
+      "name": "ハーフパンツ1",
+      "category": "bottoms",
+      "zIndex": 200,
+      "layers": [
+        {
+          "file": "parts\\clothes\\bottoms\\halfpants1.png",
+          "animated": false
+        },
+        {
+          "file": "parts\\clothes\\bottoms\\halfpants1overray.png",
+          "zIndex": 500,
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "schooluniform_pleatedskirt1",
+      "name": "制服プリーツスカート1",
+      "category": "bottoms",
+      "zIndex": 210,
+      "layers": [
+        {
+          "file": "parts\\clothes\\bottoms\\schooluniform_pleatedskirt1.png",
+          "animated": false
+        },
+        {
+          "file": "parts\\clothes\\bottoms\\schooluniform_pleatedskirt1overray.png",
+          "zIndex": 510,
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "socks-none",
+      "name": "none",
+      "category": "socks",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts\\none.png",
+          "animated": false
+        }
+      ],
+      "allowCustomColor": false
+    },
+    {
+      "id": "blacktights1",
+      "name": "黒タイツ1",
+      "category": "socks",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts\\clothes\\socks\\blacktights1.png",
+          "animated": false
+        }
+      ]
+    },
+    {
+      "id": "highsocks1",
+      "name": "ハイソックス1",
+      "category": "socks",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts\\clothes\\socks\\highsocks1white.png",
+          "animated": false
+        }
+      ],
+      "colors": {
+        "黒": {
+          "image": "parts\\clothes\\socks\\highsocks1black.png"
+        }
+      }
     }
   ],
   "categories": [
@@ -1469,8 +1811,8 @@
       "colorGroup": "skin"
     },
     {
-      "id": "accessories_head",
-      "name": "頭アクセサリー",
+      "id": "glasses",
+      "name": "眼鏡",
       "order": 50,
       "selectionMode": "multiple",
       "group": "accessories",
@@ -1599,6 +1941,39 @@
       "selectionMode": "single",
       "group": "hair",
       "colorGroup": "hair",
+      "hidden": false
+    },
+    {
+      "id": "underwear",
+      "name": "下着",
+      "order": 180,
+      "selectionMode": "single",
+      "group": "cloches",
+      "hidden": false
+    },
+    {
+      "id": "ahoge",
+      "name": "アホ毛とつけ毛",
+      "order": 190,
+      "selectionMode": "multiple",
+      "group": "hair",
+      "hidden": false,
+      "colorGroup": "hair"
+    },
+    {
+      "id": "bottoms",
+      "name": "ボトムス",
+      "order": 200,
+      "selectionMode": "multiple",
+      "group": "cloches",
+      "hidden": false
+    },
+    {
+      "id": "socks",
+      "name": "ソックス",
+      "order": 210,
+      "selectionMode": "multiple",
+      "group": "cloches",
       "hidden": false
     }
   ],

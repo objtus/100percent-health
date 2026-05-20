@@ -17,6 +17,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# 共有関連
+.stfolder/
+
 # エディタ関連
 .vscode/
 .idea/

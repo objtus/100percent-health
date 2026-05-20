@@ -97,8 +97,8 @@
         "selectionMode": "single"
       },
       {
-        "id": "accessories_head",
-        "name": "頭アクセサリー",
+        "id": "glasses",
+        "name": "眼鏡",
         "order": 50,
         "selectionMode": "multiple"
       }

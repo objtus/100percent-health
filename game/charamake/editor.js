@@ -54,6 +54,14 @@ function setupEventListeners() {
     // レイヤー・色設定
     document.getElementById('addLayerBtn').addEventListener('click', addLayer);
     document.getElementById('colorizableCheckbox').addEventListener('change', toggleColorSettings);
+    const allowCustomColorEl = document.getElementById('allowCustomColorCheckbox');
+    if (allowCustomColorEl) {
+        allowCustomColorEl.addEventListener('change', () => {
+            if (state.editingPart) {
+                state.editingPart.allowCustomColor = allowCustomColorEl.checked ? undefined : false;
+            }
+        });
+    }
     document.getElementById('addColorBtn').addEventListener('click', addColorPreset);
     document.getElementById('addUnlockBtn').addEventListener('click', addUnlock);
     
@@ -685,6 +693,15 @@ function showPartEditor() {
                     色変更可能
                 </label>
             </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="allowCustomColorCheckbox" checked>
+                    ゲームでカスタム色を許可
+                </label>
+                <small style="display:block; color:#6c757d; margin-top:0.25rem;">
+                    オフにすると dress-up ゲームで「カスタム」色が選べなくなります（プリセットは従来どおり）。
+                </small>
+            </div>
             <div id="colorPresetsArea" style="display:none;">
                 <!-- プレビューエリアを色設定内に移動 -->
                 <div class="color-preview-section">
@@ -741,6 +758,13 @@ function showPartEditor() {
     document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
     document.getElementById('addLayerBtn').addEventListener('click', addLayer);
     document.getElementById('colorizableCheckbox').addEventListener('change', toggleColorSettings);
+    document.getElementById('allowCustomColorCheckbox').addEventListener('change', () => {
+        if (state.editingPart) {
+            state.editingPart.allowCustomColor = document.getElementById('allowCustomColorCheckbox').checked
+                ? undefined
+                : false;
+        }
+    });
     document.getElementById('addColorBtn').addEventListener('click', addColorPreset);
     document.getElementById('addUnlockBtn').addEventListener('click', addUnlock);
     document.getElementById('addHidesBtn').addEventListener('click', addHides);
@@ -796,6 +820,7 @@ function populateEditor() {
     // 色設定
     const colorizable = state.editingPart.colors && Object.keys(state.editingPart.colors).length > 0;
     document.getElementById('colorizableCheckbox').checked = colorizable;
+    document.getElementById('allowCustomColorCheckbox').checked = state.editingPart.allowCustomColor !== false;
     toggleColorSettings();
     if (colorizable) {
         renderColorPresets();
@@ -1537,6 +1562,12 @@ function savePart() {
     state.editingPart.category = document.getElementById('partCategory').value;
     state.editingPart.zIndex = parseInt(document.getElementById('partZIndex').value);
     
+    if (document.getElementById('allowCustomColorCheckbox').checked) {
+        delete state.editingPart.allowCustomColor;
+    } else {
+        state.editingPart.allowCustomColor = false;
+    }
+    
     // バリデーション
     const warnings = validatePart(state.editingPart);
     if (warnings.length > 0) {
@@ -1922,6 +1953,15 @@ function collectAllLayers(layers) {
     }
 }
 
+// 描画用の画像URL（色プリセット画像があれば優先）
+function editorLayerRasterSrc(layer) {
+    const cs = layer.colorSettings;
+    if (cs && cs.image && String(cs.image).trim()) {
+        return String(cs.image).trim();
+    }
+    return layer.file;
+}
+
 // レイヤーを描画
 function drawLayers(ctx, layers) {
     if (layers.length === 0) {
@@ -1932,7 +1972,11 @@ function drawLayers(ctx, layers) {
         return;
     }
     
-    const validLayers = layers.filter(l => l.file);
+    const validLayers = layers.filter(l => {
+        if (l.file) return true;
+        const cs = l.colorSettings;
+        return !!(cs && cs.image && String(cs.image).trim());
+    });
     
     if (validLayers.length === 0) {
         ctx.fillStyle = '#666';
@@ -1948,24 +1992,34 @@ function drawLayers(ctx, layers) {
     const loadedImages = [];
     
     validLayers.forEach((layer, index) => {
-        const img = new Image();
-        
-        img.onload = function() {
-            loadedImages[index] = { img, layer, loaded: true };
-            loadedCount++;
-            checkAndDraw();
-        };
-        
-        img.onerror = function() {
-            console.warn('画像の読み込みに失敗:', layer.file);
-            loadedImages[index] = { img: null, layer, loaded: false };
-            errorCount++;
-            loadedCount++;
-            checkAndDraw();
-        };
-        
-        img.src = layer.file;
-        loadedImages[index] = { img, layer, loaded: false };
+        const primarySrc = editorLayerRasterSrc(layer);
+
+        function tryLoad(src, isFallback) {
+            const img = new Image();
+
+            img.onload = function() {
+                loadedImages[index] = { img, layer, loaded: true };
+                loadedCount++;
+                checkAndDraw();
+            };
+
+            img.onerror = function() {
+                if (!isFallback && primarySrc !== layer.file && layer.file) {
+                    tryLoad(layer.file, true);
+                    return;
+                }
+                console.warn('画像の読み込みに失敗:', src);
+                loadedImages[index] = { img: null, layer, loaded: false };
+                errorCount++;
+                loadedCount++;
+                checkAndDraw();
+            };
+
+            img.src = src;
+        }
+
+        tryLoad(primarySrc, false);
+        loadedImages[index] = { img: null, layer, loaded: false };
     });
     
     // すべての画像が読み込まれたら描画

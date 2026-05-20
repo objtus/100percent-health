@@ -997,7 +997,11 @@ function checkUnlockCondition(categoryId) {
 - **gif.js**: GIFアニメ生成（Phase 3）
 - **FileSaver.js**: ファイルダウンロード（オプション）
 
-### 10.2 CSS Blend Modes
+### 10.3 関連仕様（拡張ドラフト）
+
+- [SPEC-inner-groups.md](./SPEC-inner-groups.md) — 服の重ね着時のインナーはみ出し防止（インナーグループ / マスク画像差し替え）。**未実装**
+
+### 10.4 CSS Blend Modes
 ```css
 mix-blend-mode: multiply;    /* 乗算 */
 mix-blend-mode: screen;      /* スクリーン */
@@ -1011,4 +1015,5 @@ mix-blend-mode: color;       /* カラー */
 
 ## 更新履歴
 
+- 2026-05-20: SPEC-inner-groups.md への参照を追加
 - 2026-02-16: 初版作成

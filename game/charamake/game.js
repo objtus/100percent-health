@@ -558,6 +558,10 @@ function initPartColorState(part) {
     if (!state.selectedColors[part.id]) {
         state.selectedColors[part.id] = 'normal';
     }
+    if (state.selectedColors[part.id] === 'custom' && !isCustomColorAllowed(part)) {
+        state.selectedColors[part.id] = 'normal';
+        delete state.customColors[part.id];
+    }
     if (state.selectedColors[part.id] === 'custom') {
         const inherited = getGroupCustomColors(part.id);
         if (inherited) {
@@ -647,10 +651,40 @@ function deselectCategory(category) {
     // 何もしない：選択状態を保持したまま renderCategories / collectAllLayers 側でスキップ
 }
 
+// パーツの JSON で allowCustomColor: false のときのみゲーム内カスタム色を禁止（省略時は許可）
+function isCustomColorAllowed(part) {
+    if (!part) return true;
+    return part.allowCustomColor !== false;
+}
+
+// カスタム非許可パーツで custom が選ばれている場合は通常に戻す
+function coercePartColorFromDisallowedCustom(partId) {
+    const part = state.partsData.parts.find(p => p.id === partId);
+    if (!part || state.selectedColors[partId] !== 'custom') return;
+    if (!isCustomColorAllowed(part)) {
+        state.selectedColors[partId] = 'normal';
+        delete state.customColors[partId];
+    }
+}
+
+function coerceAllDisallowedCustomColors() {
+    for (const [categoryId, selection] of Object.entries(state.selectedParts)) {
+        const category = state.partsData.categories.find(c => c.id === categoryId);
+        const ids = category && category.selectionMode === 'multiple'
+            ? (Array.isArray(selection) ? selection : [])
+            : (selection ? [selection] : []);
+        for (const pid of ids) {
+            coercePartColorFromDisallowedCustom(pid);
+        }
+    }
+}
+
 // 色設定UIの更新
 function updateColorSettings(part) {
     elements.colorSettings.style.display = 'block';
     elements.colorPresetSelector.innerHTML = '';
+    
+    coercePartColorFromDisallowedCustom(part.id);
     
     // side 指定レイヤーがあればサイドセレクターを表示
     if (hasSidedLayers(part)) {
@@ -687,15 +721,17 @@ function updateColorSettings(part) {
         });
     }
     
-    // 3. カスタム色ボタン（常に表示）
-    const customBtn = document.createElement('button');
-    customBtn.className = 'color-preset-btn';
-    if (isCustom) {
-        customBtn.classList.add('active');
+    // 3. カスタム色（パーツが allowCustomColor: false のときは非表示）
+    if (isCustomColorAllowed(part)) {
+        const customBtn = document.createElement('button');
+        customBtn.className = 'color-preset-btn';
+        if (isCustom) {
+            customBtn.classList.add('active');
+        }
+        customBtn.textContent = 'カスタム';
+        customBtn.addEventListener('click', () => selectColorPreset(part.id, 'custom'));
+        elements.colorPresetSelector.appendChild(customBtn);
     }
-    customBtn.textContent = 'カスタム';
-    customBtn.addEventListener('click', () => selectColorPreset(part.id, 'custom'));
-    elements.colorPresetSelector.appendChild(customBtn);
     
     // カスタム色が選択されている場合のみ拡張設定を表示し、値を反映
     if (isCustom) {
@@ -712,6 +748,11 @@ const DEFAULT_CUSTOM_COLOR = { blend: 'multiply', color: '#000000', opacity: 1, 
 
 // 色プリセット選択
 function selectColorPreset(partId, colorName) {
+    const actorPart = state.partsData.parts.find(p => p.id === partId);
+    if (colorName === 'custom' && actorPart && !isCustomColorAllowed(actorPart)) {
+        return;
+    }
+    
     // customに切り替えるとき、UIとプレビューが常に同じ値を参照するよう customColors を確定させる
     if (colorName === 'custom') {
         const inherited = getGroupCustomColors(partId);
@@ -751,7 +792,8 @@ function getGroupCustomColors(partId) {
         if (!selection) continue;
         const ids = Array.isArray(selection) ? selection : [selection];
         for (const id of ids) {
-            if (state.customColors[id]) return state.customColors[id];
+            const op = state.partsData.parts.find(p => p.id === id);
+            if (op && isCustomColorAllowed(op) && state.customColors[id]) return state.customColors[id];
         }
     }
     return null;
@@ -784,9 +826,14 @@ function applyColorToGroup(partId, colorName) {
                 if (!groupedPart) return;
                 
                 if (colorName === 'custom') {
-                    state.selectedColors[selectedPartId] = 'custom';
-                    if (customData) {
-                        state.customColors[selectedPartId] = { ...customData };
+                    if (isCustomColorAllowed(groupedPart)) {
+                        state.selectedColors[selectedPartId] = 'custom';
+                        if (customData) {
+                            state.customColors[selectedPartId] = { ...customData };
+                        }
+                    } else {
+                        state.selectedColors[selectedPartId] = 'normal';
+                        delete state.customColors[selectedPartId];
                     }
                 } else if (colorName !== 'normal') {
                     // 同名プリセットがあれば適用、なければnormal
@@ -867,6 +914,9 @@ function applyCustomColor() {
     if (!partId) return;
     
     if (state.selectedColors[partId] !== 'custom') return;
+    
+    const applyPart = state.partsData.parts.find(p => p.id === partId);
+    if (applyPart && !isCustomColorAllowed(applyPart)) return;
     
     // customColorsにUI値を保存
     state.customColors[partId] = {
@@ -990,9 +1040,25 @@ function loadImage(src) {
     });
 }
 
+// 色プリセットが専用画像（image）のときはそれを、なければレイヤー本体の file を読み込む
+function loadLayerRaster(layer) {
+    const cs = layer.colorSettings;
+    const alt = cs && cs.image && String(cs.image).trim();
+    const primary = alt ? cs.image.trim() : layer.file;
+    return loadImage(primary).then(img => {
+        if (img || !alt) return { img, layer };
+        if (!layer.file) return { img: null, layer };
+        return loadImage(layer.file).then(fallbackImg => ({ img: fallbackImg, layer }));
+    });
+}
+
 // レイヤーを描画（エディタと同じロジック）
 function drawLayers(ctx, layers) {
-    const validLayers = layers.filter(l => l.file);
+    const validLayers = layers.filter(l => {
+        if (l.file) return true;
+        const cs = l.colorSettings;
+        return !!(cs && cs.image && String(cs.image).trim());
+    });
     
     if (validLayers.length === 0) {
         ctx.fillStyle = '#666';
@@ -1010,7 +1076,7 @@ function drawLayers(ctx, layers) {
     
     const sortedLayers = [...validLayers].sort((a, b) => a.zIndex - b.zIndex);
     
-    Promise.all(sortedLayers.map(layer => loadImage(layer.file).then(img => ({ img, layer }))))
+    Promise.all(sortedLayers.map(loadLayerRaster))
         .then(items => {
             offCtx.clearRect(0, 0, offscreen.width, offscreen.height);
             
@@ -1161,7 +1227,11 @@ function saveCharacter() {
         if (category && category.selectionMode === 'multiple') {
             characterData.character[categoryId] = selection;
         } else {
-            const colorSetting = state.selectedColors[selection];
+            const part = state.partsData.parts.find(p => p.id === selection);
+            let colorSetting = state.selectedColors[selection];
+            if (colorSetting === 'custom' && part && !isCustomColorAllowed(part)) {
+                colorSetting = 'normal';
+            }
             
             const sideValue = state.selectedSide[selection];
             const hasSide = sideValue && sideValue !== 'both';
@@ -1244,14 +1314,19 @@ function handleCharacterFileSelect(e) {
                         }
                         
                         if (partInfo.color === 'custom') {
-                            state.selectedColors[partInfo.id] = 'custom';
-                            state.customColors[partInfo.id] = {
-                                blend: partInfo.blend,
-                                color: partInfo.colorValue,
-                                opacity: partInfo.opacity,
-                                hueShift: partInfo.hueShift || 0,
-                                hueOpacity: partInfo.hueOpacity || 0
-                            };
+                            const loadedPart = state.partsData.parts.find(p => p.id === partInfo.id);
+                            if (loadedPart && isCustomColorAllowed(loadedPart)) {
+                                state.selectedColors[partInfo.id] = 'custom';
+                                state.customColors[partInfo.id] = {
+                                    blend: partInfo.blend,
+                                    color: partInfo.colorValue,
+                                    opacity: partInfo.opacity,
+                                    hueShift: partInfo.hueShift || 0,
+                                    hueOpacity: partInfo.hueOpacity || 0
+                                };
+                            } else {
+                                state.selectedColors[partInfo.id] = 'normal';
+                            }
                         } else if (partInfo.color) {
                             state.selectedColors[partInfo.id] = partInfo.color;
                         } else {
@@ -1260,6 +1335,8 @@ function handleCharacterFileSelect(e) {
                     }
                 }
             }
+            
+            coerceAllDisallowedCustomColors();
             
             processDependencies();
             renderCategories();
