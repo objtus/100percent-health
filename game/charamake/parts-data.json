@@ -18,7 +18,8 @@
         }
       ],
       "colors": {},
-      "allowCustomColor": false
+      "allowCustomColor": false,
+      "order": 10
     },
     {
       "id": "body_normal",
@@ -41,7 +42,8 @@
           "color": "#f3efec",
           "opacity": 1
         }
-      }
+      },
+      "order": 10
     },
     {
       "id": "bg_white",
@@ -65,7 +67,8 @@
           "color": "#ffffff",
           "opacity": 1
         }
-      }
+      },
+      "order": 20
     },
     {
       "id": "bg_gray",
@@ -112,7 +115,8 @@
           "color": "#ffff00",
           "opacity": 1
         }
-      }
+      },
+      "order": 30
     },
     {
       "id": "frame1",
@@ -125,7 +129,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 10
     },
     {
       "id": "pupil1",
@@ -138,7 +143,10 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [
+        "iris"
+      ],
+      "order": 10
     },
     {
       "id": "pupil2",
@@ -151,7 +159,7 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "order": 20
     },
     {
       "id": "pupil3",
@@ -166,7 +174,8 @@
       ],
       "unlocks": [
         "iris"
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "pupil4",
@@ -179,7 +188,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 40
     },
     {
       "id": "pupil5",
@@ -194,7 +204,8 @@
       ],
       "hides": [
         "eye-highlight"
-      ]
+      ],
+      "order": 50
     },
     {
       "id": "pupil6",
@@ -209,7 +220,8 @@
       ],
       "hides": [
         "eye-highlight"
-      ]
+      ],
+      "order": 60
     },
     {
       "id": "pupil7",
@@ -231,7 +243,8 @@
           "color": "#ff0040",
           "opacity": 1
         }
-      }
+      },
+      "order": 70
     },
     {
       "id": "pupil8",
@@ -246,7 +259,8 @@
       ],
       "unlocks": [
         "iris"
-      ]
+      ],
+      "order": 80
     },
     {
       "id": "pupil9",
@@ -261,7 +275,8 @@
       ],
       "unlocks": [
         "iris"
-      ]
+      ],
+      "order": 90
     },
     {
       "id": "eyelashes_turi1",
@@ -274,7 +289,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 10
     },
     {
       "id": "eyelashes_normal1",
@@ -287,7 +303,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 20
     },
     {
       "id": "eyelashes_normal2",
@@ -300,7 +317,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 30
     },
     {
       "id": "eyelashes_normal3",
@@ -313,7 +331,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 40
     },
     {
       "id": "eyelashes_simple1",
@@ -326,7 +345,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 50
     },
     {
       "id": "eyelashes_jito1",
@@ -339,7 +359,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 60
     },
     {
       "id": "eyelashes_jito2",
@@ -352,7 +373,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 70
     },
     {
       "id": "eyelashes_jito3",
@@ -365,7 +387,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 80
     },
     {
       "id": "iris_none",
@@ -378,7 +401,8 @@
           "animated": false
         }
       ],
-      "allowCustomColor": false
+      "allowCustomColor": false,
+      "order": 80
     },
     {
       "id": "iris1",
@@ -391,7 +415,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 10
     },
     {
       "id": "iris2",
@@ -404,7 +429,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 20
     },
     {
       "id": "iris3",
@@ -417,7 +443,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 30
     },
     {
       "id": "iris4",
@@ -430,7 +457,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 40
     },
     {
       "id": "iris5",
@@ -443,7 +471,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 50
     },
     {
       "id": "iris6",
@@ -456,7 +485,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 60
     },
     {
       "id": "iris7",
@@ -469,7 +499,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 70
     },
     {
       "id": "eye-highlight1",
@@ -478,11 +509,11 @@
       "zIndex": 170,
       "layers": [
         {
-          "file": "parts/face/eyehighlight/irishighlight1.png",
+          "file": "parts/face/eyehighlight/irishighlight4.png",
           "animated": false
         }
       ],
-      "unlocks": []
+      "order": 10
     },
     {
       "id": "eye-highlight2",
@@ -495,7 +526,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 20
     },
     {
       "id": "eye-highlight3",
@@ -508,7 +540,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 30
     },
     {
       "id": "eye-highlight4",
@@ -517,11 +550,11 @@
       "zIndex": 170,
       "layers": [
         {
-          "file": "parts/face/eyehighlight/irishighlight4.png",
+          "file": "parts/face/eyehighlight/irishighlight1.png",
           "animated": false
         }
       ],
-      "unlocks": []
+      "order": 40
     },
     {
       "id": "eye-highlight5",
@@ -534,7 +567,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 50
     },
     {
       "id": "eye-highlight6",
@@ -547,7 +581,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 60
     },
     {
       "id": "eye-highlight7",
@@ -560,7 +595,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 70
     },
     {
       "id": "eye-highlight8",
@@ -573,7 +609,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 80
     },
     {
       "id": "eye-highlight9",
@@ -586,7 +623,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 90
     },
     {
       "id": "eye-highlight10",
@@ -599,7 +637,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 100
     },
     {
       "id": "eye-highlight11",
@@ -612,7 +651,8 @@
           "animated": false
         }
       ],
-      "unlocks": []
+      "unlocks": [],
+      "order": 110
     },
     {
       "id": "sclera1",
@@ -625,7 +665,8 @@
           "animated": false
         }
       ],
-      "colors": {}
+      "colors": {},
+      "order": 10
     },
     {
       "id": "blush1",
@@ -637,7 +678,8 @@
           "file": "parts/face/blush/blush1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "blush2",
@@ -649,7 +691,8 @@
           "file": "parts/face/blush/blush2.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "blush3",
@@ -661,7 +704,8 @@
           "file": "parts/face/blush/blush3.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "blush4",
@@ -674,7 +718,8 @@
           "animated": false,
           "blendMode": "multiply"
         }
-      ]
+      ],
+      "order": 40
     },
     {
       "id": "blush5",
@@ -687,7 +732,8 @@
           "animated": false,
           "blendMode": "multiply"
         }
-      ]
+      ],
+      "order": 50
     },
     {
       "id": "ears1",
@@ -703,7 +749,8 @@
           "file": "parts/face/ears/ear1L.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "eyebrows1",
@@ -715,7 +762,8 @@
           "file": "parts/face/eyebrows/eyebrows1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "eyebrows2",
@@ -727,7 +775,8 @@
           "file": "parts/face/eyebrows/eyebrows2.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "eyebrows3",
@@ -739,7 +788,8 @@
           "file": "parts/face/eyebrows/eyebrows3.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "eyebrows4",
@@ -751,7 +801,8 @@
           "file": "parts/face/eyebrows/eyebrows4.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 40
     },
     {
       "id": "eyebrows5",
@@ -763,7 +814,8 @@
           "file": "parts/face/eyebrows/eyebrows5.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 50
     },
     {
       "id": "eyebrows6",
@@ -775,7 +827,8 @@
           "file": "parts/face/eyebrows/eyebrows6.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 60
     },
     {
       "id": "eyebrows7",
@@ -787,7 +840,8 @@
           "file": "parts/face/eyebrows/eyebrows7.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 70
     },
     {
       "id": "eyebrows8",
@@ -799,7 +853,8 @@
           "file": "parts/face/eyebrows/eyebrows8.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 80
     },
     {
       "id": "nose1",
@@ -811,7 +866,8 @@
           "file": "parts/face/nose/nose1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "nose2",
@@ -823,7 +879,8 @@
           "file": "parts/face/nose/nose2.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "nose3",
@@ -835,7 +892,8 @@
           "file": "parts/face/nose/nose3.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "nose4",
@@ -847,7 +905,8 @@
           "file": "parts/face/nose/nose4.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 40
     },
     {
       "id": "nose5",
@@ -859,7 +918,8 @@
           "file": "parts/face/nose/nose5.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 50
     },
     {
       "id": "mouth1",
@@ -871,7 +931,8 @@
           "file": "parts/face/mouth/mouth1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "mouth2",
@@ -883,7 +944,8 @@
           "file": "parts/face/mouth/mouth2.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "mouth3",
@@ -895,7 +957,8 @@
           "file": "parts/face/mouth/mouth3.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "mouth4",
@@ -907,7 +970,8 @@
           "file": "parts/face/mouth/mouth4.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 40
     },
     {
       "id": "mouth5",
@@ -919,7 +983,8 @@
           "file": "parts/face/mouth/mouth5.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 50
     },
     {
       "id": "mouth6",
@@ -931,7 +996,8 @@
           "file": "parts/face/mouth/mouth6.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 60
     },
     {
       "id": "mouth7",
@@ -943,7 +1009,8 @@
           "file": "parts/face/mouth/mouth7.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 70
     },
     {
       "id": "mouth8",
@@ -955,7 +1022,8 @@
           "file": "parts/face/mouth/mouth8.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 80
     },
     {
       "id": "mouth9",
@@ -967,7 +1035,8 @@
           "file": "parts/face/mouth/mouth9.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 90
     },
     {
       "id": "mouth10",
@@ -979,7 +1048,8 @@
           "file": "parts/face/mouth/mouth10.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 100
     },
     {
       "id": "mouth11",
@@ -991,7 +1061,8 @@
           "file": "parts/face/mouth/mouth11.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 110
     },
     {
       "id": "mouth12",
@@ -1003,21 +1074,25 @@
           "file": "parts/face/mouth/mouth12.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 120
     },
     {
       "id": "body_peace",
       "name": "通常体型 (ピース)",
       "category": "body",
-      "poseId": "peace",
       "zIndex": 100,
       "layers": [
         {
           "file": "parts/basics/body/basebody.png"
         },
         {
-          "file": "parts/basics/body/hand2.png",
+          "file": "parts/basics/body/handpeace1.png",
           "zIndex": 600,
+          "animated": false
+        },
+        {
+          "file": "parts/basics/body/handpeace2.png",
           "animated": false
         }
       ],
@@ -1027,7 +1102,8 @@
           "color": "#f3efec",
           "opacity": 1
         }
-      }
+      },
+      "order": 20
     },
     {
       "id": "backhair1",
@@ -1039,7 +1115,8 @@
           "file": "parts/hair/backhair/backhair1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "backhair2",
@@ -1051,7 +1128,8 @@
           "file": "parts/hair/backhair/backhair2.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "backhair3",
@@ -1063,7 +1141,8 @@
           "file": "parts/hair/backhair/backhair3.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "backhair4",
@@ -1075,7 +1154,8 @@
           "file": "parts/hair/backhair/backhair4.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 40
     },
     {
       "id": "backhair5",
@@ -1087,7 +1167,8 @@
           "file": "parts/hair/backhair/backhair5.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 50
     },
     {
       "id": "backhair6",
@@ -1099,7 +1180,8 @@
           "file": "parts/hair/backhair/backhair6.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 60
     },
     {
       "id": "backhair7",
@@ -1111,7 +1193,8 @@
           "file": "parts/hair/backhair/backhair7.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 70
     },
     {
       "id": "backhair8",
@@ -1123,7 +1206,8 @@
           "file": "parts/hair/backhair/backhair8.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 80
     },
     {
       "id": "backhair9",
@@ -1135,7 +1219,8 @@
           "file": "parts/hair/backhair/backhair9.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 90
     },
     {
       "id": "backhair10",
@@ -1147,7 +1232,8 @@
           "file": "parts/hair/backhair/backhair10.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 100
     },
     {
       "id": "bangs1",
@@ -1159,7 +1245,8 @@
           "file": "parts/hair/bangs/bangs1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "bangs2",
@@ -1171,7 +1258,8 @@
           "file": "parts/hair/bangs/bangs2.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "bangs3",
@@ -1183,7 +1271,8 @@
           "file": "parts/hair/bangs/bangs3.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "bangs4",
@@ -1195,7 +1284,8 @@
           "file": "parts/hair/bangs/bangs4.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 40
     },
     {
       "id": "bangs5",
@@ -1207,7 +1297,8 @@
           "file": "parts/hair/bangs/bangs5.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 50
     },
     {
       "id": "bangs6",
@@ -1219,7 +1310,8 @@
           "file": "parts/hair/bangs/bangs6.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 60
     },
     {
       "id": "bangs7",
@@ -1231,7 +1323,8 @@
           "file": "parts/hair/bangs/bangs7.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 70
     },
     {
       "id": "bangs8",
@@ -1243,7 +1336,8 @@
           "file": "parts/hair/bangs/bangs8.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 80
     },
     {
       "id": "sidehair1",
@@ -1261,7 +1355,8 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "sidehair2",
@@ -1279,7 +1374,8 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "sidehair3",
@@ -1297,7 +1393,8 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "sidehair4",
@@ -1315,7 +1412,8 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 40
     },
     {
       "id": "sidehair5",
@@ -1333,7 +1431,8 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 50
     },
     {
       "id": "sidehair6",
@@ -1351,7 +1450,8 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 60
     },
     {
       "id": "sidehair7",
@@ -1369,7 +1469,8 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 70
     },
     {
       "id": "sidehair8",
@@ -1387,7 +1488,8 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 80
     },
     {
       "id": "sidehair9",
@@ -1405,7 +1507,8 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 90
     },
     {
       "id": "sidehair10",
@@ -1423,7 +1526,8 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 100
     },
     {
       "id": "basehair",
@@ -1435,7 +1539,8 @@
           "file": "parts/basics/body/basehair.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "bangs9",
@@ -1447,7 +1552,8 @@
           "file": "parts/hair/bangs/bangs9.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 90
     },
     {
       "id": "bangs10",
@@ -1459,7 +1565,8 @@
           "file": "parts/hair/bangs/bangs10.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 100
     },
     {
       "id": "bangs11",
@@ -1471,7 +1578,8 @@
           "file": "parts/hair/bangs/bangs11.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 110
     },
     {
       "id": "bangs12",
@@ -1483,7 +1591,8 @@
           "file": "parts/hair/bangs/bangs12.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 120
     },
     {
       "id": "backhair11",
@@ -1495,7 +1604,8 @@
           "file": "parts/hair/backhair/backhair11.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 110
     },
     {
       "id": "sidehair11",
@@ -1513,12 +1623,13 @@
           "animated": false,
           "side": "left"
         }
-      ]
+      ],
+      "order": 110
     },
     {
       "id": "glasses-none",
       "name": "none",
-      "category": "glasses",
+      "category": "accessories_head",
       "zIndex": 250,
       "layers": [
         {
@@ -1527,12 +1638,13 @@
         }
       ],
       "colors": {},
-      "allowCustomColor": false
+      "allowCustomColor": false,
+      "order": 10
     },
     {
       "id": "glasses1",
       "name": "眼鏡1",
-      "category": "glasses",
+      "category": "accessories_head",
       "zIndex": 250,
       "layers": [
         {
@@ -1542,14 +1654,15 @@
       ],
       "colors": {
         "白": {
-          "image": "parts/accessories/head/glasses/glasses1-white.png"
+          "image": "parts/accessories/head/glasses1-white.png"
         }
-      }
+      },
+      "order": 20
     },
     {
       "id": "glasses2",
       "name": "眼鏡2",
-      "category": "glasses",
+      "category": "accessories_head",
       "zIndex": 250,
       "layers": [
         {
@@ -1557,7 +1670,8 @@
           "animated": false
         }
       ],
-      "colors": {}
+      "colors": {},
+      "order": 30
     },
     {
       "id": "camisole1",
@@ -1569,7 +1683,8 @@
           "file": "parts/clothes/underwear/camisole1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "innerwear1",
@@ -1581,7 +1696,8 @@
           "file": "parts/clothes/underwear/innerwear1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "sportsbra1",
@@ -1593,7 +1709,8 @@
           "file": "parts/clothes/underwear/sportsbra1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "sclera2",
@@ -1612,7 +1729,8 @@
           "color": "#eafbfb",
           "opacity": 1
         }
-      }
+      },
+      "order": 20
     },
     {
       "id": "ahoge_none",
@@ -1624,7 +1742,8 @@
           "file": "parts\\none.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 10
     },
     {
       "id": "ahoge1",
@@ -1636,7 +1755,8 @@
           "file": "parts/hair/ahoge/ahoge1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "ahoge2",
@@ -1648,7 +1768,8 @@
           "file": "parts/hair/ahoge/ahoge2.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "ahoge3",
@@ -1660,7 +1781,8 @@
           "file": "parts/hair/ahoge/ahoge3.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 40
     },
     {
       "id": "ahoge4",
@@ -1672,7 +1794,8 @@
           "file": "parts/hair/ahoge/ahoge4.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 50
     },
     {
       "id": "odango1",
@@ -1684,7 +1807,8 @@
           "file": "parts/hair/ahoge/odango1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 60
     },
     {
       "id": "petittail",
@@ -1702,7 +1826,8 @@
           "animated": false,
           "side": "right"
         }
-      ]
+      ],
+      "order": 70
     },
     {
       "id": "bottoms-none",
@@ -1715,7 +1840,8 @@
           "animated": false
         }
       ],
-      "allowCustomColor": false
+      "allowCustomColor": false,
+      "order": 10
     },
     {
       "id": "halfpants1",
@@ -1732,7 +1858,8 @@
           "zIndex": 500,
           "animated": false
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "schooluniform_pleatedskirt1",
@@ -1749,7 +1876,8 @@
           "zIndex": 510,
           "animated": false
         }
-      ]
+      ],
+      "order": 30
     },
     {
       "id": "socks-none",
@@ -1762,7 +1890,8 @@
           "animated": false
         }
       ],
-      "allowCustomColor": false
+      "allowCustomColor": false,
+      "order": 10
     },
     {
       "id": "blacktights1",
@@ -1774,7 +1903,8 @@
           "file": "parts\\clothes\\socks\\blacktights1.png",
           "animated": false
         }
-      ]
+      ],
+      "order": 20
     },
     {
       "id": "highsocks1",
@@ -1791,7 +1921,50 @@
         "黒": {
           "image": "parts\\clothes\\socks\\highsocks1black.png"
         }
-      }
+      },
+      "order": 30
+    },
+    {
+      "id": "shirts1",
+      "name": "シャツ1",
+      "category": "tops",
+      "zIndex": 250,
+      "layers": [
+        {
+          "file": "parts/clothes/tops/shirts1-base.png",
+          "animated": false
+        }
+      ],
+      "order": 10,
+      "unlocks": [
+        "shirts1-collar"
+      ]
+    },
+    {
+      "id": "tops_none",
+      "name": "なし",
+      "category": "tops",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "shirts1-collar1",
+      "name": "シャツ1襟1",
+      "category": "shirts1-collar",
+      "zIndex": 250,
+      "layers": [
+        {
+          "file": "parts/clothes/tops/shirts1-collar/shirts1-collar1.png",
+          "animated": false
+        }
+      ],
+      "order": 10
     }
   ],
   "categories": [
@@ -1813,8 +1986,8 @@
       "colorGroup": "skin"
     },
     {
-      "id": "glasses",
-      "name": "眼鏡",
+      "id": "accessories_head",
+      "name": "頭アクセサリー",
       "order": 50,
       "selectionMode": "multiple",
       "group": "accessories",
@@ -1973,10 +2146,26 @@
     {
       "id": "socks",
       "name": "ソックス",
-      "order": 210,
+      "order": 170,
       "selectionMode": "multiple",
       "group": "cloches",
       "hidden": false
+    },
+    {
+      "id": "tops",
+      "name": "トップス",
+      "order": 210,
+      "selectionMode": "single",
+      "group": "cloches",
+      "hidden": false
+    },
+    {
+      "id": "shirts1-collar",
+      "name": "シャツ1-襟",
+      "order": 220,
+      "selectionMode": "single",
+      "hidden": true,
+      "group": "cloches"
     }
   ],
   "categoryGroups": [
