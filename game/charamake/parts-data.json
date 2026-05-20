@@ -2145,7 +2145,106 @@
           "zIndex": 290
         }
       ],
-      "order": 20
+      "order": 20,
+      "hides": [
+        "sidehair1",
+        "sidehair2",
+        "sidehair3",
+        "sidehair4",
+        "sidehair5",
+        "sidehair8",
+        "sidehair10",
+        "sidehair11"
+      ]
+    },
+    {
+      "id": "sidehair12",
+      "name": "横髪12",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair12R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair12L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ],
+      "order": 110
+    },
+    {
+      "id": "sidehair13",
+      "name": "横髪13",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair13R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair13L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ],
+      "order": 110
+    },
+    {
+      "id": "sidehair14",
+      "name": "横髪14",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair14R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair14L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ],
+      "order": 110
+    },
+    {
+      "id": "sidehair15",
+      "name": "横髪15",
+      "category": "sidehair",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair15R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair15L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ],
+      "order": 110
+    },
+    {
+      "id": "bra1",
+      "name": "ブラ1",
+      "category": "underwear",
+      "zIndex": 150,
+      "layers": [
+        {
+          "file": "parts/clothes/underwear/bra1.png",
+          "animated": false
+        }
+      ],
+      "order": 40
     }
   ],
   "categories": [
