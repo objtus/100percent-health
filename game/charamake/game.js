@@ -48,6 +48,7 @@ function loadDefaultPartsData() {
         })
         .then(data => {
             state.partsData = data;
+            applyPartOrdersMigration();
             
             // キャンバスサイズを設定
             if (state.partsData.meta) {
@@ -68,16 +69,36 @@ function loadDefaultPartsData() {
         });
 }
 
+function applyPartOrdersMigration() {
+    const PO = window.CharamakePartsOrder;
+    if (PO && state.partsData && state.partsData.parts) {
+        PO.ensurePartOrders(state.partsData.parts);
+    }
+}
+
+function getSortedPartsInCategory(categoryId) {
+    const PO = window.CharamakePartsOrder;
+    if (!state.partsData || !PO) {
+        return state.partsData
+            ? state.partsData.parts.filter(p => p.category === categoryId)
+            : [];
+    }
+    return PO.getPartsInCategory(state.partsData.parts, categoryId);
+}
+
 // 各カテゴリの最初のパーツをデフォルト選択
 function initializeDefaultSelections() {
     if (!state.partsData) return;
+    
+    const PO = window.CharamakePartsOrder;
     
     state.partsData.categories.forEach(category => {
         // hidden属性のないカテゴリのみ
         if (category.hidden) return;
         
-        // そのカテゴリの最初のパーツを取得
-        const firstPart = state.partsData.parts.find(p => p.category === category.id);
+        const firstPart = PO
+            ? PO.getFirstPartInCategory(state.partsData.parts, category.id)
+            : state.partsData.parts.find(p => p.category === category.id);
         
         if (firstPart) {
             if (category.selectionMode === 'multiple') {
@@ -157,6 +178,7 @@ function handleDataFileSelect(e) {
     reader.onload = (event) => {
         try {
             state.partsData = JSON.parse(event.target.result);
+            applyPartOrdersMigration();
             
             // キャンバスサイズを設定
             if (state.partsData.meta) {
@@ -397,7 +419,7 @@ function renderParts() {
     const category = state.partsData.categories.find(c => c.id === state.currentCategory);
     elements.currentCategoryName.textContent = category.name;
     
-    const parts = state.partsData.parts.filter(p => p.category === state.currentCategory);
+    const parts = getSortedPartsInCategory(state.currentCategory);
     
     if (parts.length === 0) {
         elements.partsGrid.innerHTML = '<p class="placeholder">パーツがありません</p>';
@@ -614,7 +636,10 @@ function processDependencies() {
                 ? (state.selectedParts[categoryId] && state.selectedParts[categoryId].length > 0)
                 : !!state.selectedParts[categoryId];
             if (category && !hasSelection) {
-                const firstPart = state.partsData.parts.find(p => p.category === categoryId);
+                const PO = window.CharamakePartsOrder;
+                const firstPart = PO
+                    ? PO.getFirstPartInCategory(state.partsData.parts, categoryId)
+                    : state.partsData.parts.find(p => p.category === categoryId);
                 if (firstPart) {
                     if (category.selectionMode === 'multiple') {
                         state.selectedParts[categoryId] = [firstPart.id];

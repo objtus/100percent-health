@@ -248,6 +248,7 @@ body {
     border-radius: 4px;
     opacity: 0;
     transition: opacity 0.2s;
+    pointer-events: none;
 }
 
 .part-card:hover {
@@ -266,7 +267,36 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 0.5rem;
     margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.part-card-drag-handle {
+    flex-shrink: 0;
+    cursor: grab;
+    color: #6c757d;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0.15rem 0.35rem;
+    user-select: none;
+    touch-action: none;
+    position: relative;
+    z-index: 2;
+}
+
+.part-card-drag-handle:active {
+    cursor: grabbing;
+}
+
+.part-card.dragging {
+    opacity: 0.45;
+}
+
+.part-card.drag-over {
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.35);
 }
 
 .part-card-title {
@@ -282,6 +312,14 @@ body {
 .part-icon {
     font-size: 0.9rem;
     cursor: help;
+}
+
+.part-card-info,
+.part-card-colors,
+.part-card-unlocks,
+.part-card-requires {
+    position: relative;
+    z-index: 1;
 }
 
 .part-card-info {

@@ -18,6 +18,8 @@ const state = {
     selectedColorPreset: null // 選択中の色プリセット（プレビュー用）
 };
 
+let draggedPartId = null;
+
 // DOM要素
 const elements = {
     categoryList: document.getElementById('categoryList'),
@@ -32,6 +34,8 @@ const elements = {
 function init() {
     setupEventListeners();
     loadFromLocalStorage();
+    applyPartOrdersMigration();
+    initPartsListDragAndDrop();
     renderCategories();
 }
 
@@ -664,7 +668,7 @@ function renderParts() {
     const category = state.data.categories.find(c => c.id === state.selectedCategory);
     elements.currentCategoryName.textContent = category.name;
     
-    const parts = state.data.parts.filter(p => p.category === state.selectedCategory);
+    const parts = getSortedPartsInCategory(state.selectedCategory);
     
     if (parts.length === 0) {
         elements.partsList.innerHTML = '<p class="placeholder">パーツがありません</p>';
@@ -677,12 +681,15 @@ function renderParts() {
         const card = createPartCard(part);
         elements.partsList.appendChild(card);
     });
+
+    setupPartsListDragAndDrop();
 }
 
 // パーツカードの作成
 function createPartCard(part) {
     const card = document.createElement('div');
     card.className = 'part-card';
+    card.dataset.partId = part.id;
     if (state.selectedPart === part.id) {
         card.classList.add('active');
     }
@@ -707,6 +714,7 @@ function createPartCard(part) {
     
     card.innerHTML = `
         <div class="part-card-header">
+            <span class="part-card-drag-handle" title="ドラッグで並び替え" draggable="true">⋮⋮</span>
             <div class="part-card-title">${part.name}</div>
             <div class="part-card-icons">${icons}</div>
         </div>
@@ -724,15 +732,83 @@ function createPartCard(part) {
         </div>
     `;
     
-    // カード全体をクリックで編集画面を開く
     card.addEventListener('click', (e) => {
-        // 複製・削除ボタンをクリックした場合は編集を開かない
+        if (e.target.closest('.part-card-drag-handle')) return;
         if (!e.target.classList.contains('btn') && !e.target.closest('.btn')) {
             editPart(part.id);
         }
     });
+
+    const handle = card.querySelector('.part-card-drag-handle');
+    if (handle) {
+        handle.addEventListener('click', (e) => e.stopPropagation());
+        handle.addEventListener('dragstart', (e) => {
+            draggedPartId = part.id;
+            card.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', part.id);
+            e.stopPropagation();
+        });
+        handle.addEventListener('dragend', () => {
+            card.classList.remove('dragging');
+        });
+    }
     
     return card;
+}
+
+function setupPartsListDragAndDrop() {
+    const list = elements.partsList;
+    if (!list || list.dataset.dndSetup === '1') return;
+    list.dataset.dndSetup = '1';
+
+    list.addEventListener('dragend', () => {
+        list.querySelectorAll('.part-card.dragging').forEach(el => el.classList.remove('dragging'));
+        list.querySelectorAll('.part-card.drag-over').forEach(el => el.classList.remove('drag-over'));
+        draggedPartId = null;
+    });
+
+    list.addEventListener('dragover', (e) => {
+        const card = e.target.closest('.part-card');
+        if (!card || !draggedPartId) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        list.querySelectorAll('.part-card.drag-over').forEach(el => el.classList.remove('drag-over'));
+        card.classList.add('drag-over');
+    });
+
+    list.addEventListener('dragleave', (e) => {
+        const card = e.target.closest('.part-card');
+        if (card && !card.contains(e.relatedTarget)) {
+            card.classList.remove('drag-over');
+        }
+    });
+
+    list.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        list.querySelectorAll('.part-card.drag-over').forEach(el => el.classList.remove('drag-over'));
+        const card = e.target.closest('.part-card');
+        const draggedId = draggedPartId;
+        draggedPartId = null;
+        if (!card || !draggedId || !state.selectedCategory) return;
+        const targetId = card.dataset.partId;
+        if (draggedId === targetId) return;
+
+        const PO = window.CharamakePartsOrder;
+        if (PO) {
+            PO.movePartBefore(state.data.parts, state.selectedCategory, draggedId, targetId);
+        }
+        localStorage.setItem('characterCreatorData', JSON.stringify(state.data));
+        renderParts();
+    });
+}
+
+function initPartsListDragAndDrop() {
+    if (elements.partsList) {
+        delete elements.partsList.dataset.dndSetup;
+    }
+    setupPartsListDragAndDrop();
 }
 
 // パーツ選択（編集画面を開く）
@@ -1887,6 +1963,12 @@ function savePart() {
             }
         });
     }
+
+    const PO = window.CharamakePartsOrder;
+    if (PO && (state.editingPart.order === undefined || state.editingPart.order === null ||
+        typeof state.editingPart.order !== 'number')) {
+        state.editingPart.order = PO.nextPartOrder(state.data.parts, state.editingPart.category);
+    }
     
     // 既存パーツを更新 or 新規追加
     const existingIndex = state.data.parts.findIndex(p => p.id === state.editingPart.id);
@@ -2129,6 +2211,11 @@ function duplicatePart(partId) {
     const newPart = JSON.parse(JSON.stringify(part));
     newPart.id = part.id + '_copy';
     newPart.name = part.name + ' (コピー)';
+
+    const PO = window.CharamakePartsOrder;
+    if (PO) {
+        newPart.order = PO.nextPartOrder(state.data.parts, newPart.category);
+    }
     
     state.data.parts.push(newPart);
     renderParts();
@@ -2600,7 +2687,7 @@ function updateOtherPartsSelector() {
 
 // 他パーツ選択用のセレクトボックスを作成
 function createOtherPartSelector(category, container) {
-    const parts = state.data.parts.filter(p => p.category === category.id);
+    const parts = getSortedPartsInCategory(category.id);
     if (parts.length === 0) return;
     
     const div = document.createElement('div');
@@ -2639,6 +2726,21 @@ function normalizeMetaInnerGroups() {
     }
 }
 
+function applyPartOrdersMigration() {
+    const PO = window.CharamakePartsOrder;
+    if (PO && state.data && state.data.parts) {
+        PO.ensurePartOrders(state.data.parts);
+    }
+}
+
+function getSortedPartsInCategory(categoryId) {
+    const PO = window.CharamakePartsOrder;
+    if (!state.data || !PO) {
+        return state.data ? state.data.parts.filter(p => p.category === categoryId) : [];
+    }
+    return PO.getPartsInCategory(state.data.parts, categoryId);
+}
+
 // JSON読込
 function loadJson() {
     elements.fileInput.click();
@@ -2653,6 +2755,7 @@ function handleJsonFileSelect(e) {
         try {
             state.data = JSON.parse(event.target.result);
             normalizeMetaInnerGroups();
+            applyPartOrdersMigration();
             
             applyCanvasSize();
             
@@ -2691,6 +2794,7 @@ function loadFromLocalStorage() {
         try {
             state.data = JSON.parse(saved);
             normalizeMetaInnerGroups();
+            applyPartOrdersMigration();
             applyCanvasSize();
         } catch (error) {
             console.error('LocalStorageの読み込みに失敗:', error);

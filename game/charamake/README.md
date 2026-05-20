@@ -15,6 +15,7 @@ game/charamake/
 ├── game.css
 ├── game.js
 ├── inner-groups.js      # インナーグループ共有ロジック
+├── parts-order.js       # パーツ一覧 order 共有ロジック
 ├── parts-data.json      # パーツマスターデータ（ゲームが自動読込）
 ├── sampledata.json      # 小さなサンプルデータ（エディタの動作確認用）
 ├── SPEC.md              # 詳細仕様書
@@ -35,6 +36,7 @@ game/charamake/
 - [x] 3カラム UI（カテゴリ / パーツ一覧 / 編集＋プレビュー）
 - [x] カテゴリ・カテゴリグループの管理
 - [x] パーツ CRUD（作成・編集・削除・複製）
+- [x] パーツ一覧の並び替え（`order` + ドラッグ＆ドロップ）
 - [x] レイヤー管理（追加・削除・並び替え、zIndex / side / blendMode / animated）
 - [x] 色設定（ブレンドモード＋専用画像、色相シフト対応）
 - [x] 依存関係（requires / unlocks / hides）
@@ -92,16 +94,17 @@ game/charamake/
    - 条件付き表示（hidden）
    - カラーグループ ID（同色連動用）
 2. **パーツ追加**: カテゴリ選択後、中央カラムの「+ 新規パーツ」
-3. **パーツ編集**: パーツカードの「編集」ボタン
-4. **レイヤー管理**: ファイルパス、zIndex、side（左/右）、blendMode、animated
-5. **色設定**: ブレンドモードまたは専用画像でプリセット追加、`allowCustomColor` の ON/OFF
-6. **依存関係**:
+3. **パーツ並び替え**: パーツカード左の `⋮⋮` ハンドルをドラッグ（`order` が JSON に保存される）
+4. **パーツ編集**: パーツカードをクリック（ハンドル・ボタン以外）
+5. **レイヤー管理**: ファイルパス、zIndex、side（左/右）、blendMode、animated
+6. **色設定**: ブレンドモードまたは専用画像でプリセット追加、`allowCustomColor` の ON/OFF
+7. **依存関係**:
    - `requires`: 必須パーツ
    - `unlocks`: 選択時に表示するカテゴリ
    - `hides`: 選択時に非表示にするカテゴリ（unlocks が優先）
-7. **インナーグループ**: メタデータ編集で IG マスタ登録 → レイヤーに IG・マスク画像 → アウターにマスク指定
-8. **プレビュー**: 右カラムのキャンバス。**マスク確認は「他パーツと重ねて表示」** でアウターも選択
-9. **保存**: 「パーツを保存」で編集中パーツを確定、「JSON出力」で `parts-data.json` をダウンロード
+8. **インナーグループ**: メタデータ編集で IG マスタ登録 → レイヤーに IG・マスク画像 → アウターにマスク指定
+9. **プレビュー**: 右カラムのキャンバス。**マスク確認は「他パーツと重ねて表示」** でアウターも選択
+10. **保存**: 「パーツを保存」で編集中パーツを確定、「JSON出力」で `parts-data.json` をダウンロード
 
 ### ゲーム
 
@@ -125,7 +128,7 @@ game/charamake/
 | `meta` | バージョン、キャンバスサイズ、`innerGroups`（IG マスタ） |
 | `categoryGroups` | UI 上のグループ（基本・顔・髪・服など） |
 | `categories` | 着せ替えカテゴリ（selectionMode, hidden, colorGroup 等） |
-| `parts` | パーツ定義（layers, colors, unlocks, hides, `masksInnerGroups` 等） |
+| `parts` | パーツ定義（`order`, layers, colors, unlocks, hides, `masksInnerGroups` 等） |
 | `layers[]` | `innerGroup`, `maskedFile`（任意） |
 
 ### character.json（保存データ）

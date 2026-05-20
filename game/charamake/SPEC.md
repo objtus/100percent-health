@@ -130,6 +130,7 @@ HTML+CSS+JavaScriptでキャラクターの着せ替え＆キャラクリエイ�
 | id | string | ✓ | パーツの一意識別子 |
 | name | string | ✓ | UI表示用の名前 |
 | category | string | ✓ | 所属カテゴリのID |
+| order | number | - | カテゴリ内のUI表示順（エディタ一覧・ゲームのパーツ選択順。`zIndex` とは別） |
 | zIndex | number | ✓ | 基本の重ね順序 |
 | layers | array | ✓ | 画像レイヤーの配列 |
 | colors | object | - | 色変更設定（後述） |
