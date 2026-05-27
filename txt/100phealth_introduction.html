@@ -160,6 +160,21 @@
           flex-shrink: 0;
         }
       }
+      dl {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 0.25em 1em;
+      }
+      dt {
+        margin-left: 1rem;
+        font-weight: bold;
+      }
+      dd {
+        margin: 0;
+      }
+      #keii p {
+        font-size: 0.8rem;
+      }
     }
   
     #texthtml,
@@ -266,6 +281,8 @@
           <ol id="toc-list">
             <li><a href="#about-this-site">このサイトについて</a></li>
             <li><a href="#contents">コンテンツ</a></li>
+            <li><a href="#disclaimer">免責事項</a></li>
+            <li><a href="#colophon">制作情報</a></li>
             <li><a href="#about-this-page">このページについて</a></li>
             <li><a href="#story-of-this-site">経緯の話</a></li>
             <li><a href="#change_log">更新履歴</a></li>
@@ -281,17 +298,16 @@
             <p>
               このサイトは、 <a href="/aboutme.html">yuinoid / いど子</a> の個人サイトであり、<span class="str">創作系個人サイトのスタイルを意識した<span class="bouten">ポートフォリオサイト</span></span>です。<br>
             </p>
-            <p>
-              このサイトは、<a href="https://neocities.org/site/yuinoid" target="_blank">neocities</a>によってホスティングされています。<br>
-              <br>
-              半自動更新のRSSフィードは<a href="/rss.xml" target="_blank"><span aria-hidden="true">♥</span>こちら</a>です。
-            </p>
+            <hr>
+            <p lang="en">This is the personal website of yuinoid (idoko), a portfolio site in the style of <abbr title="a Japanese web culture of handcrafted personal sites centered around original creative works.">創作系個人サイト</abbr>.</p>
           </div>
         </section>
         <section id="contents">
           <h3 class="heading_title">コンテンツ / <small title="contents" lang="en">contents</small><a href="#contents" class="header-link">§</a></h3>
           <div class="section-item">
-            <p><span class="str2"><ruby>主要<rt>おも</rt></ruby>なコーナーは 5つ </span>あります。</p>
+            <p lang="ja"><span class="str2"><ruby>主要<rt>おも</rt></ruby>なコーナーは 5つ </span>あります。</p>
+            <p lang="en">This site has <span class="str2">5 main sections</span>.</p>
+            <hr><br>
             <div class="content-item">
               <h4 class="content-title"><a href="/aboutme.html">about</a></h4>
               <div class="section-content">
@@ -380,6 +396,81 @@
             </div>
           </div>
         </section>
+        <section id="disclaimer">
+          <h2 class="heading_title">免責事項 / <small title="disclaimer" lang="en">disclaimer</small><a href="#disclaimer" class="header-link">§</a></h2>
+          <div class="section-item">
+            <h3 class="section-title" id="content-usage">コンテンツの利用について / <small title="content usage" lang="en">content usage</small><a href="#content-usage" class="header-link">§</a></h3>
+            <p lang="ja">
+              このサイトに掲載されているイラストおよびテキストの著作権は、特に表示のない限り yuinoid / いど子 に帰属します。<br>
+              <br>
+              イラストの利用については、比較的自由な立場をとっています。転載・加工・二次創作・R-18コンテンツへの利用など、常識的な範囲での利用を歓迎します。アイコン・ヘッダー・バナーなどへの個人利用も許可しています。
+              <br>
+              利用の際は、サイトのURLおよび権利者名（yuinoid / いど子）を表示していただけると助かります。義務ではありませんが、連絡をいただけると喜びます。<br>
+              <br>
+              自作発言はご遠慮ください。商用利用をご希望の場合は、事前にご相談ください。<br>
+              <br>
+              個別のコンテンツにライセンスが明示されている場合は、そちらに従ってください。<br>
+              <br>
+              なお、このページに記載している利用条件は、予告なく変更される場合があります。
+            </p>
+            <hr>
+            <p lang="en">
+              All illustrations and texts on this site are copyrighted by yuinoid / idoko, unless otherwise noted. <br>
+              <br>
+              I take a relatively open stance on the use of my illustrations. Reposting, modification, derivative works, and R-18 content are welcome within reasonable bounds. Personal use such as profile icons, headers, and banners is explicitly permitted. <br>
+              <br>
+              When using my work, I would appreciate credit in the form of the site URL and creator name (yuinoid / idoko). This is a request, not a requirement — but a heads-up is always welcome. <br>
+              <br>
+              Please do not claim the work as your own. For commercial use, please contact me in advance. <br>
+              <br>
+              If an individual work has an explicitly stated license, that license takes precedence. <br>
+              <br>
+              Please note that these terms may be updated at any time without prior notice.
+            </p>
+          </div>
+          <div class="section-item">
+            <h3 class="section-title" id="linking-and-crosslinks">相互リンクについて / <small title="linking and crosslinks" lang="en">Linking & Crosslinks</small><a href="#linking-and-crosslinks" class="header-link">§</a></h3>
+            <p lang="ja">
+              相互リンクは受け付けています。ご希望の方は<a href="/aboutme.html">aboutページ</a>に掲載しているSNSアカウントまでご連絡ください。
+            </p>
+            <hr>
+            <p lang="en">
+              Crosslinks are welcome. Please reach out via the SNS accounts listed on the <a href="/aboutme.html">about page</a>.
+            </p>
+          </div>
+        </section>
+        <section id="colophon">
+          <h2 class="heading_title">制作情報 / <small title="colophon" lang="en">colophon</small><a href="#colophon" class="header-link">§</a></h2>
+          <div class="section-item">
+            <p lang="ja">
+              このサイトは<a href="https://neocities.org" target="_blank">Neocities</a>にホスティングされています。
+            </p>
+            <p lang="en">
+              This site is hosted on <a href="https://neocities.org" target="_blank">Neocities</a>.
+            </p>
+            <hr>
+            <div class="colophon-grid">
+              <dl lang="en">
+                <dt>Since</dt>
+                <dd>2019</dd>
+                <dt>Hosting</dt>
+                <dd>Neocities</dd>
+                <dt>Editor</dt>
+                <dd>VSCode, Cursor</dd>
+                <dt>Font</dt>
+                <dd>Saitamaar</dd>
+                <dt>JavaScript library</dt>
+                <dd>jQuery</dd>
+                <dt>Analytics</dt>
+                <dd>GoatCounter</dd>
+                <dt>RSS Feed</dt>
+                <dd><a href="/rss.xml" target="_blank">/rss.xml</a></dd>
+                <dt>Illustration</dt>
+                <dd>iPad Pro + Apple Pencil + Procreate</dd>
+              </dl>
+            </div>
+          </div>
+        </section>
         <section id="about-this-page">
           <h2 class="heading_title">このページについて / <small title="about this page" lang="en">about this page</small><a href="#about-this-page" class="header-link">§</a></h2>
           <div class="section-item">
@@ -396,73 +487,42 @@
           </div>
         </section>
         <section id="story-of-this-site">
-          <details>
-            <summary aria-label="経緯の話の詳細を開くボタン">
-              <h2 class="heading_title"><ruby>経緯の話<rt>このサイトが生まれた流れ</rt></ruby> / <small title="story of this site" lang="en">story of this site</small><a href="#story-of-this-site" class="header-link">§</a></h2>
-            </summary>
-            <div class="section-item">
-              <div class="smalltext" id="keii">
+          <h2 class="heading_title"><ruby>経緯の話<rt>このサイトが生まれた流れ</rt></ruby> / <small title="story of this site" lang="en">story of this site</small><a href="#story-of-this-site" class="header-link">§</a></h2>
+          <div class="section-item">
+            <details>
+              <summary aria-label="経緯の話の詳細を開くボタン">
+              </summary>
+              <div id="keii">
                 <p>
-                  『100%health』は静的サイトホスティングサービスである<a href="https://neocities.org/site/yuinoid"
-                    target="_blank">「neocities」を利用</a>している。<br>
-                  <br>
-                  このサイトを作る前、私はTumblrブログ『<a href="https://yuinoid.tumblr.com" target="_blank">Girl's
-                    Surface</a>』でイラストを公開していた。<br>
-                  <br>
-                  『Girl's Surface』をはじめたのがいつ頃なのかは正直記憶が曖昧で定かでないが、Tumblr自体にはすでに数年前からアカウントを持っており、どんなSNSなのかは把握していた。<br>
-                  <br>
-                  『Girl's Surface』にイラストを公開しはじめたのが2017年06月頃だった。途中でイラストを整理しているため、現在残っている最も古いイラストは<a
-                    href="https://yuinoid.tumblr.com/post/162677154931" target="_blank"><time datetime="2017-07-07">2017年07月07日</time>のもの</a>である。<br>
-                  <br>
-                  neocitiesとの出会いは、当時Tumblrユーザーの一部の間でneocitoesに移行する人が増えており、それを見ていたことがきっかけだった。
+                  自分がはじめてインターネットに触れたのは小学5年生のころだった。西暦何年かはここには書かない。<br>
+                  web2.0の名のもとに企業のプラットフォームがインターネットを被い、電子や光が駆け巡っても、個人サイトの面影が消えてなくなるほど情報化されていない時代だった、といえるだろうか。
                 </p>
                 <p>
-                  はじめてインターネットに触れたのが小学5年生だった。それが西暦何年かはここには書かない。<br>
-                  <br>
-                  少しぼかして説明するならば、web2.0の名のもとに企業のプラットフォームがインターネットを被い、そのなかでユーザーがコミュニティを築くようになっても、web1.0的な「個人サイト」の面影が消えてなくなるほど情報化されていない時代だった、といえるだろうか。<br>
-                  <br>
-                  『100%health』のスタイルの源流にあるのは、当時見ていたような昔ながらの創作系個人サイトであり、なぜそうなったのかといえば、そうしたサイトにずっと憧れがあったからだった。
+                  ニコニコ動画やYouTube、各種SNSを使いながら育ってきた。そうしたプラットフォームの文化に多大な影響を受けてきたことは素直に認める。web2.0を単純に悪とは思っていない。プラットフォームの中央集権化と表裏の関係ではあるにせよ、web2.0がもたらした概念や技術の多くはそれ自体として評価できると思っている。<br>
+                  それでも、創作系個人サイトにはずっと憧れがあった。
                 </p>
                 <p>
-                  個人サイトをやりたいと思う直接のきっかけを考えてみると、<time datetime="2014">2014年</time>頃に2chの「<a href="https://w.atwiki.jp/vipts2/"
-                    target="_blank">VIPでテキストサイトやろうぜ</a>」というムーブメントを知ったことが挙げられるかもしれない。<br>
-                  <br>
-                  「VIPでテキストサイトやろうぜ」は「VIPでテキストサイトブームをまた引き起こそうぜｗｗｗｗｗｗｗｗ」という<time datetime="2013-05-01">2013年05月01日</time>に立てたれたスレからはじまるムーブメントで、まとめwikiが作成されるほど参加者が生まれていた。<br>
-                  <br>
-                  テキストサイト自体に思い入れはなく、どちらかといえばイラストやテキストをコンテンツにする創作系個人サイトのほうが憧れがあった。<br>
-                  <br>
-                  しかし、かつてあったインターネットを自分たちでもう一度再現するという試みに共感したのだった。
+                  2017年頃から『Girl's Surface』というTumblrブログでイラストを公開しはじめた。Tumblr自体にはすでに数年前からアカウントを持っていたが、イラストを公開しはじめたのはこの頃だった。途中でイラストを整理しているため、現在残っている最も古いイラストは2017年07月07日のものである。Tumblrにはvaporwaveに代表されるノスタルジックな画像文化や、web1.0風の個人サイトをTumblrブログ上に再現するという流れがあった。2010年代を通して、ノスタルジックモードを基調とする画像文化と、当時ポスト・インターネットアートなどと呼ばれていたコンセプチュアルなテーマを持ったTumblrブログをムードボード的・キュレーション的に運用する潮流は、相互参照しながら拡大していた。レトロなデザインをそのまま再現するベタなスタイルは好みではなかったが、横目で見ながら楽しそうだと思っていた。
                 </p>
                 <p>
-                  直接のきっかけをもうひとつ挙げるとすると、Tumblr独特の「aestethic」な文化のなかに、web1.0風の個人サイトをTumblrブログ上に再現するという流れがあったからだった。<br>
-                  <br>
-                  Tumblrの独特な画像文化は2010年代のインターネットを彩っていた。<br>
-                  <br>
-                  2010年代を通してTumblrを中心に、vaporwaveに代表されるノスタルジックモードを基調とする画像文化と、当時ポスト・インターネットアートなどと呼ばれていたコンセプチュアルなテーマを持ったTumblrブログをムードボード的・キュレーション的に運用する潮流が相互参照しながら同時に拡大していた。<br>
-                  <br>
-                  そうした流れのなかで、レトロデザイン風のテーマを自作して、リブログするそれぞれ好みの美学をTumblrブログ全体で演出する文化が生まれていった。<br>
-                  <br>
-                  自分個人としては、レトロなデザインをそのまま再現するようなベタなサイトは好みではなかったが、こうした文化を横目で見ながら、楽しそうでいいなあと思ったのを覚えている。
+                  個人サイトへの関心が具体的になったきっかけのひとつは、2014年頃に知った「VIPでテキストサイトやろうぜ」というムーブメントだった。2013年に2chで立てられたスレを発端とするこの運動は、まとめwikiが作られるほど参加者を集めていた。テキストサイト自体への思い入れはなかったが、運動としておもしろいと思ったし、かつてのインターネットを再現しようとする試みには共感した。
                 </p>
                 <p>
-                  実際にneocitiesのアカウントを取得したのは<time datetime="2019-07-18">2019年07月18日</time>のことで、翌日にmisskey.ioでURLを共有した。当初、公開してからしばらくはほとんどコンテンツがない状態だった。<br>
-                  <br>
-                  そこから、今の『100%health』の原型となるサイトができたのが<time datetime="2020-05">2020年05月</time>はじめのころだった。<br>
-                  <br>
-                  Tumblrブログのほうで公開していたイラストにはある程度リアクションが付くようになっていてうれしかった。しかし、TwitterやPixivといった大手プラットフォームにイラストを公開するのが、だんだんと嫌になってきていた。<br>
-                  <br>
-                  UCGなどといわれるように、コンテンツが一種の広告として利用されているように感じて、また、個々のプラットフォームのなかでアテンションを稼ぐよう急き立てられている感じがしていたからだった。これには被害妄想的なところもあるかもしれない。
+                  neocitiesへの移行を考えはじめたのは、Tumblrユーザーの一部がneocitiesに移行するのを見ていたことがきっかけだった。アカウントを取得したのは2019年07月18日で、翌日にmisskey.ioでURLを共有した。当初、公開してからしばらくはほとんどコンテンツがない状態だった。今の『100%health』の原型ができたのは2020年05月のことだった。
                 </p>
                 <p>
-                  個人サイトを作った理由を簡単にいえば、凝ったことはできないが、自分のペースで自分の絵を見せられる場が欲しかったということだ。<br>
-                  <br>
-                  さいごにまとめると、Tumblrでの活動、テキストサイト復興運動を目にしていたこと、自分の場をもちたいという欲求と関心が重なったことでこのサイトは生まれた。<br>
-                  <br>
-                  このようにして『100%health』は私達の元へ届けられている。
+                  Tumblrブログのほうで公開していたイラストにはある程度リアクションが付くようになっていてうれしかった。しかし個人サイトを作った動機は、思想的に整理されたものではなかった。タイムラインから逃げたかった、自分のUIで絵を見せたかった、キャプションを自由に書きたかった——そういった個人的な理由が重なったというのが正直なところだ。
+                </p>
+                <p>
+                  現在の『100%health』は、当初想定していたポートフォリオというより、描いたもの・書いたもののアーカイブや、実験的なページを置く場になっている。neocities的な個人サイトコミュニティでの交流も、今では大切な部分になっている。
+                </p>
+                <p>
+                  Tumblrでの活動、テキストサイト復興運動を目にしていたこと、自分の場をもちたいという欲求と関心が重なったことでこのサイトは生まれた。<br>
+                  このようにして『100%health』は私達の元へ届けられている。  
                 </p>
               </div>
-            </div>
-          </details>
+            </details>
+          </div>
         </section>
         <section id="change_log">
           <h2 class="heading_title"><ruby>更新履歴<rt>このページの変わった日</rt></ruby> / <small title="change log of this page" lang="en">change log</small><a href="#change_log" class="header-link">§</a></h2>
@@ -472,6 +532,7 @@
               <li><time datetime="2025-02-14">2025年02月14日</time>更新</li>
               <li><time datetime="2025-08-18">2025年08月18日</time>更新</li>
               <li><time datetime="2026-05-11">2026年05月11日</time>更新</li>
+              <li><time datetime="2026-05-27">2026年05月27日</time>更新</li>
             </ul>
           </div>
         </section>
