@@ -74,59 +74,41 @@
       
       <!-- 月別コンテンツ -->
       <div class="year-content">
+
+    <section class="month-section" id="month-05">
+      <h2><a href="/txt/zakki/2026/05/2026-05.html">2026年5月</a></h2>
+      <p class="month-info">1件の記事</p>
       
-        <section class="month-section" id="month-05">
-          <h2><a href="/txt/zakki/2026/05/2026-05.html">2026年5月</a></h2>
-          <p class="month-info">1件の記事</p>
+      <div class="month-articles">
+        <article class="daily-article" id="260526">
+<h3><a href="/txt/zakki/2026/05/days/2026-05-26.html"><time datetime="2026-05-26">2026-05-26</time></a></h3>
+<div class="article-preview"><h4 id="summary">概況 <a class="header-link" href="#summary">§</a></h4><p>
+                        最近雑記更新のモチベーションが落ちてて4か月くらい更新できませんでした。1月には毎月更新を目標だとか書いていたのに......。<br>
+<br/>
+                        やっていきましょうね。
+                      </br></p><h4 id="why">なぜ更新したか <a class="header-link" href="#why">§</a></h4><p>
+                        4か月更新していなかった雑記ページをなぜいま更新したか。そこにはとても深い理由があります。
+          
+                        まず、「ネオ日本語ウェブリング」について語らなければなりません。これはちょきさんが主催す<span class="ellipsis">...</span></p><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2026/05/days/2026-05-26.html">続きを読む / <span lang="en">read more</span></a></p></div>
+</article>
+      </div>
+    </section>
+    <section class="month-section" id="month-01">
+      <h2><a href="/txt/zakki/2026/01/2026-01.html">2026年1月</a></h2>
+      <p class="month-info">1件の記事</p>
       
-          <div class="month-articles">
-            <article class="daily-article" id="260526">
-              <h3><a href="/txt/zakki/2026/05/days/2026-05-26.html"><time datetime="2026-05-26">2026-05-26</time></a></h3>
-              <div class="article-preview">
-                <h4 id="summary">概況 <a class="header-link" href="#summary">§</a></h4>
-                <p>
-                  最近雑記更新のモチベーションが落ちてて4か月くらい更新できませんでした。1月には毎月更新を目標だとか書いていたのに......。<br>
-                  <br />
-                  やっていきましょうね。
-                  </br>
-                </p>
-                <h4 id="why">なぜ更新したか <a class="header-link" href="#why">§</a></h4>
-                <p>
-                  4か月更新していなかった雑記ページをなぜいま更新したか。そこにはとても深い理由があります。
-      
-                  まず、「ネオ日本語ウェブリング」について語らなければなりません。これはちょきさんが主催す<span class="ellipsis">...</span></p>
-                <h4 id="status">近況など <a class="header-link" href="#status">§</a></h4>
-                <p>追記予定</p>
-                <p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2026/05/days/2026-05-26.html">続きを読む /
-                    <span lang="en">read more</span></a></p>
-              </div>
-            </article>
-          </div>
-        </section>
-        <section class="month-section" id="month-01">
-          <h2><a href="/txt/zakki/2026/01/2026-01.html">2026年1月</a></h2>
-          <p class="month-info">1件の記事</p>
-      
-          <div class="month-articles">
-            <article class="daily-article" id="260131">
-              <h3><a href="/txt/zakki/2026/01/days/2026-01-31.html"><time datetime="2026-01-31">2026-01-31</time></a></h3>
-              <div class="article-preview">
-                <h4 id="greeting">あいさつ <a class="header-link" href="#greeting">§</a></h4>
-                <p>
-                  あけましておめでとうございます。今年もよろしくお願いします。<br>
-                  って、もう31日、もう2026年も一ヶ月終わりですよ。早いですね。
-                  </br></p>
-                <p>
-                  2026年は1ヶ月に1回は必ず雑記を更新するようにしたいと思っていたので、ギリギリですが更新します。今回は簡単にこの一ヶ月の振り返りをします。
-                </p>
-                <hr /><br />
-                <h4 id="summary-list">まとめの表 <a class="header-link" href="#summary-list">§</a></h4>
-                <p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2026/01/days/2026-01-31.html">続きを読む /
-                    <span lang="en">read more</span></a></p>
-              </div>
-            </article>
-          </div>
-        </section>
+      <div class="month-articles">
+        <article class="daily-article" id="260131">
+<h3><a href="/txt/zakki/2026/01/days/2026-01-31.html"><time datetime="2026-01-31">2026-01-31</time></a></h3>
+<div class="article-preview"><h4 id="greeting">あいさつ <a class="header-link" href="#greeting">§</a></h4><p>
+                        あけましておめでとうございます。今年もよろしくお願いします。<br>
+                        って、もう31日、もう2026年も一ヶ月終わりですよ。早いですね。
+                      </br></p><p>
+                        2026年は1ヶ月に1回は必ず雑記を更新するようにしたいと思っていたので、ギリギリですが更新します。今回は簡単にこの一ヶ月の振り返りをします。
+                      </p><hr/><br/><h4 id="summary-list">まとめの表 <a class="header-link" href="#summary-list">§</a></h4><p class="article-ellipsis"><a class="read-more-link" href="/txt/zakki/2026/01/days/2026-01-31.html">続きを読む / <span lang="en">read more</span></a></p></div>
+</article>
+      </div>
+    </section>
       </div>
       
       <!-- 下部ナビゲーション -->
