@@ -27,7 +27,7 @@ const yearPresets = {
     { name: '昭和一桁世代', start: 1926, end: 1934 },
     { name: 'Silent Generation', start: 1928, end: 1945 },
     { name: '焼け跡世代', start: 1935, end: 1946 },
-    { name: '全共闘世代', start: 1941, end: 1949 },
+    { name: '全共闘世代', start: 1945, end: 1949 },
     { name: 'Baby Boomers', start: 1946, end: 1964 },
     { name: '団塊の世代', start: 1947, end: 1949 },
     { name: 'しらけ世代', start: 1950, end: 1964 },

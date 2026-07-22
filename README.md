@@ -1,44 +1,42 @@
-# 100% Health
+# 100% Health — 個人サイト
 
-## プロジェクト概要
-個人的な作品、アート、タイムライン、メモなどを集めた個人的なウェブサイトのソースコードリポジトリです。様々な創作物や個人的な記録を保存・展示しています。
-
-## 主な機能
-- インタラクティブなギャラリーページ
-- 個人的なタイムライン
-- アート作品の展示
-- 様々な創作コンテンツ
+**URL**: https://yuinoid.neocities.org/
+**ソース**: `/workspace/100percent-health/`（git管理）
+**最終コミット**: `7b92ad1` "Update introduction page layout and content"
+**未ステージ変更**: 多数（300+ファイルに変更あり）
 
 ## サイト構成
-- `/gallery`: 画像ギャラリー
-- `/txt`: テキストベースのコンテンツ
-- `/links`: リンク集
-- `/js`: JavaScriptファイル
-- `/include`: 共通コンポーネント
-- `/img`: 画像リソース
 
-## 技術スタック
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- レスポンシブデザイン
+```
+100percent-health/
+├── index.html          トップページ
+├── aboutme.html        プロフィール
+├── style.css           メインCSS
+├── 1column.css         1カラム用CSS
+├── gallery/            画像ギャラリー（システム＋画像ページ＋タグ）
+├── txt/                文書（自己紹介・年表・メモ・雑記等）
+│   ├── txt_main.html
+│   ├── zakki/          雑記（月別アーカイブ）
+│   ├── generations/    ジェネレーションズ年表
+│   └── profile.html
+├── works/              作品一覧
+├── links/              リンク集（相互リンク・お気に入り等）
+├── game/               ゲーム（charamake キャラメイク他）
+├── dashboard/          自分用ダッシュボード（Misskey等）
+├── planet/             連合タイムラインページ
+├── guestbook/          ゲストブック
+├── misc/               その他
+├── include/            共通コンポーネント（ヘッダ・フッタ等）
+├── js/                 JavaScript
+├── img/                画像リソース
+├── scripts/            ビルドスクリプト（Python）
+├── rss.xml             RSSフィード
+└── update-rss.sh       RSS更新用スクリプト
+```
 
-## 特徴
-- クリーンでミニマルなデザイン
-- パーソナルな創作物の収集
-- インタラクティブな要素
-
-## セットアップ
-1. リポジトリをクローン
-2. ブラウザで `index.html` を直接開く
-
-## ライセンス
-プライベートリポジトリ - 許可なき使用・複製を禁じます
-
-## 注意
-本リポジトリは個人的な作品集であり、外部からの貢献は受け付けていません。
-
----
-
-## 補足
-このREADMEは、LLM（大規模言語モデル）によって自動生成されました。
+## メモ
+- `txt/100phealth_introduction.html` が最近更新された（最新コミット）
+- 大量の未ステージ変更がある（おそらく開発/編集作業の途中）
+- node_modules/ と .gitignore が肥大（92KB）
+- ギャラリーの画像ページが gallery/image-page/ と gallery/image-page_/ の2系統ある
+- `planet/` は自分のPlanet/連合タイムラインページ
