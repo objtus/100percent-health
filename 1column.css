@@ -156,8 +156,7 @@ a[href^="http"]::after {
   image-rendering: auto;
   margin-left: 3px;
   margin-right: 1px;
-  vertical-align: middle;
-  transform: translateY(-2px);
+  vertical-align: -2px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: inherit;
@@ -170,7 +169,7 @@ a[href^="http"]:hover::after {
 .article-body a[href^="http"]::after {
   width: 12px;
   height: 20px;
-  transform: translateY(-3px);
+  vertical-align: -3px;
 }
 
 #galleryspace a[href^="http"]::after {
@@ -302,10 +301,9 @@ a.addressbar {
 
       a::before {
         content: "";
-        background-image: url("/favicon.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
+        background-color: #000;
+        -webkit-mask: url("/favicon.svg") center / contain no-repeat;
+        mask: url("/favicon.svg") center / contain no-repeat;
         display: inline-block;
         width: 11px;
         height: 11px;
@@ -892,10 +890,9 @@ nav {
 
 .nav-links li::before {
   content: "";
-  background-image: url("/favicon.svg");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-color: #000;
+  -webkit-mask: url("/favicon.svg") center / contain no-repeat;
+  mask: url("/favicon.svg") center / contain no-repeat;
   display: inline-block;
   width: 11px;
   height: 11px;
@@ -1166,7 +1163,7 @@ nav {
 @media screen and (width <= 576px) {
   #category-header {
     margin-top: 20px;
-    width: 75%;
+    /* width: 75%; */
 
     .main-category,
     .sub-category {
@@ -1201,7 +1198,7 @@ nav {
   }
   
   #wrapper {
-    border: 5px solid #000;
+    border: 0 solid #000;
     border-top: none;
     border-right: none;
     border-bottom: none;

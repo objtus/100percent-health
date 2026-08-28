@@ -5,9 +5,17 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Tue, 21 Jul 2026 23:52:07 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 28 Aug 2026 20:48:20 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>txtにinternet aesthetic: a genealogyを追加</title>
+      <link>https://yuinoid.neocities.org/txt/internet-aesthetic-a-genealogy/index.html</link>
+      <description>txtページに &#39;&#39;インターネット美学の系譜&#39;&#39; を追加しました。インターネット美学の系譜をまとめたページです。序文除き全8章構成です。</description>
+      <pubDate>Fri, 28 Aug 2026 20:45:42 GMT</pubDate>
+      <category>txt</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#wmrs3n-20260829</guid>
+    </item>
     <item>
       <title>2026年07月21日の雑記ページを追加</title>
       <link>https://yuinoid.neocities.org/txt/zakki/2026/07/days/2026-07-21.html</link>
@@ -159,14 +167,6 @@
       <pubDate>Fri, 12 Dec 2025 07:47:22 GMT</pubDate>
       <category>zakki</category>
       <guid isPermaLink="false">https://yuinoid.neocities.org/rss#5hotdk-20251212</guid>
-    </item>
-    <item>
-      <title>分散SNS関連年表を更新</title>
-      <link>https://yuinoid.neocities.org/txt/my_dsns_timeline.html</link>
-      <description>年表を更新しました。できごとを追記・一部再編集したほか、フィルタリングシステムやカテゴリを変更しています。</description>
-      <pubDate>Fri, 12 Dec 2025 07:47:22 GMT</pubDate>
-      <category>txt</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#x8i9vv-20251212</guid>
     </item>
   </channel>
 </rss>

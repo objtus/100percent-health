@@ -134,10 +134,9 @@
         min-width: 80px;
         a::before {
           content: "";
-          background-image: url(/favicon.svg);
-          background-size: contain;
-          background-repeat: no-repeat;
-          background-position: center;
+          background-color: #000;
+          -webkit-mask: url(/favicon.svg) center / contain no-repeat;
+          mask: url(/favicon.svg) center / contain no-repeat;
           display: inline-block;
           width: 16px;
           height: 16px;

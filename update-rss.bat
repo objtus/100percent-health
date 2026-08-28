@@ -1,5 +1,8 @@
 @echo off
-chcp 65001 > nul
+setlocal
+cd /d "%~dp0"
+chcp 65001 >nul
+
 title RSS Feed Generator - 100%health
 
 echo.
@@ -8,58 +11,56 @@ echo     100%health RSS Feed Generator
 echo ===============================================
 echo.
 
-echo [1/3] Node.jsの確認中...
-node --version > nul 2>&1
+echo [1/3] Checking Node.js...
+node --version >nul 2>&1
 if errorlevel 1 (
-    echo ❌ エラー: Node.jsがインストールされていません
-    echo    https://nodejs.org/ からダウンロードしてください
+    echo ERROR: Node.js is not installed.
+    echo Download from https://nodejs.org/
     echo.
     pause
     exit /b 1
 )
-echo ✅ Node.js が利用可能です
+echo OK: Node.js is available.
 
 echo.
-echo [2/3] 依存関係の確認中...
+echo [2/3] Checking dependencies...
 if not exist "node_modules" (
-    echo 📦 初回セットアップ: npm install を実行中...
-    npm install
+    echo Running npm install...
+    call npm install
     if errorlevel 1 (
-        echo ❌ エラー: npm install に失敗しました
+        echo ERROR: npm install failed.
         pause
         exit /b 1
     )
-    echo ✅ セットアップ完了
+    echo OK: Setup complete.
 ) else (
-    echo ✅ 依存関係は既にインストール済みです
+    echo OK: node_modules already exists.
 )
 
 echo.
-echo [3/3] RSS生成中...
-echo 📄 changelog.html を解析しています...
+echo [3/3] Generating RSS from changelog.html...
 
 node rss-generator.js
 if errorlevel 1 (
-    echo ❌ エラー: RSS生成に失敗しました
-    echo    changelog.htmlの形式を確認してください
+    echo ERROR: RSS generation failed.
+    echo Check include/changelog.html format.
     echo.
     pause
     exit /b 1
 )
 
 echo.
-echo ✅ RSS生成完了！
-echo 📁 ファイル: rss.xml
-echo 🌐 サイズ: 
-for %%A in (rss.xml) do echo    %%~zA bytes
+echo OK: rss.xml generated.
+if exist "rss.xml" for %%A in (rss.xml) do echo Size: %%~zA bytes
 
 echo.
-echo 📋 次のステップ:
-echo    1. rss.xml をNeocitiesにアップロード
-echo    2. サイトで https://your-site.neocities.org/rss.xml を確認
+echo Next steps:
+echo   1. Upload rss.xml to Neocities
+echo   2. Open /rss.xml on your site to verify
 echo.
 echo ===============================================
-echo            処理が完了しました
+echo Done.
 echo ===============================================
 echo.
 pause
+endlocal
