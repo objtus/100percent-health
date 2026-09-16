@@ -277,7 +277,7 @@ def pandoc_html_fragment(md: str) -> str:
     if not md.strip():
         return ""
     result = subprocess.run(
-        ["pandoc", "--from=markdown", "--to=html", "--wrap=none"],
+        ["pandoc", "--from=markdown-citations", "--to=html", "--wrap=none"],
         input=md,
         capture_output=True,
         text=True,
