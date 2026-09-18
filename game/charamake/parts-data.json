@@ -319,6 +319,23 @@
           "animated": false
         }
       ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
       "order": 10
     },
     {
@@ -332,6 +349,23 @@
           "animated": false
         }
       ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
       "unlocks": [],
       "order": 20
     },
@@ -346,6 +380,23 @@
           "animated": false
         }
       ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
       "unlocks": [],
       "order": 30
     },
@@ -360,6 +411,23 @@
           "animated": false
         }
       ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
       "unlocks": [],
       "order": 40
     },
@@ -374,6 +442,23 @@
           "animated": false
         }
       ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
       "unlocks": [],
       "order": 50
     },
@@ -388,6 +473,23 @@
           "animated": false
         }
       ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
       "unlocks": [],
       "order": 60
     },
@@ -402,6 +504,23 @@
           "animated": false
         }
       ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
       "unlocks": [],
       "order": 70
     },
