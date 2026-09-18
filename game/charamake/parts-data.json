@@ -141,6 +141,24 @@
       "order": 30
     },
     {
+      "id": "frame1-clock",
+      "name": "枠（時刻）",
+      "category": "frame",
+      "zIndex": 1000,
+      "layers": [
+        {
+          "file": "parts/basics/frame/frame1.png",
+          "animated": false
+        }
+      ],
+      "dynamicOverlay": {
+        "type": "datetime",
+        "signature": "♥100%health"
+      },
+      "unlocks": [],
+      "order": 10
+    },
+    {
       "id": "frame1",
       "name": "枠",
       "category": "frame",
@@ -152,7 +170,20 @@
         }
       ],
       "unlocks": [],
-      "order": 10
+      "order": 20
+    },
+    {
+      "id": "frame-test",
+      "name": "枠なし",
+      "category": "frame",
+      "zIndex": 1000,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 30
     },
     {
       "id": "pupil1",
@@ -2060,7 +2091,8 @@
       "order": 10,
       "unlocks": [
         "shirts1-collar",
-        "shirts1-sleeve"
+        "shirts1-sleeve",
+        "cardigan"
       ]
     },
     {
@@ -2074,7 +2106,10 @@
           "animated": false
         }
       ],
-      "order": 20
+      "order": 20,
+      "unlocks": [
+        "cardigan"
+      ]
     },
     {
       "id": "shirts1-collar1",
@@ -2114,19 +2149,6 @@
         }
       ],
       "order": 10
-    },
-    {
-      "id": "frame-test",
-      "name": "枠なし",
-      "category": "frame",
-      "zIndex": 1000,
-      "layers": [
-        {
-          "file": "parts/none.png",
-          "animated": false
-        }
-      ],
-      "order": 20
     },
     {
       "id": "shirts1-sleeve1",
@@ -2438,7 +2460,7 @@
     {
       "id": "none",
       "name": "なし",
-      "category": "blush",
+      "category": "cardigan",
       "zIndex": 100,
       "layers": [
         {
@@ -2446,7 +2468,7 @@
           "animated": false
         }
       ],
-      "order": 10
+      "order": 20
     },
     {
       "id": "blush1",
@@ -2528,6 +2550,26 @@
           "file": "parts/face/blush/blush6.png",
           "animated": false,
           "blendMode": "multiply"
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "cardigan",
+      "name": "カーディガン",
+      "category": "cardigan",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/clothes/tops/cardigan/cardigan.png",
+          "animated": false
+        },
+        {
+          "file": "parts/none.png",
+          "animated": false,
+          "poseFiles": {
+            "peace": "parts/clothes/tops/cardigan/cardigan-peace.png"
+          }
         }
       ],
       "order": 30
@@ -2776,6 +2818,14 @@
       "selectionMode": "single",
       "group": "hair",
       "hidden": false
+    },
+    {
+      "id": "cardigan",
+      "name": "カーディガン",
+      "order": 230,
+      "selectionMode": "single",
+      "hidden": true,
+      "group": "cloches"
     }
   ],
   "categoryGroups": [
