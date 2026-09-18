@@ -141,24 +141,6 @@
       "order": 30
     },
     {
-      "id": "frame1-clock",
-      "name": "枠（時刻）",
-      "category": "frame",
-      "zIndex": 1000,
-      "layers": [
-        {
-          "file": "parts/basics/frame/frame1.png",
-          "animated": false
-        }
-      ],
-      "dynamicOverlay": {
-        "type": "datetime",
-        "signature": "♥100%health"
-      },
-      "unlocks": [],
-      "order": 10
-    },
-    {
       "id": "frame1",
       "name": "枠",
       "category": "frame",
@@ -170,7 +152,7 @@
         }
       ],
       "unlocks": [],
-      "order": 20
+      "order": 10
     },
     {
       "id": "pupil1",
@@ -337,7 +319,6 @@
           "animated": false
         }
       ],
-      "unlocks": [],
       "order": 10
     },
     {
@@ -435,8 +416,24 @@
           "animated": false
         }
       ],
-      "unlocks": [],
-      "order": 80
+      "order": 80,
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      }
     },
     {
       "id": "iris_none",
@@ -715,73 +712,6 @@
       ],
       "colors": {},
       "order": 10
-    },
-    {
-      "id": "blush1",
-      "name": "頬ブラシ1",
-      "category": "blush",
-      "zIndex": 105,
-      "layers": [
-        {
-          "file": "parts/face/blush/blush1.png",
-          "animated": false
-        }
-      ],
-      "order": 10
-    },
-    {
-      "id": "blush2",
-      "name": "頬ブラシ2",
-      "category": "blush",
-      "zIndex": 105,
-      "layers": [
-        {
-          "file": "parts/face/blush/blush2.png",
-          "animated": false
-        }
-      ],
-      "order": 20
-    },
-    {
-      "id": "blush3",
-      "name": "頬ブラシ3",
-      "category": "blush",
-      "zIndex": 105,
-      "layers": [
-        {
-          "file": "parts/face/blush/blush3.png",
-          "animated": false
-        }
-      ],
-      "order": 30
-    },
-    {
-      "id": "blush4",
-      "name": "頬ブラシ4",
-      "category": "blush",
-      "zIndex": 105,
-      "layers": [
-        {
-          "file": "parts/face/blush/blush4.png",
-          "animated": false,
-          "blendMode": "multiply"
-        }
-      ],
-      "order": 40
-    },
-    {
-      "id": "blush5",
-      "name": "頬ブラシ5",
-      "category": "blush",
-      "zIndex": 105,
-      "layers": [
-        {
-          "file": "parts/face/blush/blush5.png",
-          "animated": false,
-          "blendMode": "multiply"
-        }
-      ],
-      "order": 50
     },
     {
       "id": "ears1",
@@ -2087,7 +2017,7 @@
           "animated": false
         }
       ],
-      "order": 30
+      "order": 20
     },
     {
       "id": "shirts1-sleeve1",
@@ -2395,6 +2325,103 @@
         }
       ],
       "order": 10
+    },
+    {
+      "id": "none",
+      "name": "なし",
+      "category": "blush",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "blush1",
+      "name": "頬ブラシ1",
+      "category": "blush",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush1.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "blush2",
+      "name": "頬ブラシ2",
+      "category": "blush",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush2.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "blush3",
+      "name": "頬ブラシ3",
+      "category": "blush",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush3.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "blush4",
+      "name": "頬ブラシ4",
+      "category": "blush",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush4.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "blush5",
+      "name": "頬ブラシ5",
+      "category": "blush",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush5.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "blush6",
+      "name": "頬ブラシ6",
+      "category": "blush",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/face/blush/blush6.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ],
+      "order": 30
     }
   ],
   "categories": [
@@ -2453,7 +2480,8 @@
       "order": 20,
       "selectionMode": "single",
       "group": "face",
-      "hidden": false
+      "hidden": false,
+      "colorGroup": "skin"
     },
     {
       "id": "iris",
