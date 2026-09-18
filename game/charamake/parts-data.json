@@ -51,7 +51,17 @@
       "colors": {
         "肌色1": {
           "blend": "multiply",
-          "color": "#f3efec",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
           "opacity": 1
         }
       },
@@ -131,6 +141,24 @@
       "order": 30
     },
     {
+      "id": "frame1-clock",
+      "name": "枠（時刻）",
+      "category": "frame",
+      "zIndex": 1000,
+      "layers": [
+        {
+          "file": "parts/basics/frame/frame1.png",
+          "animated": false
+        }
+      ],
+      "dynamicOverlay": {
+        "type": "datetime",
+        "signature": "♥100%health"
+      },
+      "unlocks": [],
+      "order": 10
+    },
+    {
       "id": "frame1",
       "name": "枠",
       "category": "frame",
@@ -142,7 +170,7 @@
         }
       ],
       "unlocks": [],
-      "order": 10
+      "order": 20
     },
     {
       "id": "pupil1",
@@ -770,7 +798,24 @@
           "animated": false
         }
       ],
-      "order": 10
+      "order": 10,
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      }
     },
     {
       "id": "eyebrows1",
@@ -1120,7 +1165,17 @@
       "colors": {
         "肌色1": {
           "blend": "multiply",
-          "color": "#f3efec",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
           "opacity": 1
         }
       },
@@ -2032,7 +2087,7 @@
           "animated": false
         }
       ],
-      "order": 20
+      "order": 30
     },
     {
       "id": "shirts1-sleeve1",

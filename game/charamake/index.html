@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>healthy charamaker - 100%health</title>
+  <meta name="description" content="100%health のキャラクター着せ替えメーカー。">
+  <base href="/game/charamake/">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/1column.css">
+  <link rel="stylesheet" href="/game/charamake/charamake.css">
+  <script src="/js/jquery-3.6.0.min.js" defer></script>
+  <script src="/js/main.js" defer></script>
+  <script src="/js/mouse.js" defer></script>
+</head>
+
+<body class="charamake-page">
+  <div id="wrapper">
+    <header id="header">
+      <div id="header-flex">
+        <nav id="back" aria-label="戻るナビゲーション">
+          <a id="backicon" href="/misc/index.html">&lt;</a>
+        </nav>
+        <nav id="address" class="addressbar" aria-label="パンくずナビゲーション">
+          <ol class="breadcrumb">
+            <li><a href="/index.html">100%health</a></li>
+            <li><a href="/misc/index.html">misc</a></li>
+            <li aria-current="page"><a href="/game/charamake/">healthy charamaker</a></li>
+          </ol>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <header id="category-header">
+        <nav aria-label="カテゴリナビゲーション">
+          <ol class="main-category">
+            <li><a href="/aboutme.html">about</a></li>
+            <li><a href="/gallery/gallery_main.html">gallery</a></li>
+            <li><a href="/works/works_main.html">works</a></li>
+            <li><a href="/txt/txt_main.html">txt</a></li>
+            <li><a href="/links/links_main.html">links</a></li>
+            <li><a href="/misc/index.html">misc</a></li>
+          </ol>
+          <ol class="sub-category">
+            <li><a href="/misc/index.html">misc</a></li>
+            <li><a href="/changelog_main.html">changelog</a></li>
+            <li><a href="/guestbook/">guestbook</a></li>
+            <li><a href="/planet/index.html">planet</a></li>
+            <li aria-current="page"><a href="/game/charamake/">healthy charamaker</a></li>
+          </ol>
+        </nav>
+      </header>
+
+      <div id="galleryspace">
+        <h1 class="title">healthy charamaker</h1>
+        <p class="charamake-lead">パーツを選んでキャラクターを組み立てます。キャラの保存・読込と PNG 出力ができます。</p>
+
+        <div id="charamake-app" aria-label="healthy charamaker" data-hide-custom-color="true">
+          <div id="charamake-toolbar" class="charamake-toolbar">
+            <div class="charamake-toolbar-actions">
+              <div class="secret-unlock-bar">
+                <input type="password" id="secretPasswordInput" class="secret-password-input"
+                  placeholder="シークレット" autocomplete="off">
+                <button type="button" id="submitSecretBtn" class="btn btn-small">解放</button>
+                <span id="secretMessage" class="secret-message" aria-live="polite"></span>
+              </div>
+              <button type="button" id="loadDataBtn" class="btn charamake-hidden" tabindex="-1" hidden>JSONを再読込</button>
+              <button type="button" id="loadCharacterBtn" class="btn">キャラ読込</button>
+              <button type="button" id="saveCharacterBtn" class="btn btn-primary">キャラ保存</button>
+              <button type="button" id="exportPngBtn" class="btn btn-accent">PNG出力</button>
+            </div>
+          </div>
+
+          <div class="charamake-layout">
+            <section class="preview-section charamake-stage" aria-labelledby="charamake-preview-heading">
+              <h2 id="charamake-preview-heading" class="charamake-panel-heading">プレビュー</h2>
+              <div class="preview-canvas-wrapper">
+                <canvas id="previewCanvas" width="800" height="900"></canvas>
+              </div>
+            </section>
+
+            <div class="charamake-workspace">
+              <div class="mobile-tabs" role="tablist" aria-label="着せ替えパネル">
+                <button type="button" class="tab-btn active" data-tab="categories" role="tab" aria-selected="true">カテゴリ</button>
+                <button type="button" class="tab-btn" data-tab="controls" role="tab" aria-selected="false">パーツ・色</button>
+              </div>
+
+              <div class="charamake-workspace-grid">
+                <aside class="charamake-panel charamake-panel--categories tab-content active-tab"
+                  data-tab-content="categories" aria-labelledby="charamake-categories-heading">
+                  <h2 id="charamake-categories-heading" class="charamake-panel-heading">カテゴリ</h2>
+                  <div id="categoryList" class="category-list"></div>
+                </aside>
+
+                <section class="control-section charamake-panel charamake-panel--controls tab-content active-tab"
+                  data-tab-content="controls" aria-labelledby="charamake-controls-heading">
+                  <div id="partsSelector" class="parts-selector-area">
+                    <h3 id="currentCategoryName">パーツを選択</h3>
+                    <div id="partsGrid" class="parts-grid">
+                      <p class="placeholder">カテゴリを選択してください</p>
+                    </div>
+                  </div>
+
+                  <div id="colorSettings" class="color-settings-area" style="display:none;">
+                    <h3>パーツ設定</h3>
+                    <div id="partSettingsExtensions" class="part-settings-extensions" aria-live="polite"></div>
+                    <div id="colorPresetBlock" class="form-group">
+                      <label>色プリセット:</label>
+                      <div id="colorPresetSelector" class="color-preset-buttons"></div>
+                    </div>
+                    <div id="advancedColorSettings" style="display:none;">
+                      <h4>拡張設定</h4>
+                      <div class="form-group">
+                        <label>ブレンドモード:</label>
+                        <select id="customBlendMode">
+                          <option value="multiply">multiply</option>
+                          <option value="screen">screen</option>
+                          <option value="overlay">overlay</option>
+                          <option value="darken">darken</option>
+                          <option value="lighten">lighten</option>
+                          <option value="color-dodge">color-dodge</option>
+                          <option value="color-burn">color-burn</option>
+                          <option value="hard-light">hard-light</option>
+                          <option value="soft-light">soft-light</option>
+                          <option value="difference">difference</option>
+                          <option value="exclusion">exclusion</option>
+                          <option value="hue">hue</option>
+                          <option value="saturation">saturation</option>
+                          <option value="color">color</option>
+                          <option value="luminosity">luminosity</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>カラー:</label>
+                        <input type="color" id="customColor" value="#000000">
+                      </div>
+                      <div class="form-group">
+                        <label>不透明度:</label>
+                        <input type="range" id="customOpacity" min="0" max="1" step="0.1" value="1">
+                        <span id="opacityValue">1.0</span>
+                      </div>
+                      <div class="form-group">
+                        <label>色相回転:</label>
+                        <input type="range" id="customHueShift" min="-180" max="180" step="1" value="0">
+                        <span id="hueShiftValue">0°</span>
+                      </div>
+                      <div class="form-group">
+                        <label>色相適用度:</label>
+                        <input type="range" id="customHueOpacity" min="0" max="1" step="0.1" value="0">
+                        <span id="hueOpacityValue">0.0</span>
+                      </div>
+                      <div class="form-group">
+                        <button type="button" id="applyCustomColorBtn" class="btn btn-small">適用</button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div id="dependencyFeed" class="dependency-feed" aria-live="polite" aria-label="依存関係の変化"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer id="main-footer">
+      <div id="footerhtml"></div>
+    </footer>
+  </div>
+
+  <input type="file" id="dataFileInput" accept=".json" class="charamake-hidden" hidden>
+  <input type="file" id="characterFileInput" accept=".json" class="charamake-hidden" hidden>
+
+  <script src="/game/charamake/inner-groups.js"></script>
+  <script src="/game/charamake/layer-resolve.js"></script>
+  <script src="/game/charamake/secrets.js"></script>
+  <script src="/game/charamake/dependencies.js"></script>
+  <script src="/game/charamake/parts-order.js"></script>
+  <script src="/game/charamake/game.js"></script>
+</body>
+
+</html>

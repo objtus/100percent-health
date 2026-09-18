@@ -15,8 +15,12 @@ const state = {
     hiddenByParts: new Set(), // hides により動的に非表示になっているカテゴリ
     hiddenPartIds: new Set(), // hides により動的に非表示になっているパーツ
     unlockedSecrets: new Set(), // パスワードで解放したシークレット束 ID
-    previouslyUnlockedSecrets: new Set() // 新規解放時の先頭自動選択用
+    previouslyUnlockedSecrets: new Set(), // 新規解放時の先頭自動選択用
+    clockDisplayMode: 'jst' // 時刻枠 overlay: jst | local | unix | both
 };
+
+let previewDrawPromise = Promise.resolve();
+let clockTickInterval = null;
 
 // DOM要素
 const elements = {
@@ -27,7 +31,9 @@ const elements = {
     colorSettings: document.getElementById('colorSettings'),
     colorPresetSelector: document.getElementById('colorPresetSelector'),
     dataFileInput: document.getElementById('dataFileInput'),
-    characterFileInput: document.getElementById('characterFileInput')
+    characterFileInput: document.getElementById('characterFileInput'),
+    partSettingsExtensions: document.getElementById('partSettingsExtensions'),
+    colorPresetBlock: document.getElementById('colorPresetBlock')
 };
 
 // 初期化
@@ -71,6 +77,7 @@ function loadDefaultPartsData() {
             // カテゴリ一覧を表示
             renderCategories();
             updatePreview();
+            syncClockTick();
         })
         .catch(error => {
             console.error('パーツデータの読み込みに失敗:', error);
@@ -273,8 +280,28 @@ function renderCategories() {
             elements.categoryList.appendChild(div);
         });
         
-        // グループごとに表示
-        groups.sort((a, b) => a.order - b.order).forEach(group => {
+        // グループごとに表示（同時に開くのは1グループのみ）
+        const sortedGroups = groups.sort((a, b) => a.order - b.order);
+        let openGroupId = null;
+        if (state.currentCategory) {
+            const currentCat = state.partsData.categories.find(c => c.id === state.currentCategory);
+            if (currentCat && currentCat.group) {
+                openGroupId = currentCat.group;
+            }
+        }
+        if (!openGroupId) {
+            for (const group of sortedGroups) {
+                const visible = state.partsData.categories
+                    .filter(c => c.group === group.id)
+                    .filter(isCategoryVisible);
+                if (visible.length > 0) {
+                    openGroupId = group.id;
+                    break;
+                }
+            }
+        }
+
+        sortedGroups.forEach(group => {
             const groupCategories = state.partsData.categories
                 .filter(c => c.group === group.id)
                 .sort((a, b) => a.order - b.order);
@@ -282,7 +309,7 @@ function renderCategories() {
             const visibleCategories = groupCategories.filter(isCategoryVisible);
             
             if (visibleCategories.length > 0) {
-                const groupDiv = createCategoryGroup(group, visibleCategories);
+                const groupDiv = createCategoryGroup(group, visibleCategories, group.id === openGroupId);
                 elements.categoryList.appendChild(groupDiv);
             }
         });
@@ -343,13 +370,16 @@ function createCategoryItem(category) {
 }
 
 // カテゴリグループを作成
-function createCategoryGroup(group, categories) {
+function createCategoryGroup(group, categories, startOpen = false) {
     const groupDiv = document.createElement('div');
-    groupDiv.className = 'category-group';
+    groupDiv.className = 'category-group' + (startOpen ? ' category-group--open' : '');
     
-    const header = document.createElement('div');
+    const header = document.createElement('button');
+    header.type = 'button';
     header.className = 'category-group-header';
-    header.innerHTML = `<span class="group-toggle">▼</span> ${group.name}`;
+    header.setAttribute('aria-expanded', startOpen ? 'true' : 'false');
+    header.setAttribute('aria-controls', `category-group-${group.id}`);
+    header.innerHTML = `<span class="group-toggle" aria-hidden="true">›</span><span class="category-group-name">${group.name}</span>`;
     header.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleCategoryGroup(group.id);
@@ -357,31 +387,56 @@ function createCategoryGroup(group, categories) {
     groupDiv.appendChild(header);
     
     const content = document.createElement('div');
-    content.className = 'category-group-content';
+    content.className = 'category-group-content' + (startOpen ? '' : ' category-group-content--collapsed');
     content.id = `category-group-${group.id}`;
     
+    const inner = document.createElement('div');
+    inner.className = 'category-group-content-inner';
     categories.forEach(category => {
         const div = createCategoryItem(category);
-        div.classList.add('grouped-item'); // グループ内アイテム用のクラス
-        content.appendChild(div);
+        div.classList.add('grouped-item');
+        inner.appendChild(div);
     });
+    content.appendChild(inner);
     
     groupDiv.appendChild(content);
     return groupDiv;
 }
 
-// カテゴリグループの折りたたみ切り替え
+function setCategoryGroupOpen(groupId, open) {
+    const content = document.getElementById(`category-group-${groupId}`);
+    if (!content) return;
+    const groupDiv = content.closest('.category-group');
+    const header = groupDiv?.querySelector('.category-group-header');
+    if (!groupDiv || !header) return;
+
+    if (open) {
+        content.classList.remove('category-group-content--collapsed');
+        groupDiv.classList.add('category-group--open');
+        header.setAttribute('aria-expanded', 'true');
+    } else {
+        content.classList.add('category-group-content--collapsed');
+        groupDiv.classList.remove('category-group--open');
+        header.setAttribute('aria-expanded', 'false');
+    }
+}
+
+// カテゴリグループの折りたたみ（アコーディオン: 同時に1つだけ開く）
 function toggleCategoryGroup(groupId) {
     const content = document.getElementById(`category-group-${groupId}`);
-    const header = content.previousElementSibling;
-    const toggle = header.querySelector('.group-toggle');
-    
-    if (content.style.display === 'none') {
-        content.style.display = 'block';
-        toggle.textContent = '▼';
+    if (!content) return;
+    const willOpen = content.classList.contains('category-group-content--collapsed');
+
+    if (willOpen) {
+        elements.categoryList.querySelectorAll('.category-group-content').forEach(el => {
+            const id = el.id.replace('category-group-', '');
+            if (id !== groupId) {
+                setCategoryGroupOpen(id, false);
+            }
+        });
+        setCategoryGroupOpen(groupId, true);
     } else {
-        content.style.display = 'none';
-        toggle.textContent = '▶';
+        setCategoryGroupOpen(groupId, false);
     }
 }
 
@@ -419,6 +474,8 @@ function selectCategory(categoryId) {
 function updateColorSettingsForCurrentCategory() {
     if (!state.currentCategory) {
         elements.colorSettings.style.display = 'none';
+        clearPartSettingsExtensions();
+        syncClockTick();
         return;
     }
     
@@ -435,6 +492,8 @@ function updateColorSettingsForCurrentCategory() {
             }
         }
         elements.colorSettings.style.display = 'none';
+        clearPartSettingsExtensions();
+        syncClockTick();
         return;
     }
     
@@ -442,6 +501,8 @@ function updateColorSettingsForCurrentCategory() {
     
     if (!selectedPartId) {
         elements.colorSettings.style.display = 'none';
+        clearPartSettingsExtensions();
+        syncClockTick();
         return;
     }
     
@@ -451,6 +512,8 @@ function updateColorSettingsForCurrentCategory() {
         updateColorSettings(part);
     } else {
         elements.colorSettings.style.display = 'none';
+        clearPartSettingsExtensions();
+        syncClockTick();
     }
 }
 
@@ -460,6 +523,8 @@ function renderParts() {
         elements.partsGrid.innerHTML = '<p class="placeholder">カテゴリを選択してください</p>';
         elements.currentCategoryName.textContent = 'パーツを選択';
         elements.colorSettings.style.display = 'none';
+        clearPartSettingsExtensions();
+        syncClockTick();
         return;
     }
     
@@ -1002,12 +1067,233 @@ function coerceAllDisallowedCustomColors() {
     }
 }
 
+function isCustomColorPickerEnabled() {
+    const app = document.getElementById('charamake-app');
+    return !(app && app.dataset.hideCustomColor === 'true');
+}
+
+function partHasColorPresetUI(part) {
+    if (!part) return false;
+    if (part.colors && Object.keys(part.colors).length > 0) return true;
+    if (isCustomColorAllowed(part) && isCustomColorPickerEnabled()) return true;
+    return false;
+}
+
+function clearPartSettingsExtensions() {
+    if (elements.partSettingsExtensions) {
+        elements.partSettingsExtensions.innerHTML = '';
+    }
+}
+
+const PART_SETTINGS_OVERLAY_UI = {
+    datetime: renderDatetimeOverlayControls
+};
+
+function renderPartSettingsExtensions(part) {
+    clearPartSettingsExtensions();
+    if (!part?.dynamicOverlay?.type) return false;
+    const render = PART_SETTINGS_OVERLAY_UI[part.dynamicOverlay.type];
+    if (!render || !elements.partSettingsExtensions) return false;
+    render(elements.partSettingsExtensions, part);
+    return true;
+}
+
+const CLOCK_DISPLAY_MODES = [
+    { id: 'jst', label: 'JST (+09:00)' },
+    { id: 'local', label: 'ローカル時刻' },
+    { id: 'unix', label: 'Unix 時刻（秒）' },
+    { id: 'both', label: 'JST と Unix 時刻（横並び）' }
+];
+
+function renderDatetimeOverlayControls(container, part) {
+    const row = document.createElement('div');
+    row.className = 'clock-mode-buttons';
+    row.setAttribute('role', 'group');
+    row.setAttribute('aria-label', '時刻表示モード');
+
+    const mode = state.clockDisplayMode || 'jst';
+    CLOCK_DISPLAY_MODES.forEach(({ id, label }) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'color-preset-btn clock-mode-btn';
+        if (mode === id) btn.classList.add('active');
+        btn.setAttribute('aria-label', label);
+        btn.title = label;
+        btn.textContent = id;
+        btn.addEventListener('click', () => {
+            state.clockDisplayMode = id;
+            container.querySelectorAll('.clock-mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updatePreview();
+        });
+        row.appendChild(btn);
+    });
+    container.appendChild(row);
+}
+
+function getSelectedDatetimeOverlayPart() {
+    if (!state.partsData) return null;
+    const ids = getVisibleSelectedPartIds();
+    for (const id of ids) {
+        const p = state.partsData.parts.find(x => x.id === id);
+        if (p?.dynamicOverlay?.type === 'datetime') return p;
+    }
+    return null;
+}
+
+function hasActiveDatetimeOverlay() {
+    return !!getSelectedDatetimeOverlayPart();
+}
+
+function syncClockTick() {
+    if (clockTickInterval) {
+        clearInterval(clockTickInterval);
+        clockTickInterval = null;
+    }
+    if (hasActiveDatetimeOverlay()) {
+        clockTickInterval = setInterval(() => updatePreview(), 1000);
+    }
+}
+
+function formatDateTimeParts(date, timeZone) {
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    };
+    if (timeZone) {
+        options.timeZone = timeZone;
+    }
+    const fmt = new Intl.DateTimeFormat('en-CA', options);
+    const parts = fmt.formatToParts(date);
+    const pick = type => parts.find(p => p.type === type)?.value || '00';
+    return `${pick('year')}-${pick('month')}-${pick('day')} ${pick('hour')}:${pick('minute')}:${pick('second')}`;
+}
+
+function formatDateTimeInZone(date, timeZone) {
+    return formatDateTimeParts(date, timeZone);
+}
+
+function getLocalTimezoneOffsetString(date) {
+    const offsetMin = -date.getTimezoneOffset();
+    const sign = offsetMin >= 0 ? '+' : '-';
+    const abs = Math.abs(offsetMin);
+    const h = Math.floor(abs / 60);
+    const m = abs % 60;
+    return `${sign}${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+
+function formatJstClockLine(date) {
+    return `${formatDateTimeInZone(date, 'Asia/Tokyo')} +09:00`;
+}
+
+function formatLocalClockLine(date) {
+    return `${formatDateTimeParts(date, null)} ${getLocalTimezoneOffsetString(date)}`;
+}
+
+function formatUnixClockLine(date) {
+    return (date.getTime() / 1000).toFixed(3);
+}
+
+function formatClockText(mode, date) {
+    const m = mode || 'jst';
+    if (m === 'unix') return formatUnixClockLine(date);
+    if (m === 'local') return formatLocalClockLine(date);
+    if (m === 'both') {
+        return `${formatJstClockLine(date)}  ${formatUnixClockLine(date)}`;
+    }
+    return formatJstClockLine(date);
+}
+
+function getDatetimeOverlaySignature(part) {
+    const raw = part?.dynamicOverlay?.signature;
+    if (raw === undefined || raw === null) return '';
+    return String(raw).trim();
+}
+
+function drawDynamicOverlays(ctx) {
+    const part = getSelectedDatetimeOverlayPart();
+    if (!part) return Promise.resolve();
+
+    const mode = state.clockDisplayMode || 'jst';
+    const date = new Date();
+    const fontSize = 25;
+    const marginX = 16;
+    const marginY = 14;
+    const lineStep = fontSize * 1.08;
+    const fontSpec = `${fontSize}px saitamaar, PikoA, sans-serif`;
+    const signature = getDatetimeOverlaySignature(part);
+
+    const draw = () => {
+        ctx.save();
+        ctx.font = fontSpec;
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'bottom';
+        const rightX = ctx.canvas.width - marginX;
+        const clockY = ctx.canvas.height - marginY;
+
+        if (signature) {
+            ctx.fillText(signature, rightX, clockY - lineStep);
+        }
+
+        if (mode === 'both') {
+            const jstLine = formatJstClockLine(date);
+            const unixLine = formatUnixClockLine(date);
+            const gap = 14;
+            const unixW = ctx.measureText(unixLine).width;
+            ctx.fillText(unixLine, rightX, clockY);
+            ctx.fillText(jstLine, rightX - unixW - gap, clockY);
+        } else {
+            ctx.fillText(formatClockText(mode, date), rightX, clockY);
+        }
+        ctx.restore();
+    };
+
+    if (document.fonts && document.fonts.load) {
+        return document.fonts.load(fontSpec).then(draw).catch(draw);
+    }
+    draw();
+    return Promise.resolve();
+}
+
 // 色設定UIの更新
 function updateColorSettings(part) {
+    const hasExtension = renderPartSettingsExtensions(part);
+    const showColorBlock = partHasColorPresetUI(part) || hasSidedLayers(part);
+
+    if (!hasExtension && !showColorBlock) {
+        elements.colorSettings.style.display = 'none';
+        syncClockTick();
+        return;
+    }
+
     elements.colorSettings.style.display = 'block';
+    if (elements.colorPresetBlock) {
+        elements.colorPresetBlock.style.display = showColorBlock ? '' : 'none';
+    }
+
+    if (!showColorBlock) {
+        const existingSide = document.getElementById('sideSelector');
+        if (existingSide) existingSide.remove();
+        updateAdvancedColorSettings(false);
+        syncClockTick();
+        return;
+    }
+
     elements.colorPresetSelector.innerHTML = '';
     
     coercePartColorFromDisallowedCustom(part.id);
+
+    if (!isCustomColorPickerEnabled() && state.selectedColors[part.id] === 'custom') {
+        state.selectedColors[part.id] = 'normal';
+        delete state.customColors[part.id];
+        updatePreview();
+    }
     
     // side 指定レイヤーがあればサイドセレクターを表示
     if (hasSidedLayers(part)) {
@@ -1044,8 +1330,8 @@ function updateColorSettings(part) {
         });
     }
     
-    // 3. カスタム色（パーツが allowCustomColor: false のときは非表示）
-    if (isCustomColorAllowed(part)) {
+    // 3. カスタム色（パーツが allowCustomColor: false のとき、または公開 UI で無効のときは非表示）
+    if (isCustomColorAllowed(part) && isCustomColorPickerEnabled()) {
         const customBtn = document.createElement('button');
         customBtn.className = 'color-preset-btn';
         if (isCustom) {
@@ -1057,13 +1343,15 @@ function updateColorSettings(part) {
     }
     
     // カスタム色が選択されている場合のみ拡張設定を表示し、値を反映
-    if (isCustom) {
+    if (isCustom && isCustomColorPickerEnabled()) {
         const customData = state.customColors[part.id] || { ...DEFAULT_CUSTOM_COLOR };
         loadCustomColorValues(customData);
         updateAdvancedColorSettings(true);
     } else {
         updateAdvancedColorSettings(false);
     }
+
+    syncClockTick();
 }
 
 // カスタムのデフォルト設定
@@ -1072,6 +1360,9 @@ const DEFAULT_CUSTOM_COLOR = { blend: 'multiply', color: '#000000', opacity: 1, 
 // 色プリセット選択
 function selectColorPreset(partId, colorName) {
     const actorPart = state.partsData.parts.find(p => p.id === partId);
+    if (colorName === 'custom' && !isCustomColorPickerEnabled()) {
+        return;
+    }
     if (colorName === 'custom' && actorPart && !isCustomColorAllowed(actorPart)) {
         return;
     }
@@ -1263,7 +1554,10 @@ function updatePreview() {
     // キャンバスクリア
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    if (!state.partsData) return;
+    if (!state.partsData) {
+        previewDrawPromise = Promise.resolve();
+        return;
+    }
     
     // 全レイヤーを収集
     const layers = collectAllLayers();
@@ -1271,8 +1565,11 @@ function updatePreview() {
     // zIndex順にソート
     layers.sort((a, b) => a.zIndex - b.zIndex);
     
-    // 描画
-    drawLayers(ctx, layers);
+    previewDrawPromise = drawLayers(ctx, layers).then(() => drawDynamicOverlays(ctx));
+    if (!hasActiveDatetimeOverlay() && clockTickInterval) {
+        clearInterval(clockTickInterval);
+        clockTickInterval = null;
+    }
 }
 
 // 描画・マスク算出対象の選択中パーツ ID（非表示カテゴリは除外）
@@ -1427,7 +1724,7 @@ function drawLayers(ctx, layers) {
         ctx.font = '20px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText('パーツを選択してください', ctx.canvas.width / 2, ctx.canvas.height / 2);
-        return;
+        return Promise.resolve();
     }
     
     // オフスクリーンキャンバスに描画し、完成後にメインへ転送してちらつきを防ぐ
@@ -1438,7 +1735,7 @@ function drawLayers(ctx, layers) {
     
     const sortedLayers = [...validLayers].sort((a, b) => a.zIndex - b.zIndex);
     
-    Promise.all(sortedLayers.map(loadLayerRaster))
+    return Promise.all(sortedLayers.map(loadLayerRaster))
         .then(items => {
             offCtx.clearRect(0, 0, offscreen.width, offscreen.height);
             
@@ -1581,6 +1878,7 @@ function lerp(a, b, t) { return a + (b - a) * t; }
 function saveCharacter() {
     const characterData = {
         unlockedSecrets: [...state.unlockedSecrets],
+        clockDisplayMode: state.clockDisplayMode || 'jst',
         character: {}
     };
     
@@ -1659,6 +1957,13 @@ function handleCharacterFileSelect(e) {
             );
             state.previouslyUnlockedSecrets = new Set();
 
+            const mode = data.clockDisplayMode;
+            if (mode && CLOCK_DISPLAY_MODES.some(m => m.id === mode)) {
+                state.clockDisplayMode = mode;
+            } else {
+                state.clockDisplayMode = 'jst';
+            }
+
             // パーツ選択を復元
             state.selectedParts = {};
             state.selectedColors = {};
@@ -1713,7 +2018,9 @@ function handleCharacterFileSelect(e) {
             processSecretUnlocks();
             renderCategories();
             renderParts();
+            updateColorSettingsForCurrentCategory();
             updatePreview();
+            syncClockTick();
             
             alert('キャラクターを読み込みました');
         } catch (error) {
@@ -1725,15 +2032,18 @@ function handleCharacterFileSelect(e) {
 
 // PNG出力
 function exportPng() {
-    const canvas = elements.previewCanvas;
-    
-    canvas.toBlob(blob => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'character.png';
-        a.click();
-        URL.revokeObjectURL(url);
+    updatePreview();
+    previewDrawPromise.then(() => {
+        const canvas = elements.previewCanvas;
+        canvas.toBlob(blob => {
+            if (!blob) return;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'character.png';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
     });
 }
 

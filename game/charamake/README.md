@@ -1,152 +1,125 @@
-# Character Creator
+# Character Creator / healthy charamaker
 
 透過 PNG/GIF を重ね合わせてキャラクターを作成・着せ替えできる HTML + JavaScript アプリです。
 
-**ビジュアルエディタ**（`editor.html`）でパーツ定義を編集し、**着せ替えゲーム**（`game.html`）で実際にキャラクターを組み立てます。マスターデータは `parts-data.json` に集約されています。
+## 公開版と開発用（2026-03 時点）
+
+| 用途 | ファイル | 説明 |
+|------|----------|------|
+| **サイト公開（正本）** | [`index.html`](index.html) | **healthy charamaker**。100%health の `1column.css` + [`charamake.css`](charamake.css)。URL: `/game/charamake/` |
+| **着せ替えロジック** | [`game.js`](game.js) ほか `*.js` | `index.html` / アーカイブの両方から読み込む。**機能変更はここが中心** |
+| **パーツ編集（非公開）** | [`editor.html`](editor.html) | 開発者向け。サイトからはリンクしない |
+| **旧スタンドアロン UI（アーカイブ）** | [`game.archive.html`](game.archive.html) + [`game.archive.css`](game.archive.css) | 当初の 3 カラム Material 風 UI。**凍結**。`index.html` とは **同期しない** |
+
+> **注意**: 旧名称 `game.html` / `game.css` は **`game.archive.*` にリネーム**済み。ブックマークやメモの更新を推奨。
+
+### index.html（公開版）の要点
+
+- サイト内位置: **misc** コーナー（[`misc/index.html`](../../misc/index.html) からリンク）
+- プレイ向けツールバー: キャラ読込・保存・PNG・シークレット。**JSON 再読込ボタンは非表示**（`#loadDataBtn` は DOM に残すのみ）
+- **カスタム色 UI は非公開** — `#charamake-app` の `data-hide-custom-color="true"` で「カスタム」ボタンと拡張設定を出さない（[`game.js`](game.js) が参照）
+- レイアウト: プレビュー上段 → カテゴリ | パーツ・色（下段）→ 依存関係フィード（固定高さ、`#dependencyFeed`）
+- カテゴリグループ: **アコーディオン**（同時に 1 グループのみ展開）
+- アセットパス: `<base href="/game/charamake/">` とルート絶対パス（Live Server でも `/game/charamake/index.html` 推奨）
 
 ## ファイル構成
 
 ```
 game/charamake/
-├── editor.html          # ビジュアルエディタ（パーツ管理）
+├── index.html           # 公開着せ替え（正本）
+├── charamake.css        # 公開 UI 専用スタイル（game.archive.css は使わない）
+├── game.js              # 着せ替え本体ロジック
+├── inner-groups.js
+├── layer-resolve.js
+├── secrets.js
+├── dependencies.js
+├── parts-order.js
+├── editor.html          # ビジュアルエディタ（開発・非公開）
 ├── editor.css
 ├── editor.js
-├── game.html            # 着せ替えゲーム本体
-├── game.css
-├── game.js
-├── inner-groups.js      # インナーグループ共有ロジック
-├── layer-resolve.js     # レイヤー画像解決（ポーズ + IG 2段階）
-├── secrets.js           # シークレット解放（パスワードハッシュ照合）
-├── parts-order.js       # パーツ一覧 order 共有ロジック
-├── parts-data.json      # パーツマスターデータ（ゲームが自動読込）
-├── sampledata.json      # 小さなサンプルデータ（エディタの動作確認用）
-├── SPEC.md              # 詳細仕様書
+├── game.archive.html    # 旧着せ替え UI（アーカイブ・凍結）
+├── game.archive.css
+├── parts-data.json      # パーツマスタ（ゲームが自動 fetch）
+├── sampledata.json      # エディタ動作確認用サンプル
+├── SPEC.md              # 詳細仕様
+├── SPEC-*.md            # 依存・IG・ポーズ・シークレット等
 ├── README.md
 └── parts/               # パーツ画像（PNG / GIF）
-    ├── none.png         # 透過（なし）用
-    ├── basics/          # 背景・体型・フレームなど
-    ├── face/            # 顔パーツ
-    ├── hair/            # 髪
-    ├── clothes/         # 服
-    └── accessories/     # アクセサリー
 ```
 
 ## 実装状況
 
 ### エディタ（editor.html）
 
-- [x] 3カラム UI（カテゴリ / パーツ一覧 / 編集＋プレビュー）
-- [x] カテゴリ・カテゴリグループの管理
-- [x] パーツ CRUD（作成・編集・削除・複製）
-- [x] パーツ一覧の並び替え（`order` + ドラッグ＆ドロップ）
-- [x] レイヤー管理（追加・削除・並び替え、zIndex / side / blendMode / animated）
-- [x] 色設定（ブレンドモード＋専用画像、色相シフト対応）
-- [x] 依存関係（requires / unlocks / hides）
-- [x] インナーグループ（meta / レイヤー maskedFile / masksInnerGroups）
-- [x] ポーズ差し替え（体型 `poseId` / レイヤー `poseFiles`・`poseMaskedFiles`）— `SPEC-pose-files.md`
-- [x] シークレット解放（`meta.secrets` / パスワード / カテゴリ・パーツ `secret`）— `SPEC-secrets.md`
-- [x] バリデーション（警告表示、循環依存検出、IG 参照チェック）
-- [x] プレビュー（他パーツと重ねて表示）
+- [x] 3 カラム UI、パーツ CRUD、レイヤー・色・依存・IG・ポーズ・シークレット
 - [x] JSON 読込 / 出力、LocalStorage 自動保存
 
-### ゲーム（game.html）
+### 着せ替え（ロジック: game.js / 公開: index.html）
 
-- [x] `parts-data.json` の自動読込
-- [x] カテゴリグループ付きカテゴリ選択 UI
-- [x] 単一選択 / 複数選択カテゴリ
-- [x] 条件付きカテゴリ表示（hidden / unlocks / hides・パーツ単位 hides 含む）
-- [x] 依存関係フィード（プレビュー下・最大3行）
-- [x] 色プリセット・カスタム色（ブレンド・不透明度・色相シフト）
-- [x] カラーグループ連動（髪色・肌色など）
-- [x] 左右別レイヤー（side 指定パーツの表示切替）
-- [x] Canvas プレビュー描画
-- [x] キャラクター保存 / 読込（`character.json`）
-- [x] PNG 出力
-- [x] モバイル向けタブ UI
-- [x] インナーグループ（服の重ね着マスク差し替え）— 詳細は `SPEC-inner-groups.md`
-- [x] ポーズ差し替え（体型選択で袖などを差し替え）— 詳細は `SPEC-pose-files.md`
-- [x] シークレット解放（パスワード入力）— 詳細は `SPEC-secrets.md`
+- [x] `parts-data.json` 自動読込
+- [x] カテゴリグループ、アコーディオン（公開 UI）
+- [x] 単一 / 複数選択、hidden / unlocks / hides、シークレット
+- [x] 依存関係フィード（最大 3 行・workspace 下・固定高さ）
+- [x] 色プリセット、カラーグループ連動（**公開版はカスタム色 UI オフ**）
+- [x] 左右レイヤー、Canvas プレビュー、キャラ JSON、PNG 出力
+- [x] モバイルタブ（カテゴリ | パーツ・色）
+- [x] インナーグループ・ポーズ差し替え（各 SPEC 参照）
+- [x] 時刻枠（`dynamicOverlay` / パーツ設定パネル・PNG 焼き付け）
 
 ### 未着手・将来
 
-- [ ] GIF アニメのゲーム側プレビュー
-- [ ] GIF 出力（複数レイヤー合成）
-- [ ] 複合条件依存（`requiresCondition` 等、SPEC.md 参照）
+- [ ] 公開版でカスタム色 UI のブラッシュアップと `data-hide-custom-color` 解除
+- [ ] GIF アニメプレビュー / GIF 出力
+- [ ] 複合条件依存（`requiresCondition` 等）
+- [ ] 公開時: changelog / RSS（サイト全体の運用タイミング）
 
 ## 使い方
 
-### 開発フロー
+### パーツデータの更新（開発）
 
 ```
-1. editor.html をブラウザで開く
+1. editor.html を HTTP サーバー経由で開く
 2. パーツ画像を parts/ に配置
-3. エディタでカテゴリ・パーツを定義・編集
-4. 「JSON出力」で parts-data.json をダウンロードし、このフォルダに配置
-5. game.html を開いて着せ替えを確認
-6. 必要に応じて「キャラ保存」「PNG出力」
+3. エディタで編集 → JSON 出力 → parts-data.json をこのフォルダに配置
+4. index.html（/game/charamake/）で着せ替えを確認
 ```
 
-> **注意**: `fetch` で JSON を読み込むため、ローカルでは簡易 HTTP サーバー経由での起動を推奨します（`file://` 直開きだと読込に失敗することがあります）。
+> `fetch` 利用のため、ローカルは **`file://` 直開き非推奨**。ルートをサイト直下にした Live Server 等で `/game/charamake/index.html` を開く。
 
-### エディタ
+### 公開着せ替え（index.html）
 
-1. `editor.html` をブラウザで開く
-2. 初回は空の場合、「JSON読込」から `sampledata.json` または `parts-data.json` を読み込む
-3. カテゴリを選択してパーツを編集
+1. カテゴリ（グループ）→ パーツ・色で組み立て
+2. **キャラ読込 / キャラ保存**（`character.json`）、**PNG 出力**
+3. シークレットパーツはツールバーのパスワード → 解放
 
-**基本操作**
+### アーカイブ UI（game.archive.html）
 
-1. **カテゴリ追加**: 左カラム下部の「+ カテゴリ追加」
-   - 複数選択モード（アクセサリー用）
-   - 条件付き表示（hidden）
-   - カラーグループ ID（同色連動用）
-2. **パーツ追加**: カテゴリ選択後、中央カラムの「+ 新規パーツ」
-3. **パーツ並び替え**: パーツカード左の `⋮⋮` ハンドルをドラッグ（`order` が JSON に保存される）
-4. **パーツ編集**: パーツカードをクリック（ハンドル・ボタン以外）
-5. **レイヤー管理**: ファイルパス、zIndex、side（左/右）、blendMode、animated
-6. **色設定**: ブレンドモードまたは専用画像でプリセット追加、`allowCustomColor` の ON/OFF
-7. **依存関係**:
-   - `requires`: 必須パーツ
-   - `unlocks`: 選択時に表示するカテゴリ/パーツ（ゲームはカテゴリ解放が主）
-   - `hides`: 選択時に非表示にするカテゴリ/パーツ（unlocks が優先）— `SPEC-dependencies.md`
-8. **インナーグループ**: メタデータ編集で IG マスタ登録 → レイヤーに IG・マスク画像 → アウターにマスク指定
-9. **ポーズ差し替え**: 体型パーツに `poseId` → 服レイヤーに `poseFiles`（必要なら `poseMaskedFiles`）。プレビューは「プレビュー用ポーズ」または他パーツ重ねで体型を選択
-10. **プレビュー**: 右カラムのキャンバス。**マスク確認は「他パーツと重ねて表示」** でアウターも選択
-11. **シークレット**: メタデータで束登録（パスワードはハッシュ保存）→ カテゴリ/パーツに `secret` 指定。ゲームヘッダーでパスワード入力
-12. **保存**: 「パーツを保存」で編集中パーツを確定、「JSON出力」で `parts-data.json` をダウンロード
-
-### ゲーム
-
-1. `game.html` をブラウザで開く（`parts-data.json` が同フォルダにあること）
-2. 左のカテゴリから部位を選び、右でパーツと色を変更
-3. ヘッダーの操作:
-   - **シークレット**: パスワード入力 →「解放」（セッション内のみ。キャラ保存で `unlockedSecrets` を引き継ぎ）
-   - **JSONを再読込**: 別の `parts-data.json` を手動読込
-   - **キャラ読込 / キャラ保存**: `character.json` の読み書き
-   - **PNG出力**: 現在のプレビューを PNG でダウンロード
+- 旧 3 カラム UI・全ツールバー（JSON 再読込含む）・カスタム色あり
+- 比較・退避用。**正本への変更は反映しない**
 
 ## データ形式（概要）
 
-詳細は `SPEC.md` を参照。
+詳細は [`SPEC.md`](SPEC.md)。付録 SPEC（inner-groups / pose-files / dependencies / secrets）も参照。
 
-インナーグループ（服の重ね着マスク）の詳細は [SPEC-inner-groups.md](SPEC-inner-groups.md)、ポーズ差し替えは [SPEC-pose-files.md](SPEC-pose-files.md)、依存関係は [SPEC-dependencies.md](SPEC-dependencies.md)、シークレットは [SPEC-secrets.md](SPEC-secrets.md) を参照。
+### character.json
 
-### parts-data.json
+カテゴリ ID → パーツ ID（複数選択は配列）、色、`unlockedSecrets` 等。
 
-| セクション | 内容 |
-|-----------|------|
-| `meta` | バージョン、キャンバスサイズ、`innerGroups`、`secrets`（パスワードハッシュ） |
-| `categoryGroups` | UI 上のグループ（基本・顔・髪・服など） |
-| `categories` | 着せ替えカテゴリ（selectionMode, hidden, `secret`, colorGroup 等） |
-| `parts` | パーツ定義（`order`, `poseId`, `secret`, layers, colors, unlocks, hides, `masksInnerGroups` 等） |
-| `layers[]` | `poseFiles`, `poseMaskedFiles`, `innerGroup`, `maskedFile`（任意） |
+ルートに **`clockDisplayMode`**（任意）: 時刻枠パーツの表示モード。`jst`（デフォルト）| `local` | `unix` | `both`。
 
-### character.json（保存データ）
+### parts-data.json — 特例パーツ（`dynamicOverlay`）
 
-カテゴリ ID をキーに、選択したパーツ ID と色設定を保存します。`unlockedSecrets` に解放済みシークレット束 ID の配列を含みます。複数選択カテゴリは配列、カスタム色は blend / colorValue / opacity 等を含みます。
+通常の色プリセット以外の UI・キャンバス描画が必要なパーツは、パーツオブジェクトに `dynamicOverlay` を付ける。
+
+| フィールド | 例 | 説明 |
+|------------|-----|------|
+| `dynamicOverlay.type` | `"datetime"` | [`game.js`](game.js) の UI / 描画レジストリが参照 |
+
+- **`datetime`**: 枠（時刻）など。プレビュー右下に **`signature`**（任意）と時刻を **右揃え**（署名は時刻の 1 行上、saitamaar・1 秒更新）。例: 署名 `♥100%health`。公開 UI では **パーツ設定** パネル内（色プリセットの上）にモードボタン（`jst` / `local` / `unix` / `both`、ラベルなし・`aria-label` あり）。`both` は **JST と Unix 秒（小数3桁）を横並び**（右端から Unix → その左に JST）。
+- 参照実装: パーツ ID `frame1-clock`（画像は `frame1.png` と共通）。
 
 ## 開発メモ
 
-- エディタの作業内容は LocalStorage に自動保存されます（キー: `characterCreatorData`）。リセットする場合はブラウザの開発者ツールで LocalStorage をクリアしてください
-- エディタとゲームは描画ロジック（ブレンド・色相シフト・レイヤー合成）を共通化しており、プレビューとゲームの見た目は揃う設計です
-- ゲーム起動時は各カテゴリの先頭パーツがデフォルト選択されます（hidden カテゴリを除く）
+- エディタ作業は LocalStorage（`characterCreatorData`）。リセットは DevTools から削除
+- **正本は index.html のみ**。HTML 構造を変えた場合、アーカイブは意図的に更新しない
+- カスタム色を再度公開するとき: `index.html` の `data-hide-custom-color` を削除または `false` に

@@ -1,0 +1,774 @@
+/* healthy charamaker — scoped app styles (Phase 0 layout + game UI port) */
+
+body.charamake-page #wrapper {
+  overflow-y: auto;
+}
+
+body.charamake-page #main {
+  width: min(96vw, 680px);
+  max-width: 680px;
+}
+
+body.charamake-page #galleryspace h1.title {
+  padding-top: 0;
+  scale: 1 1;
+  margin-bottom: 0.5rem;
+}
+
+body.charamake-page .charamake-lead {
+  margin: 0 0 1rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: light-dark(#444, #bbb);
+}
+
+body.charamake-page {
+  --cm-bg-panel: light-dark(#f4f4f4, #1e1e1e);
+  --cm-bg-canvas: light-dark(#fff, #282828);
+  --cm-fg: light-dark(#111, #eaeaea);
+  --cm-muted: #888;
+  --cm-accent: light-dark(rgb(0, 0, 255), #6ae);
+  --cm-accent-on: light-dark(#fff, #111);
+  --cm-panel-border: light-dark(#ddd, #555);
+  --cm-font: saitamaar, PikoA, "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --cm-workspace-max-h: min(28rem, 52vh);
+  /* 800×900 プレビューの表示上限（出力解像度は game.js のまま） */
+  --cm-canvas-max-w: min(100%, 21.5rem);
+  --cm-canvas-max-h: min(23.75rem, 38vh);
+  /* 依存フィード: 最大3行分を常に確保 */
+  --cm-dependency-feed-h: 4rem;
+}
+
+.charamake-hidden {
+  display: none !important;
+}
+
+#charamake-app,
+#charamake-app *,
+#charamake-app *::before,
+#charamake-app *::after {
+  box-sizing: border-box;
+}
+
+#charamake-app {
+  font-family: var(--cm-font);
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--cm-fg);
+  margin-top: 0.5rem;
+  border: 1px solid var(--cm-panel-border);
+  border-radius: 4px;
+  background: var(--cm-bg-panel);
+  overflow: hidden;
+}
+
+#charamake-app img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+#charamake-app .charamake-panel-heading,
+#charamake-app h3,
+#charamake-app h4 {
+  padding-top: 0;
+  scale: 1 1;
+}
+
+/* Toolbar */
+#charamake-app .charamake-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border-bottom: 1px solid var(--cm-panel-border);
+  background: light-dark(var(--cm-bg-panel), #252525);
+}
+
+#charamake-app .charamake-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.5rem;
+  width: 100%;
+}
+
+#charamake-app .secret-unlock-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-right: 0.25rem;
+}
+
+#charamake-app .secret-password-input {
+  width: 7.5rem;
+  padding: 0.3rem 0.45rem;
+  font-family: var(--cm-font);
+  font-size: 0.72rem;
+  color: var(--cm-fg);
+  background: light-dark(#fff, #333);
+  border: 1px solid var(--cm-panel-border);
+  border-radius: 3px;
+}
+
+#charamake-app .secret-message {
+  font-size: 0.68rem;
+  color: var(--cm-muted);
+  min-width: 3rem;
+}
+
+#charamake-app .secret-message.ok {
+  color: light-dark(#1e7e4a, #8f8);
+}
+
+#charamake-app .secret-message.err {
+  color: light-dark(#c0392b, #f88);
+}
+
+/* Buttons */
+#charamake-app .btn {
+  font-family: var(--cm-font);
+  padding: 0.3rem 0.55rem;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  color: var(--cm-fg);
+  background: light-dark(#fff, #333);
+  border: 1px solid var(--cm-panel-border);
+  border-radius: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+#charamake-app .btn:hover {
+  border-color: var(--cm-accent);
+  color: var(--cm-accent);
+  background: light-dark(#fff, #333);
+}
+
+#charamake-app .btn-primary.active,
+#charamake-app .btn-primary {
+  background: var(--cm-accent);
+  border-color: var(--cm-accent);
+  color: var(--cm-accent-on);
+}
+
+#charamake-app .btn-primary:hover {
+  filter: brightness(1.05);
+  color: var(--cm-accent-on);
+  border-color: var(--cm-accent);
+}
+
+#charamake-app .btn-accent {
+  background: light-dark(#111, #eaeaea);
+  border-color: light-dark(#111, #eaeaea);
+  color: light-dark(#fff, #111);
+}
+
+#charamake-app .btn-accent:hover {
+  border-color: var(--cm-accent);
+  background: var(--cm-accent);
+  color: var(--cm-accent-on);
+}
+
+#charamake-app .btn-small {
+  padding: 0.25rem 0.45rem;
+  font-size: 0.68rem;
+}
+
+/* Layout: stage + workspace */
+#charamake-app .charamake-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+#charamake-app .charamake-stage {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--cm-panel-border);
+  background: var(--cm-bg-canvas);
+}
+
+#charamake-app .charamake-panel-heading {
+  font-size: 0.72rem;
+  font-weight: normal;
+  margin-bottom: 0.5rem;
+  color: var(--cm-fg);
+}
+
+#charamake-app .preview-canvas-wrapper {
+  background: light-dark(#eee, #333);
+  border: 1px solid light-dark(#555, #666);
+  padding: 0.45rem;
+  text-align: center;
+  max-width: calc(var(--cm-canvas-max-w) + 1rem);
+  margin: 0 auto;
+}
+
+#charamake-app #previewCanvas {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: var(--cm-canvas-max-w);
+  max-height: var(--cm-canvas-max-h);
+  margin: 0 auto;
+  background:
+    repeating-conic-gradient(light-dark(#ddd, #444) 0% 25%, light-dark(#fff, #333) 0% 50%) 50% / 16px 16px;
+}
+
+#charamake-app .dependency-feed {
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--cm-dependency-feed-h);
+  min-height: var(--cm-dependency-feed-h);
+  max-height: var(--cm-dependency-feed-h);
+  margin: 0;
+  padding: 0.4rem 0.65rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: light-dark(rgb(0 0 0 / 35%), rgb(255 255 255 / 35%)) transparent;
+  font-size: 0.68rem;
+  line-height: 1.45;
+  border-top: 1px solid var(--cm-panel-border);
+  background: light-dark(#fafafa, #2a2a2a);
+}
+
+#charamake-app .dependency-feed::-webkit-scrollbar {
+  width: 2px;
+}
+
+#charamake-app .dependency-feed::-webkit-scrollbar-thumb {
+  background: light-dark(rgb(0 0 0 / 35%), rgb(255 255 255 / 40%));
+}
+
+#charamake-app .dependency-feed-line--unlock {
+  color: light-dark(#1e7e4a, #9cf0b0);
+}
+
+#charamake-app .dependency-feed-line--show {
+  color: light-dark(#2c6fad, #9cf);
+}
+
+#charamake-app .dependency-feed-line--hide {
+  color: var(--cm-muted);
+}
+
+#charamake-app .dependency-feed-line {
+  margin: 0;
+  padding: 0.12rem 0;
+}
+
+#charamake-app .dependency-feed-line + .dependency-feed-line {
+  border-top: 1px solid var(--cm-panel-border);
+  margin-top: 0.15rem;
+  padding-top: 0.3rem;
+}
+
+#charamake-app .charamake-workspace {
+  padding: 0;
+}
+
+#charamake-app .charamake-workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.38fr) minmax(0, 1fr);
+  gap: 0;
+  align-items: stretch;
+}
+
+#charamake-app .charamake-panel {
+  min-width: 0;
+  padding: 0.65rem 0.75rem;
+  overflow-y: auto;
+  max-height: var(--cm-workspace-max-h);
+  scrollbar-width: thin;
+  scrollbar-color: light-dark(rgb(0 0 0 / 35%), rgb(255 255 255 / 35%)) transparent;
+}
+
+#charamake-app .charamake-panel::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+#charamake-app .charamake-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#charamake-app .charamake-panel::-webkit-scrollbar-thumb {
+  background: light-dark(rgb(0 0 0 / 35%), rgb(255 255 255 / 40%));
+  border-radius: 1px;
+}
+
+#charamake-app .charamake-panel::-webkit-scrollbar-thumb:hover {
+  background: light-dark(rgb(0 0 0 / 50%), rgb(255 255 255 / 55%));
+}
+
+#charamake-app .charamake-panel--categories {
+  border-right: 1px solid var(--cm-panel-border);
+}
+
+#charamake-app .category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+#charamake-app .category-item {
+  padding: 0.45rem 0.5rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+#charamake-app .category-item:hover {
+  border-color: var(--cm-panel-border);
+  background: light-dark(#fff, #333);
+}
+
+#charamake-app .category-item.active {
+  background: var(--cm-accent);
+  border-color: var(--cm-accent);
+  color: var(--cm-accent-on);
+}
+
+#charamake-app .category-item.unlocked-category {
+  border-left: 3px solid light-dark(#f39c12, #fa0);
+  padding-left: calc(0.5rem - 3px);
+  background: light-dark(#fff8e6, #332a10);
+}
+
+#charamake-app .category-item.unlocked-category.active {
+  background: light-dark(#f39c12, #a60);
+  border-color: light-dark(#c87f0a, #fa0);
+  color: var(--cm-accent-on);
+}
+
+#charamake-app .category-item.secret-category {
+  border-left: 3px solid light-dark(#8e7cc3, #a8f);
+  padding-left: calc(0.5rem - 3px);
+  background: light-dark(#f6f3fb, #2a2538);
+}
+
+#charamake-app .category-item.secret-category.active {
+  background: light-dark(#8e7cc3, #7560a8);
+  border-color: light-dark(#6c5a9a, #a8f);
+  color: var(--cm-accent-on);
+}
+
+#charamake-app .category-item.hidden {
+  display: none;
+}
+
+#charamake-app .category-group {
+  margin-bottom: 0.35rem;
+}
+
+#charamake-app .category-group-header {
+  width: 100%;
+  padding: 0.45rem 0.5rem;
+  cursor: pointer;
+  font-family: var(--cm-font);
+  font-weight: normal;
+  font-size: 0.75rem;
+  text-align: left;
+  color: var(--cm-fg);
+  background: light-dark(#e8e8e8, #333);
+  border: 1px solid var(--cm-panel-border);
+  border-radius: 3px;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+#charamake-app .category-group-header:hover {
+  border-color: var(--cm-accent);
+  color: var(--cm-accent);
+}
+
+#charamake-app .category-group-header .group-toggle {
+  display: inline-block;
+  font-size: 0.85rem;
+  line-height: 1;
+  width: 0.75rem;
+  flex-shrink: 0;
+  transform: rotate(0deg);
+  transition: transform 0.22s ease;
+}
+
+#charamake-app .category-group--open .category-group-header .group-toggle {
+  transform: rotate(90deg);
+}
+
+#charamake-app .category-group-name {
+  flex: 1;
+  min-width: 0;
+}
+
+#charamake-app .category-group-content {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.22s ease;
+  margin-top: 0.2rem;
+}
+
+#charamake-app .category-group-content--collapsed {
+  grid-template-rows: 0fr;
+}
+
+#charamake-app .category-group-content-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+#charamake-app .category-group-content .grouped-item {
+  padding-left: 1rem;
+  font-size: 0.72rem;
+}
+
+#charamake-app .control-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+#charamake-app .parts-selector-area h3,
+#charamake-app .color-settings-area h3 {
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+#charamake-app .parts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+#charamake-app .part-item {
+  padding: 0.4rem;
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid var(--cm-panel-border);
+  border-radius: 3px;
+  background: light-dark(#fff, #333);
+  transition: border-color 0.12s, color 0.12s;
+}
+
+#charamake-app .part-item:hover {
+  border-color: var(--cm-accent);
+}
+
+#charamake-app .part-item.selected {
+  border-color: var(--cm-accent);
+  background: light-dark(#dde8ff, #234);
+  color: var(--cm-fg);
+}
+
+#charamake-app .part-item.secret-part {
+  border-color: light-dark(#c5b8e0, #86a);
+  background: light-dark(#faf8fd, #2e2840);
+}
+
+#charamake-app .part-item.secret-part.selected {
+  border-color: light-dark(#8e7cc3, #a8f);
+  background: light-dark(#ebe6f5, #3a3250);
+}
+
+#charamake-app .part-item.color-focused {
+  outline: 2px solid light-dark(#e67e22, #fa0);
+  outline-offset: -2px;
+}
+
+#charamake-app .part-item.selected.color-focused {
+  outline: 2px solid light-dark(#e67e22, #fa0);
+}
+
+#charamake-app .color-focus-indicator {
+  font-size: 0.65rem;
+  line-height: 1;
+  margin-top: 0.15rem;
+  opacity: 0.85;
+}
+
+#charamake-app .part-name {
+  font-size: 0.72rem;
+}
+
+#charamake-app .placeholder {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--cm-muted);
+  padding: 1.5rem 0.5rem;
+  font-size: 0.72rem;
+}
+
+#charamake-app .multiple-toolbar {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--cm-panel-border);
+}
+
+#charamake-app .multi-toggle-btn,
+#charamake-app .multiple-reset-btn {
+  font-size: 0.68rem;
+}
+
+#charamake-app .multi-toggle-btn.active {
+  background: var(--cm-accent);
+  border-color: var(--cm-accent);
+  color: var(--cm-accent-on);
+}
+
+#charamake-app .multi-badge {
+  display: inline-block;
+  margin-left: 0.25rem;
+  padding: 0 0.25rem;
+  font-size: 0.6rem;
+  border-radius: 2px;
+  background: light-dark(#bbb, #555);
+  color: light-dark(#fff, #eee);
+}
+
+#charamake-app .category-item.active .multi-badge {
+  background: light-dark(rgb(255 255 255 / 0.35), rgb(0 0 0 / 0.25));
+  color: inherit;
+}
+
+#charamake-app .form-group {
+  margin-bottom: 0.55rem;
+}
+
+#charamake-app .form-group label {
+  display: block;
+  font-size: 0.72rem;
+  margin-bottom: 0.2rem;
+}
+
+#charamake-app .form-group select,
+#charamake-app .form-group input[type="color"] {
+  width: 100%;
+  font-family: var(--cm-font);
+  font-size: 0.72rem;
+  padding: 0.35rem;
+  border: 1px solid var(--cm-panel-border);
+  border-radius: 3px;
+  background: light-dark(#fff, #333);
+  color: var(--cm-fg);
+}
+
+#charamake-app .form-group input[type="range"] {
+  width: 100%;
+}
+
+#charamake-app .color-preset-btn {
+  width: 100%;
+  padding: 0.45rem 0.55rem;
+  text-align: left;
+  font-family: var(--cm-font);
+  font-size: 0.72rem;
+  border: 1px solid var(--cm-panel-border);
+  border-radius: 3px;
+  background: light-dark(#fff, #333);
+  cursor: pointer;
+}
+
+#charamake-app .color-preset-btn:hover {
+  border-color: var(--cm-accent);
+  color: var(--cm-accent);
+}
+
+#charamake-app .color-preset-btn.active {
+  border-color: var(--cm-accent);
+  background: var(--cm-accent);
+  color: var(--cm-accent-on);
+}
+
+#charamake-app .color-preset-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+#charamake-app .part-settings-extensions {
+  min-height: 0;
+  margin-bottom: 0.65rem;
+}
+
+#charamake-app .part-settings-extensions:empty {
+  margin-bottom: 0;
+}
+
+#charamake-app .clock-mode-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+
+#charamake-app .clock-mode-buttons .clock-mode-btn {
+  width: auto;
+  text-align: center;
+  text-transform: lowercase;
+  font-variant-numeric: tabular-nums;
+}
+
+#charamake-app #advancedColorSettings {
+  border-top: 1px solid var(--cm-panel-border);
+  padding-top: 0.65rem;
+  margin-top: 0.65rem;
+}
+
+#charamake-app[data-hide-custom-color="true"] #advancedColorSettings {
+  display: none !important;
+}
+
+#charamake-app #advancedColorSettings h4 {
+  font-size: 0.72rem;
+  margin-bottom: 0.45rem;
+}
+
+#charamake-app .side-selector-label {
+  font-size: 0.72rem;
+  color: var(--cm-muted);
+}
+
+#charamake-app .side-btn {
+  padding: 0.25rem 0.5rem;
+  font-family: var(--cm-font);
+  font-size: 0.68rem;
+  border: 1px solid var(--cm-panel-border);
+  border-radius: 3px;
+  background: light-dark(#fff, #333);
+  cursor: pointer;
+}
+
+#charamake-app .side-btn:hover {
+  border-color: var(--cm-accent);
+  color: var(--cm-accent);
+}
+
+#charamake-app .side-selector {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--cm-panel-border);
+}
+
+#charamake-app .side-btn.active {
+  border-color: light-dark(#e67e22, #fa0);
+}
+
+#charamake-app .mobile-tabs {
+  display: none;
+  border-bottom: 1px solid var(--cm-panel-border);
+}
+
+#charamake-app .tab-btn {
+  flex: 1;
+  padding: 0.65rem 0.5rem;
+  font-family: var(--cm-font);
+  font-size: 0.75rem;
+  background: light-dark(#fff, #333);
+  color: var(--cm-fg);
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+#charamake-app .tab-btn.active {
+  border-bottom-color: var(--cm-accent);
+  color: var(--cm-accent);
+}
+
+/* Desktop: both workspace panels visible */
+@media screen and (width > 768px) {
+  #charamake-app .tab-content {
+    display: block !important;
+  }
+}
+
+@media screen and (width <= 520px) {
+  #charamake-app .charamake-workspace-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #charamake-app .charamake-panel--categories {
+    border-right: none;
+    border-bottom: 1px solid var(--cm-panel-border);
+  }
+}
+
+@media screen and (width <= 768px) {
+  body.charamake-page #main {
+    width: 92%;
+    max-width: none;
+  }
+
+  #charamake-app .mobile-tabs {
+    display: flex;
+  }
+
+  #charamake-app .charamake-panel-heading {
+    display: none;
+  }
+
+  #charamake-app .charamake-stage {
+    padding: 0.5rem;
+  }
+
+  body.charamake-page {
+    --cm-canvas-max-w: min(100%, 20rem);
+    --cm-canvas-max-h: min(22rem, 40vh);
+  }
+
+  #charamake-app #previewCanvas {
+    max-width: var(--cm-canvas-max-w);
+    max-height: var(--cm-canvas-max-h);
+  }
+
+  #charamake-app .tab-content {
+    display: none !important;
+  }
+
+  #charamake-app .tab-content.active-tab {
+    display: block !important;
+  }
+
+  #charamake-app .charamake-panel {
+    max-height: min(48vh, 22rem);
+  }
+
+  #charamake-app .charamake-toolbar-actions {
+    gap: 0.35rem;
+  }
+
+  #charamake-app .charamake-toolbar-actions .btn {
+    padding: 0.28rem 0.45rem;
+    font-size: 0.68rem;
+  }
+
+  #charamake-app .secret-password-input {
+    width: 6.5rem;
+  }
+}
+
+@media screen and (width <= 480px) {
+  body.charamake-page {
+    --cm-canvas-max-w: min(100%, 18rem);
+    --cm-canvas-max-h: min(19.75rem, 36vh);
+  }
+
+  #charamake-app .parts-grid {
+    gap: 0.35rem;
+  }
+}

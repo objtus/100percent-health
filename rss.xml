@@ -5,9 +5,17 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 28 Aug 2026 20:48:37 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 16 Sep 2026 08:08:05 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>linksページに、altalenaeさん、めがねーどさん、ei personさん、新居藍さんのサイトのリンクを追加</title>
+      <link>https://yuinoid.neocities.org/links/crosslinks.html</link>
+      <description>リンクページに、4サイトのリンクを掲載しました。ありがとうございます。</description>
+      <pubDate>Wed, 16 Sep 2026 08:08:05 GMT</pubDate>
+      <category>links</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#1x4ua-20260916</guid>
+    </item>
     <item>
       <title>txtにinternet aesthetic: a genealogyを追加</title>
       <link>https://yuinoid.neocities.org/txt/internet-aesthetic-a-genealogy/index.html</link>
@@ -159,14 +167,6 @@
       <pubDate>Wed, 17 Dec 2025 14:50:41 GMT</pubDate>
       <category>txt</category>
       <guid isPermaLink="false">https://yuinoid.neocities.org/rss#a4rmrp-20251217</guid>
-    </item>
-    <item>
-      <title>12月12日の雑記を追加</title>
-      <link>https://yuinoid.neocities.org/txt/zakki/2025/12/days/2025-12-12.html</link>
-      <description>雑記更新。「えとねるん Advent Calendar 2025」用です。更新した分散SNS関連年表について簡単に解説しました。</description>
-      <pubDate>Fri, 12 Dec 2025 07:47:22 GMT</pubDate>
-      <category>zakki</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#5hotdk-20251212</guid>
     </item>
   </channel>
 </rss>
