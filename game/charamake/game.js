@@ -16,7 +16,9 @@ const state = {
     hiddenPartIds: new Set(), // hides により動的に非表示になっているパーツ
     unlockedSecrets: new Set(), // パスワードで解放したシークレット束 ID
     previouslyUnlockedSecrets: new Set(), // 新規解放時の先頭自動選択用
-    clockDisplayMode: 'jst' // 時刻枠 overlay: jst | local | unix | both
+    clockDisplayMode: 'jst', // 時刻枠 overlay: jst | local | unix | both
+    colorGroupPresets: {}, // colorGroup ID → 'normal' | プリセット名 | 'custom'（グループ共有の色意図）
+    colorGroupCustom: {} // colorGroup ID → カスタム色オブジェクト
 };
 
 let previewDrawPromise = Promise.resolve();
@@ -71,6 +73,8 @@ function loadDefaultPartsData() {
             // 各カテゴリの最初のパーツをデフォルト選択（非 hidden）
             // 続けて依存関係を処理し、解放済みの条件付きカテゴリも先頭パーツを選ぶ
             resetDependencyFeedSnapshot();
+            state.colorGroupPresets = {};
+            state.colorGroupCustom = {};
             initializeDefaultSelections();
             processDependencies();
             
@@ -218,6 +222,8 @@ function handleDataFileSelect(e) {
             // 初期選択状態をクリア
             state.selectedParts = {};
             state.selectedColors = {};
+            state.colorGroupPresets = {};
+            state.colorGroupCustom = {};
             
             updatePreview();
             
@@ -690,8 +696,141 @@ function togglePartSelection(partId) {
     renderCategories();
 }
 
-// パーツの色状態を初期化（未設定の場合のみ）
+function getPartCategory(part) {
+    if (!part || !state.partsData) return null;
+    return state.partsData.categories.find(c => c.id === part.category) || null;
+}
+
+function getColorGroupIdForPart(part) {
+    const category = getPartCategory(part);
+    return category && category.colorGroup ? category.colorGroup : null;
+}
+
+function getColorGroupRawPreset(colorGroupId) {
+    if (!colorGroupId) return 'normal';
+    const v = state.colorGroupPresets[colorGroupId];
+    return v || 'normal';
+}
+
+// グループ意図を、このパーツが実際に適用できるプリセット名に解決
+function getEffectiveColorPreset(part) {
+    if (!part) return 'normal';
+    const groupId = getColorGroupIdForPart(part);
+    const raw = groupId ? getColorGroupRawPreset(groupId) : (state.selectedColors[part.id] || 'normal');
+
+    if (!raw || raw === 'normal') return 'normal';
+    if (raw === 'custom') {
+        return isCustomColorAllowed(part) ? 'custom' : 'normal';
+    }
+    if (part.colors && part.colors[raw]) return raw;
+    return 'normal';
+}
+
+function syncPartColorCacheFromGroup(part) {
+    if (!part) return;
+    const groupId = getColorGroupIdForPart(part);
+    if (!groupId) return;
+
+    const effective = getEffectiveColorPreset(part);
+    state.selectedColors[part.id] = effective;
+    if (effective === 'custom' && state.colorGroupCustom[groupId]) {
+        state.customColors[part.id] = { ...state.colorGroupCustom[groupId] };
+    } else {
+        delete state.customColors[part.id];
+    }
+}
+
+function syncSelectedColorsCacheForGroup(colorGroupId) {
+    if (!state.partsData || !colorGroupId) return;
+
+    state.partsData.categories
+        .filter(c => c.colorGroup === colorGroupId)
+        .forEach(category => {
+            const selection = state.selectedParts[category.id];
+            if (!selection) return;
+            const ids = Array.isArray(selection) ? selection : [selection];
+            ids.forEach(partId => {
+                const part = state.partsData.parts.find(p => p.id === partId);
+                if (part) syncPartColorCacheFromGroup(part);
+            });
+        });
+}
+
+function setColorGroupPreset(colorGroupId, colorName, customData) {
+    if (!colorGroupId) return;
+    state.colorGroupPresets[colorGroupId] = colorName;
+    if (colorName === 'custom' && customData) {
+        state.colorGroupCustom[colorGroupId] = { ...customData };
+    } else if (colorName !== 'custom') {
+        delete state.colorGroupCustom[colorGroupId];
+    }
+    syncSelectedColorsCacheForGroup(colorGroupId);
+}
+
+function rebuildColorGroupsFromPartColors() {
+    state.colorGroupPresets = {};
+    state.colorGroupCustom = {};
+    if (!state.partsData) return;
+
+    for (const category of state.partsData.categories) {
+        if (!category.colorGroup) continue;
+        const groupId = category.colorGroup;
+        if (state.colorGroupPresets[groupId]) continue;
+
+        const selection = state.selectedParts[category.id];
+        if (!selection) continue;
+        const ids = Array.isArray(selection) ? selection : [selection];
+
+        for (const partId of ids) {
+            const preset = state.selectedColors[partId];
+            if (!preset || preset === 'normal') continue;
+            state.colorGroupPresets[groupId] = preset;
+            if (preset === 'custom' && state.customColors[partId]) {
+                state.colorGroupCustom[groupId] = { ...state.customColors[partId] };
+            }
+            break;
+        }
+    }
+
+    for (const groupId of Object.keys(state.colorGroupPresets)) {
+        syncSelectedColorsCacheForGroup(groupId);
+    }
+}
+
+function applyLoadedColorGroups(colorGroups) {
+    state.colorGroupPresets = {};
+    state.colorGroupCustom = {};
+    if (!colorGroups || typeof colorGroups !== 'object') return;
+
+    for (const [groupId, info] of Object.entries(colorGroups)) {
+        if (!info || typeof info !== 'object') continue;
+        const preset = info.preset || info.color || 'normal';
+        if (!preset || preset === 'normal') continue;
+        state.colorGroupPresets[groupId] = preset;
+        if (preset === 'custom') {
+            state.colorGroupCustom[groupId] = {
+                blend: info.blend,
+                color: info.colorValue != null ? info.colorValue : info.color,
+                opacity: info.opacity,
+                hueShift: info.hueShift || 0,
+                hueOpacity: info.hueOpacity || 0
+            };
+        }
+    }
+
+    for (const groupId of Object.keys(state.colorGroupPresets)) {
+        syncSelectedColorsCacheForGroup(groupId);
+    }
+}
+
+// パーツの色状態を初期化（カラーグループはグループ意図から解決）
 function initPartColorState(part) {
+    const groupId = getColorGroupIdForPart(part);
+    if (groupId) {
+        syncPartColorCacheFromGroup(part);
+        return;
+    }
+
     if (!state.selectedColors[part.id]) {
         state.selectedColors[part.id] = 'normal';
     }
@@ -1048,7 +1187,13 @@ function isCustomColorAllowed(part) {
 // カスタム非許可パーツで custom が選ばれている場合は通常に戻す
 function coercePartColorFromDisallowedCustom(partId) {
     const part = state.partsData.parts.find(p => p.id === partId);
-    if (!part || state.selectedColors[partId] !== 'custom') return;
+    if (!part) return;
+    const groupId = getColorGroupIdForPart(part);
+    if (groupId) {
+        syncPartColorCacheFromGroup(part);
+        return;
+    }
+    if (state.selectedColors[partId] !== 'custom') return;
     if (!isCustomColorAllowed(part)) {
         state.selectedColors[partId] = 'normal';
         delete state.customColors[partId];
@@ -1289,10 +1434,16 @@ function updateColorSettings(part) {
     
     coercePartColorFromDisallowedCustom(part.id);
 
-    if (!isCustomColorPickerEnabled() && state.selectedColors[part.id] === 'custom') {
-        state.selectedColors[part.id] = 'normal';
-        delete state.customColors[part.id];
-        updatePreview();
+    if (!isCustomColorPickerEnabled()) {
+        const groupId = getColorGroupIdForPart(part);
+        if (groupId && getColorGroupRawPreset(groupId) === 'custom') {
+            setColorGroupPreset(groupId, 'normal');
+            updatePreview();
+        } else if (state.selectedColors[part.id] === 'custom') {
+            state.selectedColors[part.id] = 'normal';
+            delete state.customColors[part.id];
+            updatePreview();
+        }
     }
     
     // side 指定レイヤーがあればサイドセレクターを表示
@@ -1303,7 +1454,7 @@ function updateColorSettings(part) {
         if (existing) existing.remove();
     }
     
-    const currentColor = state.selectedColors[part.id] || 'normal';
+    const currentColor = getEffectiveColorPreset(part);
     const isCustom = currentColor === 'custom';
     
     // 1. 「通常」ボタン（色設定なし）
@@ -1344,7 +1495,10 @@ function updateColorSettings(part) {
     
     // カスタム色が選択されている場合のみ拡張設定を表示し、値を反映
     if (isCustom && isCustomColorPickerEnabled()) {
-        const customData = state.customColors[part.id] || { ...DEFAULT_CUSTOM_COLOR };
+        const groupId = getColorGroupIdForPart(part);
+        const customData = (groupId && state.colorGroupCustom[groupId])
+            ? { ...state.colorGroupCustom[groupId] }
+            : (state.customColors[part.id] || { ...DEFAULT_CUSTOM_COLOR });
         loadCustomColorValues(customData);
         updateAdvancedColorSettings(true);
     } else {
@@ -1366,40 +1520,52 @@ function selectColorPreset(partId, colorName) {
     if (colorName === 'custom' && actorPart && !isCustomColorAllowed(actorPart)) {
         return;
     }
-    
-    // customに切り替えるとき、UIとプレビューが常に同じ値を参照するよう customColors を確定させる
+
+    const groupId = actorPart ? getColorGroupIdForPart(actorPart) : null;
+    let customData = null;
+
     if (colorName === 'custom') {
         const inherited = getGroupCustomColors(partId);
-        // グループ引き継ぎ → 既存設定 → デフォルト の優先順で確定
-        state.customColors[partId] = inherited
+        customData = inherited
             ? { ...inherited }
             : (state.customColors[partId] ? { ...state.customColors[partId] } : { ...DEFAULT_CUSTOM_COLOR });
     }
-    
-    state.selectedColors[partId] = colorName;
-    applyColorToGroup(partId, colorName);
-    
-    // 現在のパーツの色設定UIを更新
+
+    if (groupId) {
+        if (colorName === 'custom') {
+            setColorGroupPreset(groupId, 'custom', customData);
+        } else {
+            setColorGroupPreset(groupId, colorName);
+        }
+    } else {
+        if (colorName === 'custom') {
+            state.customColors[partId] = customData;
+        }
+        state.selectedColors[partId] = colorName;
+    }
+
     const part = state.partsData.parts.find(p => p.id === partId);
     if (part) {
         updateColorSettings(part);
     }
-    
+
     updatePreview();
 }
 
-// 同じカラーグループ内の他パーツのcustomColorsを取得（なければnull）
+// 同じカラーグループの custom データ（グループ正本 → レガシー part キャッシュ）
 function getGroupCustomColors(partId) {
     const part = state.partsData.parts.find(p => p.id === partId);
     if (!part) return null;
-    
-    const category = state.partsData.categories.find(c => c.id === part.category);
+
+    const groupId = getColorGroupIdForPart(part);
+    if (groupId && state.colorGroupCustom[groupId]) {
+        return state.colorGroupCustom[groupId];
+    }
+
+    const category = getPartCategory(part);
     if (!category || !category.colorGroup) return null;
-    
+
     const colorGroup = category.colorGroup;
-    
-    // 同グループの他カテゴリの選択中パーツからcustomColorsを探す
-    // multiple カテゴリは配列なので両方に対応
     for (const groupedCategory of state.partsData.categories) {
         if (groupedCategory.colorGroup !== colorGroup || groupedCategory.id === category.id) continue;
         const selection = state.selectedParts[groupedCategory.id];
@@ -1411,53 +1577,6 @@ function getGroupCustomColors(partId) {
         }
     }
     return null;
-}
-
-// カラーグループへの色設定の連携適用
-// colorName: 'normal' / プリセット名 / 'custom'
-function applyColorToGroup(partId, colorName) {
-    const part = state.partsData.parts.find(p => p.id === partId);
-    if (!part) return;
-    
-    const category = state.partsData.categories.find(c => c.id === part.category);
-    if (!category || !category.colorGroup) return;
-    
-    const colorGroup = category.colorGroup;
-    
-    // customの場合は自分のcustomColorsをコピーして連携
-    const customData = colorName === 'custom' ? (state.customColors[partId] || null) : null;
-    
-    state.partsData.categories
-        .filter(c => c.colorGroup === colorGroup && c.id !== category.id)
-        .forEach(groupedCategory => {
-            const selection = state.selectedParts[groupedCategory.id];
-            if (!selection) return;
-            
-            // multiple カテゴリは配列、single は文字列 → 両方に対応
-            const ids = Array.isArray(selection) ? selection : [selection];
-            ids.forEach(selectedPartId => {
-                const groupedPart = state.partsData.parts.find(p => p.id === selectedPartId);
-                if (!groupedPart) return;
-                
-                if (colorName === 'custom') {
-                    if (isCustomColorAllowed(groupedPart)) {
-                        state.selectedColors[selectedPartId] = 'custom';
-                        if (customData) {
-                            state.customColors[selectedPartId] = { ...customData };
-                        }
-                    } else {
-                        state.selectedColors[selectedPartId] = 'normal';
-                        delete state.customColors[selectedPartId];
-                    }
-                } else if (colorName !== 'normal') {
-                    // 同名プリセットがあれば適用、なければnormal
-                    state.selectedColors[selectedPartId] = (groupedPart.colors && groupedPart.colors[colorName])
-                        ? colorName : 'normal';
-                } else {
-                    state.selectedColors[selectedPartId] = 'normal';
-                }
-            });
-        });
 }
 
 // 拡張設定の表示/非表示切り替え
@@ -1527,22 +1646,28 @@ function applyCustomColor() {
         || (typeof rawSelection === 'string' ? rawSelection : null);
     if (!partId) return;
     
-    if (state.selectedColors[partId] !== 'custom') return;
-    
     const applyPart = state.partsData.parts.find(p => p.id === partId);
-    if (applyPart && !isCustomColorAllowed(applyPart)) return;
-    
-    // customColorsにUI値を保存
-    state.customColors[partId] = {
+    if (!applyPart) return;
+
+    const groupId = getColorGroupIdForPart(applyPart);
+    const effective = getEffectiveColorPreset(applyPart);
+    if (effective !== 'custom' && !(groupId && getColorGroupRawPreset(groupId) === 'custom')) return;
+    if (!isCustomColorAllowed(applyPart)) return;
+
+    const customData = {
         blend: document.getElementById('customBlendMode').value,
         color: document.getElementById('customColor').value,
         opacity: parseFloat(document.getElementById('customOpacity').value),
         hueShift: parseFloat(document.getElementById('customHueShift').value) || 0,
         hueOpacity: parseFloat(document.getElementById('customHueOpacity').value) || 0
     };
-    
-    // グループ連携（customColorsのコピーを渡す）
-    applyColorToGroup(partId, 'custom');
+
+    if (groupId) {
+        setColorGroupPreset(groupId, 'custom', customData);
+    } else {
+        state.customColors[partId] = customData;
+        state.selectedColors[partId] = 'custom';
+    }
     updatePreview();
 }
 
@@ -1662,25 +1787,26 @@ function addPartLayers(partId, layers, activeMaskGroups, activePoseId) {
     });
 }
 
-// パーツの色設定を取得
+// パーツの色設定を取得（カラーグループ意図 → パーツ定義で解決）
 function getColorSettings(part) {
-    const selectedColor = state.selectedColors[part.id];
-    
-    // 1. 通常（色設定なし）
+    const selectedColor = getEffectiveColorPreset(part);
+
     if (!selectedColor || selectedColor === 'normal') {
         return null;
     }
-    
-    // 2. カスタム色
+
     if (selectedColor === 'custom') {
+        const groupId = getColorGroupIdForPart(part);
+        if (groupId && state.colorGroupCustom[groupId]) {
+            return state.colorGroupCustom[groupId];
+        }
         return state.customColors[part.id] || null;
     }
-    
-    // 3. プリセット色
+
     if (part.colors && part.colors[selectedColor]) {
         return part.colors[selectedColor];
     }
-    
+
     return null;
 }
 
@@ -1881,6 +2007,27 @@ function saveCharacter() {
         clockDisplayMode: state.clockDisplayMode || 'jst',
         character: {}
     };
+
+    const colorGroupsOut = {};
+    for (const [groupId, preset] of Object.entries(state.colorGroupPresets)) {
+        if (!preset || preset === 'normal') continue;
+        if (preset === 'custom') {
+            const customData = state.colorGroupCustom[groupId] || {};
+            colorGroupsOut[groupId] = {
+                preset: 'custom',
+                blend: customData.blend,
+                colorValue: customData.color,
+                opacity: customData.opacity,
+                hueShift: customData.hueShift || 0,
+                hueOpacity: customData.hueOpacity || 0
+            };
+        } else {
+            colorGroupsOut[groupId] = { preset };
+        }
+    }
+    if (Object.keys(colorGroupsOut).length > 0) {
+        characterData.colorGroups = colorGroupsOut;
+    }
     
     for (let [categoryId, selection] of Object.entries(state.selectedParts)) {
         const category = state.partsData.categories.find(c => c.id === categoryId);
@@ -1889,7 +2036,7 @@ function saveCharacter() {
             characterData.character[categoryId] = selection;
         } else {
             const part = state.partsData.parts.find(p => p.id === selection);
-            let colorSetting = state.selectedColors[selection];
+            let colorSetting = part ? getEffectiveColorPreset(part) : (state.selectedColors[selection] || 'normal');
             if (colorSetting === 'custom' && part && !isCustomColorAllowed(part)) {
                 colorSetting = 'normal';
             }
@@ -1899,7 +2046,10 @@ function saveCharacter() {
             
             if (colorSetting && colorSetting !== 'normal') {
                 if (colorSetting === 'custom') {
-                    const customData = state.customColors[selection] || {};
+                    const groupId = part ? getColorGroupIdForPart(part) : null;
+                    const customData = (groupId && state.colorGroupCustom[groupId])
+                        ? state.colorGroupCustom[groupId]
+                        : (state.customColors[selection] || {});
                     characterData.character[categoryId] = {
                         id: selection,
                         color: 'custom',
@@ -1968,6 +2118,8 @@ function handleCharacterFileSelect(e) {
             state.selectedParts = {};
             state.selectedColors = {};
             state.customColors = {};
+            state.colorGroupPresets = {};
+            state.colorGroupCustom = {};
             state.selectedSide = {};
             
             const charData = data.character || {};
@@ -2008,6 +2160,12 @@ function handleCharacterFileSelect(e) {
                         }
                     }
                 }
+            }
+
+            if (data.colorGroups) {
+                applyLoadedColorGroups(data.colorGroups);
+            } else {
+                rebuildColorGroupsFromPartColors();
             }
             
             coerceAllDisallowedCustomColors();

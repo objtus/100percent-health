@@ -105,6 +105,8 @@ game/charamake/
 
 カテゴリ ID → パーツ ID（複数選択は配列）、色、`unlockedSecrets` 等。
 
+ルートに **`colorGroups`**（任意）: カテゴリの `colorGroup` ID ごとの共有色意図。例: `"skin": { "preset": "肌色2" }`。カスタム時は `preset: "custom"` と blend / colorValue 等。旧 saves はパーツごとの `color` から読込時に復元。
+
 ルートに **`clockDisplayMode`**（任意）: 時刻枠パーツの表示モード。`jst`（デフォルト）| `local` | `unix` | `both`。
 
 ### parts-data.json — 特例パーツ（`dynamicOverlay`）
