@@ -1023,19 +1023,6 @@
       "order": 40
     },
     {
-      "id": "nose5",
-      "name": "鼻5",
-      "category": "nose",
-      "zIndex": 105,
-      "layers": [
-        {
-          "file": "parts/face/nose/nose5.png",
-          "animated": false
-        }
-      ],
-      "order": 50
-    },
-    {
       "id": "mouth1",
       "name": "口1",
       "category": "mouth",
@@ -1082,7 +1069,8 @@
       "layers": [
         {
           "file": "parts/face/mouth/mouth4.png",
-          "animated": false
+          "animated": false,
+          "blendMode": "multiply"
         }
       ],
       "order": 40
@@ -1108,7 +1096,8 @@
       "layers": [
         {
           "file": "parts/face/mouth/mouth6.png",
-          "animated": false
+          "animated": false,
+          "blendMode": "multiply"
         }
       ],
       "order": 60
@@ -1173,7 +1162,8 @@
       "layers": [
         {
           "file": "parts/face/mouth/mouth11.png",
-          "animated": false
+          "animated": false,
+          "blendMode": "multiply"
         }
       ],
       "order": 110
