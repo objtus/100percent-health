@@ -189,7 +189,7 @@
       "id": "pupil1",
       "name": "瞳1",
       "category": "pupil",
-      "zIndex": 150,
+      "zIndex": 1150,
       "layers": [
         {
           "file": "parts/face/pupil/pupil1.png",
@@ -205,7 +205,7 @@
       "id": "pupil2",
       "name": "瞳2",
       "category": "pupil",
-      "zIndex": 150,
+      "zIndex": 1150,
       "layers": [
         {
           "file": "parts/face/pupil/pupil2.png",
@@ -226,7 +226,7 @@
       "id": "pupil3",
       "name": "瞳3",
       "category": "pupil",
-      "zIndex": 150,
+      "zIndex": 1150,
       "layers": [
         {
           "file": "parts/face/pupil/pupil3.png",
@@ -242,7 +242,7 @@
       "id": "pupil4",
       "name": "瞳4",
       "category": "pupil",
-      "zIndex": 150,
+      "zIndex": 1150,
       "layers": [
         {
           "file": "parts/face/pupil/pupil4.png",
@@ -256,7 +256,7 @@
       "id": "pupil5",
       "name": "瞳5",
       "category": "pupil",
-      "zIndex": 150,
+      "zIndex": 1150,
       "layers": [
         {
           "file": "parts/face/pupil/pupil5.png",
@@ -272,7 +272,7 @@
       "id": "pupil6",
       "name": "瞳6",
       "category": "pupil",
-      "zIndex": 150,
+      "zIndex": 1150,
       "layers": [
         {
           "file": "parts/face/pupil/pupil6.png",
@@ -288,7 +288,7 @@
       "id": "pupil7",
       "name": "瞳7",
       "category": "pupil",
-      "zIndex": 150,
+      "zIndex": 1150,
       "layers": [
         {
           "file": "parts/face/pupil/pupil7.png",
@@ -311,7 +311,7 @@
       "id": "pupil8",
       "name": "瞳8",
       "category": "pupil",
-      "zIndex": 150,
+      "zIndex": 1150,
       "layers": [
         {
           "file": "parts/face/pupil/pupil8.png",
@@ -327,7 +327,7 @@
       "id": "pupil9",
       "name": "瞳9",
       "category": "pupil",
-      "zIndex": 150,
+      "zIndex": 1150,
       "layers": [
         {
           "file": "parts/face/pupil/pupil9.png",
@@ -343,7 +343,7 @@
       "id": "eyelashes_turi1",
       "name": "ツリ目1",
       "category": "eyelashes",
-      "zIndex": 200,
+      "zIndex": 1200,
       "layers": [
         {
           "file": "parts/face/eyelashes/eyelashes1.png",
@@ -373,7 +373,7 @@
       "id": "eyelashes_normal1",
       "name": "普通目1",
       "category": "eyelashes",
-      "zIndex": 200,
+      "zIndex": 1200,
       "layers": [
         {
           "file": "parts/face/eyelashes/eyelashes2.png",
@@ -404,7 +404,7 @@
       "id": "eyelashes_normal2",
       "name": "普通目2",
       "category": "eyelashes",
-      "zIndex": 200,
+      "zIndex": 1200,
       "layers": [
         {
           "file": "parts/face/eyelashes/eyelashes3.png",
@@ -435,7 +435,7 @@
       "id": "eyelashes_normal3",
       "name": "普通目3",
       "category": "eyelashes",
-      "zIndex": 200,
+      "zIndex": 1200,
       "layers": [
         {
           "file": "parts/face/eyelashes/eyelashes8.png",
@@ -466,7 +466,7 @@
       "id": "eyelashes_simple1",
       "name": "シンプルまつ毛1",
       "category": "eyelashes",
-      "zIndex": 200,
+      "zIndex": 1200,
       "layers": [
         {
           "file": "parts/face/eyelashes/eyelashes4.png",
@@ -497,7 +497,7 @@
       "id": "eyelashes_jito1",
       "name": "ジト目1",
       "category": "eyelashes",
-      "zIndex": 200,
+      "zIndex": 1200,
       "layers": [
         {
           "file": "parts/face/eyelashes/eyelashes5.png",
@@ -528,7 +528,7 @@
       "id": "eyelashes_jito2",
       "name": "ジト目2",
       "category": "eyelashes",
-      "zIndex": 200,
+      "zIndex": 1200,
       "layers": [
         {
           "file": "parts/face/eyelashes/eyelashes6.png",
@@ -559,7 +559,7 @@
       "id": "eyelashes_jito3",
       "name": "ジト目3",
       "category": "eyelashes",
-      "zIndex": 200,
+      "zIndex": 1200,
       "layers": [
         {
           "file": "parts/face/eyelashes/eyelashes7.png",
@@ -589,7 +589,7 @@
       "id": "iris_none",
       "name": "瞳孔（なし）",
       "category": "iris",
-      "zIndex": 160,
+      "zIndex": 1160,
       "layers": [
         {
           "file": "parts/none.png",
@@ -603,7 +603,7 @@
       "id": "iris1",
       "name": "瞳孔1",
       "category": "iris",
-      "zIndex": 160,
+      "zIndex": 1160,
       "layers": [
         {
           "file": "parts/face/iris/iris1.png",
@@ -617,7 +617,7 @@
       "id": "iris2",
       "name": "瞳孔2",
       "category": "iris",
-      "zIndex": 160,
+      "zIndex": 1160,
       "layers": [
         {
           "file": "parts/face/iris/iris2.png",
@@ -631,7 +631,7 @@
       "id": "iris3",
       "name": "瞳孔3",
       "category": "iris",
-      "zIndex": 160,
+      "zIndex": 1160,
       "layers": [
         {
           "file": "parts/face/iris/iris3.png",
@@ -645,7 +645,7 @@
       "id": "iris4",
       "name": "瞳孔4",
       "category": "iris",
-      "zIndex": 160,
+      "zIndex": 1160,
       "layers": [
         {
           "file": "parts/face/iris/iris4.png",
@@ -659,7 +659,7 @@
       "id": "iris5",
       "name": "瞳孔5",
       "category": "iris",
-      "zIndex": 160,
+      "zIndex": 1160,
       "layers": [
         {
           "file": "parts/face/iris/iris5.png",
@@ -673,7 +673,7 @@
       "id": "iris6",
       "name": "瞳孔6",
       "category": "iris",
-      "zIndex": 160,
+      "zIndex": 1160,
       "layers": [
         {
           "file": "parts/face/iris/iris6.png",
@@ -687,7 +687,7 @@
       "id": "iris7",
       "name": "瞳孔7",
       "category": "iris",
-      "zIndex": 160,
+      "zIndex": 1160,
       "layers": [
         {
           "file": "parts/face/iris/iris7.png",
@@ -701,7 +701,7 @@
       "id": "eye-highlight1",
       "name": "瞳ハイライト1",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight4.png",
@@ -714,7 +714,7 @@
       "id": "eye-highlight2",
       "name": "瞳ハイライト2",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight2.png",
@@ -728,7 +728,7 @@
       "id": "eye-highlight3",
       "name": "瞳ハイライト3",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight3.png",
@@ -742,7 +742,7 @@
       "id": "eye-highlight4",
       "name": "瞳ハイライト4",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight1.png",
@@ -755,7 +755,7 @@
       "id": "eye-highlight5",
       "name": "瞳ハイライト5",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight5.png",
@@ -769,7 +769,7 @@
       "id": "eye-highlight6",
       "name": "瞳ハイライト6",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight6.png",
@@ -783,7 +783,7 @@
       "id": "eye-highlight7",
       "name": "瞳ハイライト7",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight7.png",
@@ -797,7 +797,7 @@
       "id": "eye-highlight8",
       "name": "瞳ハイライト8",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight8.png",
@@ -811,7 +811,7 @@
       "id": "eye-highlight9",
       "name": "瞳ハイライト9",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight9.png",
@@ -825,7 +825,7 @@
       "id": "eye-highlight10",
       "name": "瞳ハイライト10",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight10.png",
@@ -839,7 +839,7 @@
       "id": "eye-highlight11",
       "name": "瞳ハイライト11",
       "category": "eye-highlight",
-      "zIndex": 170,
+      "zIndex": 1170,
       "layers": [
         {
           "file": "parts/face/eyehighlight/irishighlight11.png",
@@ -853,7 +853,7 @@
       "id": "sclera1",
       "name": "白目1",
       "category": "sclera",
-      "zIndex": 110,
+      "zIndex": 1110,
       "layers": [
         {
           "file": "parts/face/sclera/sclera1.png",
@@ -867,7 +867,7 @@
       "id": "ears1",
       "name": "耳1",
       "category": "ears",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/ears/ear1R.png",
@@ -901,7 +901,7 @@
       "id": "eyebrows1",
       "name": "眉毛1",
       "category": "eyebrow",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/eyebrows/eyebrows1.png",
@@ -914,7 +914,7 @@
       "id": "eyebrows2",
       "name": "眉毛2",
       "category": "eyebrow",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/eyebrows/eyebrows2.png",
@@ -927,7 +927,7 @@
       "id": "eyebrows3",
       "name": "眉毛3",
       "category": "eyebrow",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/eyebrows/eyebrows3.png",
@@ -940,7 +940,7 @@
       "id": "eyebrows4",
       "name": "眉毛4",
       "category": "eyebrow",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/eyebrows/eyebrows4.png",
@@ -953,7 +953,7 @@
       "id": "eyebrows5",
       "name": "眉毛5",
       "category": "eyebrow",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/eyebrows/eyebrows5.png",
@@ -966,7 +966,7 @@
       "id": "eyebrows6",
       "name": "眉毛6",
       "category": "eyebrow",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/eyebrows/eyebrows6.png",
@@ -979,7 +979,7 @@
       "id": "eyebrows7",
       "name": "眉毛7",
       "category": "eyebrow",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/eyebrows/eyebrows7.png",
@@ -992,7 +992,7 @@
       "id": "eyebrows8",
       "name": "眉毛8",
       "category": "eyebrow",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/eyebrows/eyebrows8.png",
@@ -1005,7 +1005,7 @@
       "id": "nose1",
       "name": "鼻1",
       "category": "nose",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/nose/nose1.png",
@@ -1018,7 +1018,7 @@
       "id": "nose2",
       "name": "鼻2",
       "category": "nose",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/nose/nose2.png",
@@ -1031,7 +1031,7 @@
       "id": "nose3",
       "name": "鼻3",
       "category": "nose",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/nose/nose3.png",
@@ -1044,7 +1044,7 @@
       "id": "nose4",
       "name": "鼻4",
       "category": "nose",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/nose/nose4.png",
@@ -1057,7 +1057,7 @@
       "id": "mouth1",
       "name": "口1",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth1.png",
@@ -1070,7 +1070,7 @@
       "id": "mouth2",
       "name": "口2",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth2.png",
@@ -1083,7 +1083,7 @@
       "id": "mouth3",
       "name": "口3",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth3.png",
@@ -1096,7 +1096,7 @@
       "id": "mouth4",
       "name": "口4",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth4.png",
@@ -1110,7 +1110,7 @@
       "id": "mouth5",
       "name": "口5",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth5.png",
@@ -1123,7 +1123,7 @@
       "id": "mouth6",
       "name": "口6",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth6.png",
@@ -1137,7 +1137,7 @@
       "id": "mouth7",
       "name": "口7",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth7.png",
@@ -1150,7 +1150,7 @@
       "id": "mouth8",
       "name": "口8",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth8.png",
@@ -1163,7 +1163,7 @@
       "id": "mouth9",
       "name": "口9",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth9.png",
@@ -1176,7 +1176,7 @@
       "id": "mouth10",
       "name": "口10",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth10.png",
@@ -1189,7 +1189,7 @@
       "id": "mouth11",
       "name": "口11",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth11.png",
@@ -1203,7 +1203,7 @@
       "id": "mouth12",
       "name": "口12",
       "category": "mouth",
-      "zIndex": 105,
+      "zIndex": 1105,
       "layers": [
         {
           "file": "parts/face/mouth/mouth12.png",
@@ -1386,7 +1386,7 @@
       "id": "bangs1",
       "name": "前髪1",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs1.png",
@@ -1399,7 +1399,7 @@
       "id": "bangs2",
       "name": "前髪2",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs2.png",
@@ -1412,7 +1412,7 @@
       "id": "bangs3",
       "name": "前髪3",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs3.png",
@@ -1425,7 +1425,7 @@
       "id": "bangs4",
       "name": "前髪4",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs4.png",
@@ -1438,7 +1438,7 @@
       "id": "bangs5",
       "name": "前髪5",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs5.png",
@@ -1451,7 +1451,7 @@
       "id": "bangs6",
       "name": "前髪6",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs6.png",
@@ -1464,7 +1464,7 @@
       "id": "bangs7",
       "name": "前髪7",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs7.png",
@@ -1477,7 +1477,7 @@
       "id": "bangs8",
       "name": "前髪8",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs8.png",
@@ -1490,7 +1490,7 @@
       "id": "sidehair1",
       "name": "横髪1",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair1R.png",
@@ -1509,7 +1509,7 @@
       "id": "sidehair2",
       "name": "横髪2",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair2R.png",
@@ -1528,7 +1528,7 @@
       "id": "sidehair3",
       "name": "横髪3",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair3R.png",
@@ -1547,7 +1547,7 @@
       "id": "sidehair4",
       "name": "横髪4",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair4R.png",
@@ -1566,7 +1566,7 @@
       "id": "sidehair5",
       "name": "横髪5",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair5R.png",
@@ -1585,7 +1585,7 @@
       "id": "sidehair6",
       "name": "横髪6",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair6R.png",
@@ -1604,7 +1604,7 @@
       "id": "sidehair7",
       "name": "横髪7",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair7R.png",
@@ -1623,7 +1623,7 @@
       "id": "sidehair8",
       "name": "横髪8",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair8R.png",
@@ -1642,7 +1642,7 @@
       "id": "sidehair9",
       "name": "横髪9",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair9R.png",
@@ -1661,7 +1661,7 @@
       "id": "sidehair10",
       "name": "横髪10",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair10R.png",
@@ -1693,7 +1693,7 @@
       "id": "bangs9",
       "name": "前髪9",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs9.png",
@@ -1706,7 +1706,7 @@
       "id": "bangs10",
       "name": "前髪10",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs10.png",
@@ -1719,7 +1719,7 @@
       "id": "bangs11",
       "name": "前髪11",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs11.png",
@@ -1732,7 +1732,7 @@
       "id": "bangs12",
       "name": "前髪12",
       "category": "bangs",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs12.png",
@@ -1758,7 +1758,7 @@
       "id": "sidehair11",
       "name": "横髪11",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair11R.png",
@@ -1777,7 +1777,7 @@
       "id": "glasses-none",
       "name": "none",
       "category": "glasses",
-      "zIndex": 250,
+      "zIndex": 1250,
       "layers": [
         {
           "file": "parts/none.png",
@@ -1792,7 +1792,7 @@
       "id": "glasses1",
       "name": "眼鏡1",
       "category": "glasses",
-      "zIndex": 250,
+      "zIndex": 1250,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses1-black.png",
@@ -1810,7 +1810,7 @@
       "id": "glasses2",
       "name": "眼鏡2",
       "category": "glasses",
-      "zIndex": 250,
+      "zIndex": 1250,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses2.png",
@@ -1863,7 +1863,7 @@
       "id": "sclera2",
       "name": "白目2",
       "category": "sclera",
-      "zIndex": 110,
+      "zIndex": 1110,
       "layers": [
         {
           "file": "parts/face/sclera/sclera2.png",
@@ -1896,7 +1896,7 @@
       "id": "ahoge1",
       "name": "アホ毛1",
       "category": "ahoge",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/hair/ahoge/ahoge1.png",
@@ -1909,7 +1909,7 @@
       "id": "ahoge2",
       "name": "アホ毛2",
       "category": "ahoge",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/hair/ahoge/ahoge2.png",
@@ -1922,7 +1922,7 @@
       "id": "ahoge3",
       "name": "アホ毛3",
       "category": "ahoge",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/hair/ahoge/ahoge3.png",
@@ -1935,7 +1935,7 @@
       "id": "ahoge4",
       "name": "アホ毛4",
       "category": "ahoge",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/hair/ahoge/ahoge4.png",
@@ -1948,7 +1948,7 @@
       "id": "odango1",
       "name": "おだんご1",
       "category": "ahoge",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/hair/ahoge/odango1L.png",
@@ -1967,7 +1967,7 @@
       "id": "petittail",
       "name": "ミニツインテール",
       "category": "ahoge",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/hair/ahoge/petittailL.png",
@@ -2000,7 +2000,7 @@
       "id": "halfpants1",
       "name": "ハーフパンツ1",
       "category": "bottoms",
-      "zIndex": 200,
+      "zIndex": 250,
       "layers": [
         {
           "file": "parts\\clothes\\bottoms\\halfpants1.png",
@@ -2008,7 +2008,7 @@
         },
         {
           "file": "parts\\clothes\\bottoms\\halfpants1overray.png",
-          "zIndex": 550,
+          "zIndex": 650,
           "animated": false
         }
       ],
@@ -2018,7 +2018,7 @@
       "id": "schooluniform_pleatedskirt1",
       "name": "制服プリーツスカート1",
       "category": "bottoms",
-      "zIndex": 210,
+      "zIndex": 250,
       "layers": [
         {
           "file": "parts\\clothes\\bottoms\\schooluniform_pleatedskirt1.png",
@@ -2026,7 +2026,7 @@
         },
         {
           "file": "parts\\clothes\\bottoms\\schooluniform_pleatedskirt1overray.png",
-          "zIndex": 550,
+          "zIndex": 650,
           "animated": false
         }
       ],
@@ -2108,7 +2108,8 @@
       ],
       "order": 20,
       "unlocks": [
-        "cardigan"
+        "cardigan",
+        "underwear"
       ]
     },
     {
@@ -2185,16 +2186,30 @@
       "zIndex": 295,
       "layers": [
         {
-          "file": "parts/clothes/outer/jacket1.png",
-          "animated": false
-        },
-        {
           "file": "parts/none.png",
           "animated": false,
           "poseFiles": {
-            "peace": "parts/clothes/outer/jacket1hand.png"
+            "peace": "parts/clothes/outer/jacket1hand-front.png"
           },
-          "zIndex": 540
+          "zIndex": 610
+        },
+        {
+          "file": "parts/none.png",
+          "zIndex": 600,
+          "animated": false,
+          "poseFiles": {
+            "peace": "parts/clothes/outer/jacket1hand-back.png"
+          }
+        },
+        {
+          "file": "parts/clothes/outer/jacket1-right.png",
+          "animated": false,
+          "zIndex": 750
+        },
+        {
+          "file": "parts/clothes/outer/jacket1-left.png",
+          "animated": false,
+          "zIndex": 560
         },
         {
           "file": "parts/clothes/outer/jacket1collar.png",
@@ -2224,7 +2239,7 @@
       "id": "eyepatch1",
       "name": "眼帯1",
       "category": "face-accessories",
-      "zIndex": 200,
+      "zIndex": 1200,
       "layers": [
         {
           "file": "parts/accessories/face/eyepatch1.png",
@@ -2263,7 +2278,7 @@
       "id": "babushka1",
       "name": "バブーシュカ1",
       "category": "head-accessories",
-      "zIndex": 350,
+      "zIndex": 1350,
       "layers": [
         {
           "file": "parts/accessories/head/babushka1.png",
@@ -2272,7 +2287,7 @@
         {
           "file": "parts/accessories/head/babushka1back.png",
           "animated": false,
-          "zIndex": 290
+          "zIndex": 600
         }
       ],
       "order": 20,
@@ -2289,14 +2304,15 @@
         "ahoge1",
         "ahoge2",
         "ahoge3",
-        "ahoge4"
+        "ahoge4",
+        "hair-highlight"
       ]
     },
     {
       "id": "sidehair12",
       "name": "横髪12",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair12R.png",
@@ -2315,7 +2331,7 @@
       "id": "sidehair13",
       "name": "横髪13",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair13R.png",
@@ -2334,7 +2350,7 @@
       "id": "sidehair14",
       "name": "横髪14",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair14R.png",
@@ -2353,7 +2369,7 @@
       "id": "sidehair15",
       "name": "横髪15",
       "category": "sidehair",
-      "zIndex": 300,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair15R.png",
@@ -2399,7 +2415,7 @@
       "id": "hair-highlight1",
       "name": "髪ハイライト1",
       "category": "hair-highlight",
-      "zIndex": 340,
+      "zIndex": 1340,
       "layers": [
         {
           "file": "parts/hair/hairhighlight/hairhighlight1.png",
@@ -2412,7 +2428,7 @@
       "id": "hair-highlight2",
       "name": "髪ハイライト2",
       "category": "hair-highlight",
-      "zIndex": 340,
+      "zIndex": 1340,
       "layers": [
         {
           "file": "parts/hair/hairhighlight/hairhighlight2.png",
@@ -2430,7 +2446,7 @@
       "id": "hair-highlight3",
       "name": "髪ハイライト3",
       "category": "hair-highlight",
-      "zIndex": 340,
+      "zIndex": 1340,
       "layers": [
         {
           "file": "parts/hair/hairhighlight/hairhighlight3.png",
@@ -2448,7 +2464,7 @@
       "id": "hair-highlight4",
       "name": "髪ハイライト4",
       "category": "hair-highlight",
-      "zIndex": 340,
+      "zIndex": 1340,
       "layers": [
         {
           "file": "parts/hair/hairhighlight/hairhighlight4.png",
@@ -2458,23 +2474,10 @@
       "order": 10
     },
     {
-      "id": "none",
-      "name": "なし",
-      "category": "cardigan",
-      "zIndex": 100,
-      "layers": [
-        {
-          "file": "parts/none.png",
-          "animated": false
-        }
-      ],
-      "order": 20
-    },
-    {
       "id": "blush1",
       "name": "頬ブラシ1",
       "category": "blush",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/face/blush/blush1.png",
@@ -2488,7 +2491,7 @@
       "id": "blush2",
       "name": "頬ブラシ2",
       "category": "blush",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/face/blush/blush2.png",
@@ -2502,7 +2505,7 @@
       "id": "blush3",
       "name": "頬ブラシ3",
       "category": "blush",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/face/blush/blush3.png",
@@ -2510,13 +2513,13 @@
           "blendMode": "multiply"
         }
       ],
-      "order": 30
+      "order": 40
     },
     {
       "id": "blush4",
       "name": "頬ブラシ4",
       "category": "blush",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/face/blush/blush4.png",
@@ -2524,13 +2527,13 @@
           "blendMode": "multiply"
         }
       ],
-      "order": 30
+      "order": 50
     },
     {
       "id": "blush5",
       "name": "頬ブラシ5",
       "category": "blush",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/face/blush/blush5.png",
@@ -2538,13 +2541,13 @@
           "blendMode": "multiply"
         }
       ],
-      "order": 30
+      "order": 60
     },
     {
       "id": "blush6",
       "name": "頬ブラシ6",
       "category": "blush",
-      "zIndex": 100,
+      "zIndex": 1100,
       "layers": [
         {
           "file": "parts/face/blush/blush6.png",
@@ -2552,16 +2555,67 @@
           "blendMode": "multiply"
         }
       ],
-      "order": 30
+      "order": 70
+    },
+    {
+      "id": "black-dress",
+      "name": "黒ドレス",
+      "category": "tops",
+      "zIndex": 250,
+      "layers": [
+        {
+          "file": "parts/clothes/tops/black-dress/black-dress-base.png",
+          "animated": false
+        },
+        {
+          "file": "parts/clothes/tops/black-dress/black-dress-skirt.png",
+          "animated": false,
+          "zIndex": 550
+        },
+        {
+          "file": "parts/clothes/tops/black-dress/black-dress-collar-bg.png",
+          "animated": false,
+          "zIndex": 90
+        }
+      ],
+      "order": 30,
+      "hides": [
+        "jacket1",
+        "bottoms"
+      ],
+      "unlocks": [
+        "black-dress-collar"
+      ]
+    },
+    {
+      "id": "black-dress-collar-1",
+      "name": "黒ドレス襟1",
+      "category": "black-dress-collar",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/clothes/tops/black-dress/collar/black-dress-collar1.png",
+          "animated": false
+        }
+      ],
+      "order": 10,
+      "unlocks": [
+        "pinafore"
+      ]
     },
     {
       "id": "cardigan",
       "name": "カーディガン",
       "category": "cardigan",
-      "zIndex": 100,
+      "zIndex": 555,
       "layers": [
         {
-          "file": "parts/clothes/tops/cardigan/cardigan.png",
+          "file": "parts/clothes/tops/cardigan/cardigan-right.png",
+          "animated": false,
+          "zIndex": 700
+        },
+        {
+          "file": "parts/clothes/tops/cardigan/cardigan-left.png",
           "animated": false
         },
         {
@@ -2569,10 +2623,80 @@
           "animated": false,
           "poseFiles": {
             "peace": "parts/clothes/tops/cardigan/cardigan-peace.png"
-          }
+          },
+          "zIndex": 605
+        },
+        {
+          "file": "parts/clothes/tops/cardigan/cardigan-bg.png",
+          "zIndex": 100,
+          "animated": false
         }
       ],
-      "order": 30
+      "order": 20,
+      "masksInnerGroups": [
+        "inner_group_1"
+      ]
+    },
+    {
+      "id": "pinafore",
+      "name": "ピナフォア",
+      "category": "pinafore",
+      "zIndex": 260,
+      "layers": [
+        {
+          "file": "parts\\clothes\\tops\\pinafore\\pinafore-bg.png",
+          "animated": false
+        },
+        {
+          "file": "parts\\clothes\\tops\\pinafore\\pinafore-base.png",
+          "animated": false
+        },
+        {
+          "file": "parts\\clothes\\tops\\pinafore\\pinafore-skirt.png",
+          "animated": false,
+          "zIndex": 670
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "pinafore-none",
+      "name": "なし",
+      "category": "pinafore",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "cardigan-none",
+      "name": "なし",
+      "category": "cardigan",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "blush-none",
+      "name": "なし",
+      "category": "blush",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10
     }
   ],
   "categories": [
@@ -2733,7 +2857,7 @@
       "order": 180,
       "selectionMode": "single",
       "group": "cloches",
-      "hidden": false
+      "hidden": true
     },
     {
       "id": "ahoge",
@@ -2790,7 +2914,7 @@
     {
       "id": "outer",
       "name": "アウター",
-      "order": 250,
+      "order": 300,
       "selectionMode": "single",
       "group": "cloches",
       "hidden": false
@@ -2823,6 +2947,22 @@
       "id": "cardigan",
       "name": "カーディガン",
       "order": 230,
+      "selectionMode": "single",
+      "hidden": true,
+      "group": "cloches"
+    },
+    {
+      "id": "black-dress-collar",
+      "name": "黒ドレス襟",
+      "order": 240,
+      "selectionMode": "single",
+      "hidden": true,
+      "group": "cloches"
+    },
+    {
+      "id": "pinafore",
+      "name": "ピナフォア",
+      "order": 250,
       "selectionMode": "single",
       "hidden": true,
       "group": "cloches"
