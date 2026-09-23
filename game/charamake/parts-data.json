@@ -1994,7 +1994,7 @@
         }
       ],
       "allowCustomColor": false,
-      "order": 30
+      "order": 40
     },
     {
       "id": "halfpants1",
@@ -2419,7 +2419,8 @@
       "layers": [
         {
           "file": "parts/hair/hairhighlight/hairhighlight1.png",
-          "animated": false
+          "animated": false,
+          "blendMode": "screen"
         }
       ],
       "order": 10
@@ -2432,7 +2433,8 @@
       "layers": [
         {
           "file": "parts/hair/hairhighlight/hairhighlight2.png",
-          "animated": false
+          "animated": false,
+          "blendMode": "screen"
         },
         {
           "file": "parts/hair/hairhighlight/おでこガード.png",
@@ -2450,7 +2452,8 @@
       "layers": [
         {
           "file": "parts/hair/hairhighlight/hairhighlight3.png",
-          "animated": false
+          "animated": false,
+          "blendMode": "screen"
         },
         {
           "file": "parts/hair/hairhighlight/おでこガード.png",
@@ -2635,6 +2638,9 @@
       "order": 20,
       "masksInnerGroups": [
         "inner_group_1"
+      ],
+      "hides": [
+        "pinafore"
       ]
     },
     {
@@ -2657,7 +2663,10 @@
           "zIndex": 670
         }
       ],
-      "order": 20
+      "order": 20,
+      "hides": [
+        "cardigan"
+      ]
     },
     {
       "id": "pinafore-none",
@@ -2697,6 +2706,24 @@
         }
       ],
       "order": 10
+    },
+    {
+      "id": "trackpants",
+      "name": "ジャージズボン",
+      "category": "bottoms",
+      "zIndex": 250,
+      "layers": [
+        {
+          "file": "parts/clothes/bottoms/trackpants/trackpants_hip.png",
+          "animated": false
+        },
+        {
+          "file": "parts/clothes/bottoms/trackpants/trackpants.png",
+          "animated": false,
+          "zIndex": 650
+        }
+      ],
+      "order": 30
     }
   ],
   "categories": [
@@ -2886,7 +2913,7 @@
     },
     {
       "id": "tops",
-      "name": "トップス",
+      "name": "トップス1",
       "order": 210,
       "selectionMode": "single",
       "group": "cloches",
@@ -2966,6 +2993,14 @@
       "selectionMode": "single",
       "hidden": true,
       "group": "cloches"
+    },
+    {
+      "id": "tops2",
+      "name": "トップス2",
+      "order": 320,
+      "selectionMode": "multiple",
+      "group": "cloches",
+      "hidden": false
     }
   ],
   "categoryGroups": [
