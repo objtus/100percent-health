@@ -8,6 +8,10 @@
       {
         "id": "inner_group_1",
         "name": "インナーグループ1"
+      },
+      {
+        "id": "pinafore1",
+        "name": "pinafore1"
       }
     ],
     "secrets": [
@@ -2080,7 +2084,7 @@
     {
       "id": "shirts1",
       "name": "シャツ1",
-      "category": "tops",
+      "category": "tops1",
       "zIndex": 250,
       "layers": [
         {
@@ -2098,7 +2102,7 @@
     {
       "id": "tops_none",
       "name": "なし",
-      "category": "tops",
+      "category": "tops1",
       "zIndex": 100,
       "layers": [
         {
@@ -2106,7 +2110,7 @@
           "animated": false
         }
       ],
-      "order": 20,
+      "order": 30,
       "unlocks": [
         "cardigan",
         "underwear"
@@ -2220,6 +2224,9 @@
       "order": 10,
       "masksInnerGroups": [
         "inner_group_1"
+      ],
+      "hides": [
+        "pinafore"
       ]
     },
     {
@@ -2563,7 +2570,7 @@
     {
       "id": "black-dress",
       "name": "黒ドレス",
-      "category": "tops",
+      "category": "tops1",
       "zIndex": 250,
       "layers": [
         {
@@ -2581,9 +2588,10 @@
           "zIndex": 90
         }
       ],
-      "order": 30,
+      "order": 20,
       "hides": [
         "jacket1",
+        "tracktop",
         "bottoms"
       ],
       "unlocks": [
@@ -2609,7 +2617,7 @@
     {
       "id": "cardigan",
       "name": "カーディガン",
-      "category": "cardigan",
+      "category": "tops2",
       "zIndex": 555,
       "layers": [
         {
@@ -2646,7 +2654,7 @@
     {
       "id": "pinafore",
       "name": "ピナフォア",
-      "category": "pinafore",
+      "category": "tops2",
       "zIndex": 260,
       "layers": [
         {
@@ -2655,7 +2663,9 @@
         },
         {
           "file": "parts\\clothes\\tops\\pinafore\\pinafore-base.png",
-          "animated": false
+          "animated": false,
+          "innerGroup": "pinafore1",
+          "maskedFile": "parts\\clothes\\tops\\pinafore\\pinafore-base-cut1.png"
         },
         {
           "file": "parts\\clothes\\tops\\pinafore\\pinafore-skirt.png",
@@ -2663,36 +2673,10 @@
           "zIndex": 670
         }
       ],
-      "order": 20,
+      "order": 40,
       "hides": [
         "cardigan"
       ]
-    },
-    {
-      "id": "pinafore-none",
-      "name": "なし",
-      "category": "pinafore",
-      "zIndex": 100,
-      "layers": [
-        {
-          "file": "parts/none.png",
-          "animated": false
-        }
-      ],
-      "order": 10
-    },
-    {
-      "id": "cardigan-none",
-      "name": "なし",
-      "category": "cardigan",
-      "zIndex": 100,
-      "layers": [
-        {
-          "file": "parts/none.png",
-          "animated": false
-        }
-      ],
-      "order": 10
     },
     {
       "id": "blush-none",
@@ -2724,6 +2708,48 @@
         }
       ],
       "order": 30
+    },
+    {
+      "id": "tops-none",
+      "name": "なし",
+      "category": "tops2",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "tracktop",
+      "name": "ジャージ上",
+      "category": "tops2",
+      "zIndex": 255,
+      "layers": [
+        {
+          "file": "parts/clothes/tops/tracktop/tracktop.png",
+          "animated": false
+        },
+        {
+          "file": "parts/none.png",
+          "animated": false,
+          "poseFiles": {
+            "peace": "parts/clothes/tops/tracktop/tracktop-peace.png"
+          },
+          "zIndex": 605
+        },
+        {
+          "file": "parts/clothes/tops/tracktop/tracktop-hip.png",
+          "animated": false
+        }
+      ],
+      "order": 30,
+      "masksInnerGroups": [
+        "pinafore1",
+        "inner_group_1"
+      ]
     }
   ],
   "categories": [
@@ -2912,13 +2938,21 @@
       "hidden": false
     },
     {
-      "id": "tops",
+      "id": "tops1",
       "name": "トップス1",
       "order": 210,
       "selectionMode": "single",
       "group": "cloches",
       "hidden": false,
       "colorGroup": "shirts"
+    },
+    {
+      "id": "tops2",
+      "name": "トップス2",
+      "order": 250,
+      "selectionMode": "multiple",
+      "group": "cloches",
+      "hidden": false
     },
     {
       "id": "shirts1-collar",
@@ -2971,36 +3005,12 @@
       "hidden": false
     },
     {
-      "id": "cardigan",
-      "name": "カーディガン",
+      "id": "black-dress-collar",
+      "name": "黒ドレス襟",
       "order": 230,
       "selectionMode": "single",
       "hidden": true,
       "group": "cloches"
-    },
-    {
-      "id": "black-dress-collar",
-      "name": "黒ドレス襟",
-      "order": 240,
-      "selectionMode": "single",
-      "hidden": true,
-      "group": "cloches"
-    },
-    {
-      "id": "pinafore",
-      "name": "ピナフォア",
-      "order": 250,
-      "selectionMode": "single",
-      "hidden": true,
-      "group": "cloches"
-    },
-    {
-      "id": "tops2",
-      "name": "トップス2",
-      "order": 320,
-      "selectionMode": "multiple",
-      "group": "cloches",
-      "hidden": false
     }
   ],
   "categoryGroups": [
