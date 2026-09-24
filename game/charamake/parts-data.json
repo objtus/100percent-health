@@ -1870,14 +1870,24 @@
       "zIndex": 1110,
       "layers": [
         {
-          "file": "parts/face/sclera/sclera2.png",
+          "file": "parts/face/sclera/sclera1.png",
           "animated": false
         }
       ],
       "colors": {
         "白目1": {
-          "blend": "lighten",
-          "color": "#eafbfb",
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "白目2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "白目3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
           "opacity": 1
         }
       },
@@ -2750,6 +2760,109 @@
         "pinafore1",
         "inner_group_1"
       ]
+    },
+    {
+      "id": "lower_eyelid1",
+      "name": "下まぶた1",
+      "category": "lower_eyelid",
+      "zIndex": 1250,
+      "layers": [
+        {
+          "file": "parts\\face\\lowereyelid\\lowereyelid1.png",
+          "animated": false
+        }
+      ],
+      "order": 20,
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "lower_eyelid_none",
+      "name": "なし",
+      "category": "lower_eyelid",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "lower_eyelid2",
+      "name": "下まぶた2",
+      "category": "lower_eyelid",
+      "zIndex": 1250,
+      "layers": [
+        {
+          "file": "parts\\face\\lowereyelid\\lowereyelid2.png",
+          "animated": false
+        }
+      ],
+      "order": 30,
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "lower_eyelashes1",
+      "name": "下まつ毛1",
+      "category": "lower_eyelid",
+      "zIndex": 1250,
+      "layers": [
+        {
+          "file": "parts\\face\\lowereyelid\\lowereyelashes1.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ],
+      "order": 40,
+      "colors": {},
+      "allowCustomColor": false
+    },
+    {
+      "id": "darkcircles1",
+      "name": "くま1",
+      "category": "lower_eyelid",
+      "zIndex": 1250,
+      "layers": [
+        {
+          "file": "parts\\face\\lowereyelid\\darkcircles1.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ],
+      "order": 50
     }
   ],
   "categories": [
@@ -2797,7 +2910,7 @@
     {
       "id": "pupil",
       "name": "瞳",
-      "order": 30,
+      "order": 35,
       "selectionMode": "single",
       "group": "face",
       "hidden": false
@@ -2814,7 +2927,7 @@
     {
       "id": "iris",
       "name": "瞳装飾",
-      "order": 35,
+      "order": 40,
       "selectionMode": "multiple",
       "hidden": true,
       "group": "face"
@@ -2822,7 +2935,7 @@
     {
       "id": "eye-highlight",
       "name": "瞳ハイライト",
-      "order": 25,
+      "order": 30,
       "selectionMode": "multiple",
       "group": "face",
       "hidden": false
@@ -2830,7 +2943,7 @@
     {
       "id": "sclera",
       "name": "白目",
-      "order": 40,
+      "order": 50,
       "selectionMode": "single",
       "group": "face",
       "hidden": false
@@ -2838,7 +2951,7 @@
     {
       "id": "blush",
       "name": "頬ブラシ",
-      "order": 50,
+      "order": 55,
       "selectionMode": "multiple",
       "group": "face",
       "hidden": false
@@ -3011,6 +3124,15 @@
       "selectionMode": "single",
       "hidden": true,
       "group": "cloches"
+    },
+    {
+      "id": "lower_eyelid",
+      "name": "下まぶた",
+      "order": 25,
+      "selectionMode": "single",
+      "group": "face",
+      "hidden": false,
+      "colorGroup": "skin"
     }
   ],
   "categoryGroups": [
