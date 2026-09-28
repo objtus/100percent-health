@@ -1,15 +1,58 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-<head>
+<head prefix="og: http://ogp.me/ns#">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>profile:yuinoid - 100%health</title>
+  <meta name="description" content="yuinoid / いど子の個人プロフィール。活動、fediverse 利用、好きな音楽や影響を受けた作品など。">
+  <meta name="author" content="yuinoid">
+  <meta property="og:url" content="https://yuinoid.neocities.org/txt/profile.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="100%health">
+  <meta property="og:title" content="profile:yuinoid - 100%health">
+  <meta property="og:description" content="yuinoid / いど子の個人プロフィール。活動、fediverse 利用、好きな音楽や影響を受けた作品など。">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yuinoid.neocities.org/img/ogp.gif">
+  <link rel="canonical" href="https://yuinoid.neocities.org/txt/profile.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://yuinoid.neocities.org/img/ogp.gif">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="../1column.css">
   <script src="../js/jquery-3.6.0.min.js" defer></script>
   <script src="../js/main.js" defer></script>
   <script src="../js/mouse.js" defer></script>
   <link rel="profile" href="https://microformats.org/profile/hcard">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "profile:yuinoid",
+          "url": "https://yuinoid.neocities.org/txt/profile.html",
+          "inLanguage": "ja",
+          "about": { "@id": "https://yuinoid.neocities.org/#author" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://yuinoid.neocities.org/#author",
+          "name": "yuinoid",
+          "alternateName": "いど子",
+          "url": "https://yuinoid.neocities.org/aboutme.html"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "100%health", "item": "https://yuinoid.neocities.org/" },
+            { "@type": "ListItem", "position": 2, "name": "about_me", "item": "https://yuinoid.neocities.org/aboutme.html" },
+            { "@type": "ListItem", "position": 3, "name": "txt", "item": "https://yuinoid.neocities.org/txt/txt_main.html" },
+            { "@type": "ListItem", "position": 4, "name": "profile:yuinoid", "item": "https://yuinoid.neocities.org/txt/profile.html" }
+          ]
+        }
+      ]
+    }
+  </script>
   <style>
     /* 本文 */
     #galleryspace {
@@ -270,8 +313,11 @@
           </ol>
         </nav>
       </header>
-      <section id="textblock">
+      <article id="textblock">
         <h1 class="title">プロフィールのページ</h1>
+        <p class="byline" style="margin: 0 0 1rem; font-size: 0.9rem;">
+          by <a href="/aboutme.html" rel="author">yuinoid</a> / いど子
+        </p>
         <section id="profile">
           <h2 id="profile_header" class="highlight">前略プロフィール <a href="#profile" class="header-link">§</a></h2>
             <figure>
@@ -497,7 +543,7 @@
           </figure>
         </section>
 
-      </section>
+      </article>
     </main>
 
     <footer id="main-footer">

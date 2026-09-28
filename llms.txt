@@ -6,6 +6,7 @@
 
 - https://yuinoid.neocities.org/txt/100phealth_introduction.html
 - https://yuinoid.neocities.org/aboutme.html
+- https://yuinoid.neocities.org/txt/profile.html
 
 サイトの説明・コンセプトは introduction、作者プロフィールは about me を参照。
 
