@@ -64,3 +64,10 @@
     var i = Math.floor(Math.random() * mylink.length);
     location.href = mylink[i];
   }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var btn = document.getElementById("randomjump-btn");
+    if (btn) {
+      btn.addEventListener("click", random_jump);
+    }
+  });

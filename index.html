@@ -13,7 +13,10 @@
   <meta property="og:description" content="このサイトはyuinoidのwebページ「100%health」です。このサイトは、yuinoid / いど子の個人サイトであり、創作系個人サイトのスタイルを模倣した、ポートフォリオサイトです。">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="100%health">
-  <meta property="og:image" content="/img/ogp.gif">
+  <meta property="og:image" content="https://yuinoid.neocities.org/img/ogp.gif">
+  <link rel="canonical" href="https://yuinoid.neocities.org/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://yuinoid.neocities.org/img/ogp.gif">
   <meta name="theme-color" content="#ffffff">
   <meta name="google-site-verification" content="H_-LY4RFx7v9bkgjTQpjGWcfEjtOkGaq0ie_m_vNe4g">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -25,6 +28,32 @@
   <script src="./js/mouse.js" defer></script>
   <script src="./js/rundomjump.js" defer></script>
   <link rel="alternate" type="application/rss+xml" title="100%health RSS Feed" href="/rss.xml">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "name": "100%health",
+          "url": "https://yuinoid.neocities.org/",
+          "inLanguage": "ja",
+          "description": "このサイトはyuinoidのwebページ「100%health」です。このサイトは、yuinoid / いど子の個人サイトであり、創作系個人サイトのスタイルを模倣した、ポートフォリオサイトです。"
+        },
+        {
+          "@type": "Person",
+          "name": "yuinoid",
+          "alternateName": "いど子",
+          "url": "https://yuinoid.neocities.org/aboutme.html",
+          "sameAs": [
+            "https://twitter.com/yuinoid",
+            "https://yuinoid.tumblr.com",
+            "https://tanoshii.site/@health",
+            "https://neocities.org/site/yuinoid"
+          ]
+        }
+      ]
+    }
+  </script>
   <style>
     #gallerymaphtml {
       width: 18em;
@@ -157,7 +186,7 @@
 <body>
   <div id="skip-links-container">
     <!-- スキップリンク -->
-    <a href="#item2" class="skip-link" id="skip-link">メインコンテンツにスキップ</a>
+    <a href="#main" class="skip-link" id="skip-link">メインコンテンツにスキップ</a>
     <a href="#about" class="skip-link" id="skip-about">aboutセクションにスキップ</a>
     <a href="#gallery" class="skip-link" id="skip-gallery">galleryセクションにスキップ</a>
     <a href="#works" class="skip-link" id="skip-works">worksセクションにスキップ</a>
@@ -169,15 +198,16 @@
       <div id="item1">
         <h1 id="sitetitle" title="site title">100%health</h1>
       </div>
+      <main id="main">
       <div id="item2">
-        <nav class="section" id="about" aria-label="自己・サイト情報セクション">
+        <section class="section" id="about" aria-label="自己・サイト情報セクション">
           <h2 class="highlight">
             <a class="highlight-anchor" href="aboutme.html">
               <span title="about" lang="en">about</span> / <small>わたしについて</small><span class="internallink" aria-hidden="true">>></span>
             </a>
           </h2>
-          <div id="aboutcontainer">
-            <h3 class="section-title">hello!</h3>
+          <article id="aboutcontainer" aria-labelledby="about-hello">
+            <h3 class="section-title" id="about-hello">hello!</h3>
             <p style="margin: 5px 0;">
               ようこそ！<br>
               わたしは <a href="/aboutme.html">yuinoid / いど子</a> です。
@@ -194,7 +224,7 @@
               This is yuinoid's web page ''100%health''.<br>
               About this site: <a href="txt/100phealth_introduction.html" style="text-decoration: underline;">100%health_introduction</a>.
             </p>
-          </div>
+          </article>
           <div id="indexcontainer">
             <h3 class="section-title">index</h3>
             <div id="indexlist">
@@ -209,7 +239,7 @@
               </ul>
             </div>
           </div>
-        </nav>
+        </section>
         <nav class="section" id="changelog" aria-label="更新履歴セクション">
           <h2 class="highlight">
             <a class="highlight-anchor" href="changelog_main.html">
@@ -317,9 +347,9 @@
         <nav class="section" id="site-information" aria-label="サイト情報セクション">
           <h2 class="section-title">site information</h2>
           <div id="randomjump">
-            <a href="javascript:random_jump();">
-              <img id="randomjumpimg" src="./img/d2000.gif" alt="ランダムジャンプ機能のアイコン - クリックするとランダムなページに移動します" style="width:200px;opacity:1;">
-            </a>
+            <button type="button" id="randomjump-btn" aria-label="ランダムなページへ移動">
+              <img id="randomjumpimg" src="./img/d2000.gif" alt="" style="width:200px;opacity:1;">
+            </button>
           </div>
           <div>
             <div id="accesscounterhtml"></div>
@@ -332,6 +362,7 @@
           </div>
         </nav>
       </div>
+      </main>
     </div>
     <div id="footerhtml"></div>
   </div>

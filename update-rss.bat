@@ -38,7 +38,7 @@ if not exist "node_modules" (
 )
 
 echo.
-echo [3/3] Generating RSS from changelog.html...
+echo [3/4] Generating RSS from changelog.html...
 
 node rss-generator.js
 if errorlevel 1 (
@@ -54,9 +54,24 @@ echo OK: rss.xml generated.
 if exist "rss.xml" for %%A in (rss.xml) do echo Size: %%~zA bytes
 
 echo.
+echo [4/4] Generating sitemap.xml...
+
+node sitemap-generator.js
+if errorlevel 1 (
+    echo ERROR: Sitemap generation failed.
+    echo.
+    pause
+    exit /b 1
+)
+
+echo.
+if exist "sitemap.xml" for %%A in (sitemap.xml) do echo OK: sitemap.xml Size: %%~zA bytes
+
+echo.
 echo Next steps:
-echo   1. Upload rss.xml to Neocities
-echo   2. Open /rss.xml on your site to verify
+echo   1. Upload rss.xml and sitemap.xml to Neocities
+echo   2. Open /rss.xml and /sitemap.xml on your site to verify
+echo   3. Upload robots.txt if not yet on the server
 echo.
 echo ===============================================
 echo Done.

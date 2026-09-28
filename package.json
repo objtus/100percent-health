@@ -5,6 +5,8 @@
   "main": "rss-generator.js",
   "scripts": {
     "generate-rss": "node rss-generator.js",
+    "generate-sitemap": "node sitemap-generator.js",
+    "generate-feeds": "npm run generate-rss && npm run generate-sitemap",
     "test": "node test-rss.js"
   },
   "dependencies": {

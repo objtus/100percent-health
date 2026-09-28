@@ -42,30 +42,46 @@ fi
 echo
 
 # RSS生成
-print_yellow "[3/3] RSS生成中..."
+print_yellow "[3/4] RSS生成中..."
 print_yellow "📄 changelog.html を解析しています..."
 
-if node rss-generator.js; then
-    echo
-    print_green "✅ RSS生成完了！"
-    echo "📁 ファイル: rss.xml"
-    if [ -f "rss.xml" ]; then
-        echo "🌐 サイズ: $(wc -c < rss.xml) bytes"
-    fi
-    
-    echo
-    print_blue "📋 次のステップ:"
-    echo "   1. rss.xml をNeocitiesにアップロード"
-    echo "   2. サイトで https://your-site.neocities.org/rss.xml を確認"
-    echo
-    print_blue "==============================================="
-    print_blue "            処理が完了しました"
-    print_blue "==============================================="
-else
+if ! node rss-generator.js; then
     echo
     print_red "❌ エラー: RSS生成に失敗しました"
     echo "   changelog.htmlの形式を確認してください"
     exit 1
 fi
+
+echo
+print_green "✅ RSS生成完了！"
+echo "📁 ファイル: rss.xml"
+if [ -f "rss.xml" ]; then
+    echo "🌐 サイズ: $(wc -c < rss.xml) bytes"
+fi
+
+echo
+print_yellow "[4/4] sitemap.xml 生成中..."
+
+if ! node sitemap-generator.js; then
+    echo
+    print_red "❌ エラー: sitemap 生成に失敗しました"
+    exit 1
+fi
+
+echo
+print_green "✅ sitemap 生成完了！"
+if [ -f "sitemap.xml" ]; then
+    echo "🌐 サイズ: $(wc -c < sitemap.xml) bytes"
+fi
+
+echo
+print_blue "📋 次のステップ:"
+echo "   1. rss.xml と sitemap.xml を Neocities にアップロード"
+echo "   2. /rss.xml と /sitemap.xml を確認"
+echo "   3. 未配置なら robots.txt もアップロード"
+echo
+print_blue "==============================================="
+print_blue "            処理が完了しました"
+print_blue "==============================================="
 
 echo

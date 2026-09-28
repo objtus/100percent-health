@@ -153,6 +153,11 @@ summary {
   gap: 0;
 }
 
+/* index: main ラップで flex 子は item2/item3 のまま */
+#flexrayout > #main {
+  display: contents;
+}
+
 /* gridレイアウトカラム幅メモ 130px 1fr 0.5fr */
 #item1 {
   align-self: flex-start;
@@ -729,7 +734,17 @@ h2 {
  }
 }
 
-#randomjump > a:hover {
+#randomjump > button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+#randomjump > a:hover,
+#randomjump > button:hover {
   background-color: transparent;
 }
 
