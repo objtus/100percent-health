@@ -4,20 +4,22 @@
 
 ## About this site
 
-- [100%health introduction](<https://yuinoid.neocities.org/txt/100phealth_introduction.html>)
-- [about me](<https://yuinoid.neocities.org/aboutme.html>)
+- https://yuinoid.neocities.org/txt/100phealth_introduction.html
+- https://yuinoid.neocities.org/aboutme.html
 
 サイトの説明・コンセプトは introduction、作者プロフィールは about me を参照。
 
 ## Main sections
 
-- [gallery](<https://yuinoid.neocities.org/gallery/gallery_main.html>)
-- [works](<https://yuinoid.neocities.org/works/works_main.html>)
-- [txt](<https://yuinoid.neocities.org/txt/txt_main.html>)
-- [links](<https://yuinoid.neocities.org/links/links_main.html>)
+- https://yuinoid.neocities.org/gallery/gallery_main.html
+- https://yuinoid.neocities.org/works/works_main.html
+- https://yuinoid.neocities.org/txt/txt_main.html
+- https://yuinoid.neocities.org/links/links_main.html
 
 ## Feeds
 
-- [RSS](<https://yuinoid.neocities.org/rss.xml>)
+- https://yuinoid.neocities.org/rss.xml
 
-Contact: <https://tanoshii.site/@health>
+## Contact
+
+- https://tanoshii.site/@health
