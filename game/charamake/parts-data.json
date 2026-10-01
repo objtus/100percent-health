@@ -1796,7 +1796,7 @@
       "id": "glasses1",
       "name": "眼鏡1",
       "category": "glasses",
-      "zIndex": 1250,
+      "zIndex": 1350,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses1-black.png",
@@ -1814,7 +1814,7 @@
       "id": "glasses2",
       "name": "眼鏡2",
       "category": "glasses",
-      "zIndex": 1250,
+      "zIndex": 1350,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses2.png",
@@ -2256,7 +2256,7 @@
       "id": "eyepatch1",
       "name": "眼帯1",
       "category": "face-accessories",
-      "zIndex": 1200,
+      "zIndex": 1300,
       "layers": [
         {
           "file": "parts/accessories/face/eyepatch1.png",
@@ -2497,7 +2497,7 @@
       "id": "blush1",
       "name": "頬ブラシ1",
       "category": "blush",
-      "zIndex": 1100,
+      "zIndex": 1210,
       "layers": [
         {
           "file": "parts/face/blush/blush1.png",
@@ -2511,7 +2511,7 @@
       "id": "blush2",
       "name": "頬ブラシ2",
       "category": "blush",
-      "zIndex": 1100,
+      "zIndex": 1210,
       "layers": [
         {
           "file": "parts/face/blush/blush2.png",
@@ -2525,7 +2525,7 @@
       "id": "blush3",
       "name": "頬ブラシ3",
       "category": "blush",
-      "zIndex": 1100,
+      "zIndex": 1210,
       "layers": [
         {
           "file": "parts/face/blush/blush3.png",
@@ -2539,7 +2539,7 @@
       "id": "blush4",
       "name": "頬ブラシ4",
       "category": "blush",
-      "zIndex": 1100,
+      "zIndex": 1210,
       "layers": [
         {
           "file": "parts/face/blush/blush4.png",
@@ -2553,7 +2553,7 @@
       "id": "blush5",
       "name": "頬ブラシ5",
       "category": "blush",
-      "zIndex": 1100,
+      "zIndex": 1210,
       "layers": [
         {
           "file": "parts/face/blush/blush5.png",
@@ -2567,7 +2567,7 @@
       "id": "blush6",
       "name": "頬ブラシ6",
       "category": "blush",
-      "zIndex": 1100,
+      "zIndex": 1210,
       "layers": [
         {
           "file": "parts/face/blush/blush6.png",
@@ -2765,7 +2765,7 @@
       "id": "lower_eyelid1",
       "name": "下まぶた1",
       "category": "lower_eyelid",
-      "zIndex": 1250,
+      "zIndex": 1205,
       "layers": [
         {
           "file": "parts\\face\\lowereyelid\\lowereyelid1.png",
@@ -2808,7 +2808,7 @@
       "id": "lower_eyelid2",
       "name": "下まぶた2",
       "category": "lower_eyelid",
-      "zIndex": 1250,
+      "zIndex": 1205,
       "layers": [
         {
           "file": "parts\\face\\lowereyelid\\lowereyelid2.png",
@@ -2838,7 +2838,7 @@
       "id": "lower_eyelashes1",
       "name": "下まつ毛1",
       "category": "lower_eyelid",
-      "zIndex": 1250,
+      "zIndex": 1205,
       "layers": [
         {
           "file": "parts\\face\\lowereyelid\\lowereyelashes1.png",
@@ -2854,7 +2854,7 @@
       "id": "darkcircles1",
       "name": "くま1",
       "category": "lower_eyelid",
-      "zIndex": 1250,
+      "zIndex": 1205,
       "layers": [
         {
           "file": "parts\\face\\lowereyelid\\darkcircles1.png",
@@ -2863,6 +2863,154 @@
         }
       ],
       "order": 50
+    },
+    {
+      "id": "nose5",
+      "name": "鼻5",
+      "category": "nose",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/nose/nose5.png",
+          "animated": false
+        }
+      ],
+      "order": 50
+    },
+    {
+      "id": "nose6",
+      "name": "鼻6",
+      "category": "nose",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/nose/nose6.png",
+          "animated": false
+        }
+      ],
+      "order": 50
+    },
+    {
+      "id": "nose7",
+      "name": "鼻7",
+      "category": "nose",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/nose/nose7.png",
+          "animated": false
+        }
+      ],
+      "order": 50
+    },
+    {
+      "id": "pupil10",
+      "name": "瞳10",
+      "category": "pupil",
+      "zIndex": 1150,
+      "layers": [
+        {
+          "file": "parts/face/pupil/pupil10.png",
+          "animated": false
+        }
+      ],
+      "order": 100
+    },
+    {
+      "id": "darkcircles2",
+      "name": "くま2",
+      "category": "lower_eyelid",
+      "zIndex": 1205,
+      "layers": [
+        {
+          "file": "parts\\face\\lowereyelid\\darkcircles2b.png",
+          "animated": false
+        },
+        {
+          "file": "parts\\face\\lowereyelid\\darkcircles2a.png",
+          "animated": false
+        }
+      ],
+      "order": 60,
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "darkcircles3",
+      "name": "くま3",
+      "category": "lower_eyelid",
+      "zIndex": 1205,
+      "layers": [
+        {
+          "file": "parts\\face\\lowereyelid\\darkcircles3.png",
+          "animated": false
+        }
+      ],
+      "order": 60,
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "lower_eyelashes2",
+      "name": "下まつ毛2",
+      "category": "lower_eyelid",
+      "zIndex": 1205,
+      "layers": [
+        {
+          "file": "parts\\face\\lowereyelid\\lowereyelashes2.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ],
+      "order": 40,
+      "colors": {},
+      "allowCustomColor": false
+    },
+    {
+      "id": "lower_eyelashes3",
+      "name": "下まつ毛3",
+      "category": "lower_eyelid",
+      "zIndex": 1205,
+      "layers": [
+        {
+          "file": "parts\\face\\lowereyelid\\lowereyelashes3.png",
+          "animated": false,
+          "blendMode": "multiply"
+        }
+      ],
+      "order": 40,
+      "colors": {},
+      "allowCustomColor": false
     }
   ],
   "categories": [
@@ -2969,7 +3117,7 @@
       "id": "nose",
       "name": "鼻",
       "order": 60,
-      "selectionMode": "single",
+      "selectionMode": "multiple",
       "group": "face",
       "hidden": false
     },
