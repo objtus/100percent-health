@@ -14,7 +14,7 @@
         multipleDefault: { min: 0, max: 1 },
         categories: {
             nose: { min: 1, max: 3 },
-            'eye-highlight': { min: 1, max: 1 },
+            'eye-highlight': { min: 1, max: 2 },
             sidehair: { min: 1, max: 2 },
             glasses: { min: 0, max: 1, emptyRate: 0.5 },
             'head-accessories': { min: 0, max: 1, emptyRate: 0.5 },
