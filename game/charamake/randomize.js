@@ -12,7 +12,7 @@
         sideWeights: { both: 2, left: 1, right: 1 },
         maxIterations: 8,
         multipleDefault: { min: 0, max: 1 },
-        categories: {
+        categories: {　/* パーツの選択数の下限と上限。emptyRateは空の確率（0.3 なら 30%）。 */
             nose: { min: 1, max: 3 },
             'eye-highlight': { min: 1, max: 2 },
             sidehair: { min: 1, max: 2 },
@@ -24,7 +24,15 @@
             ahoge: { min: 0, max: 1, emptyRate: 0.5 },
             bottoms: { min: 0, max: 1, emptyRate: 0.3 },
             tops2: { min: 0, max: 2, emptyRate: 0.3 },
-            iris: { min: 0, max: 2, emptyRate: 0.4 }
+            iris: { min: 0, max: 2, emptyRate: 0.4 },
+            'eyelashes1-deco': { min: 0, max: 4, emptyRate: 0.2 },
+            'eyelashes2-deco': { min: 0, max: 3, emptyRate: 0.2 },
+            'eyelashes3-deco': { min: 0, max: 4, emptyRate: 0.2 },
+            'eyelashes4-deco': { min: 0, max: 1, emptyRate: 0.2 },
+            'eyelashes5-deco': { min: 0, max: 3, emptyRate: 0.2 },
+            'eyelashes6-deco': { min: 0, max: 2, emptyRate: 0.2 },
+            'eyelashes7-deco': { min: 0, max: 1, emptyRate: 0.2 },
+            'eyelashes8-deco': { min: 0, max: 1, emptyRate: 0.2 }
         },
         // rankAtMost: target の段階 ≦ source の段階。段階は「通常」= 0、ほかはプリセット名末尾の数字
         colorConstraints: [

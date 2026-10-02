@@ -18,7 +18,7 @@
       {
         "id": "secret_1",
         "name": "シークレット1",
-        "passwordHash": "0684ca5025a00966cba51e026adcef1e93ed35545984e0ccb588430cbe3f965b"
+        "passwordHash": "2ac9a6746aca543af8dff39894cfe8173afba21eb01c6fae33d52947222855ef"
       }
     ]
   },
@@ -302,13 +302,7 @@
       "unlocks": [
         "iris"
       ],
-      "colors": {
-        "赤": {
-          "blend": "multiply",
-          "color": "#ff0040",
-          "opacity": 1
-        }
-      },
+      "colors": {},
       "order": 70
     },
     {
@@ -371,7 +365,10 @@
           "opacity": 1
         }
       },
-      "order": 10
+      "order": 10,
+      "unlocks": [
+        "eyelashes1-deco"
+      ]
     },
     {
       "id": "eyelashes_normal1",
@@ -401,7 +398,9 @@
           "opacity": 1
         }
       },
-      "unlocks": [],
+      "unlocks": [
+        "eyelashes2-deco"
+      ],
       "order": 20
     },
     {
@@ -432,7 +431,9 @@
           "opacity": 1
         }
       },
-      "unlocks": [],
+      "unlocks": [
+        "eyelashes3-deco"
+      ],
       "order": 30
     },
     {
@@ -463,39 +464,10 @@
           "opacity": 1
         }
       },
-      "unlocks": [],
-      "order": 40
-    },
-    {
-      "id": "eyelashes_simple1",
-      "name": "シンプルまつ毛1",
-      "category": "eyelashes",
-      "zIndex": 1200,
-      "layers": [
-        {
-          "file": "parts/face/eyelashes/eyelashes4.png",
-          "animated": false
-        }
+      "unlocks": [
+        "eyelashes4-deco"
       ],
-      "colors": {
-        "肌色1": {
-          "blend": "multiply",
-          "color": "#f0f0f0",
-          "opacity": 1
-        },
-        "肌色2": {
-          "blend": "multiply",
-          "color": "#cfcfcf",
-          "opacity": 1
-        },
-        "肌色3": {
-          "blend": "multiply",
-          "color": "#a1a1a1",
-          "opacity": 1
-        }
-      },
-      "unlocks": [],
-      "order": 50
+      "order": 40
     },
     {
       "id": "eyelashes_jito1",
@@ -525,8 +497,10 @@
           "opacity": 1
         }
       },
-      "unlocks": [],
-      "order": 60
+      "unlocks": [
+        "eyelashes6-deco"
+      ],
+      "order": 70
     },
     {
       "id": "eyelashes_jito2",
@@ -556,8 +530,10 @@
           "opacity": 1
         }
       },
-      "unlocks": [],
-      "order": 70
+      "unlocks": [
+        "eyelashes7-deco"
+      ],
+      "order": 80
     },
     {
       "id": "eyelashes_jito3",
@@ -570,7 +546,7 @@
           "animated": false
         }
       ],
-      "order": 80,
+      "order": 90,
       "colors": {
         "肌色1": {
           "blend": "multiply",
@@ -587,7 +563,10 @@
           "color": "#a1a1a1",
           "opacity": 1
         }
-      }
+      },
+      "unlocks": [
+        "eyelashes8-deco"
+      ]
     },
     {
       "id": "iris_none",
@@ -3012,6 +2991,580 @@
       "order": 40,
       "colors": {},
       "allowCustomColor": false
+    },
+    {
+      "id": "eyelashes1-deco1",
+      "name": "装飾1",
+      "category": "eyelashes1-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes1-deco/eyelashes1-deco1.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "eyelashes1-deco2",
+      "name": "装飾2",
+      "category": "eyelashes1-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes1-deco/eyelashes1-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "eyelashes1-deco3",
+      "name": "装飾3",
+      "category": "eyelashes1-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes1-deco/eyelashes1-deco3.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "eyelashes1-deco4",
+      "name": "装飾4",
+      "category": "eyelashes1-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes1-deco/eyelashes1-deco4.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "eyelashes2-deco2",
+      "name": "装飾2",
+      "category": "eyelashes2-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes2-deco/eyelashes2-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "eyelashes2-deco1",
+      "name": "装飾1",
+      "category": "eyelashes2-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes2-deco/eyelashes2-deco1.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "eyelashes2-deco3",
+      "name": "装飾3",
+      "category": "eyelashes2-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes2-deco/eyelashes2-deco3.png",
+          "animated": false
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "eyelashes3-deco1",
+      "name": "装飾1",
+      "category": "eyelashes3-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes3-deco/eyelashes3-deco1.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "eyelashes3-deco2",
+      "name": "装飾2",
+      "category": "eyelashes3-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes3-deco/eyelashes3-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "eyelashes3-deco3",
+      "name": "装飾3",
+      "category": "eyelashes3-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes3-deco/eyelashes3-deco3.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "eyelashes3-deco4",
+      "name": "装飾4",
+      "category": "eyelashes3-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes3-deco/eyelashes3-deco4.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "eyelashes4-deco1",
+      "name": "装飾1",
+      "category": "eyelashes4-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes4-deco/eyelashes4-deco1.png",
+          "animated": false
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "eyelashes4-deco2",
+      "name": "装飾2",
+      "category": "eyelashes4-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes4-deco/eyelashes4-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "eyelashes_normal4",
+      "name": "普通目4",
+      "category": "eyelashes",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes4.png",
+          "animated": false
+        }
+      ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
+      "order": 50,
+      "unlocks": [
+        "eyelashes5-deco"
+      ]
+    },
+    {
+      "id": "eyelashes5-deco1",
+      "name": "装飾1",
+      "category": "eyelashes5-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes5-deco/eyelashes5-deco1.png",
+          "animated": false
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "eyelashes5-deco2",
+      "name": "装飾2",
+      "category": "eyelashes5-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes5-deco/eyelashes5-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "eyelashes5-deco3",
+      "name": "装飾3",
+      "category": "eyelashes5-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes5-deco/eyelashes5-deco3.png",
+          "animated": false
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "eyelashes6-deco1",
+      "name": "装飾1",
+      "category": "eyelashes6-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes6-deco/eyelashes6-deco1.png",
+          "animated": false
+        }
+      ],
+      "order": 40
+    },
+    {
+      "id": "eyelashes6-deco2",
+      "name": "装飾2",
+      "category": "eyelashes6-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes6-deco/eyelashes6-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 40
+    },
+    {
+      "id": "eyelashes7-deco2",
+      "name": "装飾2",
+      "category": "eyelashes7-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes7-deco/eyelashes7-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 50
+    },
+    {
+      "id": "eyelashes7-deco3",
+      "name": "装飾3",
+      "category": "eyelashes7-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes7-deco/eyelashes7-deco3.png",
+          "animated": false
+        }
+      ],
+      "order": 50
+    },
+    {
+      "id": "eyelashes8-deco1",
+      "name": "装飾1",
+      "category": "eyelashes8-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes8-deco/eyelashes8-deco1.png",
+          "animated": false
+        }
+      ],
+      "order": 60
+    },
+    {
+      "id": "eyelashes8-deco2",
+      "name": "装飾2",
+      "category": "eyelashes8-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes8-deco/eyelashes8-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 60
+    },
+    {
+      "id": "eyelashes8-deco3",
+      "name": "装飾3",
+      "category": "eyelashes8-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes8-deco/eyelashes8-deco3.png",
+          "animated": false
+        }
+      ],
+      "order": 60
+    },
+    {
+      "id": "eyelashes_normal5",
+      "name": "普通目5",
+      "category": "eyelashes",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes9.png",
+          "animated": false
+        }
+      ],
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
+      "order": 60,
+      "unlocks": [
+        "eyelashes9-deco"
+      ]
+    },
+    {
+      "id": "eyelashes9-deco1",
+      "name": "装飾1",
+      "category": "eyelashes9-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes9-deco/eyelashes9-deco1.png",
+          "animated": false
+        }
+      ],
+      "order": 70
+    },
+    {
+      "id": "eyelashes9-deco2",
+      "name": "装飾2",
+      "category": "eyelashes9-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes9-deco/eyelashes9-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 70
+    },
+    {
+      "id": "eyelashes9-deco3",
+      "name": "装飾3",
+      "category": "eyelashes9-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes9-deco/eyelashes9-deco3.png",
+          "animated": false
+        }
+      ],
+      "order": 70
+    },
+    {
+      "id": "eyelashes_jito4",
+      "name": "ジト目4",
+      "category": "eyelashes",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes10.png",
+          "animated": false
+        }
+      ],
+      "order": 100,
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
+      "unlocks": [
+        "eyelashes10-deco"
+      ]
+    },
+    {
+      "id": "eyelashes10-deco1",
+      "name": "装飾1",
+      "category": "eyelashes10-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes10-deco/eyelashes10-deco1.png",
+          "animated": false
+        }
+      ],
+      "order": 80
+    },
+    {
+      "id": "eyelashes10-deco2",
+      "name": "装飾2",
+      "category": "eyelashes10-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes10-deco/eyelashes10-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 80
+    },
+    {
+      "id": "eyelashes10-deco3",
+      "name": "装飾3",
+      "category": "eyelashes10-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes10-deco/eyelashes10-deco3.png",
+          "animated": false
+        }
+      ],
+      "order": 80
+    },
+    {
+      "id": "eyelashes_close1",
+      "name": "閉じ目1",
+      "category": "eyelashes",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes11.png",
+          "animated": false
+        }
+      ],
+      "order": 110,
+      "colors": {
+        "肌色1": {
+          "blend": "multiply",
+          "color": "#f0f0f0",
+          "opacity": 1
+        },
+        "肌色2": {
+          "blend": "multiply",
+          "color": "#cfcfcf",
+          "opacity": 1
+        },
+        "肌色3": {
+          "blend": "multiply",
+          "color": "#a1a1a1",
+          "opacity": 1
+        }
+      },
+      "unlocks": [
+        "eyelashes11-deco"
+      ]
+    },
+    {
+      "id": "eyelashes11-deco1",
+      "name": "装飾1",
+      "category": "eyelashes11-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes11-deco/eyelashes11-deco1.png",
+          "animated": false
+        }
+      ],
+      "order": 90
+    },
+    {
+      "id": "eyelashes11-deco2",
+      "name": "装飾2",
+      "category": "eyelashes11-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes11-deco/eyelashes11-deco2.png",
+          "animated": false
+        }
+      ],
+      "order": 90
+    },
+    {
+      "id": "eyelashes11-deco3",
+      "name": "装飾3",
+      "category": "eyelashes11-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes11-deco/eyelashes11-deco3.png",
+          "animated": false
+        }
+      ],
+      "order": 90
+    },
+    {
+      "id": "eyelashes11-deco4",
+      "name": "装飾4",
+      "category": "eyelashes11-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes11-deco/eyelashes11-deco4.png",
+          "animated": false
+        }
+      ],
+      "order": 90
+    },
+    {
+      "id": "eyelashes11-deco5",
+      "name": "装飾5",
+      "category": "eyelashes11-deco",
+      "zIndex": 1200,
+      "layers": [
+        {
+          "file": "parts/face/eyelashes/eyelashes11-deco/eyelashes11-deco5.png",
+          "animated": false
+        }
+      ],
+      "order": 90
     }
   ],
   "categories": [
@@ -3282,6 +3835,94 @@
       "group": "face",
       "hidden": false,
       "colorGroup": "skin"
+    },
+    {
+      "id": "eyelashes1-deco",
+      "name": "ツリ目1装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eyelashes2-deco",
+      "name": "普通目1装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eyelashes3-deco",
+      "name": "普通目2装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eyelashes4-deco",
+      "name": "普通目3装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eyelashes5-deco",
+      "name": "普通目4装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eyelashes6-deco",
+      "name": "ジト目1装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eyelashes7-deco",
+      "name": "ジト目2装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eyelashes8-deco",
+      "name": "ジト目3装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eyelashes9-deco",
+      "name": "普通目5装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eyelashes10-deco",
+      "name": "ジト目4装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
+    },
+    {
+      "id": "eyelashes11-deco",
+      "name": "閉じ目1装飾",
+      "order": 20,
+      "selectionMode": "multiple",
+      "hidden": true,
+      "group": "face"
     }
   ],
   "categoryGroups": [
