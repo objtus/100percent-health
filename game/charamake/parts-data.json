@@ -187,7 +187,8 @@
           "animated": false
         }
       ],
-      "order": 30
+      "order": 30,
+      "isNone": true
     },
     {
       "id": "pupil1",
@@ -268,7 +269,8 @@
         }
       ],
       "hides": [
-        "eye-highlight"
+        "eye-highlight",
+        "eyelashes_jito3"
       ],
       "order": 50
     },
@@ -1483,7 +1485,8 @@
         {
           "file": "parts/hair/sidehair/sidehair1L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 10
@@ -1502,7 +1505,8 @@
         {
           "file": "parts/hair/sidehair/sidehair2L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 20
@@ -1521,7 +1525,8 @@
         {
           "file": "parts/hair/sidehair/sidehair3L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 30
@@ -1540,7 +1545,8 @@
         {
           "file": "parts/hair/sidehair/sidehair4L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 40
@@ -1559,7 +1565,8 @@
         {
           "file": "parts/hair/sidehair/sidehair5L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 50
@@ -1578,7 +1585,8 @@
         {
           "file": "parts/hair/sidehair/sidehair6L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 60
@@ -1597,7 +1605,8 @@
         {
           "file": "parts/hair/sidehair/sidehair7L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 70
@@ -1616,7 +1625,8 @@
         {
           "file": "parts/hair/sidehair/sidehair8L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 80
@@ -1635,7 +1645,8 @@
         {
           "file": "parts/hair/sidehair/sidehair9L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 90
@@ -1654,7 +1665,8 @@
         {
           "file": "parts/hair/sidehair/sidehair10L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 100
@@ -1751,14 +1763,15 @@
         {
           "file": "parts/hair/sidehair/sidehair11L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 110
     },
     {
       "id": "glasses-none",
-      "name": "none",
+      "name": "なし",
       "category": "glasses",
       "zIndex": 1250,
       "layers": [
@@ -1769,7 +1782,8 @@
       ],
       "colors": {},
       "allowCustomColor": false,
-      "order": 10
+      "order": 10,
+      "isNone": true
     },
     {
       "id": "glasses1",
@@ -1787,7 +1801,10 @@
           "image": "parts/accessories/head/glasses1-white.png"
         }
       },
-      "order": 20
+      "order": 20,
+      "unlocks": [
+        "glasses1-deco"
+      ]
     },
     {
       "id": "glasses2",
@@ -1801,7 +1818,10 @@
         }
       ],
       "colors": {},
-      "order": 30
+      "order": 30,
+      "unlocks": [
+        "glasses2-deco"
+      ]
     },
     {
       "id": "camisole1",
@@ -2235,7 +2255,7 @@
       "id": "eyepatch1",
       "name": "眼帯1",
       "category": "face-accessories",
-      "zIndex": 1290,
+      "zIndex": 1285,
       "layers": [
         {
           "file": "parts/accessories/face/eyepatch1.png",
@@ -2318,7 +2338,8 @@
         {
           "file": "parts/hair/sidehair/sidehair12L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 110
@@ -2356,7 +2377,8 @@
         {
           "file": "parts/hair/sidehair/sidehair14L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1290
         }
       ],
       "order": 110
@@ -3499,6 +3521,9 @@
       },
       "unlocks": [
         "eyelashes11-deco"
+      ],
+      "hides": [
+        "lower_eyelid"
       ]
     },
     {
@@ -3565,6 +3590,274 @@
         }
       ],
       "order": 90
+    },
+    {
+      "id": "glasses1-deco1",
+      "name": "装飾1",
+      "category": "glasses1-deco",
+      "zIndex": 1295,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses1-light/glasses1-light1.png",
+          "animated": false
+        }
+      ],
+      "colors": {},
+      "order": 20
+    },
+    {
+      "id": "glasses1-deco2",
+      "name": "装飾2",
+      "category": "glasses1-deco",
+      "zIndex": 1295,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses1-light/glasses1-light2.png",
+          "animated": false
+        }
+      ],
+      "colors": {},
+      "order": 30
+    },
+    {
+      "id": "glasses1-deco3",
+      "name": "装飾3（瓶底）",
+      "category": "glasses1-deco",
+      "zIndex": 1295,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses1-light/glasses1-light3.png",
+          "animated": false
+        }
+      ],
+      "colors": {},
+      "order": 40
+    },
+    {
+      "id": "glasses1-deco-none",
+      "name": "なし",
+      "category": "glasses1-deco",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10,
+      "isNone": true
+    },
+    {
+      "id": "glasses2-deco1",
+      "name": "装飾1",
+      "category": "glasses2-deco",
+      "zIndex": 1295,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses2-light/glasses2-light1.png",
+          "animated": false
+        }
+      ],
+      "colors": {},
+      "order": 50
+    },
+    {
+      "id": "glasses2-deco2",
+      "name": "装飾2",
+      "category": "glasses2-deco",
+      "zIndex": 1295,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses2-light/glasses2-light2.png",
+          "animated": false
+        }
+      ],
+      "colors": {},
+      "order": 50
+    },
+    {
+      "id": "glasses2-deco-none",
+      "name": "なし",
+      "category": "glasses2-deco",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 50,
+      "isNone": true
+    },
+    {
+      "id": "frame-deco-none",
+      "name": "なし",
+      "category": "frame-deco1",
+      "zIndex": 0,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10
+    },
+    {
+      "id": "frame-deco-heart",
+      "name": "ハート",
+      "category": "frame-deco1",
+      "zIndex": 10000,
+      "layers": [
+        {
+          "file": "parts\\basics\\frame-deco1\\heart1.png",
+          "animated": false
+        }
+      ],
+      "order": 20,
+      "colors": {
+        "黒": {
+          "blend": "multiply",
+          "color": "#000000",
+          "opacity": 1
+        },
+        "白": {
+          "blend": "lighten",
+          "color": "#ffffff",
+          "opacity": 1
+        },
+        "赤": {
+          "blend": "screen",
+          "color": "#ff0000",
+          "opacity": 1
+        },
+        "青": {
+          "blend": "screen",
+          "color": "#0000ff",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "frame-deco-sparkle",
+      "name": "キラキラ",
+      "category": "frame-deco1",
+      "zIndex": 10000,
+      "layers": [
+        {
+          "file": "parts\\basics\\frame-deco1\\sparkle1.png",
+          "animated": false
+        }
+      ],
+      "order": 30,
+      "colors": {
+        "黒": {
+          "blend": "multiply",
+          "color": "#000000",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "frame-deco-censored",
+      "name": "目隠し",
+      "category": "frame-deco1",
+      "zIndex": 10000,
+      "layers": [
+        {
+          "file": "parts\\basics\\frame-deco1\\censored.png",
+          "animated": false
+        }
+      ],
+      "order": 40
+    },
+    {
+      "id": "frame-deco-leaves",
+      "name": "木の葉っぱ",
+      "category": "frame-deco1",
+      "zIndex": 10000,
+      "layers": [
+        {
+          "file": "parts\\basics\\frame-deco1\\leaves.png",
+          "animated": false
+        }
+      ],
+      "order": 40
+    },
+    {
+      "id": "frame-deco-seikin",
+      "name": "セイキン",
+      "category": "frame-deco1",
+      "zIndex": 10000,
+      "layers": [
+        {
+          "file": "parts\\basics\\frame-deco1\\seikin.png",
+          "animated": false
+        }
+      ],
+      "order": 40
+    },
+    {
+      "id": "nose-band-aid",
+      "name": "鼻ばんそうこう",
+      "category": "face-accessories",
+      "zIndex": 1215,
+      "layers": [
+        {
+          "file": "parts\\accessories\\face\\nose-band-aid.png",
+          "animated": false
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "cheek-band-aid",
+      "name": "頬ばんそうこう",
+      "category": "face-accessories",
+      "zIndex": 1215,
+      "layers": [
+        {
+          "file": "parts\\accessories\\face\\cheek-band-aid.png",
+          "animated": false
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "food-warmer",
+      "name": "フードウォーマー",
+      "category": "head-accessories",
+      "zIndex": 1350,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\food-warmer\\food-warmer-bg.png",
+          "zIndex": 1,
+          "animated": false
+        },
+        {
+          "file": "parts\\accessories\\head\\food-warmer\\food-warmer-leftear.png",
+          "zIndex": 1250,
+          "animated": false
+        },
+        {
+          "file": "parts\\accessories\\head\\food-warmer\\food-warmer-fg.png",
+          "zIndex": 1350,
+          "animated": false
+        }
+      ],
+      "order": 30,
+      "hides": [
+        "ahoge",
+        "backhair9",
+        "backhair11"
+      ],
+      "colors": {
+        "白": {
+          "blend": "color-dodge",
+          "color": "#c9c9c9",
+          "opacity": 1
+        }
+      }
     }
   ],
   "categories": [
@@ -3603,7 +3896,7 @@
     },
     {
       "id": "frame",
-      "name": "フレーム",
+      "name": "フレーム1",
       "order": 60,
       "selectionMode": "single",
       "group": "decoration",
@@ -3923,6 +4216,30 @@
       "selectionMode": "multiple",
       "hidden": true,
       "group": "face"
+    },
+    {
+      "id": "glasses1-deco",
+      "name": "眼鏡1装飾",
+      "order": 50,
+      "selectionMode": "single",
+      "hidden": true,
+      "group": "accessories"
+    },
+    {
+      "id": "glasses2-deco",
+      "name": "眼鏡2装飾",
+      "order": 50,
+      "selectionMode": "single",
+      "hidden": true,
+      "group": "accessories"
+    },
+    {
+      "id": "frame-deco1",
+      "name": "画面装飾1",
+      "order": 450,
+      "selectionMode": "multiple",
+      "group": "decoration",
+      "hidden": false
     }
   ],
   "categoryGroups": [
