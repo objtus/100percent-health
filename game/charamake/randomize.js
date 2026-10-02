@@ -25,7 +25,11 @@
             bottoms: { min: 0, max: 1, emptyRate: 0.3 },
             tops2: { min: 0, max: 1, emptyRate: 0.3 },
             iris: { min: 0, max: 2, emptyRate: 0.4 }
-        }
+        },
+        // rankAtMost: target の段階 ≦ source の段階。段階は「通常」= 0、ほかはプリセット名末尾の数字
+        colorConstraints: [
+            { source: { colorGroup: 'skin' }, target: { category: 'sclera' }, rule: 'rankAtMost' }
+        ]
     };
 
     function getDependencies() {
@@ -340,9 +344,32 @@
         return entries;
     }
 
+    /** 色プリセットの段階。「通常」= 0、名前末尾の数字、判定できなければ null（制約なし） */
+    function colorRank(colorName) {
+        if (!colorName || colorName === 'normal') return 0;
+        const m = /(\d+)\s*$/.exec(String(colorName));
+        return m ? Number(m[1]) : null;
+    }
+
+    /** 制約の片側 { colorGroup } / { category } を正規化（colorGroup 所属カテゴリはグループ扱い） */
+    function normalizeConstraintSide(side, idx) {
+        if (!side) return null;
+        if (side.colorGroup) return { colorGroup: side.colorGroup };
+        const category = idx.categoryById.get(side.category);
+        if (!category) return null;
+        return category.colorGroup ? { colorGroup: category.colorGroup } : { category: category.id };
+    }
+
+    function slotMatchesSide(slot, side) {
+        return side.colorGroup
+            ? slot.groupId === side.colorGroup
+            : (!slot.groupId && slot.categoryId === side.category);
+    }
+
     /**
      * 色を抽選する（カスタム色は対象外）
      * colorGroup は対象カテゴリを 1 つでも含むときだけ 1 回抽選してグループで共有する
+     * colorConstraints は、抽選しない側（固定など）の現在の色 opts.currentColors も考慮する
      * @returns {{ colorGroupPresets: Record<string,string>, selectedColors: Record<string,string> }}
      */
     function randomizeColors(opts) {
@@ -352,40 +379,108 @@
         const unlockedSecrets = opts.unlockedSecrets || new Set();
         const sets = opts.dependencySets;
         const targets = new Set(opts.targetCategoryIds || []);
+        const current = opts.currentColors || {};
         const idx = createIndex(partsData);
 
-        const colorGroupPresets = {};
-        const selectedColors = {};
+        const visiblePartsOf = category => {
+            if (!isCategoryVisibleIn(category, sets, unlockedSecrets)) return [];
+            return toIdList(opts.selectedParts[category.id], category)
+                .map(partId => idx.partById.get(partId))
+                .filter(part => isPartVisibleIn(part, sets, unlockedSecrets));
+        };
 
+        const slots = [];
         const groupIds = new Set();
         idx.categories.forEach(c => {
             if (c.colorGroup && targets.has(c.id)) groupIds.add(c.colorGroup);
         });
-
         groupIds.forEach(groupId => {
             const keys = new Set();
             idx.categories.filter(c => c.colorGroup === groupId).forEach(category => {
-                if (!isCategoryVisibleIn(category, sets, unlockedSecrets)) return;
-                toIdList(opts.selectedParts[category.id], category).forEach(partId => {
-                    const part = idx.partById.get(partId);
-                    if (!isPartVisibleIn(part, sets, unlockedSecrets)) return;
+                visiblePartsOf(category).forEach(part => {
                     Object.keys(part.colors || {}).forEach(k => keys.add(k));
                 });
             });
-            colorGroupPresets[groupId] = chooseWeighted(colorEntries([...keys], config), rng) || 'normal';
+            slots.push({ groupId, entries: colorEntries([...keys], config) });
         });
-
         idx.categories.forEach(category => {
             if (!targets.has(category.id) || category.colorGroup) return;
-            if (!isCategoryVisibleIn(category, sets, unlockedSecrets)) return;
-            toIdList(opts.selectedParts[category.id], category).forEach(partId => {
-                const part = idx.partById.get(partId);
-                if (!isPartVisibleIn(part, sets, unlockedSecrets)) return;
-                const keys = Object.keys(part.colors || {});
-                selectedColors[partId] = keys.length > 0
-                    ? (chooseWeighted(colorEntries(keys, config), rng) || 'normal')
-                    : 'normal';
+            visiblePartsOf(category).forEach(part => {
+                slots.push({
+                    categoryId: category.id,
+                    partId: part.id,
+                    entries: colorEntries(Object.keys(part.colors || {}), config)
+                });
             });
+        });
+
+        const constraints = (config.colorConstraints || [])
+            .filter(c => c && c.rule === 'rankAtMost')
+            .map(c => ({ source: normalizeConstraintSide(c.source, idx), target: normalizeConstraintSide(c.target, idx) }))
+            .filter(c => c.source && c.target);
+
+        const decided = [];
+        const isDrawnSide = side => slots.some(slot => slotMatchesSide(slot, side));
+
+        /** 抽選しない側の現在の段階（判定できない色が含まれれば null） */
+        function currentSideRanks(side) {
+            if (side.colorGroup) {
+                const preset = (current.colorGroupPresets && current.colorGroupPresets[side.colorGroup]) || 'normal';
+                return [colorRank(preset)];
+            }
+            const category = idx.categoryById.get(side.category);
+            const ranks = [];
+            for (const part of visiblePartsOf(category)) {
+                ranks.push(colorRank((current.selectedColors && current.selectedColors[part.id]) || 'normal'));
+            }
+            return ranks.some(r => r === null) ? null : ranks;
+        }
+
+        function sideRanks(side) {
+            const drawn = decided.filter(d => slotMatchesSide(d.slot, side));
+            if (drawn.length > 0) {
+                const ranks = drawn.map(d => colorRank(d.color));
+                return ranks.some(r => r === null) ? null : ranks;
+            }
+            return currentSideRanks(side);
+        }
+
+        function filterEntries(slot) {
+            let entries = slot.entries;
+            constraints.forEach(c => {
+                if (slotMatchesSide(slot, c.target)) {
+                    const ranks = sideRanks(c.source);
+                    if (!ranks || ranks.length === 0) return;
+                    const limit = Math.min(...ranks);
+                    entries = entries.filter(([key]) => {
+                        const r = colorRank(key);
+                        return r === null || r <= limit;
+                    });
+                }
+                if (slotMatchesSide(slot, c.source) && !isDrawnSide(c.target)) {
+                    const ranks = currentSideRanks(c.target);
+                    if (!ranks || ranks.length === 0) return;
+                    const floor = Math.max(...ranks);
+                    const narrowed = entries.filter(([key]) => {
+                        const r = colorRank(key);
+                        return r !== null && r >= floor;
+                    });
+                    if (narrowed.length > 0) entries = narrowed;
+                }
+            });
+            return entries;
+        }
+
+        const isSource = slot => constraints.some(c => slotMatchesSide(slot, c.source));
+        const ordered = slots.filter(isSource).concat(slots.filter(slot => !isSource(slot)));
+
+        const colorGroupPresets = {};
+        const selectedColors = {};
+        ordered.forEach(slot => {
+            const color = chooseWeighted(filterEntries(slot), rng) || 'normal';
+            decided.push({ slot, color });
+            if (slot.groupId) colorGroupPresets[slot.groupId] = color;
+            else selectedColors[slot.partId] = color;
         });
 
         return { colorGroupPresets, selectedColors };
@@ -427,7 +522,7 @@
             rng: opts.rng,
             config: opts.config
         };
-        const colors = randomizeColors(common);
+        const colors = randomizeColors({ ...common, currentColors: opts.currentColors });
         const sides = randomizeSides(common);
         return {
             ...selection,
@@ -440,6 +535,7 @@
     const api = {
         RANDOM_CONFIG,
         isNonePart,
+        colorRank,
         getCategoryRandomConfig,
         buildModifierHosts,
         getFullRandomTargets,

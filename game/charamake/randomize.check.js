@@ -62,6 +62,7 @@ function initialSelection(secrets) {
     return res;
 }
 
+const constraintStats = {};
 const emptyStats = {};
 function recordEmpty(categoryId, isEmpty) {
     const s = emptyStats[categoryId] || (emptyStats[categoryId] = { empty: 0, total: 0 });
@@ -77,6 +78,7 @@ for (let run = 0; run < RUNS; run++) {
         secrets = run % 400 === 0 ? new Set() : new Set(allSecrets);
         state = initialSelection(secrets);
         state.colorGroupPresets = {};
+        state.selectedColors = {};
     }
 
     const locked = new Set(R.RANDOM_CONFIG.defaultLocked);
@@ -102,6 +104,7 @@ for (let run = 0; run < RUNS; run++) {
         lockedCategoryIds: locked,
         unlockedSecrets: secrets,
         previouslyUnlockedCategories: state.unlockedCategories,
+        currentColors: { colorGroupPresets: state.colorGroupPresets, selectedColors: state.selectedColors },
         rng
     });
     const ctx = { run, categoryMode, targetIds: categoryMode ? targetIds : '(full)' };
@@ -182,15 +185,39 @@ for (let run = 0; run < RUNS; run++) {
         if (!['both', 'left', 'right'].includes(side)) fail('不正な side', { ...ctx, partId, side });
     });
 
+    // 8. colorConstraints（例: 白目の段階 ≦ 肌色の段階）
+    const colorGroupPresets = { ...state.colorGroupPresets, ...result.colorGroupPresets };
+    const selectedColors = { ...state.selectedColors, ...result.selectedColors };
+    R.RANDOM_CONFIG.colorConstraints.forEach(c => {
+        const sourceColor = colorGroupPresets[c.source.colorGroup] || 'normal';
+        const sourceRank = R.colorRank(sourceColor);
+        const category = categoryById.get(c.target.category);
+        if (!isCategoryVisible(category, result, secrets)) return;
+        idsOf(result.selectedParts[category.id], category).forEach(partId => {
+            const color = selectedColors[partId] || 'normal';
+            const rank = R.colorRank(color);
+            if (rank !== null && sourceRank !== null && rank > sourceRank) {
+                fail('色の制約を満たしていない', { ...ctx, sourceColor, partId, color });
+            }
+            const key = `${sourceColor} → ${color}`;
+            constraintStats[key] = (constraintStats[key] || 0) + 1;
+        });
+    });
+
     state = {
         selectedParts: result.selectedParts,
         unlockedCategories: result.unlockedCategories,
         hiddenCategoryIds: result.hiddenCategoryIds,
-        hiddenPartIds: result.hiddenPartIds
+        hiddenPartIds: result.hiddenPartIds,
+        colorGroupPresets,
+        selectedColors
     };
 }
 
-// 8. emptyRate の実測値（±5%）
+console.log('色の組み合わせ（肌色 → 白目）:');
+Object.keys(constraintStats).sort().forEach(key => console.log(`  ${key}: ${constraintStats[key]}`));
+
+// 9. emptyRate の実測値（±5%）
 Object.entries(emptyStats).forEach(([categoryId, s]) => {
     const category = categoryById.get(categoryId);
     const cfg = R.getCategoryRandomConfig(category);

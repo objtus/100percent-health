@@ -2548,7 +2548,11 @@ function runRandomize(targetCategoryIds, includeModifiers) {
         includeModifiers,
         lockedCategoryIds: state.lockedCategories,
         unlockedSecrets: state.unlockedSecrets,
-        previouslyUnlockedCategories: state.previouslyUnlockedCategories
+        previouslyUnlockedCategories: state.previouslyUnlockedCategories,
+        currentColors: {
+            colorGroupPresets: state.colorGroupPresets,
+            selectedColors: state.selectedColors
+        }
     });
     return applyRandomResult(result, before);
 }
