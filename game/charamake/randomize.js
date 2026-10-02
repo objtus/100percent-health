@@ -19,7 +19,7 @@
             sidehair: { min: 1, max: 2 },
             glasses: { min: 0, max: 1, emptyRate: 0.5 },
             'head-accessories': { min: 0, max: 1, emptyRate: 0.5 },
-            'face-accessories': { min: 0, max: 1, emptyRate: 0.5 },
+            'face-accessories': { min: 0, max: 3, emptyRate: 0.5 },
             socks: { min: 0, max: 1, emptyRate: 0.5 },
             blush: { min: 0, max: 3, emptyRate: 0.5 },
             ahoge: { min: 0, max: 1, emptyRate: 0.5 },

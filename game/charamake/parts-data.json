@@ -3858,6 +3858,61 @@
           "opacity": 1
         }
       }
+    },
+    {
+      "id": "0per-cap",
+      "name": "0% cap",
+      "category": "head-accessories",
+      "zIndex": 1350,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\cap\\0per-cap-bg.png",
+          "zIndex": 1,
+          "animated": false
+        },
+        {
+          "file": "parts\\accessories\\head\\cap\\0per-cap-fg.png",
+          "animated": false
+        }
+      ],
+      "order": 40,
+      "hides": [
+        "ahoge"
+      ],
+      "colors": {
+        "白": {
+          "blend": "color-dodge",
+          "color": "#c9c9c9",
+          "opacity": 0.6
+        },
+        "黒": {
+          "blend": "color-burn",
+          "color": "#6b6b6b",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "flat-cap",
+      "name": "ハンチング帽",
+      "category": "head-accessories",
+      "zIndex": 1350,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\flat-cap\\flat-cap-bg.png",
+          "zIndex": 1,
+          "animated": false
+        },
+        {
+          "file": "parts\\accessories\\head\\flat-cap\\flat-cap-fg.png",
+          "animated": false
+        }
+      ],
+      "order": 40,
+      "hides": [
+        "ahoge"
+      ],
+      "colors": {}
     }
   ],
   "categories": [
@@ -4100,7 +4155,7 @@
       "id": "head-accessories",
       "name": "頭アクセサリー",
       "order": 60,
-      "selectionMode": "multiple",
+      "selectionMode": "single",
       "group": "accessories",
       "hidden": false
     },
