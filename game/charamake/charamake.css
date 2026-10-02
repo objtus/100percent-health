@@ -438,9 +438,36 @@ body.charamake-page {
 }
 
 #charamake-app .parts-selector-area h3,
-#charamake-app .color-settings-area h3 {
+#charamake-app .color-settings-area h3,
+#charamake-app .part-settings-panel h3 {
   font-size: 0.75rem;
   margin-bottom: 0.5rem;
+}
+
+#charamake-app .part-settings-heading {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+#charamake-app .part-settings-panel > .part-settings-heading:first-of-type {
+  margin-top: 0.35rem;
+}
+
+#charamake-app .modifier-categories-host {
+  margin-top: 0.5rem;
+}
+
+#charamake-app .modifier-category-block + .modifier-category-block {
+  margin-top: 0.65rem;
+}
+
+#charamake-app .modifier-category-heading {
+  margin-bottom: 0.35rem;
+}
+
+#charamake-app .modifier-parts-grid {
+  margin-top: 0.25rem;
 }
 
 #charamake-app .parts-grid {

@@ -1796,7 +1796,7 @@
       "id": "glasses1",
       "name": "眼鏡1",
       "category": "glasses",
-      "zIndex": 1350,
+      "zIndex": 1295,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses1-black.png",
@@ -1814,7 +1814,7 @@
       "id": "glasses2",
       "name": "眼鏡2",
       "category": "glasses",
-      "zIndex": 1350,
+      "zIndex": 1295,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses2.png",
@@ -2256,7 +2256,7 @@
       "id": "eyepatch1",
       "name": "眼帯1",
       "category": "face-accessories",
-      "zIndex": 1300,
+      "zIndex": 1290,
       "layers": [
         {
           "file": "parts/accessories/face/eyepatch1.png",

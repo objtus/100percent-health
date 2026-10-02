@@ -20,6 +20,7 @@
 - **カスタム色 UI は非公開** — `#charamake-app` の `data-hide-custom-color="true"` で「カスタム」ボタンと拡張設定を出さない（[`game.js`](game.js) が参照）
 - レイアウト: プレビュー上段 → カテゴリ | パーツ・色（下段）→ 依存関係フィード（固定高さ、`#dependencyFeed`）
 - カテゴリグループ: **アコーディオン**（同時に 1 グループのみ展開）
+- 条件付き（`hidden`）カテゴリ: 左欄には出さず、unlock 元パーツ選択時に **パーツ設定** ペイン内で修飾として選択
 - アセットパス: `<base href="/game/charamake/">` とルート絶対パス（Live Server でも `/game/charamake/index.html` 推奨）
 
 ## ファイル構成

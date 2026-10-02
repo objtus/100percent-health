@@ -12,6 +12,7 @@ const state = {
     previouslyHiddenCategories: new Set(), // 以前 hides で非表示だったカテゴリ
     previouslyHiddenPartIds: new Set(), // 以前 hides で非表示だったパーツ
     dependencyFeedReady: false, // 初回 processDependencies ではフィードを出さない
+    unlockedCategories: new Set(), // 表示中の選択の unlocks（processDependencies で更新）
     hiddenByParts: new Set(), // hides により動的に非表示になっているカテゴリ
     hiddenPartIds: new Set(), // hides により動的に非表示になっているパーツ
     unlockedSecrets: new Set(), // パスワードで解放したシークレット束 ID
@@ -35,8 +36,14 @@ const elements = {
     dataFileInput: document.getElementById('dataFileInput'),
     characterFileInput: document.getElementById('characterFileInput'),
     partSettingsExtensions: document.getElementById('partSettingsExtensions'),
+    partSettingsDisplayHeading: document.getElementById('partSettingsDisplayHeading'),
+    partSettingsColorHeading: document.getElementById('partSettingsColorHeading'),
+    modifierCategoriesHost: document.getElementById('modifierCategoriesHost'),
     colorPresetBlock: document.getElementById('colorPresetBlock')
 };
+
+/** @type {Map<string, string[]> | null} partId → hidden category ids */
+let modifierCategoriesByPartIdCache = null;
 
 // 初期化
 function init() {
@@ -62,6 +69,7 @@ function loadDefaultPartsData() {
         })
         .then(data => {
             state.partsData = data;
+            modifierCategoriesByPartIdCache = null;
             applyPartOrdersMigration();
             
             // キャンバスサイズを設定
@@ -106,16 +114,15 @@ function getSortedPartsInCategory(categoryId) {
     return PO.getPartsInCategory(state.partsData.parts, categoryId);
 }
 
-// 各カテゴリの最初のパーツをデフォルト選択
-function initializeDefaultSelections() {
+// 各カテゴリの最初のパーツをデフォルト選択（onlyMissing: 未設定カテゴリのみ）
+function initializeDefaultSelections(onlyMissing = false) {
     if (!state.partsData) return;
-    
-    const PO = window.CharamakePartsOrder;
     
     state.partsData.categories.forEach(category => {
         // hidden / secret カテゴリはスキップ
         if (category.hidden) return;
         if (category.secret && !isSecretUnlocked(category.secret)) return;
+        if (onlyMissing && Object.prototype.hasOwnProperty.call(state.selectedParts, category.id)) return;
 
         const firstPart = getFirstVisiblePartInCategory(category.id);
         
@@ -208,6 +215,7 @@ function handleDataFileSelect(e) {
     reader.onload = (event) => {
         try {
             state.partsData = JSON.parse(event.target.result);
+            modifierCategoriesByPartIdCache = null;
             applyPartOrdersMigration();
             
             // キャンバスサイズを設定
@@ -216,15 +224,23 @@ function handleDataFileSelect(e) {
                 elements.previewCanvas.height = state.partsData.meta.canvasHeight || 900;
             }
             
-            // カテゴリ一覧を表示
-            renderCategories();
-            
-            // 初期選択状態をクリア
             state.selectedParts = {};
             state.selectedColors = {};
+            state.customColors = {};
+            state.selectedSide = {};
             state.colorGroupPresets = {};
             state.colorGroupCustom = {};
-            
+            state.unlockedCategories = new Set();
+            state.hiddenByParts = new Set();
+            state.hiddenPartIds = new Set();
+            state.currentCategory = null;
+            state.colorSettingsPart = null;
+            resetDependencyFeedSnapshot();
+            initializeDefaultSelections();
+            processDependencies();
+
+            renderCategories();
+            renderParts();
             updatePreview();
             
             alert('パーツデータを読み込みました');
@@ -266,6 +282,155 @@ function isCategoryVisible(category) {
     return true;
 }
 
+function isCategoryListedInSidebar(category) {
+    if (!category || category.hidden) return false;
+    return isCategoryVisible(category);
+}
+
+function buildModifierCategoriesByPartId(partsData) {
+    const categoryIds = new Set((partsData.categories || []).map(c => c.id));
+    const hiddenIds = new Set(
+        (partsData.categories || []).filter(c => c.hidden).map(c => c.id)
+    );
+    const map = new Map();
+    for (const part of partsData.parts || []) {
+        if (!part.unlocks) continue;
+        const mods = part.unlocks.filter(id => categoryIds.has(id) && hiddenIds.has(id));
+        if (mods.length > 0) {
+            map.set(part.id, mods);
+        }
+    }
+    return map;
+}
+
+function getModifierCategoriesByPartId() {
+    if (!state.partsData) return new Map();
+    if (!modifierCategoriesByPartIdCache) {
+        modifierCategoriesByPartIdCache = buildModifierCategoriesByPartId(state.partsData);
+    }
+    return modifierCategoriesByPartIdCache;
+}
+
+function getSelectedPartIdsInCategory(categoryId) {
+    const selection = state.selectedParts[categoryId];
+    if (!selection) return [];
+    const category = state.partsData?.categories.find(c => c.id === categoryId);
+    if (category && category.selectionMode === 'multiple') {
+        return Array.isArray(selection) ? selection.slice() : [selection];
+    }
+    const id = Array.isArray(selection) ? selection[0] : selection;
+    return id ? [id] : [];
+}
+
+function getActiveModifierCategories(hostCategoryId) {
+    if (!state.partsData || !hostCategoryId) return [];
+    const modMap = getModifierCategoriesByPartId();
+    const hostIds = getSelectedPartIdsInCategory(hostCategoryId);
+    const modSet = new Set();
+    hostIds.forEach(partId => {
+        const list = modMap.get(partId);
+        if (list) list.forEach(catId => modSet.add(catId));
+    });
+    const categories = [...modSet]
+        .map(id => state.partsData.categories.find(c => c.id === id))
+        .filter(cat => cat && isCategoryUnlocked(cat.id) && isCategoryVisible(cat))
+        .sort((a, b) => a.order - b.order);
+    return categories;
+}
+
+function findHostCategoryForModifier(modifierCategoryId) {
+    if (!state.partsData) return null;
+    for (const part of state.partsData.parts) {
+        if (part.unlocks && part.unlocks.includes(modifierCategoryId)) {
+            return part.category;
+        }
+    }
+    return null;
+}
+
+function findFirstListedCategoryInGroup(groupId) {
+    if (!state.partsData) return null;
+    return state.partsData.categories
+        .filter(c => c.group === groupId && isCategoryListedInSidebar(c))
+        .sort((a, b) => a.order - b.order)[0] || null;
+}
+
+function findFirstListedCategoryAnywhere() {
+    if (!state.partsData) return null;
+    const ungrouped = state.partsData.categories
+        .filter(c => !c.group && isCategoryListedInSidebar(c))
+        .sort((a, b) => a.order - b.order);
+    if (ungrouped.length > 0) return ungrouped[0];
+    const groups = (state.partsData.categoryGroups || []).sort((a, b) => a.order - b.order);
+    for (const group of groups) {
+        const cat = findFirstListedCategoryInGroup(group.id);
+        if (cat) return cat;
+    }
+    return null;
+}
+
+function ensureCurrentCategoryVisible() {
+    if (!state.partsData || !state.currentCategory) return false;
+    const current = state.partsData.categories.find(c => c.id === state.currentCategory);
+    if (current && isCategoryListedInSidebar(current)) {
+        return false;
+    }
+    let next = null;
+    if (current && current.hidden) {
+        next = state.partsData.categories.find(c => c.id === findHostCategoryForModifier(current.id));
+        if (next && !isCategoryListedInSidebar(next)) next = null;
+    }
+    if (!next && current && current.group) {
+        next = findFirstListedCategoryInGroup(current.group);
+    }
+    if (!next) {
+        next = findFirstListedCategoryAnywhere();
+    }
+    if (next) {
+        state.currentCategory = next.id;
+        state.colorSettingsPart = null;
+        state.multiSelectActive[next.id] = false;
+        return true;
+    }
+    return false;
+}
+
+function getHostPartForSettings() {
+    if (!state.currentCategory || !state.partsData) return null;
+    const category = state.partsData.categories.find(c => c.id === state.currentCategory);
+    if (!category || category.hidden) return null;
+
+    if (category.selectionMode === 'multiple') {
+        if (state.colorSettingsPart) {
+            const part = state.partsData.parts.find(
+                p => p.id === state.colorSettingsPart && p.category === state.currentCategory
+            );
+            if (part) return part;
+        }
+        return null;
+    }
+
+    const selectedPartId = state.selectedParts[state.currentCategory];
+    if (!selectedPartId) return null;
+    const id = Array.isArray(selectedPartId) ? selectedPartId[0] : selectedPartId;
+    return state.partsData.parts.find(p => p.id === id) || null;
+}
+
+function syncColorStateAfterDependencyResolve() {
+    if (!state.partsData) return;
+    for (const [categoryId, selection] of Object.entries(state.selectedParts)) {
+        const category = state.partsData.categories.find(c => c.id === categoryId);
+        if (!category) continue;
+        const ids = category.selectionMode === 'multiple'
+            ? (Array.isArray(selection) ? selection : [])
+            : (selection ? [Array.isArray(selection) ? selection[0] : selection] : []);
+        ids.forEach(partId => {
+            const part = state.partsData.parts.find(p => p.id === partId);
+            if (part) initPartColorState(part);
+        });
+    }
+}
+
 // カテゴリ一覧の描画
 function renderCategories() {
     if (!state.partsData) return;
@@ -281,7 +446,7 @@ function renderCategories() {
             .sort((a, b) => a.order - b.order);
         
         ungroupedCategories.forEach(category => {
-            if (!isCategoryVisible(category)) return;
+            if (!isCategoryListedInSidebar(category)) return;
             const div = createCategoryItem(category);
             elements.categoryList.appendChild(div);
         });
@@ -299,7 +464,7 @@ function renderCategories() {
             for (const group of sortedGroups) {
                 const visible = state.partsData.categories
                     .filter(c => c.group === group.id)
-                    .filter(isCategoryVisible);
+                    .filter(isCategoryListedInSidebar);
                 if (visible.length > 0) {
                     openGroupId = group.id;
                     break;
@@ -312,7 +477,7 @@ function renderCategories() {
                 .filter(c => c.group === group.id)
                 .sort((a, b) => a.order - b.order);
             
-            const visibleCategories = groupCategories.filter(isCategoryVisible);
+            const visibleCategories = groupCategories.filter(isCategoryListedInSidebar);
             
             if (visibleCategories.length > 0) {
                 const groupDiv = createCategoryGroup(group, visibleCategories, group.id === openGroupId);
@@ -323,7 +488,7 @@ function renderCategories() {
         const categories = [...state.partsData.categories].sort((a, b) => a.order - b.order);
         
         categories.forEach(category => {
-            if (!isCategoryVisible(category)) return;
+            if (!isCategoryListedInSidebar(category)) return;
             
             const div = document.createElement('div');
             div.className = 'category-item';
@@ -446,16 +611,9 @@ function toggleCategoryGroup(groupId) {
     }
 }
 
-// カテゴリが解放されているかチェック
+// カテゴリが解放されているか（processDependencies が表示中の選択から算出した集合）
 function isCategoryUnlocked(categoryId) {
-    // 選択中のパーツのunlocksをチェック
-    for (let partId of Object.values(state.selectedParts).flat()) {
-        const part = state.partsData.parts.find(p => p.id === partId);
-        if (part && part.unlocks && part.unlocks.includes(categoryId)) {
-            return true;
-        }
-    }
-    return false;
+    return state.unlockedCategories.has(categoryId);
 }
 
 // カテゴリ選択
@@ -467,8 +625,7 @@ function selectCategory(categoryId) {
     renderCategories();
     renderParts();
     
-    // 現在選択されているパーツの色設定UIを更新
-    updateColorSettingsForCurrentCategory();
+    updatePartSettingsPanel();
     
     // モバイル時はパーツタブに自動切り替え
     if (isMobile()) {
@@ -476,56 +633,27 @@ function selectCategory(categoryId) {
     }
 }
 
-// 現在のカテゴリで選択中のパーツの色設定を更新
 function updateColorSettingsForCurrentCategory() {
-    if (!state.currentCategory) {
-        elements.colorSettings.style.display = 'none';
-        clearPartSettingsExtensions();
-        syncClockTick();
-        return;
-    }
-    
-    const category = state.partsData.categories.find(c => c.id === state.currentCategory);
-    
-    // 複数選択カテゴリは colorSettingsPart を参照
-    if (category && category.selectionMode === 'multiple') {
-        if (state.colorSettingsPart) {
-            const part = state.partsData.parts.find(p => p.id === state.colorSettingsPart
-                && p.category === state.currentCategory);
-            if (part) {
-                updateColorSettings(part);
-                return;
-            }
-        }
-        elements.colorSettings.style.display = 'none';
-        clearPartSettingsExtensions();
-        syncClockTick();
-        return;
-    }
-    
-    const selectedPartId = state.selectedParts[state.currentCategory];
-    
-    if (!selectedPartId) {
-        elements.colorSettings.style.display = 'none';
-        clearPartSettingsExtensions();
-        syncClockTick();
-        return;
-    }
-    
-    const part = state.partsData.parts.find(p => p.id === selectedPartId);
-    
-    if (part) {
-        updateColorSettings(part);
-    } else {
-        elements.colorSettings.style.display = 'none';
-        clearPartSettingsExtensions();
-        syncClockTick();
-    }
+    updatePartSettingsPanel();
 }
 
 // パーツ一覧の描画
 function renderParts() {
-    if (!state.currentCategory || !state.partsData) {
+    if (!state.partsData) {
+        elements.partsGrid.innerHTML = '<p class="placeholder">カテゴリを選択してください</p>';
+        elements.currentCategoryName.textContent = 'パーツを選択';
+        elements.colorSettings.style.display = 'none';
+        clearPartSettingsExtensions();
+        if (elements.modifierCategoriesHost) elements.modifierCategoriesHost.innerHTML = '';
+        syncClockTick();
+        return;
+    }
+
+    if (ensureCurrentCategoryVisible()) {
+        renderCategories();
+    }
+
+    if (!state.currentCategory) {
         elements.partsGrid.innerHTML = '<p class="placeholder">カテゴリを選択してください</p>';
         elements.currentCategoryName.textContent = 'パーツを選択';
         elements.colorSettings.style.display = 'none';
@@ -535,12 +663,19 @@ function renderParts() {
     }
     
     const category = state.partsData.categories.find(c => c.id === state.currentCategory);
+    if (!category || !isCategoryListedInSidebar(category)) {
+        elements.partsGrid.innerHTML = '<p class="placeholder">カテゴリを選択してください</p>';
+        elements.currentCategoryName.textContent = 'パーツを選択';
+        updatePartSettingsPanel();
+        return;
+    }
     elements.currentCategoryName.textContent = category.name;
     
     const parts = getVisiblePartsInCategory(state.currentCategory);
     
     if (parts.length === 0) {
         elements.partsGrid.innerHTML = '<p class="placeholder">パーツがありません</p>';
+        updatePartSettingsPanel();
         return;
     }
     
@@ -582,6 +717,8 @@ function renderParts() {
         const item = createPartItem(part, isMultipleCapable, isMultiActive);
         elements.partsGrid.appendChild(item);
     });
+
+    updatePartSettingsPanel();
 }
 
 // パーツアイテムの作成
@@ -637,13 +774,33 @@ function selectPart(partId) {
     // 依存関係処理
     processDependencies();
     
-    // 色設定UIを更新
-    updateColorSettings(part);
-    
-    // プレビュー更新
+    updatePartSettingsPanel();
     updatePreview();
-    
-    // パーツ一覧を再描画
+    renderParts();
+    renderCategories();
+}
+
+function selectModifierPart(partId) {
+    const part = state.partsData.parts.find(p => p.id === partId);
+    if (!part) return;
+    const category = state.partsData.categories.find(c => c.id === part.category);
+    if (!category) return;
+
+    if (category.selectionMode === 'multiple') {
+        const isMultiActive = !!state.multiSelectActive[category.id];
+        if (isMultiActive) {
+            togglePartSelection(partId);
+            return;
+        }
+        selectPartInMultiCategory(partId);
+        return;
+    }
+
+    state.selectedParts[part.category] = partId;
+    initPartColorState(part);
+    processDependencies();
+    updatePartSettingsPanel();
+    updatePreview();
     renderParts();
     renderCategories();
 }
@@ -661,10 +818,12 @@ function selectPartInMultiCategory(partId) {
     }
     
     initPartColorState(part);
-    state.colorSettingsPart = partId;
+    if (part.category === state.currentCategory) {
+        state.colorSettingsPart = partId;
+    }
     
     processDependencies();
-    updateColorSettings(part);
+    updatePartSettingsPanel();
     updatePreview();
     renderParts();
     renderCategories();
@@ -687,10 +846,12 @@ function togglePartSelection(partId) {
     }
     
     initPartColorState(part);
-    state.colorSettingsPart = partId;
+    if (part.category === state.currentCategory) {
+        state.colorSettingsPart = partId;
+    }
     
     processDependencies();
-    updateColorSettings(part);
+    updatePartSettingsPanel();
     updatePreview();
     renderParts();
     renderCategories();
@@ -984,23 +1145,41 @@ function renderDependencyFeed(messages) {
     });
 }
 
-// 依存関係の処理
+// 依存関係の処理（resolveSelection で固定点まで解決）
 function processDependencies() {
     if (!state.partsData) return;
 
     const Dep = window.CharamakeDependencies;
-    const selectedIds = getSelectedPartIds();
-    const sets = Dep
-        ? Dep.collectDependencySets(selectedIds, state.partsData)
-        : {
-            unlockedCategories: new Set(),
-            hiddenCategoryIds: new Set(),
-            hiddenPartIds: new Set()
-        };
+    let unlockedCategories = new Set();
+    let hiddenByParts = new Set();
+    let hiddenPartIds = new Set();
 
-    const unlockedCategories = sets.unlockedCategories;
-    const hiddenByParts = sets.hiddenCategoryIds;
-    const hiddenPartIds = sets.hiddenPartIds;
+    if (Dep && Dep.resolveSelection) {
+        const result = Dep.resolveSelection(state.selectedParts, state.partsData, {
+            unlockedSecrets: state.unlockedSecrets,
+            previouslyUnlockedCategories: state.previouslyUnlockedCategories
+        });
+        state.selectedParts = result.selectedParts;
+        unlockedCategories = result.unlockedCategories;
+        hiddenByParts = result.hiddenCategoryIds;
+        hiddenPartIds = result.hiddenPartIds;
+    } else {
+        const selectedIds = getSelectedPartIds();
+        const sets = Dep
+            ? Dep.collectDependencySets(selectedIds, state.partsData)
+            : {
+                unlockedCategories: new Set(),
+                hiddenCategoryIds: new Set(),
+                hiddenPartIds: new Set()
+            };
+        unlockedCategories = sets.unlockedCategories;
+        hiddenByParts = sets.hiddenCategoryIds;
+        hiddenPartIds = sets.hiddenPartIds;
+        state.unlockedCategories = unlockedCategories;
+        state.hiddenByParts = hiddenByParts;
+        state.hiddenPartIds = hiddenPartIds;
+        sanitizeHiddenPartSelections();
+    }
 
     if (state.dependencyFeedReady) {
         const feedMessages = collectDependencyFeedMessages(
@@ -1014,44 +1193,11 @@ function processDependencies() {
         renderDependencyFeed(feedMessages);
     }
 
+    state.unlockedCategories = unlockedCategories;
     state.hiddenByParts = hiddenByParts;
     state.hiddenPartIds = hiddenPartIds;
 
-    // 新しく解放されたカテゴリを検出して最初の表示可能パーツを自動選択
-    unlockedCategories.forEach(categoryId => {
-        if (!state.previouslyUnlockedCategories.has(categoryId)) {
-            const category = state.partsData.categories.find(c => c.id === categoryId);
-            const hasSelection = category && category.selectionMode === 'multiple'
-                ? (state.selectedParts[categoryId] && state.selectedParts[categoryId].length > 0)
-                : !!state.selectedParts[categoryId];
-            if (category && !hasSelection) {
-                const firstPart = getFirstVisiblePartInCategory(categoryId);
-                if (firstPart) {
-                    if (category.selectionMode === 'multiple') {
-                        state.selectedParts[categoryId] = [firstPart.id];
-                    } else {
-                        state.selectedParts[categoryId] = firstPart.id;
-                        state.selectedColors[firstPart.id] = 'normal';
-                    }
-                }
-            }
-        }
-    });
-
-    // hidden: true のカテゴリで解放されていないものをデセレクト
-    state.partsData.categories.forEach(category => {
-        if (category.hidden && !unlockedCategories.has(category.id)) {
-            deselectCategory(category);
-        }
-    });
-
-    // hides によって動的に非表示になるカテゴリをデセレクト
-    hiddenByParts.forEach(categoryId => {
-        const category = state.partsData.categories.find(c => c.id === categoryId);
-        if (category) deselectCategory(category);
-    });
-
-    sanitizeHiddenPartSelections();
+    syncColorStateAfterDependencyResolve();
 
     state.previouslyUnlockedCategories = new Set(unlockedCategories);
     state.previouslyHiddenCategories = new Set(hiddenByParts);
@@ -1059,40 +1205,41 @@ function processDependencies() {
     state.dependencyFeedReady = true;
 }
 
-// カテゴリを非表示にする（選択状態はそのまま保持）
-// ※ selectedParts は削除しない。collectAllLayers でスキップすることで描画から除外する
-function deselectCategory(category) {
-    // 何もしない：選択状態を保持したまま renderCategories / collectAllLayers 側でスキップ
-}
-
 // シークレット未解放の選択を除去
 function sanitizeSecretSelections() {
     if (!state.partsData) return;
 
+    const isPartAllowed = partId => {
+        const part = state.partsData.parts.find(p => p.id === partId);
+        return !!part && part.category && isSecretUnlocked(part.secret);
+    };
+
     for (const [categoryId, selection] of Object.entries(state.selectedParts)) {
         const category = state.partsData.categories.find(c => c.id === categoryId);
-        if (!category || !isCategoryVisible(category)) {
+        if (!category || (category.secret && !isSecretUnlocked(category.secret))) {
             delete state.selectedParts[categoryId];
             continue;
         }
 
-        if (category.selectionMode === 'multiple' && Array.isArray(selection)) {
-            const filtered = selection.filter(partId => {
-                const part = state.partsData.parts.find(p => p.id === partId);
-                return isPartVisible(part);
-            });
+        if (category.selectionMode === 'multiple') {
+            const arr = Array.isArray(selection) ? selection : (selection ? [selection] : []);
+            const filtered = arr.filter(id => isPartAllowed(id) && getPartCategoryId(id) === categoryId);
             if (filtered.length > 0) {
                 state.selectedParts[categoryId] = filtered;
             } else {
                 delete state.selectedParts[categoryId];
             }
         } else if (selection) {
-            const part = state.partsData.parts.find(p => p.id === selection);
-            if (!isPartVisible(part)) {
+            if (!isPartAllowed(selection) || getPartCategoryId(selection) !== categoryId) {
                 delete state.selectedParts[categoryId];
             }
         }
     }
+}
+
+function getPartCategoryId(partId) {
+    const part = state.partsData?.parts.find(p => p.id === partId);
+    return part ? part.category : null;
 }
 
 function processSecretUnlocks() {
@@ -1167,6 +1314,7 @@ async function submitSecretPassword() {
 
     state.unlockedSecrets.add(secretId);
     processSecretUnlocks();
+    processDependencies();
     renderCategories();
     if (state.currentCategory) renderParts();
     updatePreview();
@@ -1406,30 +1554,153 @@ function drawDynamicOverlays(ctx) {
     return Promise.resolve();
 }
 
-// 色設定UIの更新
-function updateColorSettings(part) {
-    const hasExtension = renderPartSettingsExtensions(part);
-    const showColorBlock = partHasColorPresetUI(part) || hasSidedLayers(part);
+function renderModifierCategoryBlocks(modifierCategories) {
+    const host = elements.modifierCategoriesHost;
+    if (!host) return;
+    host.innerHTML = '';
+    if (!modifierCategories || modifierCategories.length === 0) return;
 
-    if (!hasExtension && !showColorBlock) {
+    modifierCategories.forEach(modCat => {
+        const parts = getVisiblePartsInCategory(modCat.id);
+        if (parts.length === 0) return;
+
+        const block = document.createElement('div');
+        block.className = 'modifier-category-block';
+
+        const heading = document.createElement('h4');
+        heading.className = 'modifier-category-heading part-settings-heading';
+        heading.id = `modifier-heading-${modCat.id}`;
+        const multiTag = modCat.selectionMode === 'multiple'
+            ? '<span class="multi-badge">複数可</span>'
+            : '';
+        heading.innerHTML = `${modCat.name}${multiTag}`;
+        block.setAttribute('aria-labelledby', heading.id);
+        block.appendChild(heading);
+
+        const grid = document.createElement('div');
+        grid.className = 'modifier-parts-grid parts-grid';
+
+        const isMultipleCapable = modCat.selectionMode === 'multiple';
+        const isMultiActive = isMultipleCapable && !!state.multiSelectActive[modCat.id];
+
+        if (isMultipleCapable) {
+            const toolbar = document.createElement('div');
+            toolbar.className = 'multiple-toolbar';
+
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'btn btn-small multi-toggle-btn' + (isMultiActive ? ' active' : '');
+            toggleBtn.textContent = '複数選択';
+            toggleBtn.addEventListener('click', () => {
+                state.multiSelectActive[modCat.id] = !state.multiSelectActive[modCat.id];
+                updatePartSettingsPanel();
+            });
+
+            const resetBtn = document.createElement('button');
+            resetBtn.type = 'button';
+            resetBtn.className = 'btn btn-small multiple-reset-btn';
+            resetBtn.textContent = '選択解除';
+            resetBtn.addEventListener('click', () => {
+                state.selectedParts[modCat.id] = [];
+                processDependencies();
+                updatePreview();
+                updatePartSettingsPanel();
+                renderCategories();
+            });
+
+            toolbar.appendChild(toggleBtn);
+            toolbar.appendChild(resetBtn);
+            grid.appendChild(toolbar);
+        }
+
+        parts.forEach(part => {
+            grid.appendChild(createModifierPartItem(part, isMultipleCapable));
+        });
+
+        block.appendChild(grid);
+        host.appendChild(block);
+    });
+}
+
+function createModifierPartItem(part, isMultipleCapable) {
+    const div = document.createElement('div');
+    div.className = 'part-item';
+
+    const isSelected = isMultipleCapable
+        ? (state.selectedParts[part.category] && state.selectedParts[part.category].includes(part.id))
+        : (state.selectedParts[part.category] === part.id);
+
+    if (isSelected) div.classList.add('selected');
+    if (part.secret && isSecretUnlocked(part.secret)) {
+        div.classList.add('secret-part');
+    }
+
+    div.innerHTML = `<div class="part-name">${part.name}</div>`;
+    div.addEventListener('click', () => selectModifierPart(part.id));
+
+    return div;
+}
+
+function updatePartSettingsPanel() {
+    if (!state.currentCategory || !state.partsData) {
         elements.colorSettings.style.display = 'none';
+        clearPartSettingsExtensions();
+        if (elements.modifierCategoriesHost) elements.modifierCategoriesHost.innerHTML = '';
+        syncClockTick();
+        return;
+    }
+
+    const hostPart = getHostPartForSettings();
+    const modifierCategories = getActiveModifierCategories(state.currentCategory);
+
+    let hasExtension = false;
+    let showColorBlock = false;
+
+    if (hostPart) {
+        hasExtension = renderPartSettingsExtensions(hostPart);
+        showColorBlock = partHasColorPresetUI(hostPart) || hasSidedLayers(hostPart);
+    } else {
+        clearPartSettingsExtensions();
+        const existingSide = document.getElementById('sideSelector');
+        if (existingSide) existingSide.remove();
+        updateAdvancedColorSettings(false);
+    }
+
+    const hasModifiers = !!elements.modifierCategoriesHost && modifierCategories.length > 0;
+
+    if (!hasExtension && !showColorBlock && !hasModifiers) {
+        elements.colorSettings.style.display = 'none';
+        if (elements.modifierCategoriesHost) elements.modifierCategoriesHost.innerHTML = '';
         syncClockTick();
         return;
     }
 
     elements.colorSettings.style.display = 'block';
+
+    if (elements.partSettingsDisplayHeading) {
+        elements.partSettingsDisplayHeading.style.display = hasExtension ? '' : 'none';
+    }
+    if (elements.partSettingsColorHeading) {
+        elements.partSettingsColorHeading.style.display = showColorBlock ? '' : 'none';
+    }
     if (elements.colorPresetBlock) {
         elements.colorPresetBlock.style.display = showColorBlock ? '' : 'none';
     }
 
-    if (!showColorBlock) {
+    if (hostPart && showColorBlock) {
+        renderColorBlockForPart(hostPart);
+    } else if (elements.colorPresetSelector) {
+        elements.colorPresetSelector.innerHTML = '';
         const existingSide = document.getElementById('sideSelector');
         if (existingSide) existingSide.remove();
         updateAdvancedColorSettings(false);
-        syncClockTick();
-        return;
     }
 
+    renderModifierCategoryBlocks(modifierCategories);
+    syncClockTick();
+}
+
+function renderColorBlockForPart(part) {
     elements.colorPresetSelector.innerHTML = '';
     
     coercePartColorFromDisallowedCustom(part.id);
@@ -1505,7 +1776,10 @@ function updateColorSettings(part) {
         updateAdvancedColorSettings(false);
     }
 
-    syncClockTick();
+}
+
+function updateColorSettings(part) {
+    updatePartSettingsPanel();
 }
 
 // カスタムのデフォルト設定
@@ -2127,7 +2401,13 @@ function handleCharacterFileSelect(e) {
                 const category = state.partsData.categories.find(c => c.id === categoryId);
                 
                 if (category && category.selectionMode === 'multiple') {
-                    state.selectedParts[categoryId] = partInfo;
+                    if (Array.isArray(partInfo)) {
+                        state.selectedParts[categoryId] = partInfo;
+                    } else if (typeof partInfo === 'string') {
+                        state.selectedParts[categoryId] = [partInfo];
+                    } else {
+                        state.selectedParts[categoryId] = [];
+                    }
                 } else {
                     if (typeof partInfo === 'string') {
                         state.selectedParts[categoryId] = partInfo;
@@ -2169,14 +2449,20 @@ function handleCharacterFileSelect(e) {
             }
             
             coerceAllDisallowedCustomColors();
-            sanitizeSecretSelections();
+            state.unlockedCategories = new Set();
+            state.hiddenByParts = new Set();
+            state.hiddenPartIds = new Set();
             resetDependencyFeedSnapshot();
             
+            sanitizeSecretSelections();
+            initializeDefaultSelections(true);
             processDependencies();
             processSecretUnlocks();
+            processDependencies();
+            ensureCurrentCategoryVisible();
             renderCategories();
             renderParts();
-            updateColorSettingsForCurrentCategory();
+            updatePartSettingsPanel();
             updatePreview();
             syncClockTick();
             

@@ -79,12 +79,10 @@
 
 `processDependencies()`（パーツ選択のたびに実行）:
 
-1. `collectDependencySets(selectedPartIds, partsData)` で Set を集約
-2. `state.hiddenByParts` / `state.hiddenPartIds` を更新
-3. 新規 `unlocks` カテゴリで、未選択なら `getFirstVisiblePartInCategory` で先頭パーツを自動選択
-4. `hidden: true` で未解放のカテゴリをデセレクト（選択保持設計）
-5. カテゴリ `hides` 対象をデセレクト（同上）
-6. `sanitizeHiddenPartSelections()` で非表示パーツの選択を修正
+1. [`dependencies.js`](./dependencies.js) の `resolveSelection()` で **表示中の選択のみ**から `unlocks` / `hides` を集約し、非表示カテゴリの選択削除・新規 unlock の先頭パーツ自動選択・非表示パーツ差し替えを **固定点まで反復**
+2. `state.hiddenByParts` / `state.hiddenPartIds` / `state.selectedParts` を結果で更新
+
+**プレイ UI**: `hidden: true` の修飾カテゴリは左のカテゴリ一覧に出さず、unlock 元を選んだとき **パーツ設定** ペイン内でパーツを選ぶ（[`index.html`](./index.html) / [`game.js`](./game.js)）。
 
 表示判定:
 
