@@ -19,8 +19,15 @@ const state = {
     previouslyUnlockedSecrets: new Set(), // 新規解放時の先頭自動選択用
     clockDisplayMode: 'jst', // 時刻枠 overlay: jst | local | unix | both
     colorGroupPresets: {}, // colorGroup ID → 'normal' | プリセット名 | 'custom'（グループ共有の色意図）
-    colorGroupCustom: {} // colorGroup ID → カスタム色オブジェクト
+    colorGroupCustom: {}, // colorGroup ID → カスタム色オブジェクト
+    lockedCategories: new Set(), // 全体ランダムの対象外にする左一覧カテゴリ
+    undoStack: [],
+    redoStack: []
 };
+
+const HISTORY_LIMIT = 20;
+const LOCKS_STORAGE_KEY = 'charamake.lockedCategories';
+const FALLBACK_DEFAULT_LOCKS = ['frame', 'background', 'basehair'];
 
 let previewDrawPromise = Promise.resolve();
 let clockTickInterval = null;
@@ -39,7 +46,13 @@ const elements = {
     partSettingsDisplayHeading: document.getElementById('partSettingsDisplayHeading'),
     partSettingsColorHeading: document.getElementById('partSettingsColorHeading'),
     modifierCategoriesHost: document.getElementById('modifierCategoriesHost'),
-    colorPresetBlock: document.getElementById('colorPresetBlock')
+    colorPresetBlock: document.getElementById('colorPresetBlock'),
+    randomAllBtn: document.getElementById('randomAllBtn'),
+    undoBtn: document.getElementById('undoBtn'),
+    redoBtn: document.getElementById('redoBtn'),
+    lockSummary: document.getElementById('lockSummary'),
+    clearLocksBtn: document.getElementById('clearLocksBtn'),
+    categoryRandomBtn: document.getElementById('categoryRandomBtn')
 };
 
 /** @type {Map<string, string[]> | null} partId → hidden category ids */
@@ -83,6 +96,8 @@ function loadDefaultPartsData() {
             resetDependencyFeedSnapshot();
             state.colorGroupPresets = {};
             state.colorGroupCustom = {};
+            initializeLocks();
+            clearHistory();
             initializeDefaultSelections();
             processDependencies();
             
@@ -172,6 +187,19 @@ function setupEventListeners() {
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
 
+    if (elements.randomAllBtn) elements.randomAllBtn.addEventListener('click', randomizeAll);
+    if (elements.undoBtn) elements.undoBtn.addEventListener('click', undo);
+    if (elements.redoBtn) elements.redoBtn.addEventListener('click', redo);
+    if (elements.clearLocksBtn) elements.clearLocksBtn.addEventListener('click', clearAllLocks);
+    if (elements.categoryRandomBtn) {
+        elements.categoryRandomBtn.addEventListener('click', () => {
+            if (state.currentCategory) randomizeCategory(state.currentCategory);
+        });
+    }
+    if (elements.randomAllBtn) {
+        document.addEventListener('keydown', handleShortcutKey);
+    }
+
     const submitSecretBtn = document.getElementById('submitSecretBtn');
     const secretPasswordInput = document.getElementById('secretPasswordInput');
     if (submitSecretBtn) {
@@ -236,6 +264,8 @@ function handleDataFileSelect(e) {
             state.currentCategory = null;
             state.colorSettingsPart = null;
             resetDependencyFeedSnapshot();
+            initializeLocks();
+            clearHistory();
             initializeDefaultSelections();
             processDependencies();
 
@@ -504,10 +534,7 @@ function renderCategories() {
                 div.classList.add('active');
             }
             
-            const multiTag = category.selectionMode === 'multiple'
-                ? '<span class="multi-badge">複数可</span>'
-                : '';
-            div.innerHTML = `${category.name}${multiTag}`;
+            fillCategoryItem(div, category);
             div.addEventListener('click', () => selectCategory(category.id));
             
             elements.categoryList.appendChild(div);
@@ -532,12 +559,49 @@ function createCategoryItem(category) {
         div.classList.add('secret-category');
     }
     
+    fillCategoryItem(div, category);
+    div.addEventListener('click', () => selectCategory(category.id));
+    return div;
+}
+
+function fillCategoryItem(div, category) {
     const multiTag = category.selectionMode === 'multiple'
         ? '<span class="multi-badge">複数可</span>'
         : '';
-    div.innerHTML = `${category.name}${multiTag}`;
-    div.addEventListener('click', () => selectCategory(category.id));
-    return div;
+    const label = document.createElement('span');
+    label.className = 'category-item-label';
+    label.innerHTML = `${category.name}${multiTag}`;
+    div.appendChild(label);
+
+    const locked = state.lockedCategories.has(category.id);
+    div.classList.toggle('is-locked', locked);
+    div.appendChild(createLockToggle(locked ? 'on' : 'off', category.name, () => toggleCategoryLock(category.id)));
+}
+
+const LOCK_ICON_CLOSED = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">'
+    + '<path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/>'
+    + '<rect x="3" y="7" width="10" height="7" rx="1.5" fill="currentColor"/></svg>';
+const LOCK_ICON_OPEN = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">'
+    + '<path d="M5 7V5a3 3 0 0 1 5.8-1.1" fill="none" stroke="currentColor" stroke-width="1.6"/>'
+    + '<rect x="3" y="7" width="10" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
+
+/** @param {'on'|'off'|'mixed'} lockState */
+function createLockToggle(lockState, label, onToggle) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'lock-toggle lock-toggle--' + lockState;
+    btn.setAttribute('aria-pressed', lockState === 'on' ? 'true' : (lockState === 'mixed' ? 'mixed' : 'false'));
+    const title = lockState === 'on'
+        ? `「${label}」の固定を外す`
+        : `「${label}」を固定する（全体ランダムで変えない）`;
+    btn.title = title;
+    btn.setAttribute('aria-label', title);
+    btn.innerHTML = lockState === 'off' ? LOCK_ICON_OPEN : LOCK_ICON_CLOSED;
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onToggle();
+    });
+    return btn;
 }
 
 // カテゴリグループを作成
@@ -555,7 +619,14 @@ function createCategoryGroup(group, categories, startOpen = false) {
         e.stopPropagation();
         toggleCategoryGroup(group.id);
     });
-    groupDiv.appendChild(header);
+
+    const headerRow = document.createElement('div');
+    headerRow.className = 'category-group-header-row';
+    headerRow.appendChild(header);
+    const lockState = getGroupLockState(group.id);
+    headerRow.classList.toggle('is-locked', lockState === 'on');
+    headerRow.appendChild(createLockToggle(lockState, group.name, () => toggleGroupLock(group.id)));
+    groupDiv.appendChild(headerRow);
     
     const content = document.createElement('div');
     content.className = 'category-group-content' + (startOpen ? '' : ' category-group-content--collapsed');
@@ -639,6 +710,27 @@ function updateColorSettingsForCurrentCategory() {
 
 // パーツ一覧の描画
 function renderParts() {
+    renderPartsContent();
+    updateCategoryRandomButton();
+}
+
+function updateCategoryRandomButton() {
+    const btn = elements.categoryRandomBtn;
+    if (!btn) return;
+    const category = state.partsData && state.currentCategory
+        ? state.partsData.categories.find(c => c.id === state.currentCategory)
+        : null;
+    const usable = !!category && isCategoryListedInSidebar(category)
+        && getVisiblePartsInCategory(category.id).length > 0
+        && !!window.CharamakeRandomize;
+    btn.hidden = !usable;
+    if (!usable) return;
+    btn.title = state.lockedCategories.has(category.id)
+        ? `「${category.name}」は固定中ですが、このボタンでは引き直します`
+        : `「${category.name}」だけをランダムにする`;
+}
+
+function renderPartsContent() {
     if (!state.partsData) {
         elements.partsGrid.innerHTML = '<p class="placeholder">カテゴリを選択してください</p>';
         elements.currentCategoryName.textContent = 'パーツを選択';
@@ -701,11 +793,13 @@ function renderParts() {
         resetBtn.className = 'btn btn-small multiple-reset-btn';
         resetBtn.textContent = '選択解除';
         resetBtn.addEventListener('click', () => {
+            const before = captureSnapshot();
             state.selectedParts[state.currentCategory] = [];
             processDependencies();
             updatePreview();
             renderParts();
             renderCategories();
+            commitHistory(before);
         });
         
         toolbar.appendChild(toggleBtn);
@@ -764,6 +858,7 @@ function createPartItem(part, isMultipleCapable, isMultiActive) {
 function selectPart(partId) {
     const part = state.partsData.parts.find(p => p.id === partId);
     if (!part) return;
+    const before = captureSnapshot();
     
     // 選択状態を更新
     state.selectedParts[part.category] = partId;
@@ -778,6 +873,7 @@ function selectPart(partId) {
     updatePreview();
     renderParts();
     renderCategories();
+    commitHistory(before);
 }
 
 function selectModifierPart(partId) {
@@ -796,6 +892,7 @@ function selectModifierPart(partId) {
         return;
     }
 
+    const before = captureSnapshot();
     state.selectedParts[part.category] = partId;
     initPartColorState(part);
     processDependencies();
@@ -803,12 +900,14 @@ function selectModifierPart(partId) {
     updatePreview();
     renderParts();
     renderCategories();
+    commitHistory(before);
 }
 
 // 複数可カテゴリでの単一選択（配列に1件だけ保持）
 function selectPartInMultiCategory(partId) {
     const part = state.partsData.parts.find(p => p.id === partId);
     if (!part) return;
+    const before = captureSnapshot();
     
     const current = state.selectedParts[part.category] || [];
     if (current.length === 1 && current[0] === partId) {
@@ -827,12 +926,14 @@ function selectPartInMultiCategory(partId) {
     updatePreview();
     renderParts();
     renderCategories();
+    commitHistory(before);
 }
 
 // パーツ選択（複数選択トグル）
 function togglePartSelection(partId) {
     const part = state.partsData.parts.find(p => p.id === partId);
     if (!part) return;
+    const before = captureSnapshot();
     
     if (!state.selectedParts[part.category]) {
         state.selectedParts[part.category] = [];
@@ -855,6 +956,7 @@ function togglePartSelection(partId) {
     updatePreview();
     renderParts();
     renderCategories();
+    commitHistory(before);
 }
 
 function getPartCategory(part) {
@@ -1575,7 +1677,20 @@ function renderModifierCategoryBlocks(modifierCategories) {
             : '';
         heading.innerHTML = `${modCat.name}${multiTag}`;
         block.setAttribute('aria-labelledby', heading.id);
-        block.appendChild(heading);
+
+        const headerRow = document.createElement('div');
+        headerRow.className = 'modifier-category-header';
+        headerRow.appendChild(heading);
+        if (window.CharamakeRandomize) {
+            const randomBtn = document.createElement('button');
+            randomBtn.type = 'button';
+            randomBtn.className = 'btn btn-small category-random-btn category-random-btn--mini';
+            randomBtn.textContent = 'ランダム';
+            randomBtn.title = `「${modCat.name}」だけをランダムにする`;
+            randomBtn.addEventListener('click', () => randomizeCategory(modCat.id, { includeModifiers: false }));
+            headerRow.appendChild(randomBtn);
+        }
+        block.appendChild(headerRow);
 
         const grid = document.createElement('div');
         grid.className = 'modifier-parts-grid parts-grid';
@@ -1601,11 +1716,13 @@ function renderModifierCategoryBlocks(modifierCategories) {
             resetBtn.className = 'btn btn-small multiple-reset-btn';
             resetBtn.textContent = '選択解除';
             resetBtn.addEventListener('click', () => {
+                const before = captureSnapshot();
                 state.selectedParts[modCat.id] = [];
                 processDependencies();
                 updatePreview();
                 updatePartSettingsPanel();
                 renderCategories();
+                commitHistory(before);
             });
 
             toolbar.appendChild(toggleBtn);
@@ -1795,6 +1912,7 @@ function selectColorPreset(partId, colorName) {
         return;
     }
 
+    const before = captureSnapshot();
     const groupId = actorPart ? getColorGroupIdForPart(actorPart) : null;
     let customData = null;
 
@@ -1824,6 +1942,7 @@ function selectColorPreset(partId, colorName) {
     }
 
     updatePreview();
+    commitHistory(before);
 }
 
 // 同じカラーグループの custom データ（グループ正本 → レガシー part キャッシュ）
@@ -1888,9 +2007,11 @@ function renderSideSelector(part) {
         btn.className = 'side-btn' + (currentSide === value ? ' active' : '');
         btn.textContent = text;
         btn.addEventListener('click', () => {
+            const before = captureSnapshot();
             state.selectedSide[part.id] = value;
             renderSideSelector(part);
             updatePreview();
+            commitHistory(before);
         });
         selector.appendChild(btn);
     });
@@ -2274,11 +2395,353 @@ function hslToRgb(h, s, l) {
 
 function lerp(a, b, t) { return a + (b - a) * t; }
 
+// ---- 戻す / やり直す ----
+
+function captureSnapshot() {
+    return {
+        selectedParts: JSON.parse(JSON.stringify(state.selectedParts)),
+        selectedColors: { ...state.selectedColors },
+        customColors: JSON.parse(JSON.stringify(state.customColors)),
+        colorGroupPresets: { ...state.colorGroupPresets },
+        colorGroupCustom: JSON.parse(JSON.stringify(state.colorGroupCustom)),
+        selectedSide: { ...state.selectedSide },
+        unlockedCategories: [...state.unlockedCategories]
+    };
+}
+
+function snapshotKey(snapshot) {
+    const { unlockedCategories, ...rest } = snapshot;
+    return JSON.stringify(rest);
+}
+
+/** 操作前のスナップショットと現在が違えば undo 側に積む */
+function commitHistory(before) {
+    if (!before) return;
+    if (snapshotKey(before) === snapshotKey(captureSnapshot())) return;
+    state.undoStack.push(before);
+    if (state.undoStack.length > HISTORY_LIMIT) state.undoStack.shift();
+    state.redoStack = [];
+    updateRandomBar();
+}
+
+function clearHistory() {
+    state.undoStack = [];
+    state.redoStack = [];
+    updateRandomBar();
+}
+
+function restoreSnapshot(snapshot) {
+    state.selectedParts = JSON.parse(JSON.stringify(snapshot.selectedParts));
+    state.selectedColors = { ...snapshot.selectedColors };
+    state.customColors = JSON.parse(JSON.stringify(snapshot.customColors));
+    state.colorGroupPresets = { ...snapshot.colorGroupPresets };
+    state.colorGroupCustom = JSON.parse(JSON.stringify(snapshot.colorGroupCustom));
+    state.selectedSide = { ...snapshot.selectedSide };
+    // スナップショット時点で表示中だった修飾カテゴリを自動選択で上書きしない
+    state.previouslyUnlockedCategories = new Set(snapshot.unlockedCategories);
+    processDependencies();
+    state.colorSettingsPart = null;
+    ensureCurrentCategoryVisible();
+    renderCategories();
+    renderParts();
+    updatePreview();
+    syncClockTick();
+}
+
+function undo() {
+    if (state.undoStack.length === 0) return;
+    state.redoStack.push(captureSnapshot());
+    restoreSnapshot(state.undoStack.pop());
+    renderDependencyFeed([{ kind: 'history', text: '1 つ前の状態に戻しました' }]);
+    updateRandomBar();
+}
+
+function redo() {
+    if (state.redoStack.length === 0) return;
+    state.undoStack.push(captureSnapshot());
+    restoreSnapshot(state.redoStack.pop());
+    renderDependencyFeed([{ kind: 'history', text: '戻した操作をやり直しました' }]);
+    updateRandomBar();
+}
+
+/** R: 全体ランダム / Ctrl+Z: 戻す / Ctrl+Y・Ctrl+Shift+Z: やり直す */
+function handleShortcutKey(e) {
+    const target = e.target;
+    if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
+    const key = e.key.toLowerCase();
+    const mod = e.ctrlKey || e.metaKey;
+
+    if (mod && !e.altKey && key === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) redo();
+        else undo();
+    } else if (mod && !e.altKey && !e.shiftKey && key === 'y') {
+        e.preventDefault();
+        redo();
+    } else if (!mod && !e.altKey && !e.shiftKey && key === 'r' && !e.repeat) {
+        e.preventDefault();
+        randomizeAll();
+    }
+}
+
+// ---- ランダム ----
+
+function categorySignature(snapshot, category) {
+    const ids = getSelectionIdList(snapshot.selectedParts[category.id], category);
+    return JSON.stringify({
+        ids,
+        colors: ids.map(id => snapshot.selectedColors[id] || 'normal'),
+        sides: ids.map(id => snapshot.selectedSide[id] || 'both'),
+        group: category.colorGroup ? (snapshot.colorGroupPresets[category.colorGroup] || 'normal') : null
+    });
+}
+
+function getSelectionIdList(selection, category) {
+    if (!selection) return [];
+    if (category && category.selectionMode === 'multiple') {
+        return Array.isArray(selection) ? selection.slice() : [selection];
+    }
+    const id = Array.isArray(selection) ? selection[0] : selection;
+    return id ? [id] : [];
+}
+
+function countChangedVisibleCategories(before, after) {
+    return state.partsData.categories.filter(category => {
+        if (!isCategoryVisible(category)) return false;
+        return categorySignature(before, category) !== categorySignature(after, category);
+    }).length;
+}
+
+function applyRandomResult(result, before) {
+    state.selectedParts = result.selectedParts;
+    state.previouslyUnlockedCategories = new Set(result.unlockedCategories);
+    processDependencies();
+
+    Object.entries(result.colorGroupPresets).forEach(([groupId, colorName]) => {
+        setColorGroupPreset(groupId, colorName);
+    });
+    Object.entries(result.selectedColors).forEach(([partId, colorName]) => {
+        state.selectedColors[partId] = colorName;
+        delete state.customColors[partId];
+    });
+    Object.assign(state.selectedSide, result.selectedSide);
+    syncColorStateAfterDependencyResolve();
+
+    state.colorSettingsPart = null;
+    ensureCurrentCategoryVisible();
+    renderCategories();
+    renderParts();
+    updatePreview();
+    syncClockTick();
+    commitHistory(before);
+    return countChangedVisibleCategories(before, captureSnapshot());
+}
+
+function runRandomize(targetCategoryIds, includeModifiers) {
+    const R = window.CharamakeRandomize;
+    if (!R || !state.partsData) return null;
+    const before = captureSnapshot();
+    const result = R.randomize({
+        partsData: state.partsData,
+        selectedParts: state.selectedParts,
+        targetCategoryIds,
+        includeModifiers,
+        lockedCategoryIds: state.lockedCategories,
+        unlockedSecrets: state.unlockedSecrets,
+        previouslyUnlockedCategories: state.previouslyUnlockedCategories
+    });
+    return applyRandomResult(result, before);
+}
+
+function randomizeAll() {
+    const R = window.CharamakeRandomize;
+    if (!R || !state.partsData) return;
+    const targets = R.getFullRandomTargets(state.partsData, state.lockedCategories, state.unlockedSecrets);
+    const changed = runRandomize(targets, true);
+    if (changed === null) return;
+    const lockCount = state.lockedCategories.size;
+    renderDependencyFeed([{
+        kind: 'random',
+        text: lockCount > 0
+            ? `ランダム: ${changed} カテゴリを変更（固定 ${lockCount}）`
+            : `完全ランダム: ${changed} カテゴリを変更`
+    }]);
+}
+
+/** 表示中カテゴリ（と修飾）だけを引き直す。固定中でも実行する */
+function randomizeCategory(categoryId, options = {}) {
+    const changed = runRandomize([categoryId], options.includeModifiers !== false);
+    if (changed === null) return;
+    renderDependencyFeed([{
+        kind: 'random',
+        text: `「${getCategoryDisplayName(categoryId)}」をランダム: ${changed} カテゴリを変更`
+    }]);
+}
+
+// ---- 固定（ロック） ----
+
+function getDefaultLocks() {
+    const R = window.CharamakeRandomize;
+    return R ? R.RANDOM_CONFIG.defaultLocked : FALLBACK_DEFAULT_LOCKS;
+}
+
+function setLockedCategories(ids) {
+    const valid = new Set(
+        (state.partsData?.categories || []).filter(c => !c.hidden).map(c => c.id)
+    );
+    state.lockedCategories = new Set((ids || []).filter(id => valid.has(id)));
+}
+
+function loadLocksFromStorage() {
+    try {
+        const raw = window.localStorage.getItem(LOCKS_STORAGE_KEY);
+        if (!raw) return null;
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function saveLocksToStorage() {
+    try {
+        window.localStorage.setItem(LOCKS_STORAGE_KEY, JSON.stringify([...state.lockedCategories]));
+    } catch (e) {
+        // localStorage が使えない環境では保持しない
+    }
+}
+
+function initializeLocks() {
+    const stored = loadLocksFromStorage();
+    setLockedCategories(stored || getDefaultLocks());
+    updateRandomBar();
+}
+
+function onLocksChanged() {
+    saveLocksToStorage();
+    renderCategories();
+    updateCategoryRandomButton();
+    updateRandomBar();
+}
+
+function toggleCategoryLock(categoryId) {
+    if (state.lockedCategories.has(categoryId)) {
+        state.lockedCategories.delete(categoryId);
+    } else {
+        state.lockedCategories.add(categoryId);
+    }
+    onLocksChanged();
+}
+
+function getGroupLockableCategories(groupId) {
+    if (!state.partsData) return [];
+    return state.partsData.categories.filter(c => c.group === groupId && !c.hidden);
+}
+
+/** @returns {'on'|'off'|'mixed'} */
+function getGroupLockState(groupId) {
+    const cats = getGroupLockableCategories(groupId);
+    const lockedCount = cats.filter(c => state.lockedCategories.has(c.id)).length;
+    if (lockedCount === 0) return 'off';
+    return lockedCount === cats.length ? 'on' : 'mixed';
+}
+
+function toggleGroupLock(groupId) {
+    const cats = getGroupLockableCategories(groupId);
+    const lockAll = getGroupLockState(groupId) !== 'on';
+    cats.forEach(c => {
+        if (lockAll) state.lockedCategories.add(c.id);
+        else state.lockedCategories.delete(c.id);
+    });
+    onLocksChanged();
+}
+
+function clearAllLocks() {
+    if (state.lockedCategories.size === 0) return;
+    state.lockedCategories.clear();
+    onLocksChanged();
+}
+
+function updateRandomBar() {
+    const count = state.lockedCategories.size;
+    if (elements.randomAllBtn) {
+        elements.randomAllBtn.textContent = count === 0 ? '完全ランダム' : '全体ランダム';
+        elements.randomAllBtn.title = (count === 0
+            ? 'すべてのカテゴリをランダムにする'
+            : `固定中の ${count} カテゴリ以外をランダムにする`) + '（R）';
+        elements.randomAllBtn.disabled = !window.CharamakeRandomize;
+    }
+    if (elements.lockSummary) elements.lockSummary.textContent = `固定 ${count} 件`;
+    if (elements.clearLocksBtn) elements.clearLocksBtn.disabled = count === 0;
+    if (elements.undoBtn) elements.undoBtn.disabled = state.undoStack.length === 0;
+    if (elements.redoBtn) elements.redoBtn.disabled = state.redoStack.length === 0;
+}
+
+/**
+ * 複数選択カテゴリの 1 要素。左右・個別色が無ければ ID 文字列のまま。
+ * colorGroup に属するカテゴリの色は colorGroups 側に保存されるので要素には付けない。
+ */
+function serializeMultiplePartEntry(partId, category) {
+    const part = state.partsData.parts.find(p => p.id === partId);
+    const entry = { id: partId };
+
+    const side = state.selectedSide[partId];
+    if (side && side !== 'both') entry.side = side;
+
+    if (part && !category.colorGroup) {
+        let colorSetting = getEffectiveColorPreset(part);
+        if (colorSetting === 'custom' && !isCustomColorAllowed(part)) colorSetting = 'normal';
+        if (colorSetting === 'custom') {
+            const customData = state.customColors[partId] || {};
+            Object.assign(entry, {
+                color: 'custom',
+                blend: customData.blend,
+                colorValue: customData.color,
+                opacity: customData.opacity,
+                hueShift: customData.hueShift || 0,
+                hueOpacity: customData.hueOpacity || 0
+            });
+        } else if (colorSetting && colorSetting !== 'normal') {
+            entry.color = colorSetting;
+        }
+    }
+
+    return Object.keys(entry).length === 1 ? partId : entry;
+}
+
+/** 読込した { id, side?, color?, ... } から左右と色を復元 */
+function restorePartEntryExtras(partInfo) {
+    if (partInfo.side) {
+        state.selectedSide[partInfo.id] = partInfo.side;
+    }
+
+    if (partInfo.color === 'custom') {
+        const loadedPart = state.partsData.parts.find(p => p.id === partInfo.id);
+        if (loadedPart && isCustomColorAllowed(loadedPart)) {
+            state.selectedColors[partInfo.id] = 'custom';
+            state.customColors[partInfo.id] = {
+                blend: partInfo.blend,
+                color: partInfo.colorValue,
+                opacity: partInfo.opacity,
+                hueShift: partInfo.hueShift || 0,
+                hueOpacity: partInfo.hueOpacity || 0
+            };
+        } else {
+            state.selectedColors[partInfo.id] = 'normal';
+        }
+    } else if (partInfo.color) {
+        state.selectedColors[partInfo.id] = partInfo.color;
+    } else {
+        state.selectedColors[partInfo.id] = 'normal';
+    }
+}
+
 // キャラクター保存
 function saveCharacter() {
     const characterData = {
         unlockedSecrets: [...state.unlockedSecrets],
         clockDisplayMode: state.clockDisplayMode || 'jst',
+        locks: [...state.lockedCategories],
         character: {}
     };
 
@@ -2307,7 +2770,8 @@ function saveCharacter() {
         const category = state.partsData.categories.find(c => c.id === categoryId);
         
         if (category && category.selectionMode === 'multiple') {
-            characterData.character[categoryId] = selection;
+            const ids = Array.isArray(selection) ? selection : (selection ? [selection] : []);
+            characterData.character[categoryId] = ids.map(partId => serializeMultiplePartEntry(partId, category));
         } else {
             const part = state.partsData.parts.find(p => p.id === selection);
             let colorSetting = part ? getEffectiveColorPreset(part) : (state.selectedColors[selection] || 'normal');
@@ -2401,43 +2865,21 @@ function handleCharacterFileSelect(e) {
                 const category = state.partsData.categories.find(c => c.id === categoryId);
                 
                 if (category && category.selectionMode === 'multiple') {
-                    if (Array.isArray(partInfo)) {
-                        state.selectedParts[categoryId] = partInfo;
-                    } else if (typeof partInfo === 'string') {
-                        state.selectedParts[categoryId] = [partInfo];
-                    } else {
-                        state.selectedParts[categoryId] = [];
-                    }
+                    // 旧形式は ID 文字列の配列、新形式は要素に { id, side?, color? } も混在
+                    const entries = Array.isArray(partInfo) ? partInfo : (partInfo ? [partInfo] : []);
+                    state.selectedParts[categoryId] = entries
+                        .map(entry => (typeof entry === 'string' ? entry : entry && entry.id))
+                        .filter(Boolean);
+                    entries.forEach(entry => {
+                        if (entry && typeof entry === 'object' && entry.id) restorePartEntryExtras(entry);
+                    });
                 } else {
                     if (typeof partInfo === 'string') {
                         state.selectedParts[categoryId] = partInfo;
                         state.selectedColors[partInfo] = 'normal';
-                    } else {
+                    } else if (partInfo && partInfo.id) {
                         state.selectedParts[categoryId] = partInfo.id;
-                        
-                        if (partInfo.side) {
-                            state.selectedSide[partInfo.id] = partInfo.side;
-                        }
-                        
-                        if (partInfo.color === 'custom') {
-                            const loadedPart = state.partsData.parts.find(p => p.id === partInfo.id);
-                            if (loadedPart && isCustomColorAllowed(loadedPart)) {
-                                state.selectedColors[partInfo.id] = 'custom';
-                                state.customColors[partInfo.id] = {
-                                    blend: partInfo.blend,
-                                    color: partInfo.colorValue,
-                                    opacity: partInfo.opacity,
-                                    hueShift: partInfo.hueShift || 0,
-                                    hueOpacity: partInfo.hueOpacity || 0
-                                };
-                            } else {
-                                state.selectedColors[partInfo.id] = 'normal';
-                            }
-                        } else if (partInfo.color) {
-                            state.selectedColors[partInfo.id] = partInfo.color;
-                        } else {
-                            state.selectedColors[partInfo.id] = 'normal';
-                        }
+                        restorePartEntryExtras(partInfo);
                     }
                 }
             }
@@ -2453,6 +2895,10 @@ function handleCharacterFileSelect(e) {
             state.hiddenByParts = new Set();
             state.hiddenPartIds = new Set();
             resetDependencyFeedSnapshot();
+
+            setLockedCategories(Array.isArray(data.locks) ? data.locks : getDefaultLocks());
+            saveLocksToStorage();
+            clearHistory();
             
             sanitizeSecretSelections();
             initializeDefaultSelections(true);

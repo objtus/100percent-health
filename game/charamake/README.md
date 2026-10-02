@@ -34,6 +34,8 @@ game/charamake/
 ├── layer-resolve.js
 ├── secrets.js
 ├── dependencies.js
+├── randomize.js         # ランダム生成（RANDOM_CONFIG で確率を調整）
+├── randomize.check.js   # ランダムの不変条件チェック（Node）
 ├── parts-order.js
 ├── editor.html          # ビジュアルエディタ（開発・非公開）
 ├── editor.css
@@ -66,6 +68,7 @@ game/charamake/
 - [x] モバイルタブ（カテゴリ | パーツ・色）
 - [x] インナーグループ・ポーズ差し替え（各 SPEC 参照）
 - [x] 時刻枠（`dynamicOverlay` / パーツ設定パネル・PNG 焼き付け）
+- [x] 全体ランダム / カテゴリランダム、固定（ロック）、戻す / やり直す（SPEC.md 9.11）
 
 ### 未着手・将来
 
@@ -92,6 +95,7 @@ game/charamake/
 1. カテゴリ（グループ）→ パーツ・色で組み立て
 2. **キャラ読込 / キャラ保存**（`character.json`）、**PNG 出力**
 3. シークレットパーツはツールバーのパスワード → 解放
+4. プレビュー下のランダムバー: 全体ランダム（`R`）、戻す（`Ctrl+Z`）/ やり直す（`Ctrl+Y`）。左一覧の錠前で固定したカテゴリは全体ランダムで変わらない。パーツ欄見出しの「ランダム」はそのカテゴリだけ引き直す（固定中でも可）
 
 ### アーカイブ UI（game.archive.html）
 
@@ -104,7 +108,9 @@ game/charamake/
 
 ### character.json
 
-カテゴリ ID → パーツ ID（複数選択は配列）、色、`unlockedSecrets` 等。
+カテゴリ ID → パーツ ID（複数選択は配列）、色、`unlockedSecrets` 等。複数選択の配列要素は ID 文字列、または `{ "id", "side"?, "color"? }`（旧形式の文字列配列も読める）。
+
+ルートに **`locks`**（任意）: 全体ランダムで固定するカテゴリ ID の配列。無い JSON は既定（フレーム・背景・ベース髪）。
 
 ルートに **`colorGroups`**（任意）: カテゴリの `colorGroup` ID ごとの共有色意図。例: `"skin": { "preset": "肌色2" }`。カスタム時は `preset: "custom"` と blend / colorValue 等。旧 saves はパーツごとの `color` から読込時に復元。
 
@@ -124,5 +130,6 @@ game/charamake/
 ## 開発メモ
 
 - エディタ作業は LocalStorage（`characterCreatorData`）。リセットは DevTools から削除
+- ランダムの確率・件数・既定の固定は [`randomize.js`](randomize.js) 先頭の `RANDOM_CONFIG`。カテゴリ単位の上書きはエディタの「ランダム」（`categories[].random`）、「なし」扱いはパーツの「ランダムでの扱い」（`parts[].isNone`）。変更後は `node game/charamake/randomize.check.js` で確認
 - **正本は index.html のみ**。HTML 構造を変えた場合、アーカイブは意図的に更新しない
 - カスタム色を再度公開するとき: `index.html` の `data-hide-custom-color` を削除または `false` に

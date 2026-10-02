@@ -281,6 +281,23 @@ function showCategoryEditor() {
                 </small>
             </div>
         </details>
+
+        <details>
+            <summary>ランダム</summary>
+            <small style="display: block; color: #6c757d; margin-bottom: 0.5rem;">
+                空欄のときはゲーム側の既定値（randomize.js の RANDOM_CONFIG）を使います
+            </small>
+            <div class="form-group">
+                <label>選ぶ数（最小〜最大、複数選択のみ）:</label>
+                <input type="number" id="categoryRandomMin" min="0" step="1" style="width: 5rem;" value="${category.random && typeof category.random.min === 'number' ? category.random.min : ''}">
+                〜
+                <input type="number" id="categoryRandomMax" min="1" step="1" style="width: 5rem;" value="${category.random && typeof category.random.max === 'number' ? category.random.max : ''}">
+            </div>
+            <div class="form-group">
+                <label>「なし」になる確率（0〜1）:</label>
+                <input type="number" id="categoryRandomEmptyRate" min="0" max="1" step="0.05" style="width: 5rem;" value="${category.random && typeof category.random.emptyRate === 'number' ? category.random.emptyRate : ''}">
+            </div>
+        </details>
         
         <div class="editor-actions">
             <button id="saveCategoryBtn" class="btn btn-primary">カテゴリを保存</button>
@@ -309,6 +326,22 @@ function saveCategory() {
     const secretVal = document.getElementById('categorySecret').value.trim();
     if (secretVal) category.secret = secretVal;
     else delete category.secret;
+
+    const random = {};
+    const readNumber = (id, parse) => {
+        const raw = document.getElementById(id).value.trim();
+        if (raw === '') return undefined;
+        const n = parse(raw);
+        return Number.isFinite(n) ? n : undefined;
+    };
+    const min = readNumber('categoryRandomMin', v => parseInt(v, 10));
+    const max = readNumber('categoryRandomMax', v => parseInt(v, 10));
+    const emptyRate = readNumber('categoryRandomEmptyRate', parseFloat);
+    if (min !== undefined) random.min = Math.max(0, min);
+    if (max !== undefined) random.max = Math.max(1, max);
+    if (emptyRate !== undefined) random.emptyRate = Math.min(1, Math.max(0, emptyRate));
+    if (Object.keys(random).length > 0) category.random = random;
+    else delete category.random;
     
     renderCategories();
     renderParts();
@@ -1018,6 +1051,17 @@ function showPartEditor() {
                 <select id="partSecret">${getSecretOptionsHtml(state.editingPart.secret || '')}</select>
                 <small style="display:block; color:#6c757d; margin-top:0.25rem;">
                     パスワード解放後にゲームで表示
+                </small>
+            </div>
+            <div class="form-group">
+                <label>ランダムでの扱い:</label>
+                <select id="partIsNone">
+                    <option value="" ${typeof state.editingPart.isNone !== 'boolean' ? 'selected' : ''}>自動判定（ID に none / 名前が「なし」）</option>
+                    <option value="true" ${state.editingPart.isNone === true ? 'selected' : ''}>「なし」パーツとして扱う</option>
+                    <option value="false" ${state.editingPart.isNone === false ? 'selected' : ''}>通常パーツとして扱う</option>
+                </select>
+                <small style="display:block; color:#6c757d; margin-top:0.25rem;">
+                    「なし」パーツはカテゴリの「なしの確率」で選ばれ、他のパーツと同時には選ばれません
                 </small>
             </div>
         </details>
@@ -2423,7 +2467,13 @@ function savePart() {
     const secretVal = secretSelect ? secretSelect.value.trim() : '';
     if (secretVal) state.editingPart.secret = secretVal;
     else delete state.editingPart.secret;
-    
+
+    const isNoneSelect = document.getElementById('partIsNone');
+    const isNoneVal = isNoneSelect ? isNoneSelect.value : '';
+    if (isNoneVal === 'true') state.editingPart.isNone = true;
+    else if (isNoneVal === 'false') state.editingPart.isNone = false;
+    else delete state.editingPart.isNone;
+
     if (document.getElementById('allowCustomColorCheckbox').checked) {
         delete state.editingPart.allowCustomColor;
     } else {

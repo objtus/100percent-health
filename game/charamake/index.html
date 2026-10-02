@@ -79,6 +79,17 @@
               <div class="preview-canvas-wrapper">
                 <canvas id="previewCanvas" width="800" height="900"></canvas>
               </div>
+              <div id="randomBar" class="random-bar" role="group" aria-label="ランダムと履歴">
+                <button type="button" id="randomAllBtn" class="btn btn-primary random-all-btn">完全ランダム</button>
+                <div class="random-bar-history">
+                  <button type="button" id="undoBtn" class="btn btn-small" title="戻す（Ctrl+Z）" disabled>戻す</button>
+                  <button type="button" id="redoBtn" class="btn btn-small" title="やり直す（Ctrl+Y）" disabled>やり直す</button>
+                </div>
+                <div class="random-bar-locks">
+                  <span id="lockSummary" class="random-lock-summary">固定 0 件</span>
+                  <button type="button" id="clearLocksBtn" class="btn btn-small" disabled>すべて解除</button>
+                </div>
+              </div>
             </section>
 
             <div class="charamake-workspace">
@@ -97,7 +108,10 @@
                 <section class="control-section charamake-panel charamake-panel--controls tab-content active-tab"
                   data-tab-content="controls" aria-labelledby="charamake-controls-heading">
                   <div id="partsSelector" class="parts-selector-area">
-                    <h3 id="currentCategoryName">パーツを選択</h3>
+                    <div class="parts-selector-header">
+                      <h3 id="currentCategoryName">パーツを選択</h3>
+                      <button type="button" id="categoryRandomBtn" class="btn btn-small category-random-btn" hidden>ランダム</button>
+                    </div>
                     <div id="partsGrid" class="parts-grid">
                       <p class="placeholder">カテゴリを選択してください</p>
                     </div>
@@ -180,6 +194,7 @@
   <script src="/game/charamake/layer-resolve.js"></script>
   <script src="/game/charamake/secrets.js"></script>
   <script src="/game/charamake/dependencies.js"></script>
+  <script src="/game/charamake/randomize.js"></script>
   <script src="/game/charamake/parts-order.js"></script>
   <script src="/game/charamake/game.js"></script>
 </body>

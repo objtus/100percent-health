@@ -2602,7 +2602,8 @@
       "hides": [
         "jacket1",
         "tracktop",
-        "bottoms"
+        "bottoms",
+        "cardigan"
       ],
       "unlocks": [
         "black-dress-collar"
