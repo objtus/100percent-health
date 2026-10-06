@@ -574,6 +574,30 @@ summary:hover {
     font-size: 0.9rem;
 }
 
+.color-layer-image-row {
+    align-items: center;
+    margin-bottom: 0.35rem;
+}
+
+.color-layer-image-row label {
+    flex-shrink: 0;
+}
+
+.color-image-tone {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed #ced4da;
+}
+
+.color-image-tone-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0.35rem;
+}
+
 .color-preset-type {
     margin-bottom: 0.5rem;
 }

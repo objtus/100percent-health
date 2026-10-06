@@ -1005,6 +1005,7 @@ function editPart(partId) {
     
     // 色プリセットは常にデフォルトを選択
     state.selectedColorPreset = 'default';
+    state.colorPresetStash = {};
     
     renderParts(); // 選択状態を更新
     showPartEditor();
@@ -2054,6 +2055,12 @@ function updateLayer(index, field, value) {
         } else {
             delete state.editingPart.layers[index].maskedFile;
         }
+    } else if (field === 'file') {
+        const oldKey = state.editingPart.layers[index].file;
+        const newVal = value != null ? String(value) : '';
+        remapColorPresetImageKeys(state.editingPart, oldKey, newVal);
+        state.editingPart.layers[index][field] = value;
+        refreshColorPresetsIfOpen();
     } else {
         state.editingPart.layers[index][field] = value;
     }
@@ -2074,6 +2081,7 @@ function addLayer() {
     });
     
     renderLayers();
+    refreshColorPresetsIfOpen();
     updatePreview();
 }
 
@@ -2095,8 +2103,268 @@ function deleteLayer(index) {
     if (confirm('このレイヤーを削除しますか?')) {
         state.editingPart.layers.splice(index, 1);
         renderLayers();
+        refreshColorPresetsIfOpen();
         updatePreview();
     }
+}
+
+function getPartLayerFileKeys(part) {
+    if (!part || !part.layers) return [];
+    return part.layers
+        .map(l => (l.file != null ? String(l.file).replace(/\\/g, '/').trim() : ''))
+        .filter(Boolean);
+}
+
+function partNeedsPerLayerColorImages(part) {
+    return getPartLayerFileKeys(part).length > 1;
+}
+
+function getColorPresetImageForLayer(colorData, layerFileKey) {
+    if (!colorData) return '';
+    const key = layerFileKey != null ? String(layerFileKey).replace(/\\/g, '/').trim() : '';
+    if (colorData.images && typeof colorData.images === 'object') {
+        if (key && colorData.images[key]) return colorData.images[key];
+        if (layerFileKey && colorData.images[layerFileKey]) return colorData.images[layerFileKey];
+    }
+    if (colorData.image) return colorData.image;
+    return '';
+}
+
+function layerColorImageLabel(layer, index) {
+    const base = layer.file
+        ? String(layer.file).replace(/\\/g, '/').split('/').pop()
+        : `レイヤー${index + 1}`;
+    const side = layer.side ? ` (${layer.side})` : '';
+    return base + side;
+}
+
+function refreshColorPresetsIfOpen() {
+    const area = document.getElementById('colorPresetsArea');
+    if (area && area.style.display !== 'none' && state.editingPart) {
+        renderColorPresets();
+    }
+}
+
+function remapColorPresetImageKeys(part, oldFileKey, newFileKey) {
+    if (!part.colors || !oldFileKey || !newFileKey || oldFileKey === newFileKey) return;
+    const oldK = String(oldFileKey).replace(/\\/g, '/').trim();
+    const newK = String(newFileKey).replace(/\\/g, '/').trim();
+    Object.values(part.colors).forEach(data => {
+        if (!data || !data.images || typeof data.images !== 'object') return;
+        if (data.images[oldK] !== undefined) {
+            if (data.images[newK] === undefined) data.images[newK] = data.images[oldK];
+            delete data.images[oldK];
+        }
+    });
+}
+
+function cleanupPartColorPresets(part) {
+    if (!part || !part.colors) return;
+    const layerKeys = getPartLayerFileKeys(part);
+    const multi = layerKeys.length > 1;
+
+    Object.keys(part.colors).forEach(colorName => {
+        const data = part.colors[colorName];
+        if (!data || typeof data !== 'object') {
+            delete part.colors[colorName];
+            return;
+        }
+        if (!isImageColorPreset(data)) {
+            return;
+        }
+
+        if (!data.blend) {
+            delete data.blend;
+            delete data.color;
+            delete data.opacity;
+        }
+        if (!data.hueShift || !data.hueOpacity) {
+            delete data.hueShift;
+            delete data.hueOpacity;
+        }
+
+        if (multi) {
+            if (!data.images || typeof data.images !== 'object') {
+                data.images = {};
+            }
+            if (data.image && String(data.image).trim()) {
+                const fallback = String(data.image).trim().replace(/\\/g, '/');
+                layerKeys.forEach(k => {
+                    if (!data.images[k] || !String(data.images[k]).trim()) {
+                        data.images[k] = fallback;
+                    }
+                });
+            }
+            layerKeys.forEach(k => {
+                const v = data.images[k];
+                if (v && String(v).trim()) {
+                    data.images[k] = String(v).trim().replace(/\\/g, '/');
+                } else {
+                    delete data.images[k];
+                }
+            });
+            Object.keys(data.images).forEach(k => {
+                if (!layerKeys.includes(k)) delete data.images[k];
+            });
+            delete data.image;
+            if (Object.keys(data.images).length === 0) {
+                delete part.colors[colorName];
+            }
+        } else {
+            let img = data.image && String(data.image).trim();
+            if (!img && data.images && layerKeys[0]) {
+                img = data.images[layerKeys[0]];
+            }
+            if (img) {
+                data.image = String(img).trim().replace(/\\/g, '/');
+            } else {
+                delete data.image;
+            }
+            delete data.images;
+            if (!data.image) {
+                delete part.colors[colorName];
+            }
+        }
+    });
+
+    if (Object.keys(part.colors).length === 0) {
+        delete part.colors;
+    }
+}
+
+// image / images キーを持つプリセットは「画像」モード（blend 等は画像への色調調整として扱う）
+function isImageColorPreset(colorData) {
+    return !!colorData && typeof colorData === 'object' &&
+        (Object.prototype.hasOwnProperty.call(colorData, 'image') ||
+         Object.prototype.hasOwnProperty.call(colorData, 'images'));
+}
+
+const COLOR_BLEND_MODES = [
+    'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn',
+    'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity'
+];
+
+function buildColorToneControlsHtml(colorName, colorData, allowNoBlend) {
+    const cNameEsc = escapeHtmlAttr(colorName);
+    const blend = colorData.blend || '';
+    const color = escapeHtmlAttr(colorData.color || '#000000');
+    const opacity = colorData.opacity !== undefined ? colorData.opacity : 1;
+    const hueShift = colorData.hueShift || 0;
+    const hueOpacity = colorData.hueOpacity !== undefined ? colorData.hueOpacity : 0;
+    const noneOption = allowNoBlend
+        ? `<option value="" ${!blend ? 'selected' : ''}>なし</option>`
+        : '';
+    const options = COLOR_BLEND_MODES
+        .map(m => `<option value="${m}" ${blend === m ? 'selected' : ''}>${m}</option>`)
+        .join('');
+
+    return `
+                <div class="form-group-inline">
+                    <label>Mode:</label>
+                    <select onclick="event.stopPropagation()" onchange="updateColorPreset('${cNameEsc}', 'blend', this.value)" style="font-size: 0.85rem;">
+                        ${noneOption}${options}
+                    </select>
+                </div>
+                <div class="form-group-inline">
+                    <label>Color:</label>
+                    <input type="color" value="${color}"
+                           onclick="event.stopPropagation()"
+                           oninput="this.nextElementSibling.value = this.value; updateColorPreset('${cNameEsc}', 'color', this.value)"
+                           style="width: 40px; height: 28px;">
+                    <input type="text" value="${color}"
+                           onclick="event.stopPropagation()"
+                           onchange="this.previousElementSibling.value = this.value; updateColorPreset('${cNameEsc}', 'color', this.value)"
+                           style="width: 70px; font-size: 0.85rem;">
+                </div>
+                <div class="form-group-inline">
+                    <label>Opacity:</label>
+                    <input type="range" min="0" max="1" step="0.1" value="${opacity}"
+                           onclick="event.stopPropagation()"
+                           oninput="this.nextElementSibling.textContent = parseFloat(this.value).toFixed(1); updateColorPreset('${cNameEsc}', 'opacity', this.value)"
+                           style="flex: 1;">
+                    <span style="min-width: 30px; font-size: 0.85rem;">${Number(opacity).toFixed(1)}</span>
+                </div>
+                <div class="form-group-inline">
+                    <label>Hue:</label>
+                    <input type="range" min="-180" max="180" step="1" value="${hueShift}"
+                           onclick="event.stopPropagation()"
+                           oninput="this.nextElementSibling.textContent = this.value + '°'; updateColorPreset('${cNameEsc}', 'hueShift', parseFloat(this.value))"
+                           style="flex: 1;">
+                    <span style="min-width: 36px; font-size: 0.85rem;">${hueShift}°</span>
+                </div>
+                <div class="form-group-inline">
+                    <label>H.Opa:</label>
+                    <input type="range" min="0" max="1" step="0.1" value="${hueOpacity}"
+                           onclick="event.stopPropagation()"
+                           oninput="this.nextElementSibling.textContent = parseFloat(this.value).toFixed(1); updateColorPreset('${cNameEsc}', 'hueOpacity', parseFloat(this.value))"
+                           style="flex: 1;">
+                    <span style="min-width: 30px; font-size: 0.85rem;">${Number(hueOpacity).toFixed(1)}</span>
+                </div>`;
+}
+
+function buildImageToneSectionHtml(colorName, colorData, multi) {
+    const cNameEsc = escapeHtmlAttr(colorName);
+    const scope = multi ? '（全レイヤー共通）' : '';
+    return `
+            <div class="color-image-tone">
+                <div class="color-image-tone-header">
+                    <span>色調調整${scope}</span>
+                    <button type="button" class="btn btn-small" onclick="event.stopPropagation(); resetImageColorTone('${cNameEsc}')">リセット</button>
+                </div>
+                ${buildColorToneControlsHtml(colorName, colorData, true)}
+            </div>`;
+}
+
+function buildImageColorSettingsHtml(colorName, colorData, displayBlock) {
+    const part = state.editingPart;
+    const layerKeys = getPartLayerFileKeys(part);
+    const multi = layerKeys.length > 1;
+    const cNameEsc = escapeHtmlAttr(colorName);
+    const display = displayBlock ? 'block' : 'none';
+
+    if (!multi) {
+        const val = escapeHtmlAttr(getColorPresetImageForLayer(colorData, layerKeys[0] || ''));
+        return `
+            <div id="imageSettings_${colorName}" class="color-settings-compact" style="display: ${display};">
+                <div class="form-group-inline">
+                    <label>画像:</label>
+                    <input type="text" id="colorImage_${colorName}" value="${val}"
+                           onclick="event.stopPropagation()"
+                           onchange="updateColorPreset('${cNameEsc}', 'image', this.value)"
+                           style="flex: 1; font-size: 0.85rem;">
+                    <button type="button" class="btn btn-small" onclick="event.stopPropagation(); selectColorImage('${cNameEsc}')">参照</button>
+                </div>
+                ${buildImageToneSectionHtml(colorName, colorData, false)}
+            </div>`;
+    }
+
+    const layersWithFile = (part.layers || [])
+        .map((layer, idx) => ({ layer, idx }))
+        .filter(({ layer }) => layer.file && String(layer.file).trim());
+
+    const rows = layersWithFile.map(({ layer, idx }) => {
+        const fileKey = String(layer.file).replace(/\\/g, '/');
+        const fileEsc = escapeHtmlAttr(fileKey);
+        const val = escapeHtmlAttr(getColorPresetImageForLayer(colorData, fileKey));
+        const label = escapeHtmlAttr(layerColorImageLabel(layer, idx));
+        return `
+            <div class="form-group-inline color-layer-image-row">
+                <label title="${fileEsc}" style="min-width: 5.5rem; font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis;">${label}</label>
+                <input type="text" value="${val}" onclick="event.stopPropagation()"
+                       onchange="updateColorPresetLayerImage('${cNameEsc}', '${fileEsc}', this.value)"
+                       style="flex: 1; font-size: 0.85rem;">
+                <button type="button" class="btn btn-small" onclick="event.stopPropagation(); selectColorImage('${cNameEsc}', '${fileEsc}')">参照</button>
+            </div>`;
+    }).join('');
+
+    return `
+        <div id="imageSettings_${colorName}" class="color-settings-compact" style="display: ${display};">
+            <small style="display:block; color:#6c757d; margin-bottom:0.35rem;">
+                複数レイヤー: 各レイヤー用の画像（JSON の <code>images</code>）
+            </small>
+            ${rows}
+            ${buildImageToneSectionHtml(colorName, colorData, true)}
+        </div>`;
 }
 
 // 色設定の表示切り替え
@@ -2172,7 +2440,7 @@ function createColorPresetCard(colorName, colorData) {
         card.classList.add('selected');
     }
     
-    const isBlend = colorData.blend !== undefined;
+    const isBlend = !isImageColorPreset(colorData);
     
     card.innerHTML = `
         <div class="color-preset-compact">
@@ -2202,73 +2470,10 @@ function createColorPresetCard(colorName, colorData) {
             </div>
             
             <div id="blendSettings_${colorName}" class="color-settings-compact" style="display: ${isBlend ? 'block' : 'none'};">
-                <div class="form-group-inline">
-                    <label>Mode:</label>
-                    <select onclick="event.stopPropagation()" onchange="updateColorPreset('${colorName}', 'blend', this.value)" style="font-size: 0.85rem;">
-                        <option value="multiply"   ${colorData.blend === 'multiply'   ? 'selected' : ''}>multiply</option>
-                        <option value="screen"     ${colorData.blend === 'screen'     ? 'selected' : ''}>screen</option>
-                        <option value="overlay"    ${colorData.blend === 'overlay'    ? 'selected' : ''}>overlay</option>
-                        <option value="darken"     ${colorData.blend === 'darken'     ? 'selected' : ''}>darken</option>
-                        <option value="lighten"    ${colorData.blend === 'lighten'    ? 'selected' : ''}>lighten</option>
-                        <option value="color-dodge"  ${colorData.blend === 'color-dodge'  ? 'selected' : ''}>color-dodge</option>
-                        <option value="color-burn"   ${colorData.blend === 'color-burn'   ? 'selected' : ''}>color-burn</option>
-                        <option value="hard-light"   ${colorData.blend === 'hard-light'   ? 'selected' : ''}>hard-light</option>
-                        <option value="soft-light"   ${colorData.blend === 'soft-light'   ? 'selected' : ''}>soft-light</option>
-                        <option value="difference"   ${colorData.blend === 'difference'   ? 'selected' : ''}>difference</option>
-                        <option value="exclusion"    ${colorData.blend === 'exclusion'    ? 'selected' : ''}>exclusion</option>
-                        <option value="hue"          ${colorData.blend === 'hue'          ? 'selected' : ''}>hue</option>
-                        <option value="saturation"   ${colorData.blend === 'saturation'   ? 'selected' : ''}>saturation</option>
-                        <option value="color"        ${colorData.blend === 'color'        ? 'selected' : ''}>color</option>
-                        <option value="luminosity"   ${colorData.blend === 'luminosity'   ? 'selected' : ''}>luminosity</option>
-                    </select>
-                </div>
-                <div class="form-group-inline">
-                    <label>Color:</label>
-                    <input type="color" value="${colorData.color || '#000000'}" 
-                           onclick="event.stopPropagation()"
-                           onchange="updateColorPreset('${colorName}', 'color', this.value)"
-                           style="width: 40px; height: 28px;">
-                    <input type="text" value="${colorData.color || '#000000'}" 
-                           onclick="event.stopPropagation()"
-                           onchange="updateColorPreset('${colorName}', 'color', this.value)"
-                           style="width: 70px; font-size: 0.85rem;">
-                </div>
-                <div class="form-group-inline">
-                    <label>Opacity:</label>
-                    <input type="range" min="0" max="1" step="0.1" value="${colorData.opacity !== undefined ? colorData.opacity : 1}" 
-                           onclick="event.stopPropagation()"
-                           onchange="updateColorPreset('${colorName}', 'opacity', this.value)"
-                           style="flex: 1;">
-                    <span style="min-width: 30px; font-size: 0.85rem;">${colorData.opacity !== undefined ? colorData.opacity : 1}</span>
-                </div>
-                <div class="form-group-inline">
-                    <label>Hue:</label>
-                    <input type="range" min="-180" max="180" step="1" value="${colorData.hueShift || 0}" 
-                           onclick="event.stopPropagation()"
-                           oninput="this.nextElementSibling.textContent = this.value + '°'; updateColorPreset('${colorName}', 'hueShift', parseFloat(this.value))"
-                           style="flex: 1;">
-                    <span style="min-width: 36px; font-size: 0.85rem;">${colorData.hueShift || 0}°</span>
-                </div>
-                <div class="form-group-inline">
-                    <label>H.Opa:</label>
-                    <input type="range" min="0" max="1" step="0.1" value="${colorData.hueOpacity !== undefined ? colorData.hueOpacity : 0}" 
-                           onclick="event.stopPropagation()"
-                           oninput="this.nextElementSibling.textContent = parseFloat(this.value).toFixed(1); updateColorPreset('${colorName}', 'hueOpacity', parseFloat(this.value))"
-                           style="flex: 1;">
-                    <span style="min-width: 30px; font-size: 0.85rem;">${colorData.hueOpacity !== undefined ? colorData.hueOpacity.toFixed(1) : '0.0'}</span>
-                </div>
+                ${isBlend ? buildColorToneControlsHtml(colorName, colorData, false) : ''}
             </div>
             
-            <div id="imageSettings_${colorName}" class="color-settings-compact" style="display: ${!isBlend ? 'block' : 'none'};">
-                <div class="form-group-inline">
-                    <label>画像:</label>
-                    <input type="text" id="colorImage_${colorName}" value="${colorData.image || ''}" 
-                           onclick="event.stopPropagation()"
-                           onchange="updateColorPreset('${colorName}', 'image', this.value)" 
-                           style="flex: 1; font-size: 0.85rem;">
-                    <button class="btn btn-small" onclick="event.stopPropagation(); selectColorImage('${colorName}')">参照</button>
-                </div>
-            </div>
+            ${buildImageColorSettingsHtml(colorName, colorData, !isBlend)}
         </div>
     `;
     
@@ -2300,80 +2505,115 @@ function renameColorPreset(oldName, newName) {
     
     state.editingPart.colors[newName] = state.editingPart.colors[oldName];
     delete state.editingPart.colors[oldName];
+    if (state.colorPresetStash && state.colorPresetStash[oldName]) {
+        state.colorPresetStash[newName] = state.colorPresetStash[oldName];
+        delete state.colorPresetStash[oldName];
+    }
     renderColorPresets();
 }
 
-// 色画像ファイル選択
-function selectColorImage(colorName) {
+function resolveColorImageRelativePath(fileName) {
+    let relativePath = fileName;
+    if (state.data.meta.projectRoot) {
+        let fullPath = prompt(
+            '選択した画像の完全なパスを入力してください:\n' +
+            'ファイル名: ' + fileName,
+            state.data.meta.projectRoot + '/parts/'
+        );
+        if (fullPath) {
+            fullPath = fullPath.replace(/^["']|["']$/g, '').trim();
+            const rootPath = state.data.meta.projectRoot.replace(/\\/g, '/');
+            const normalizedPath = fullPath.replace(/\\/g, '/');
+            if (normalizedPath.startsWith(rootPath)) {
+                relativePath = normalizedPath.substring(rootPath.length + 1);
+            } else {
+                relativePath = normalizedPath;
+            }
+        }
+    } else {
+        alert('プロジェクトルートパスを設定すると、正しいパスを計算できます。');
+    }
+    return relativePath;
+}
+
+// 色画像ファイル選択（layerFileKey あり = 複数レイヤー用 images）
+function selectColorImage(colorName, layerFileKey) {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
     input.onchange = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            const inputField = document.getElementById(`colorImage_${colorName}`);
-            let relativePath = file.name;
-            
-            if (state.data.meta.projectRoot) {
-                let fullPath = prompt(
-                    '選択した画像の完全なパスを入力してください:\n' +
-                    'ファイル名: ' + file.name,
-                    state.data.meta.projectRoot + '/parts/'
-                );
-                
-                if (fullPath) {
-                    // ダブルクォーテーション、シングルクォーテーションを除去
-                    fullPath = fullPath.replace(/^["']|["']$/g, '').trim();
-                    
-                    const rootPath = state.data.meta.projectRoot.replace(/\\/g, '/');
-                    const normalizedPath = fullPath.replace(/\\/g, '/');
-                    
-                    if (normalizedPath.startsWith(rootPath)) {
-                        relativePath = normalizedPath.substring(rootPath.length + 1);
-                    } else {
-                        relativePath = normalizedPath;
-                    }
-                }
-            } else {
-                alert('プロジェクトルートパスを設定すると、正しいパスを計算できます。');
-            }
-            
-            if (inputField) {
-                inputField.value = relativePath;
-                updateColorPreset(colorName, 'image', relativePath);
-            }
+        if (!file) return;
+        const relativePath = resolveColorImageRelativePath(file.name);
+        if (layerFileKey) {
+            updateColorPresetLayerImage(colorName, layerFileKey, relativePath);
+            refreshColorPresetsIfOpen();
+            return;
         }
+        const inputField = document.getElementById(`colorImage_${colorName}`);
+        if (inputField) {
+            inputField.value = relativePath;
+        }
+        updateColorPreset(colorName, 'image', relativePath);
     };
     input.click();
 }
 
-// 色タイプ切り替え
-function switchColorType(colorName, type) {
-    const blendSettings = document.getElementById(`blendSettings_${colorName}`);
-    const imageSettings = document.getElementById(`imageSettings_${colorName}`);
-    
-    if (type === 'blend') {
-        blendSettings.style.display = 'block';
-        imageSettings.style.display = 'none';
-        
-        // ブレンドモード用の初期値
-        state.editingPart.colors[colorName] = {
-            blend: 'multiply',
-            color: '#000000',
-            opacity: 1
-        };
-    } else {
-        blendSettings.style.display = 'none';
-        imageSettings.style.display = 'block';
-        
-        // 画像用の初期値
-        state.editingPart.colors[colorName] = {
-            image: ''
-        };
+function createEmptyImageColorPreset() {
+    const layerKeys = getPartLayerFileKeys(state.editingPart);
+    if (layerKeys.length > 1) {
+        const images = {};
+        layerKeys.forEach(k => { images[k] = ''; });
+        return { images };
     }
+    return { image: '' };
+}
+
+// 色タイプ切り替え（切り替え前の値は編集中のみ保持し、戻したときに復元する）
+function switchColorType(colorName, type) {
+    const current = state.editingPart.colors[colorName];
+    if (!current) return;
+    const currentType = isImageColorPreset(current) ? 'image' : 'blend';
+    if (currentType === type) return;
+
+    if (!state.colorPresetStash) state.colorPresetStash = {};
+    const stash = state.colorPresetStash[colorName] || (state.colorPresetStash[colorName] = {});
+    stash[currentType] = JSON.parse(JSON.stringify(current));
+
+    let next = stash[type] ? JSON.parse(JSON.stringify(stash[type])) : null;
+    if (!next) {
+        next = type === 'blend'
+            ? { blend: 'multiply', color: '#000000', opacity: 1 }
+            : createEmptyImageColorPreset();
+    }
+    state.editingPart.colors[colorName] = next;
     
     renderColorPresets();
     updatePreview(); // プレビュー更新
+}
+
+function resetImageColorTone(colorName) {
+    const data = state.editingPart.colors[colorName];
+    if (!data) return;
+    ['blend', 'color', 'opacity', 'hueShift', 'hueOpacity'].forEach(k => delete data[k]);
+    renderColorPresets();
+    updatePreview();
+}
+
+function updateColorPresetLayerImage(colorName, layerFileKey, value) {
+    if (!state.editingPart.colors[colorName]) return;
+    const data = state.editingPart.colors[colorName];
+    if (!data.images || typeof data.images !== 'object') {
+        data.images = {};
+    }
+    const key = String(layerFileKey).replace(/\\/g, '/').trim();
+    if (value && String(value).trim()) {
+        data.images[key] = String(value).trim();
+    } else {
+        delete data.images[key];
+    }
+    delete data.image;
+    updatePreview();
 }
 
 // カラープリセット更新
@@ -2382,8 +2622,13 @@ function updateColorPreset(colorName, field, value) {
     
     if (['opacity', 'hueShift', 'hueOpacity'].includes(field)) {
         state.editingPart.colors[colorName][field] = parseFloat(value);
+    } else if (field === 'blend' && !value) {
+        delete state.editingPart.colors[colorName].blend;
     } else {
         state.editingPart.colors[colorName][field] = value;
+    }
+    if (field === 'image') {
+        delete state.editingPart.colors[colorName].images;
     }
     
     // プレビューを更新
@@ -2430,6 +2675,7 @@ function deleteColorPreset(colorName) {
     if (!confirm(`色設定「${colorName}」を削除しますか？`)) return;
     
     delete state.editingPart.colors[colorName];
+    if (state.colorPresetStash) delete state.colorPresetStash[colorName];
     
     // 削除した色が選択中だった場合、別のプリセットを選択
     if (state.selectedColorPreset === colorName) {
@@ -2478,6 +2724,13 @@ function savePart() {
         delete state.editingPart.allowCustomColor;
     } else {
         state.editingPart.allowCustomColor = false;
+    }
+
+    const colorizableOn = document.getElementById('colorizableCheckbox').checked;
+    if (!colorizableOn) {
+        delete state.editingPart.colors;
+    } else if (state.editingPart.colors) {
+        cleanupPartColorPresets(state.editingPart);
     }
     
     // バリデーション
@@ -2623,6 +2876,23 @@ function validatePart(part) {
 
     if (window.CharamakeLayerResolve) {
         warnings.push(...window.CharamakeLayerResolve.validatePartPose(part, state.data.parts));
+    }
+
+    if (part.colors && partNeedsPerLayerColorImages(part)) {
+        const layerKeys = getPartLayerFileKeys(part);
+        Object.entries(part.colors).forEach(([colorName, data]) => {
+            if (!isImageColorPreset(data)) return;
+            if (data.images && typeof data.images === 'object') {
+                layerKeys.forEach(k => {
+                    const v = data.images[k];
+                    if (!v || !String(v).trim()) {
+                        warnings.push(`色「${colorName}」: レイヤー「${k}」の色用画像が未設定です`);
+                    }
+                });
+            } else {
+                warnings.push(`色「${colorName}」: 複数レイヤーでは images で各レイヤーを指定してください`);
+            }
+        });
     }
 
     if (window.CharamakeSecrets) {
@@ -2798,6 +3068,7 @@ function addPart() {
         zIndex: 100,
         layers: []
     };
+    state.colorPresetStash = {};
     
     showPartEditor();
     populateEditor();
@@ -3094,12 +3365,16 @@ function drawLayers(ctx, layers) {
                 if (item.layer.colorSettings) {
                     const colorSettings = item.layer.colorSettings;
                     
-                    if (colorSettings.blend && colorSettings.color) {
+                    const hasBlend = colorSettings.blend && colorSettings.color;
+                    const hasHue = colorSettings.hueShift && colorSettings.hueOpacity > 0;
+
+                    if (hasBlend || hasHue) {
                         const tempCanvas = document.createElement('canvas');
                         tempCanvas.width = ctx.canvas.width;
                         tempCanvas.height = ctx.canvas.height;
                         const tempCtx = tempCanvas.getContext('2d');
                         
+                        if (hasBlend) {
                         // ステップ1: 白背景 + img で完全不透明版を作成し、その上で blend 計算する
                         const opaqueCanvas = document.createElement('canvas');
                         opaqueCanvas.width = ctx.canvas.width;
@@ -3123,9 +3398,12 @@ function drawLayers(ctx, layers) {
                         tempCtx.drawImage(opaqueCanvas, 0, 0);
                         tempCtx.globalAlpha = 1;
                         tempCtx.globalCompositeOperation = 'source-over';
+                        } else {
+                            tempCtx.drawImage(item.img, 0, 0);
+                        }
                         
                         // ステップ3: 色相回転
-                        if (colorSettings.hueShift && colorSettings.hueOpacity > 0) {
+                        if (hasHue) {
                             applyHueShiftEditor(tempCtx, tempCanvas.width, tempCanvas.height, colorSettings.hueShift, colorSettings.hueOpacity);
                         }
                         
