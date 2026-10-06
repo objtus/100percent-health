@@ -2345,64 +2345,6 @@
       "order": 110
     },
     {
-      "id": "sidehair13",
-      "name": "横髪13",
-      "category": "sidehair",
-      "zIndex": 1300,
-      "layers": [
-        {
-          "file": "parts/hair/sidehair/sidehair13R.png",
-          "animated": false,
-          "side": "right"
-        },
-        {
-          "file": "parts/hair/sidehair/sidehair13L.png",
-          "animated": false,
-          "side": "left"
-        }
-      ],
-      "order": 110
-    },
-    {
-      "id": "sidehair14",
-      "name": "横髪14",
-      "category": "sidehair",
-      "zIndex": 1300,
-      "layers": [
-        {
-          "file": "parts/hair/sidehair/sidehair14R.png",
-          "animated": false,
-          "side": "right"
-        },
-        {
-          "file": "parts/hair/sidehair/sidehair14L.png",
-          "animated": false,
-          "side": "left",
-          "zIndex": 1290
-        }
-      ],
-      "order": 110
-    },
-    {
-      "id": "sidehair15",
-      "name": "横髪15",
-      "category": "sidehair",
-      "zIndex": 1300,
-      "layers": [
-        {
-          "file": "parts/hair/sidehair/sidehair15R.png",
-          "animated": false,
-          "side": "right"
-        },
-        {
-          "file": "parts/hair/sidehair/sidehair15L.png",
-          "animated": false,
-          "side": "left"
-        }
-      ],
-      "order": 110
-    },
-    {
       "id": "bra1",
       "name": "ブラ1",
       "category": "underwear",
@@ -4168,6 +4110,78 @@
         }
       ],
       "order": 120
+    },
+    {
+      "id": "sidehair-ear1",
+      "name": "横髪（耳後ろ）1",
+      "category": "sidehair-ear",
+      "zIndex": 1300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear1R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear1L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "sidehair-ear2",
+      "name": "横髪（耳後ろ）2",
+      "category": "sidehair-ear",
+      "zIndex": 1300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear2R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear2L.png",
+          "animated": false,
+          "side": "left",
+          "zIndex": 1290
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "sidehair-ear3",
+      "name": "横髪（耳後ろ）3",
+      "category": "sidehair-ear",
+      "zIndex": 1300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear3R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear3L.png",
+          "animated": false,
+          "side": "left"
+        }
+      ],
+      "order": 40
+    },
+    {
+      "id": "sideair-ear-none",
+      "name": "なし",
+      "category": "sidehair-ear",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10
     }
   ],
   "categories": [
@@ -4566,6 +4580,14 @@
       "selectionMode": "multiple",
       "hidden": false,
       "group": "decoration"
+    },
+    {
+      "id": "sidehair-ear",
+      "name": "横髪（耳後ろ）",
+      "order": 40,
+      "selectionMode": "single",
+      "group": "hair",
+      "hidden": false
     }
   ],
   "categoryGroups": [
