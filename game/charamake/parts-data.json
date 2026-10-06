@@ -1248,7 +1248,12 @@
           "animated": false
         }
       ],
-      "order": 10
+      "order": 10,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair1-gray.png"
+        }
+      }
     },
     {
       "id": "backhair2",
@@ -1261,7 +1266,12 @@
           "animated": false
         }
       ],
-      "order": 20
+      "order": 20,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair2-gray.png"
+        }
+      }
     },
     {
       "id": "backhair3",
@@ -1274,7 +1284,12 @@
           "animated": false
         }
       ],
-      "order": 30
+      "order": 30,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair3-gray.png"
+        }
+      }
     },
     {
       "id": "backhair4",
@@ -1287,7 +1302,12 @@
           "animated": false
         }
       ],
-      "order": 40
+      "order": 40,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair4-gray.png"
+        }
+      }
     },
     {
       "id": "backhair5",
@@ -1300,7 +1320,12 @@
           "animated": false
         }
       ],
-      "order": 50
+      "order": 50,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair5-gray.png"
+        }
+      }
     },
     {
       "id": "backhair6",
@@ -1313,7 +1338,12 @@
           "animated": false
         }
       ],
-      "order": 60
+      "order": 60,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair6-gray.png"
+        }
+      }
     },
     {
       "id": "backhair7",
@@ -1326,7 +1356,12 @@
           "animated": false
         }
       ],
-      "order": 70
+      "order": 70,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair7-gray.png"
+        }
+      }
     },
     {
       "id": "backhair8",
@@ -1339,7 +1374,12 @@
           "animated": false
         }
       ],
-      "order": 80
+      "order": 80,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair8-gray.png"
+        }
+      }
     },
     {
       "id": "backhair9",
@@ -1352,7 +1392,12 @@
           "animated": false
         }
       ],
-      "order": 90
+      "order": 90,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair9-gray.png"
+        }
+      }
     },
     {
       "id": "backhair10",
@@ -1365,7 +1410,12 @@
           "animated": false
         }
       ],
-      "order": 100
+      "order": 100,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair10-gray.png"
+        }
+      }
     },
     {
       "id": "bangs1",
@@ -1378,7 +1428,12 @@
           "animated": false
         }
       ],
-      "order": 10
+      "order": 10,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs1-gray.png"
+        }
+      }
     },
     {
       "id": "bangs2",
@@ -1391,7 +1446,12 @@
           "animated": false
         }
       ],
-      "order": 20
+      "order": 20,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs2-gray.png"
+        }
+      }
     },
     {
       "id": "bangs3",
@@ -1404,7 +1464,12 @@
           "animated": false
         }
       ],
-      "order": 30
+      "order": 30,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs3-gray.png"
+        }
+      }
     },
     {
       "id": "bangs4",
@@ -1417,7 +1482,12 @@
           "animated": false
         }
       ],
-      "order": 40
+      "order": 40,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs4-gray.png"
+        }
+      }
     },
     {
       "id": "bangs5",
@@ -1430,7 +1500,12 @@
           "animated": false
         }
       ],
-      "order": 50
+      "order": 50,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs5-gray.png"
+        }
+      }
     },
     {
       "id": "bangs6",
@@ -1443,7 +1518,12 @@
           "animated": false
         }
       ],
-      "order": 60
+      "order": 60,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs6-gray.png"
+        }
+      }
     },
     {
       "id": "bangs7",
@@ -1456,7 +1536,12 @@
           "animated": false
         }
       ],
-      "order": 70
+      "order": 70,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs7-gray.png"
+        }
+      }
     },
     {
       "id": "bangs8",
@@ -1469,7 +1554,12 @@
           "animated": false
         }
       ],
-      "order": 80
+      "order": 80,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs8-gray.png"
+        }
+      }
     },
     {
       "id": "sidehair1",
@@ -1489,7 +1579,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 10
+      "order": 10,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair1R.png": "parts/hair/sidehair/sidehair1R-gray.png",
+            "parts/hair/sidehair/sidehair1L.png": "parts/hair/sidehair/sidehair1L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair2",
@@ -1509,7 +1607,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 20
+      "order": 20,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair2R.png": "parts/hair/sidehair/sidehair2R-gray.png",
+            "parts/hair/sidehair/sidehair2L.png": "parts/hair/sidehair/sidehair2L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair3",
@@ -1529,7 +1635,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 30
+      "order": 30,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair3R.png": "parts/hair/sidehair/sidehair3R-gray.png",
+            "parts/hair/sidehair/sidehair3L.png": "parts/hair/sidehair/sidehair3L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair4",
@@ -1549,7 +1663,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 40
+      "order": 40,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair4R.png": "parts/hair/sidehair/sidehair4R-gray.png",
+            "parts/hair/sidehair/sidehair4L.png": "parts/hair/sidehair/sidehair4L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair5",
@@ -1569,7 +1691,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 50
+      "order": 50,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair5R.png": "parts/hair/sidehair/sidehair5R-gray.png",
+            "parts/hair/sidehair/sidehair5L.png": "parts/hair/sidehair/sidehair5L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair6",
@@ -1589,7 +1719,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 60
+      "order": 60,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair6R.png": "parts/hair/sidehair/sidehair6R-gray.png",
+            "parts/hair/sidehair/sidehair6L.png": "parts/hair/sidehair/sidehair6L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair7",
@@ -1609,7 +1747,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 70
+      "order": 70,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair7R.png": "parts/hair/sidehair/sidehair7R-gray.png",
+            "parts/hair/sidehair/sidehair7L.png": "parts/hair/sidehair/sidehair7L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair8",
@@ -1629,7 +1775,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 80
+      "order": 80,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair8R.png": "parts/hair/sidehair/sidehair8R-gray.png",
+            "parts/hair/sidehair/sidehair8L.png": "parts/hair/sidehair/sidehair8L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair9",
@@ -1649,7 +1803,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 90
+      "order": 90,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair9R.png": "parts/hair/sidehair/sidehair9R-gray.png",
+            "parts/hair/sidehair/sidehair9L.png": "parts/hair/sidehair/sidehair9L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair10",
@@ -1669,7 +1831,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 100
+      "order": 100,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair10R.png": "parts/hair/sidehair/sidehair10R-gray.png",
+            "parts/hair/sidehair/sidehair10L.png": "parts/hair/sidehair/sidehair10L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "basehair",
@@ -1682,7 +1852,12 @@
           "animated": false
         }
       ],
-      "order": 10
+      "order": 10,
+      "colors": {
+        "グレー": {
+          "image": "parts/basics/body/basehair-gray.png"
+        }
+      }
     },
     {
       "id": "bangs9",
@@ -1695,7 +1870,12 @@
           "animated": false
         }
       ],
-      "order": 90
+      "order": 90,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs9-gray.png"
+        }
+      }
     },
     {
       "id": "bangs10",
@@ -1708,7 +1888,12 @@
           "animated": false
         }
       ],
-      "order": 100
+      "order": 100,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs10-gray.png"
+        }
+      }
     },
     {
       "id": "bangs11",
@@ -1721,7 +1906,12 @@
           "animated": false
         }
       ],
-      "order": 110
+      "order": 110,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs11-gray.png"
+        }
+      }
     },
     {
       "id": "bangs12",
@@ -1734,7 +1924,12 @@
           "animated": false
         }
       ],
-      "order": 120
+      "order": 120,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs12-gray.png"
+        }
+      }
     },
     {
       "id": "backhair11",
@@ -1747,7 +1942,12 @@
           "animated": false
         }
       ],
-      "order": 110
+      "order": 110,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair11-gray.png"
+        }
+      }
     },
     {
       "id": "sidehair11",
@@ -1767,7 +1967,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 110
+      "order": 110,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair11R.png": "parts/hair/sidehair/sidehair11R-gray.png",
+            "parts/hair/sidehair/sidehair11L.png": "parts/hair/sidehair/sidehair11L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "glasses-none",
@@ -2342,7 +2550,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 110
+      "order": 110,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair12R.png": "parts/hair/sidehair/sidehair12R-gray.png",
+            "parts/hair/sidehair/sidehair12L.png": "parts/hair/sidehair/sidehair12L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "bra1",
@@ -3992,7 +4208,12 @@
           "animated": false
         }
       ],
-      "order": 110
+      "order": 110,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair12-gray.png"
+        }
+      }
     },
     {
       "id": "backhair13",
@@ -4005,7 +4226,12 @@
           "animated": false
         }
       ],
-      "order": 110
+      "order": 110,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair13-gray.png"
+        }
+      }
     },
     {
       "id": "backhair14",
@@ -4018,7 +4244,12 @@
           "animated": false
         }
       ],
-      "order": 110
+      "order": 110,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair14-gray.png"
+        }
+      }
     },
     {
       "id": "backhair15",
@@ -4031,7 +4262,12 @@
           "animated": false
         }
       ],
-      "order": 110
+      "order": 110,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair15-gray.png"
+        }
+      }
     },
     {
       "id": "backhair16",
@@ -4044,7 +4280,12 @@
           "animated": false
         }
       ],
-      "order": 110
+      "order": 110,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/backhair/backhair16-gray.png"
+        }
+      }
     },
     {
       "id": "bangs13",
@@ -4057,7 +4298,12 @@
           "animated": false
         }
       ],
-      "order": 120
+      "order": 120,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs13-gray.png"
+        }
+      }
     },
     {
       "id": "bangs14",
@@ -4070,7 +4316,12 @@
           "animated": false
         }
       ],
-      "order": 120
+      "order": 120,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs14-gray.png"
+        }
+      }
     },
     {
       "id": "bangs15",
@@ -4083,7 +4334,12 @@
           "animated": false
         }
       ],
-      "order": 120
+      "order": 120,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs15-gray.png"
+        }
+      }
     },
     {
       "id": "bangs16",
@@ -4096,7 +4352,12 @@
           "animated": false
         }
       ],
-      "order": 120
+      "order": 120,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs16-gray.png"
+        }
+      }
     },
     {
       "id": "bangs17",
@@ -4109,7 +4370,12 @@
           "animated": false
         }
       ],
-      "order": 120
+      "order": 120,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/bangs/bangs17-gray.png"
+        }
+      }
     },
     {
       "id": "sidehair-ear1",
@@ -4128,7 +4394,15 @@
           "side": "left"
         }
       ],
-      "order": 20
+      "order": 20,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair-ear/sidehair-ear1R.png": "parts/hair/sidehair/sidehair-ear/sidehair-ear1R-gray.png",
+            "parts/hair/sidehair/sidehair-ear/sidehair-ear1L.png": "parts/hair/sidehair/sidehair-ear/sidehair-ear1L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair-ear2",
@@ -4148,7 +4422,15 @@
           "zIndex": 1290
         }
       ],
-      "order": 30
+      "order": 30,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair-ear/sidehair-ear2R.png": "parts/hair/sidehair/sidehair-ear/sidehair-ear2R-gray.png",
+            "parts/hair/sidehair/sidehair-ear/sidehair-ear2L.png": "parts/hair/sidehair/sidehair-ear/sidehair-ear2L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sidehair-ear3",
@@ -4167,7 +4449,15 @@
           "side": "left"
         }
       ],
-      "order": 40
+      "order": 40,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair-ear/sidehair-ear3R.png": "parts/hair/sidehair/sidehair-ear/sidehair-ear3R-gray.png",
+            "parts/hair/sidehair/sidehair-ear/sidehair-ear3L.png": "parts/hair/sidehair/sidehair-ear/sidehair-ear3L-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "sideair-ear-none",
@@ -4587,7 +4877,8 @@
       "order": 40,
       "selectionMode": "single",
       "group": "hair",
-      "hidden": false
+      "hidden": false,
+      "colorGroup": "hair"
     }
   ],
   "categoryGroups": [

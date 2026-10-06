@@ -2999,9 +2999,13 @@ function collectAllLayers(layers) {
 // 描画用の画像URL（色プリセット画像があれば優先）
 function editorLayerRasterSrc(layer) {
     const cs = layer.colorSettings;
-    if (cs && cs.image && String(cs.image).trim()) {
-        return String(cs.image).trim();
+    if (!cs || !layer.file) return layer.file;
+    const fileKey = String(layer.file).replace(/\\/g, '/');
+    if (cs.images && typeof cs.images === 'object') {
+        const fromMap = cs.images[fileKey] || cs.images[layer.file];
+        if (fromMap && String(fromMap).trim()) return String(fromMap).trim();
     }
+    if (cs.image && String(cs.image).trim()) return String(cs.image).trim();
     return layer.file;
 }
 
@@ -3018,7 +3022,13 @@ function drawLayers(ctx, layers) {
     const validLayers = layers.filter(l => {
         if (l.file) return true;
         const cs = l.colorSettings;
-        return !!(cs && cs.image && String(cs.image).trim());
+        if (!cs) return false;
+        if (cs.image && String(cs.image).trim()) return true;
+        if (cs.images && typeof cs.images === 'object') {
+            const fileKey = String(l.file || '').replace(/\\/g, '/');
+            return !!(cs.images[fileKey] || cs.images[l.file]);
+        }
+        return false;
     });
     
     if (validLayers.length === 0) {

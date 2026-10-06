@@ -2231,11 +2231,23 @@ function loadImage(src) {
     });
 }
 
+function colorPresetRasterPath(layer) {
+    const cs = layer.colorSettings;
+    if (!cs || !layer.file) return layer.file;
+    const fileKey = String(layer.file).replace(/\\/g, '/');
+    if (cs.images && typeof cs.images === 'object') {
+        const fromMap = cs.images[fileKey] || cs.images[layer.file];
+        if (fromMap && String(fromMap).trim()) return String(fromMap).trim();
+    }
+    if (cs.image && typeof cs.image === 'string' && cs.image.trim()) return cs.image.trim();
+    return layer.file;
+}
+
 // 色プリセットが専用画像（image）のときはそれを、なければレイヤー本体の file を読み込む
 function loadLayerRaster(layer) {
     const cs = layer.colorSettings;
-    const alt = cs && cs.image && String(cs.image).trim();
-    const primary = alt ? cs.image.trim() : layer.file;
+    const primary = colorPresetRasterPath(layer);
+    const alt = cs && primary !== layer.file ? primary : null;
     return loadImage(primary).then(img => {
         if (img || !alt) return { img, layer };
         if (!layer.file) return { img: null, layer };
@@ -2248,7 +2260,13 @@ function drawLayers(ctx, layers) {
     const validLayers = layers.filter(l => {
         if (l.file) return true;
         const cs = l.colorSettings;
-        return !!(cs && cs.image && String(cs.image).trim());
+        if (!cs) return false;
+        if (cs.image && String(cs.image).trim()) return true;
+        if (cs.images && typeof cs.images === 'object') {
+            const fileKey = String(l.file || '').replace(/\\/g, '/');
+            return !!(cs.images[fileKey] || cs.images[l.file]);
+        }
+        return false;
     });
     
     if (validLayers.length === 0) {
