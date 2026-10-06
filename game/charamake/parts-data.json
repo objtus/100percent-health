@@ -75,7 +75,7 @@
       "id": "bg_white",
       "name": "背景（白）",
       "category": "background",
-      "zIndex": 0,
+      "zIndex": 1,
       "layers": [
         {
           "file": "parts/basics/background/white.png",
@@ -100,7 +100,7 @@
       "id": "bg_gray",
       "name": "背景（グレー）",
       "category": "background",
-      "zIndex": 0,
+      "zIndex": 1,
       "layers": [
         {
           "file": "parts/basics/background/gray.png",
@@ -3595,7 +3595,7 @@
       "id": "glasses1-deco1",
       "name": "装飾1",
       "category": "glasses1-deco",
-      "zIndex": 1295,
+      "zIndex": 1290,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses1-light/glasses1-light1.png",
@@ -3609,7 +3609,7 @@
       "id": "glasses1-deco2",
       "name": "装飾2",
       "category": "glasses1-deco",
-      "zIndex": 1295,
+      "zIndex": 1290,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses1-light/glasses1-light2.png",
@@ -3623,7 +3623,7 @@
       "id": "glasses1-deco3",
       "name": "装飾3（瓶底）",
       "category": "glasses1-deco",
-      "zIndex": 1295,
+      "zIndex": 1290,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses1-light/glasses1-light3.png",
@@ -3651,7 +3651,7 @@
       "id": "glasses2-deco1",
       "name": "装飾1",
       "category": "glasses2-deco",
-      "zIndex": 1295,
+      "zIndex": 1290,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses2-light/glasses2-light1.png",
@@ -3665,7 +3665,7 @@
       "id": "glasses2-deco2",
       "name": "装飾2",
       "category": "glasses2-deco",
-      "zIndex": 1295,
+      "zIndex": 1290,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses2-light/glasses2-light2.png",
@@ -3913,6 +3913,261 @@
         "ahoge"
       ],
       "colors": {}
+    },
+    {
+      "id": "glasses3",
+      "name": "眼鏡3",
+      "category": "glasses",
+      "zIndex": 1295,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses3.png",
+          "animated": false
+        },
+        {
+          "file": "parts/accessories/head/glasses/glasses3-nosepad.png",
+          "animated": false,
+          "zIndex": 1289
+        }
+      ],
+      "colors": {},
+      "order": 40,
+      "unlocks": [
+        "glasses3-deco"
+      ]
+    },
+    {
+      "id": "glasses3-deco1",
+      "name": "装飾1",
+      "category": "glasses3-deco",
+      "zIndex": 1290,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses3-light/glasses3-light1.png",
+          "animated": false
+        }
+      ],
+      "colors": {},
+      "order": 60
+    },
+    {
+      "id": "glasses3-deco2",
+      "name": "装飾2",
+      "category": "glasses3-deco",
+      "zIndex": 1290,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses3-light/glasses3-light2.png",
+          "animated": false
+        }
+      ],
+      "colors": {},
+      "order": 60
+    },
+    {
+      "id": "glasses3-deco-none",
+      "name": "なし",
+      "category": "glasses3-deco",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 60,
+      "isNone": true
+    },
+    {
+      "id": "gb-frame1",
+      "name": "枠1",
+      "category": "bg-deco",
+      "zIndex": 2,
+      "layers": [
+        {
+          "file": "parts\\basics\\background\\bg-pettern\\bg-frame1.png",
+          "animated": false
+        }
+      ],
+      "order": 20,
+      "colors": {
+        "グレー": {
+          "blend": "screen",
+          "color": "#8c8c8c",
+          "opacity": 1
+        },
+        "白": {
+          "blend": "screen",
+          "color": "#ffffff",
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "id": "bg-deco-none",
+      "name": "なし",
+      "category": "bg-deco",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10,
+      "isNone": true
+    },
+    {
+      "id": "sun-visor",
+      "name": "サンバイザー",
+      "category": "head-accessories",
+      "zIndex": 1350,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\sun-visor-black.png",
+          "animated": false
+        },
+        {
+          "file": "parts\\accessories\\head\\sun-visor-black-bg.png",
+          "zIndex": 1,
+          "animated": false
+        }
+      ],
+      "order": 50,
+      "hides": [
+        "ahoge"
+      ],
+      "colors": {}
+    },
+    {
+      "id": "backhair12",
+      "name": "後ろ髪12",
+      "category": "backhair",
+      "zIndex": 10,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair12.png",
+          "animated": false
+        }
+      ],
+      "order": 110
+    },
+    {
+      "id": "backhair13",
+      "name": "後ろ髪13",
+      "category": "backhair",
+      "zIndex": 10,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair13.png",
+          "animated": false
+        }
+      ],
+      "order": 110
+    },
+    {
+      "id": "backhair14",
+      "name": "後ろ髪14",
+      "category": "backhair",
+      "zIndex": 10,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair14.png",
+          "animated": false
+        }
+      ],
+      "order": 110
+    },
+    {
+      "id": "backhair15",
+      "name": "後ろ髪15",
+      "category": "backhair",
+      "zIndex": 10,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair15.png",
+          "animated": false
+        }
+      ],
+      "order": 110
+    },
+    {
+      "id": "backhair16",
+      "name": "後ろ髪16",
+      "category": "backhair",
+      "zIndex": 10,
+      "layers": [
+        {
+          "file": "parts/hair/backhair/backhair16.png",
+          "animated": false
+        }
+      ],
+      "order": 110
+    },
+    {
+      "id": "bangs13",
+      "name": "前髪13",
+      "category": "bangs",
+      "zIndex": 1300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs13.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "bangs14",
+      "name": "前髪14",
+      "category": "bangs",
+      "zIndex": 1300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs14.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "bangs15",
+      "name": "前髪15",
+      "category": "bangs",
+      "zIndex": 1300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs15.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "bangs16",
+      "name": "前髪16",
+      "category": "bangs",
+      "zIndex": 1300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs16.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "bangs17",
+      "name": "前髪17",
+      "category": "bangs",
+      "zIndex": 1300,
+      "layers": [
+        {
+          "file": "parts/hair/bangs/bangs17.png",
+          "animated": false
+        }
+      ],
+      "order": 120
     }
   ],
   "categories": [
@@ -4295,6 +4550,22 @@
       "selectionMode": "multiple",
       "group": "decoration",
       "hidden": false
+    },
+    {
+      "id": "glasses3-deco",
+      "name": "眼鏡3装飾",
+      "order": 50,
+      "selectionMode": "single",
+      "hidden": true,
+      "group": "accessories"
+    },
+    {
+      "id": "bg-deco",
+      "name": "背景装飾",
+      "order": 1,
+      "selectionMode": "multiple",
+      "hidden": false,
+      "group": "decoration"
     }
   ],
   "categoryGroups": [

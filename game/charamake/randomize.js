@@ -36,7 +36,8 @@
             'eyelashes8-deco': { min: 0, max: 1, emptyRate: 0.2 },
             'glasses1-deco': { emptyRate: 0.7 },
             'glasses2-deco': { emptyRate: 0.7 },
-            'frame-deco1': { min: 0, max: 2, emptyRate: 0.7 },
+            'frame-deco1': { min: 0, max: 2, emptyRate: 0.85 },
+            'bg-deco': { min: 0, max: 2, emptyRate: 0.8 },
         },
         // rankAtMost: target の段階 ≦ source の段階。段階は「通常」= 0、ほかはプリセット名末尾の数字
         colorConstraints: [
