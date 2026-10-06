@@ -1020,6 +1020,12 @@ function checkUnlockCondition(categoryId) {
 - 左一覧のカテゴリ行とグループ見出しの錠前ボタンで切り替える。グループは「全部固定 ↔ 全部解除」、一部だけ固定のときは中間表示（`aria-pressed="mixed"`）。
 - 初期値は `RANDOM_CONFIG.defaultLocked`（フレーム・背景・ベース髪）。現在の固定は `localStorage`（`charamake.lockedCategories`）に保存し、再訪時に復元。
 - キャラ JSON のルート `locks`（カテゴリ ID 配列）に保存。読込時は `locks` で置き換え、無い古い JSON は既定の固定に戻す。
+- **色の固定**（colorGroup 単位）: パーツ設定の色欄にある「〇の色を固定」で切り替える。表示名は `RANDOM_CONFIG.colorGroupNames`（肌・髪・シャツ）。色プリセットを持つグループ所属パーツでだけ表示する。
+  - 固定中のグループ色は、全体ランダムでも**カテゴリランダムでも**抽選しない（パーツの固定と違い、カテゴリランダムでも守る）。パーツは通常どおり抽選する。
+  - 固定色が「通常」以外のときは、そのプリセットを持たないパーツを候補から外す（持つ候補が無ければ外さない）。
+  - `colorConstraints` は固定中の色を基準にする（例: 肌色1 で固定なら白目は 通常・白目1）。
+  - `localStorage`（`charamake.lockedColorGroups`）とキャラ JSON のルート `colorLocks`（colorGroup ID 配列）に保存。無い古い JSON は色の固定なし。既定は固定なし。
+  - ランダムバーの件数は「固定 n 件・色 m」。「すべて解除」で両方外す。履歴には入れない。
 
 #### 9.11.6 戻す / やり直す
 - 手動のパーツ選択・選択解除・色プリセット・左右・ランダムの直前の状態を最大 20 段積む。状態が変わらない操作は積まない。新しい操作で「やり直す」側は空になる。固定の切り替えとカスタム色スライダーは履歴に入れない。
@@ -1032,6 +1038,7 @@ function checkUnlockCondition(categoryId) {
 ```json
 {
   "locks": ["frame", "background", "basehair"],
+  "colorLocks": ["skin"],
   "character": {
     "sidehair": [{ "id": "sidehair3", "side": "left" }, "sidehair5"],
     "glasses": [{ "id": "glasses1", "color": "白" }]

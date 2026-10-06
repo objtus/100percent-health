@@ -20,6 +20,7 @@ const categoryById = new Map(partsData.categories.map(c => [c.id, c]));
 const partById = new Map(partsData.parts.map(p => [p.id, p]));
 const allSecrets = new Set((partsData.meta?.secrets || []).map(s => s.id));
 const listedIds = partsData.categories.filter(c => !c.hidden).map(c => c.id);
+const colorGroupIds = [...new Set(partsData.categories.map(c => c.colorGroup).filter(Boolean))];
 
 let seed = Number(process.argv[3]) || 12345;
 function rng() {
@@ -86,6 +87,11 @@ for (let run = 0; run < RUNS; run++) {
         if (rng() < 0.15) locked.add(id);
     });
 
+    const lockedColorGroups = new Set();
+    colorGroupIds.forEach(id => {
+        if (rng() < 0.15) lockedColorGroups.add(id);
+    });
+
     const categoryMode = rng() < 0.25;
     let targetIds;
     if (categoryMode) {
@@ -102,6 +108,7 @@ for (let run = 0; run < RUNS; run++) {
         selectedParts: before,
         targetCategoryIds: targetIds,
         lockedCategoryIds: locked,
+        lockedColorGroups,
         unlockedSecrets: secrets,
         previouslyUnlockedCategories: state.unlockedCategories,
         currentColors: { colorGroupPresets: state.colorGroupPresets, selectedColors: state.selectedColors },
@@ -162,9 +169,33 @@ for (let run = 0; run < RUNS; run++) {
     groups.forEach(groupId => {
         const listedInGroup = partsData.categories.filter(c => c.colorGroup === groupId && !c.hidden);
         const allLocked = listedInGroup.every(c => locked.has(c.id) && !targets.has(c.id));
+        const colorLocked = lockedColorGroups.has(groupId);
         const changed = Object.prototype.hasOwnProperty.call(result.colorGroupPresets, groupId);
         if (allLocked && changed) fail('全固定のグループ色が変わった', { ...ctx, groupId });
-        if (!categoryMode && !allLocked && !changed) fail('未固定を含むグループ色が抽選されていない', { ...ctx, groupId });
+        if (colorLocked && changed) fail('色固定のグループ色が変わった', { ...ctx, groupId });
+        if (!categoryMode && !allLocked && !colorLocked && !changed) {
+            fail('未固定を含むグループ色が抽選されていない', { ...ctx, groupId });
+        }
+
+        // 色固定中は、新しく選ばれたパーツも固定色を持つ（持つ候補が 1 つでもあれば）
+        const preset = state.colorGroupPresets[groupId];
+        if (!colorLocked || !preset || preset === 'normal') return;
+        partsData.categories.filter(c => c.colorGroup === groupId).forEach(category => {
+            if (!targets.has(category.id) || !isCategoryVisible(category, result, secrets)) return;
+            const prevIds = new Set(idsOf(before[category.id], category));
+            const hasCandidate = partsData.parts.some(p => p.category === category.id
+                && p.colors && p.colors[preset]
+                && (!p.secret || secrets.has(p.secret))
+                && !result.hiddenPartIds.has(p.id));
+            if (!hasCandidate) return;
+            idsOf(result.selectedParts[category.id], category).forEach(id => {
+                const part = partById.get(id);
+                if (prevIds.has(id) || R.isNonePart(part)) return;
+                if (!(part.colors && part.colors[preset])) {
+                    fail('色固定のプリセットを持たないパーツが選ばれた', { ...ctx, groupId, preset, id });
+                }
+            });
+        });
     });
 
     // 6. グループ所属パーツは個別色を持たない（グループで同期）
@@ -227,7 +258,9 @@ Object.entries(emptyStats).forEach(([categoryId, s]) => {
     const hasHideInteraction = partsData.parts.some(p =>
         (p.category === categoryId && (p.hides || []).length > 0)
         || (p.hides || []).some(h => h === categoryId || partById.get(h)?.category === categoryId));
-    if (s.total >= 200 && !hasHideInteraction && Math.abs(rate - cfg.emptyRate) > 0.05) {
+    // 標本が少ないカテゴリ（修飾など）は ±5% では偶然でも外れるので 3σ まで許す
+    const tolerance = Math.max(0.05, 3 * Math.sqrt(cfg.emptyRate * (1 - cfg.emptyRate) / s.total));
+    if (s.total >= 200 && !hasHideInteraction && Math.abs(rate - cfg.emptyRate) > tolerance) {
         fail('emptyRate の実測値が設定値から 5% 以上ずれた', { categoryId, rate, expected: cfg.emptyRate });
     }
     console.log(line);

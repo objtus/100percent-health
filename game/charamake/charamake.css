@@ -807,6 +807,38 @@ body.charamake-page {
   gap: 0.35rem;
 }
 
+#charamake-app .color-lock-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.45rem;
+  padding: 0.2rem 0.45rem;
+  font-family: var(--cm-font);
+  font-size: 0.68rem;
+  color: var(--cm-muted);
+  border: 1px dashed var(--cm-panel-border);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+}
+
+#charamake-app .color-lock-toggle:hover,
+#charamake-app .color-lock-toggle:focus-visible {
+  color: var(--cm-accent);
+  border-color: var(--cm-accent);
+}
+
+#charamake-app .color-lock-toggle.is-locked {
+  color: var(--cm-accent);
+  border-style: solid;
+  border-color: var(--cm-accent);
+}
+
+#charamake-app .color-lock-toggle svg {
+  display: block;
+  flex-shrink: 0;
+}
+
 #charamake-app .part-settings-extensions {
   min-height: 0;
   margin-bottom: 0.65rem;

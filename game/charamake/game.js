@@ -21,12 +21,14 @@ const state = {
     colorGroupPresets: {}, // colorGroup ID → 'normal' | プリセット名 | 'custom'（グループ共有の色意図）
     colorGroupCustom: {}, // colorGroup ID → カスタム色オブジェクト
     lockedCategories: new Set(), // 全体ランダムの対象外にする左一覧カテゴリ
+    lockedColorGroups: new Set(), // ランダムで色を変えない colorGroup（カテゴリランダムでも守る）
     undoStack: [],
     redoStack: []
 };
 
 const HISTORY_LIMIT = 20;
 const LOCKS_STORAGE_KEY = 'charamake.lockedCategories';
+const COLOR_LOCKS_STORAGE_KEY = 'charamake.lockedColorGroups';
 const FALLBACK_DEFAULT_LOCKS = ['frame', 'background', 'basehair'];
 
 let previewDrawPromise = Promise.resolve();
@@ -1810,6 +1812,8 @@ function updatePartSettingsPanel() {
         elements.colorPresetSelector.innerHTML = '';
         const existingSide = document.getElementById('sideSelector');
         if (existingSide) existingSide.remove();
+        const existingColorLock = document.getElementById('colorLockToggle');
+        if (existingColorLock) existingColorLock.remove();
         updateAdvancedColorSettings(false);
     }
 
@@ -1879,6 +1883,13 @@ function renderColorBlockForPart(part) {
         customBtn.textContent = 'カスタム';
         customBtn.addEventListener('click', () => selectColorPreset(part.id, 'custom'));
         elements.colorPresetSelector.appendChild(customBtn);
+    }
+
+    const existingColorLock = document.getElementById('colorLockToggle');
+    if (existingColorLock) existingColorLock.remove();
+    const colorGroupId = getColorGroupIdForPart(part);
+    if (colorGroupId && part.colors && Object.keys(part.colors).length > 0) {
+        elements.colorPresetSelector.after(createColorLockToggle(colorGroupId));
     }
     
     // カスタム色が選択されている場合のみ拡張設定を表示し、値を反映
@@ -2547,6 +2558,7 @@ function runRandomize(targetCategoryIds, includeModifiers) {
         targetCategoryIds,
         includeModifiers,
         lockedCategoryIds: state.lockedCategories,
+        lockedColorGroups: state.lockedColorGroups,
         unlockedSecrets: state.unlockedSecrets,
         previouslyUnlockedCategories: state.previouslyUnlockedCategories,
         currentColors: {
@@ -2563,11 +2575,11 @@ function randomizeAll() {
     const targets = R.getFullRandomTargets(state.partsData, state.lockedCategories, state.unlockedSecrets);
     const changed = runRandomize(targets, true);
     if (changed === null) return;
-    const lockCount = state.lockedCategories.size;
+    const lockText = formatLockCounts();
     renderDependencyFeed([{
         kind: 'random',
-        text: lockCount > 0
-            ? `ランダム: ${changed} カテゴリを変更（固定 ${lockCount}）`
+        text: lockText
+            ? `ランダム: ${changed} カテゴリを変更（${lockText}）`
             : `完全ランダム: ${changed} カテゴリを変更`
     }]);
 }
@@ -2615,17 +2627,85 @@ function saveLocksToStorage() {
     }
 }
 
+function getColorGroupIds() {
+    return new Set((state.partsData?.categories || []).map(c => c.colorGroup).filter(Boolean));
+}
+
+function getColorGroupDisplayName(groupId) {
+    const names = window.CharamakeRandomize?.RANDOM_CONFIG.colorGroupNames || {};
+    return names[groupId] || groupId;
+}
+
+function setLockedColorGroups(ids) {
+    const valid = getColorGroupIds();
+    state.lockedColorGroups = new Set((ids || []).filter(id => valid.has(id)));
+}
+
+function loadColorLocksFromStorage() {
+    try {
+        const arr = JSON.parse(window.localStorage.getItem(COLOR_LOCKS_STORAGE_KEY) || 'null');
+        return Array.isArray(arr) ? arr : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function saveColorLocksToStorage() {
+    try {
+        window.localStorage.setItem(COLOR_LOCKS_STORAGE_KEY, JSON.stringify([...state.lockedColorGroups]));
+    } catch (e) {
+        // localStorage が使えない環境では保持しない
+    }
+}
+
 function initializeLocks() {
     const stored = loadLocksFromStorage();
     setLockedCategories(stored || getDefaultLocks());
+    setLockedColorGroups(loadColorLocksFromStorage() || []);
     updateRandomBar();
 }
 
 function onLocksChanged() {
     saveLocksToStorage();
+    saveColorLocksToStorage();
     renderCategories();
     updateCategoryRandomButton();
+    updatePartSettingsPanel();
     updateRandomBar();
+}
+
+function toggleColorGroupLock(groupId) {
+    if (state.lockedColorGroups.has(groupId)) {
+        state.lockedColorGroups.delete(groupId);
+    } else {
+        state.lockedColorGroups.add(groupId);
+    }
+    onLocksChanged();
+}
+
+/** 「固定 3・色固定 1」のような要約。どちらも 0 件なら空文字 */
+function formatLockCounts() {
+    const parts = [];
+    if (state.lockedCategories.size > 0) parts.push(`固定 ${state.lockedCategories.size}`);
+    if (state.lockedColorGroups.size > 0) parts.push(`色固定 ${state.lockedColorGroups.size}`);
+    return parts.join('・');
+}
+
+function createColorLockToggle(groupId) {
+    const locked = state.lockedColorGroups.has(groupId);
+    const name = getColorGroupDisplayName(groupId);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = 'colorLockToggle';
+    btn.className = 'color-lock-toggle' + (locked ? ' is-locked' : '');
+    btn.setAttribute('aria-pressed', locked ? 'true' : 'false');
+    btn.title = locked
+        ? `「${name}」の色の固定を外す`
+        : `「${name}」の色を固定する（ランダムで色を変えない）`;
+    btn.innerHTML = (locked ? LOCK_ICON_CLOSED : LOCK_ICON_OPEN)
+        + `<span>${locked ? `${name}の色を固定中` : `${name}の色を固定`}</span>`;
+    btn.addEventListener('click', () => toggleColorGroupLock(groupId));
+    return btn;
 }
 
 function toggleCategoryLock(categoryId) {
@@ -2661,22 +2741,32 @@ function toggleGroupLock(groupId) {
 }
 
 function clearAllLocks() {
-    if (state.lockedCategories.size === 0) return;
+    if (state.lockedCategories.size === 0 && state.lockedColorGroups.size === 0) return;
     state.lockedCategories.clear();
+    state.lockedColorGroups.clear();
     onLocksChanged();
 }
 
 function updateRandomBar() {
     const count = state.lockedCategories.size;
+    const colorCount = state.lockedColorGroups.size;
     if (elements.randomAllBtn) {
-        elements.randomAllBtn.textContent = count === 0 ? '完全ランダム' : '全体ランダム';
-        elements.randomAllBtn.title = (count === 0
+        elements.randomAllBtn.textContent = count === 0 && colorCount === 0 ? '完全ランダム' : '全体ランダム';
+        const scope = count === 0
             ? 'すべてのカテゴリをランダムにする'
-            : `固定中の ${count} カテゴリ以外をランダムにする`) + '（R）';
+            : `固定中の ${count} カテゴリ以外をランダムにする`;
+        const colorNote = colorCount > 0
+            ? `。${[...state.lockedColorGroups].map(getColorGroupDisplayName).join('・')}の色は変えない`
+            : '';
+        elements.randomAllBtn.title = scope + colorNote + '（R）';
         elements.randomAllBtn.disabled = !window.CharamakeRandomize;
     }
-    if (elements.lockSummary) elements.lockSummary.textContent = `固定 ${count} 件`;
-    if (elements.clearLocksBtn) elements.clearLocksBtn.disabled = count === 0;
+    if (elements.lockSummary) {
+        elements.lockSummary.textContent = colorCount > 0
+            ? `固定 ${count} 件・色 ${colorCount}`
+            : `固定 ${count} 件`;
+    }
+    if (elements.clearLocksBtn) elements.clearLocksBtn.disabled = count === 0 && colorCount === 0;
     if (elements.undoBtn) elements.undoBtn.disabled = state.undoStack.length === 0;
     if (elements.redoBtn) elements.redoBtn.disabled = state.redoStack.length === 0;
 }
@@ -2746,6 +2836,7 @@ function saveCharacter() {
         unlockedSecrets: [...state.unlockedSecrets],
         clockDisplayMode: state.clockDisplayMode || 'jst',
         locks: [...state.lockedCategories],
+        colorLocks: [...state.lockedColorGroups],
         character: {}
     };
 
@@ -2901,7 +2992,10 @@ function handleCharacterFileSelect(e) {
             resetDependencyFeedSnapshot();
 
             setLockedCategories(Array.isArray(data.locks) ? data.locks : getDefaultLocks());
+            setLockedColorGroups(Array.isArray(data.colorLocks) ? data.colorLocks : []);
             saveLocksToStorage();
+            saveColorLocksToStorage();
+            updateRandomBar();
             clearHistory();
             
             sanitizeSecretSelections();

@@ -42,7 +42,8 @@
         // rankAtMost: target の段階 ≦ source の段階。段階は「通常」= 0、ほかはプリセット名末尾の数字
         colorConstraints: [
             { source: { colorGroup: 'skin' }, target: { category: 'sclera' }, rule: 'rankAtMost' }
-        ]
+        ],
+        colorGroupNames: { skin: '肌', hair: '髪', shirts: 'シャツ' }
     };
 
     function getDependencies() {
@@ -227,6 +228,8 @@
      *   targetCategoryIds: string[],
      *   includeModifiers?: boolean,
      *   lockedCategoryIds?: Set<string>,
+     *   lockedColorGroups?: Set<string>,
+     *   currentColors?: { colorGroupPresets?: Record<string,string>, selectedColors?: Record<string,string> },
      *   unlockedSecrets?: Set<string>,
      *   previouslyUnlockedCategories?: Set<string>,
      *   rng?: () => number,
@@ -274,6 +277,16 @@
             id => protectedCategories.has(id) || protectedPartIds.has(id)
         );
 
+        const lockedColorGroups = opts.lockedColorGroups || new Set();
+        const currentGroupPresets = (opts.currentColors && opts.currentColors.colorGroupPresets) || {};
+        /** 色固定中のグループで、そのプリセットを持たないパーツは見た目の色が揃わないので外す */
+        function requiredPresetFor(category) {
+            const groupId = category.colorGroup;
+            if (!groupId || !lockedColorGroups.has(groupId)) return null;
+            const preset = currentGroupPresets[groupId];
+            return preset && preset !== 'normal' && preset !== 'custom' ? preset : null;
+        }
+
         function pickForCategory(category, hiddenPartIds) {
             const candidates = (idx.sortedByCategory.get(category.id) || []).filter(p =>
                 (!p.secret || isSecretUnlocked(p.secret, unlockedSecrets))
@@ -281,7 +294,12 @@
                 && !breaksLock(p)
             );
             const nones = candidates.filter(isNonePart);
-            const others = candidates.filter(p => !isNonePart(p));
+            let others = candidates.filter(p => !isNonePart(p));
+            const requiredPreset = requiredPresetFor(category);
+            if (requiredPreset) {
+                const matching = others.filter(p => p.colors && p.colors[requiredPreset]);
+                if (matching.length > 0) others = matching;
+            }
             const cfg = getCategoryRandomConfig(category, config);
 
             if (category.selectionMode === 'multiple') {
@@ -303,7 +321,7 @@
             if (nones.length > 0 && others.length > 0) {
                 return (rng() < cfg.emptyRate ? choose(nones, rng) : choose(others, rng)).id;
             }
-            return choose(candidates, rng).id;
+            return choose(others.length > 0 ? others : nones, rng).id;
         }
 
         const orderedTargets = idx.categories
@@ -402,10 +420,11 @@
                 .filter(part => isPartVisibleIn(part, sets, unlockedSecrets));
         };
 
+        const lockedColorGroups = opts.lockedColorGroups || new Set();
         const slots = [];
         const groupIds = new Set();
         idx.categories.forEach(c => {
-            if (c.colorGroup && targets.has(c.id)) groupIds.add(c.colorGroup);
+            if (c.colorGroup && targets.has(c.id) && !lockedColorGroups.has(c.colorGroup)) groupIds.add(c.colorGroup);
         });
         groupIds.forEach(groupId => {
             const keys = new Set();
@@ -535,7 +554,11 @@
             rng: opts.rng,
             config: opts.config
         };
-        const colors = randomizeColors({ ...common, currentColors: opts.currentColors });
+        const colors = randomizeColors({
+            ...common,
+            currentColors: opts.currentColors,
+            lockedColorGroups: opts.lockedColorGroups
+        });
         const sides = randomizeSides(common);
         return {
             ...selection,

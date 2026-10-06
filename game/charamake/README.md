@@ -111,6 +111,7 @@ game/charamake/
 カテゴリ ID → パーツ ID（複数選択は配列）、色、`unlockedSecrets` 等。複数選択の配列要素は ID 文字列、または `{ "id", "side"?, "color"? }`（旧形式の文字列配列も読める）。
 
 ルートに **`locks`**（任意）: 全体ランダムで固定するカテゴリ ID の配列。無い JSON は既定（フレーム・背景・ベース髪）。
+**`colorLocks`**（任意）: ランダムで色を変えない colorGroup ID の配列（例: `["skin"]`）。無い JSON は色の固定なし。
 
 ルートに **`colorGroups`**（任意）: カテゴリの `colorGroup` ID ごとの共有色意図。例: `"skin": { "preset": "肌色2" }`。カスタム時は `preset: "custom"` と blend / colorValue 等。旧 saves はパーツごとの `color` から読込時に復元。
 
