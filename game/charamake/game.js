@@ -421,7 +421,7 @@ function ensureCurrentCategoryVisible() {
     if (next) {
         state.currentCategory = next.id;
         state.colorSettingsPart = null;
-        state.multiSelectActive[next.id] = false;
+        syncMultiSelectActive(next.id);
         return true;
     }
     return false;
@@ -433,13 +433,14 @@ function getHostPartForSettings() {
     if (!category || category.hidden) return null;
 
     if (category.selectionMode === 'multiple') {
-        if (state.colorSettingsPart) {
-            const part = state.partsData.parts.find(
-                p => p.id === state.colorSettingsPart && p.category === state.currentCategory
-            );
-            if (part) return part;
-        }
-        return null;
+        const raw = state.selectedParts[state.currentCategory];
+        const selectedIds = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+        // クリックしたパーツが選択中ならそれを、なければ選択中の先頭パーツ（ランダム直後・カテゴリ切替直後）
+        const id = selectedIds.includes(state.colorSettingsPart)
+            ? state.colorSettingsPart
+            : selectedIds[0];
+        if (!id) return null;
+        return state.partsData.parts.find(p => p.id === id && p.category === state.currentCategory) || null;
     }
 
     const selectedPartId = state.selectedParts[state.currentCategory];
@@ -689,12 +690,20 @@ function isCategoryUnlocked(categoryId) {
     return state.unlockedCategories.has(categoryId);
 }
 
+// 複数選択カテゴリで 2 つ以上選ばれていれば「複数選択」モードを有効にする
+function syncMultiSelectActive(categoryId) {
+    const category = state.partsData && state.partsData.categories.find(c => c.id === categoryId);
+    if (!category || category.selectionMode !== 'multiple') return;
+    const selection = state.selectedParts[categoryId];
+    state.multiSelectActive[categoryId] = Array.isArray(selection) && selection.length > 1;
+}
+
 // カテゴリ選択
 function selectCategory(categoryId) {
     state.currentCategory = categoryId;
     state.colorSettingsPart = null; // カテゴリ切り替え時は色設定フォーカスをリセット
-    // カテゴリ切り替え時は複数選択モードをリセット
-    state.multiSelectActive[categoryId] = false;
+    // カテゴリ切り替え時は複数選択モードを選択数に合わせる
+    syncMultiSelectActive(categoryId);
     renderCategories();
     renderParts();
     
@@ -835,7 +844,8 @@ function createPartItem(part, isMultipleCapable, isMultiActive) {
     }
     
     // 色設定が表示されているパーツにインジケータ
-    const isColorFocused = isMultipleCapable && state.colorSettingsPart === part.id;
+    const hostPart = isMultipleCapable ? getHostPartForSettings() : null;
+    const isColorFocused = !!hostPart && hostPart.id === part.id;
     if (isColorFocused) {
         div.classList.add('color-focused');
     }
@@ -2045,14 +2055,7 @@ function loadCustomColorValues(customSettings) {
 function applyCustomColor() {
     if (!state.currentCategory) return;
     
-    // colorSettingsPart を優先（複数選択カテゴリではこちらに正しいパーツIDが入る）
-    // 通常カテゴリでは selectedParts[category] が文字列で入っている
-    const rawSelection = state.selectedParts[state.currentCategory];
-    const partId = state.colorSettingsPart
-        || (typeof rawSelection === 'string' ? rawSelection : null);
-    if (!partId) return;
-    
-    const applyPart = state.partsData.parts.find(p => p.id === partId);
+    const applyPart = getHostPartForSettings();
     if (!applyPart) return;
 
     const groupId = getColorGroupIdForPart(applyPart);
@@ -2071,8 +2074,8 @@ function applyCustomColor() {
     if (groupId) {
         setColorGroupPreset(groupId, 'custom', customData);
     } else {
-        state.customColors[partId] = customData;
-        state.selectedColors[partId] = 'custom';
+        state.customColors[applyPart.id] = customData;
+        state.selectedColors[applyPart.id] = 'custom';
     }
     updatePreview();
 }
@@ -2555,6 +2558,7 @@ function applyRandomResult(result, before) {
     });
     Object.assign(state.selectedSide, result.selectedSide);
     syncColorStateAfterDependencyResolve();
+    (result.targetCategoryIds || []).forEach(syncMultiSelectActive);
 
     state.colorSettingsPart = null;
     ensureCurrentCategoryVisible();

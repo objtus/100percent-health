@@ -9,6 +9,8 @@
         defaultLocked: ['frame', 'background', 'basehair'],
         emptyRateDefault: 0.3,
         normalColorWeight: 2,
+        /* 左右レイヤーを持つパーツの「両方 / 左だけ / 右だけ」の比率。
+           categories の各カテゴリに sideWeights を書くと、そのカテゴリだけ上書きできる。 */
         sideWeights: { both: 2, left: 1, right: 1 },
         maxIterations: 8,
         multipleDefault: { min: 0, max: 1 },
@@ -16,7 +18,7 @@
             frame: { min: 1, max: 1, emptyRate: 0.0 },
             nose: { min: 1, max: 3 },
             'eye-highlight': { min: 1, max: 2 },
-            sidehair: { min: 1, max: 2 },
+            sidehair: { min: 1, max: 2, sideWeights: { both: 8, left: 1, right: 1 } },
             glasses: { min: 0, max: 1, emptyRate: 0.5 },
             'head-accessories': { min: 0, max: 1, emptyRate: 0.5 },
             'face-accessories': { min: 0, max: 3, emptyRate: 0.5 },
@@ -38,7 +40,13 @@
             'glasses2-deco': { emptyRate: 0.7 },
             'frame-deco1': { min: 0, max: 2, emptyRate: 0.85 },
             'bg-deco': { min: 0, max: 2, emptyRate: 0.8 },
-            'sidehair-ear': { min: 0, max: 1, emptyRate: 0.85 },
+            'sidehair-ear': { min: 0, max: 1, emptyRate: 0.85, sideWeights: { both: 8, left: 1, right: 1 } },
+        },
+        /* パーツ ID ごとの選ばれやすさ。未指定は 1。0.3 なら他の 0.3 倍、0 ならランダムでは選ばれない。
+           JSON の parts[].random.weight でも指定でき、こちらより優先される。 */
+        partWeights: {
+            // 'bangs3': 0.3,
+            'frame-deco-leaves': 0.3,
         },
         // rankAtMost: target の段階 ≦ source の段階。段階は「通常」= 0、ほかはプリセット名末尾の数字
         colorConstraints: [
@@ -106,11 +114,6 @@
         return na.length === nb.length && na.every((v, i) => v === nb[i]);
     }
 
-    function choose(list, rng) {
-        if (!list || list.length === 0) return undefined;
-        return list[Math.floor(rng() * list.length) % list.length];
-    }
-
     function chooseWeighted(entries, rng) {
         const valid = entries.filter(([, w]) => w > 0);
         const total = valid.reduce((sum, [, w]) => sum + w, 0);
@@ -123,12 +126,28 @@
         return valid[valid.length - 1][0];
     }
 
-    function sample(list, count, rng) {
+    function getPartWeight(part, config) {
+        const fromData = part && part.random && part.random.weight;
+        if (typeof fromData === 'number' && fromData >= 0) return fromData;
+        const fromTable = config && config.partWeights && config.partWeights[part.id];
+        if (typeof fromTable === 'number' && fromTable >= 0) return fromTable;
+        return 1;
+    }
+
+    function choosePart(list, rng, config) {
+        const id = chooseWeighted(list.map(p => [p.id, getPartWeight(p, config)]), rng);
+        return id === undefined ? undefined : list.find(p => p.id === id);
+    }
+
+    /** 重み付きの非復元抽出 */
+    function samplePartsWeighted(list, count, rng, config) {
         const pool = list.slice();
         const out = [];
         while (out.length < count && pool.length > 0) {
-            const idx = Math.floor(rng() * pool.length) % pool.length;
-            out.push(pool.splice(idx, 1)[0]);
+            const part = choosePart(pool, rng, config);
+            if (!part) break;
+            out.push(part);
+            pool.splice(pool.indexOf(part), 1);
         }
         return out;
     }
@@ -293,6 +312,7 @@
                 (!p.secret || isSecretUnlocked(p.secret, unlockedSecrets))
                 && !hiddenPartIds.has(p.id)
                 && !breaksLock(p)
+                && getPartWeight(p, config) > 0
             );
             const nones = candidates.filter(isNonePart);
             let others = candidates.filter(p => !isNonePart(p));
@@ -309,20 +329,20 @@
                 const max = Math.max(min, Math.max(1, cfg.max | 0));
                 const goEmpty = others.length === 0 || (min === 0 && rng() < cfg.emptyRate);
                 if (goEmpty) {
-                    const none = choose(nones, rng);
+                    const none = choosePart(nones, rng, config);
                     return none ? [none.id] : [];
                 }
                 const lo = Math.max(1, min);
                 const hi = Math.min(max, others.length);
                 const count = lo >= hi ? hi : lo + Math.floor(rng() * (hi - lo + 1));
-                return sample(others, count, rng).map(p => p.id);
+                return samplePartsWeighted(others, count, rng, config).map(p => p.id);
             }
 
             if (candidates.length === 0) return undefined;
             if (nones.length > 0 && others.length > 0) {
-                return (rng() < cfg.emptyRate ? choose(nones, rng) : choose(others, rng)).id;
+                return (rng() < cfg.emptyRate ? choosePart(nones, rng, config) : choosePart(others, rng, config)).id;
             }
-            return choose(others.length > 0 ? others : nones, rng).id;
+            return choosePart(others.length > 0 ? others : nones, rng, config).id;
         }
 
         const orderedTargets = idx.categories
@@ -528,12 +548,12 @@
         const sets = opts.dependencySets;
         const targets = new Set(opts.targetCategoryIds || []);
         const idx = createIndex(partsData);
-        const entries = Object.entries(config.sideWeights);
-
         const selectedSide = {};
         idx.categories.forEach(category => {
             if (!targets.has(category.id)) return;
             if (!isCategoryVisibleIn(category, sets, unlockedSecrets)) return;
+            const cfg = getCategoryRandomConfig(category, config);
+            const entries = Object.entries(cfg.sideWeights || config.sideWeights);
             toIdList(opts.selectedParts[category.id], category).forEach(partId => {
                 const part = idx.partById.get(partId);
                 if (!hasSidedLayers(part)) return;
@@ -574,6 +594,7 @@
         isNonePart,
         colorRank,
         getCategoryRandomConfig,
+        getPartWeight,
         buildModifierHosts,
         getFullRandomTargets,
         expandTargets,

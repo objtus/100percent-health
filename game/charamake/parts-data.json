@@ -1010,7 +1010,10 @@
           "animated": false
         }
       ],
-      "order": 20
+      "order": 20,
+      "hides": [
+        "nose6"
+      ]
     },
     {
       "id": "nose3",
@@ -3048,7 +3051,10 @@
           "animated": false
         }
       ],
-      "order": 50
+      "order": 50,
+      "hides": [
+        "nose2"
+      ]
     },
     {
       "id": "nose7",
@@ -4506,7 +4512,8 @@
       "order": 10,
       "selectionMode": "single",
       "hidden": false,
-      "group": "face"
+      "group": "face",
+      "colorGroup": "hair"
     },
     {
       "id": "frame",
