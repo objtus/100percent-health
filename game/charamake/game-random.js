@@ -148,7 +148,7 @@ function applyRandomResult(result, before) {
     return countChangedVisibleCategories(before, captureSnapshot());
 }
 
-function runRandomize(targetCategoryIds, includeModifiers) {
+function runRandomize(targetCategoryIds, includeModifiers, ignoreEmptyRate = false) {
     const R = window.CharamakeRandomize;
     if (!R || !state.partsData) return null;
     const before = captureSnapshot();
@@ -157,6 +157,7 @@ function runRandomize(targetCategoryIds, includeModifiers) {
         selectedParts: state.selectedParts,
         targetCategoryIds,
         includeModifiers,
+        ignoreEmptyRate,
         lockedCategoryIds: state.lockedCategories,
         lockedColorGroups: state.lockedColorGroups,
         unlockedSecrets: state.unlockedSecrets,
@@ -184,9 +185,9 @@ function randomizeAll() {
     }]);
 }
 
-/** 表示中カテゴリ（と修飾）だけを引き直す。固定中でも実行する */
+/** 表示中カテゴリ（と修飾）だけを引き直す。固定中でも実行し、emptyRate は使わない（min/max は効く） */
 function randomizeCategory(categoryId, options = {}) {
-    const changed = runRandomize([categoryId], options.includeModifiers !== false);
+    const changed = runRandomize([categoryId], options.includeModifiers !== false, true);
     if (changed === null) return;
     renderDependencyFeed([{
         kind: 'random',

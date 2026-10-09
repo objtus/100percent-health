@@ -1004,6 +1004,7 @@ function checkUnlockCondition(categoryId) {
 #### 9.11.3 件数と「なし」
 - 設定はカテゴリごとに `RANDOM_CONFIG.categories` → `categories[].random`（parts-data.json）の順で上書き。キーは `min` / `max`（複数選択のみ）/ `emptyRate`。
 - 抽選順: (1) `min` が 0 なら `emptyRate` の確率で「なし」（「なし」パーツがあればそれ 1 つ、無ければ空配列）→ (2) 件数を `max(1,min)`〜`max` から一様に → (3) その件数ぶん「なし」以外から一様に。単一選択カテゴリは「なし」パーツがあるときだけ `emptyRate` で「なし」を選ぶ。
+- **カテゴリランダムでは `emptyRate` を使わない**（`ignoreEmptyRate`）。「なし」も他のパーツと同じ 1 候補として扱い、空になる確率は `1 /（「なし」以外の候補数 + 1）`。`min` / `max` はそのまま効く（`min` ≥ 1 なら空にならない）。全体ランダムは従来どおり `emptyRate` に従う。
 - 「なし」パーツの判定: `parts[].isNone`（boolean）があればそれを優先。無ければ ID に `none`（区切り `-` / `_`）を含む、または名前が「なし」。
 - 既定（`randomize.js` 先頭の `RANDOM_CONFIG`）: 鼻・瞳ハイライト・横髪は 1 つ、アクセサリー類・ソックス・頬・アホ毛は 0〜1（なし 50%）、ボトムス・トップス2 は 0〜1（なし 30%）、瞳装飾は 0〜2（なし 40%）、ほかは `emptyRateDefault` 30%。
 

@@ -14,19 +14,17 @@
         sideWeights: { both: 2, left: 1, right: 1 },
         maxIterations: 8,
         multipleDefault: { min: 0, max: 1 },
-        categories: {　/* パーツの選択数の下限と上限。emptyRateは空の確率（0.3 なら 30%）。 */
+        categories: {
+            /* min, max: パーツの選択数の下限と上限。
+            emptyRate: 空の確率（0.3 なら 「なし」が30%）。
+            大きいほど選ばれにくい。1.0 なら必ず選ばれない。 */
+            
             frame: { min: 1, max: 1, emptyRate: 0.0 },
-            nose: { min: 1, max: 3 },
+            'frame-deco1': { min: 0, max: 2, emptyRate: 0.85 },
+            'bg-deco': { min: 0, max: 2, emptyRate: 0.8 },
+
+            /* 顔面 */
             'eye-highlight': { min: 1, max: 2 },
-            sidehair: { min: 1, max: 2, sideWeights: { both: 8, left: 1, right: 1 } },
-            glasses: { min: 0, max: 1, emptyRate: 0.75 },
-            'head-accessories': { min: 0, max: 1, emptyRate: 0.5 },
-            'face-accessories': { min: 0, max: 3, emptyRate: 0.5 },
-            socks: { min: 0, max: 1, emptyRate: 0.5 },
-            blush: { min: 0, max: 3, emptyRate: 0.5 },
-            ahoge: { min: 0, max: 1, emptyRate: 0.5 },
-            bottoms: { min: 0, max: 1, emptyRate: 0.3 },
-            tops2: { min: 0, max: 2, emptyRate: 0.3 },
             iris: { min: 0, max: 2, emptyRate: 0.4 },
             'eyelashes1-deco': { min: 0, max: 4, emptyRate: 0.2 },
             'eyelashes2-deco': { min: 0, max: 3, emptyRate: 0.2 },
@@ -36,11 +34,26 @@
             'eyelashes6-deco': { min: 0, max: 2, emptyRate: 0.2 },
             'eyelashes7-deco': { min: 0, max: 1, emptyRate: 0.2 },
             'eyelashes8-deco': { min: 0, max: 1, emptyRate: 0.2 },
+            blush: { min: 0, max: 3, emptyRate: 0.5 },
+            nose: { min: 1, max: 3 },
+
+            /* 髪 */
+            ahoge: { min: 0, max: 1, emptyRate: 0.5 },
+            sidehair: { min: 1, max: 2, sideWeights: { both: 8, left: 1, right: 1 } },
+            'sidehair-ear': { min: 0, max: 1, emptyRate: 0.85, sideWeights: { both: 10, left: 0, right: 0 } },
+
+            /* 服 */
+            socks: { min: 0, max: 1, emptyRate: 0.5 },
+            bottoms: { min: 0, max: 1, emptyRate: 0.3 },
+            tops2: { min: 0, max: 2, emptyRate: 0.3 },
+            
+            /* アクセサリー */
+            glasses: { min: 0, max: 1, emptyRate: 0.7 },
             'glasses1-deco': { emptyRate: 0.7 },
             'glasses2-deco': { emptyRate: 0.7 },
-            'frame-deco1': { min: 0, max: 2, emptyRate: 0.85 },
-            'bg-deco': { min: 0, max: 2, emptyRate: 0.8 },
-            'sidehair-ear': { min: 0, max: 1, emptyRate: 0.85, sideWeights: { both: 8, left: 1, right: 1 } },
+            'head-accessories': { min: 0, max: 1, emptyRate: 0.55 },
+            'face-accessories': { min: 0, max: 3, emptyRate: 0.75 },
+
         },
         /* パーツ ID ごとの選ばれやすさ。未指定は 1。0.3 なら他の 0.3 倍、0 ならランダムでは選ばれない。
            JSON の parts[].random.weight でも指定でき、こちらより優先される。 */
@@ -49,10 +62,10 @@
             frame1: 0,
             'frame-none': 0,
             'frame-deco-leaves': 0.3,
-            'frame-deco-censored': 0.5,
+            'frame-deco-censored': 0.3,
             'eyepatch1': 0.3,
             'glasses1-deco2': 0.3,
-            'glasses1-deco3': 0.3,
+            'glasses1-deco3': 0.7,
             'glasses2-deco2': 0.3,
             'glasses3-deco2': 0.3,
             'eye-highlight6': 0.4,
@@ -263,6 +276,7 @@
      *   selectedParts: Record<string, string|string[]>,
      *   targetCategoryIds: string[],
      *   includeModifiers?: boolean,
+     *   ignoreEmptyRate?: boolean,
      *   lockedCategoryIds?: Set<string>,
      *   lockedColorGroups?: Set<string>,
      *   currentColors?: { colorGroupPresets?: Record<string,string>, selectedColors?: Record<string,string> },
@@ -338,12 +352,14 @@
                 if (matching.length > 0) others = matching;
             }
             const cfg = getCategoryRandomConfig(category, config);
+            // ignoreEmptyRate: 「なし」も他のパーツと同じ 1 候補として扱う
+            const emptyRate = opts.ignoreEmptyRate ? 1 / (others.length + 1) : cfg.emptyRate;
 
             if (category.selectionMode === 'multiple') {
                 if (candidates.length === 0) return [];
                 const min = Math.max(0, cfg.min | 0);
                 const max = Math.max(min, Math.max(1, cfg.max | 0));
-                const goEmpty = others.length === 0 || (min === 0 && rng() < cfg.emptyRate);
+                const goEmpty = others.length === 0 || (min === 0 && rng() < emptyRate);
                 if (goEmpty) {
                     const none = choosePart(nones, rng, config);
                     return none ? [none.id] : [];
@@ -356,7 +372,7 @@
 
             if (candidates.length === 0) return undefined;
             if (nones.length > 0 && others.length > 0) {
-                return (rng() < cfg.emptyRate ? choosePart(nones, rng, config) : choosePart(others, rng, config)).id;
+                return (rng() < emptyRate ? choosePart(nones, rng, config) : choosePart(others, rng, config)).id;
             }
             return choosePart(others.length > 0 ? others : nones, rng, config).id;
         }

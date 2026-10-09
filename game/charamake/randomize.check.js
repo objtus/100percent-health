@@ -107,6 +107,7 @@ for (let run = 0; run < RUNS; run++) {
         partsData,
         selectedParts: before,
         targetCategoryIds: targetIds,
+        ignoreEmptyRate: categoryMode,
         lockedCategoryIds: locked,
         lockedColorGroups,
         unlockedSecrets: secrets,
