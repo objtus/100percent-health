@@ -46,6 +46,8 @@
            JSON の parts[].random.weight でも指定でき、こちらより優先される。 */
         partWeights: {
             // 'bangs3': 0.3,
+            frame1: 0,
+            'frame-none': 0,
             'frame-deco-leaves': 0.3,
             'frame-deco-censored': 0.5,
             'eyepatch1': 0.3,

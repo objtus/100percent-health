@@ -177,20 +177,6 @@
       "order": 20
     },
     {
-      "id": "frame-test",
-      "name": "枠なし",
-      "category": "frame",
-      "zIndex": 1000,
-      "layers": [
-        {
-          "file": "parts/none.png",
-          "animated": false
-        }
-      ],
-      "order": 30,
-      "isNone": true
-    },
-    {
       "id": "pupil1",
       "name": "瞳1",
       "category": "pupil",
@@ -894,7 +880,12 @@
           "animated": false
         }
       ],
-      "order": 10
+      "order": 10,
+      "colors": {
+        "グレー": {
+          "image": "parts/face/eyebrows/eyebrows1-gray.png"
+        }
+      }
     },
     {
       "id": "eyebrows2",
@@ -907,7 +898,12 @@
           "animated": false
         }
       ],
-      "order": 20
+      "order": 20,
+      "colors": {
+        "グレー": {
+          "image": "parts/face/eyebrows/eyebrows2-gray.png"
+        }
+      }
     },
     {
       "id": "eyebrows3",
@@ -920,7 +916,12 @@
           "animated": false
         }
       ],
-      "order": 30
+      "order": 30,
+      "colors": {
+        "グレー": {
+          "image": "parts/face/eyebrows/eyebrows3-gray.png"
+        }
+      }
     },
     {
       "id": "eyebrows4",
@@ -933,7 +934,12 @@
           "animated": false
         }
       ],
-      "order": 40
+      "order": 40,
+      "colors": {
+        "グレー": {
+          "image": "parts/face/eyebrows/eyebrows4-gray.png"
+        }
+      }
     },
     {
       "id": "eyebrows5",
@@ -946,7 +952,12 @@
           "animated": false
         }
       ],
-      "order": 50
+      "order": 50,
+      "colors": {
+        "グレー": {
+          "image": "parts/face/eyebrows/eyebrows5-gray.png"
+        }
+      }
     },
     {
       "id": "eyebrows6",
@@ -959,7 +970,12 @@
           "animated": false
         }
       ],
-      "order": 60
+      "order": 60,
+      "colors": {
+        "グレー": {
+          "image": "parts/face/eyebrows/eyebrows6-gray.png"
+        }
+      }
     },
     {
       "id": "eyebrows7",
@@ -972,7 +988,12 @@
           "animated": false
         }
       ],
-      "order": 70
+      "order": 70,
+      "colors": {
+        "グレー": {
+          "image": "parts/face/eyebrows/eyebrows7-gray.png"
+        }
+      }
     },
     {
       "id": "eyebrows8",
@@ -985,7 +1006,12 @@
           "animated": false
         }
       ],
-      "order": 80
+      "order": 80,
+      "colors": {
+        "グレー": {
+          "image": "parts/face/eyebrows/eyebrows8-gray.png"
+        }
+      }
     },
     {
       "id": "nose1",
@@ -4474,6 +4500,111 @@
       ],
       "isNone": true,
       "order": 10
+    },
+    {
+      "id": "mouth13",
+      "name": "口13",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth13.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "mouth14",
+      "name": "口14",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth14.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "mouth15",
+      "name": "口15",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth15.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "mouth16",
+      "name": "口16",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth16.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "mouth17",
+      "name": "口17",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth17.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "mouth18",
+      "name": "口18",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth18.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "mouth19",
+      "name": "口19",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth19.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "frame-none",
+      "name": "枠なし",
+      "category": "frame",
+      "zIndex": 1000,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 30,
+      "isNone": true
     }
   ],
   "categories": [
