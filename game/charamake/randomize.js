@@ -19,7 +19,7 @@
             nose: { min: 1, max: 3 },
             'eye-highlight': { min: 1, max: 2 },
             sidehair: { min: 1, max: 2, sideWeights: { both: 8, left: 1, right: 1 } },
-            glasses: { min: 0, max: 1, emptyRate: 0.5 },
+            glasses: { min: 0, max: 1, emptyRate: 0.75 },
             'head-accessories': { min: 0, max: 1, emptyRate: 0.5 },
             'face-accessories': { min: 0, max: 3, emptyRate: 0.5 },
             socks: { min: 0, max: 1, emptyRate: 0.5 },
@@ -60,6 +60,9 @@
             'eye-highlight8': 0.4,
             'eye-highlight9': 0.4,
             'eye-highlight10': 0.4,
+            'cheek-band-aid': 0.4,
+            'nose-band-aid': 0.4,
+
         },
         // rankAtMost: target の段階 ≦ source の段階。段階は「通常」= 0、ほかはプリセット名末尾の数字
         colorConstraints: [

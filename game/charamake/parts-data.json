@@ -2153,7 +2153,12 @@
           "animated": false
         }
       ],
-      "order": 20
+      "order": 20,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/ahoge/ahoge1-gray.png"
+        }
+      }
     },
     {
       "id": "ahoge2",
@@ -2166,7 +2171,12 @@
           "animated": false
         }
       ],
-      "order": 30
+      "order": 30,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/ahoge/ahoge2-gray.png"
+        }
+      }
     },
     {
       "id": "ahoge3",
@@ -2179,7 +2189,12 @@
           "animated": false
         }
       ],
-      "order": 40
+      "order": 40,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/ahoge/ahoge3-gray.png"
+        }
+      }
     },
     {
       "id": "ahoge4",
@@ -2192,7 +2207,12 @@
           "animated": false
         }
       ],
-      "order": 50
+      "order": 50,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/ahoge/ahoge4-gray.png"
+        }
+      }
     },
     {
       "id": "odango1",
@@ -2211,7 +2231,15 @@
           "side": "right"
         }
       ],
-      "order": 60
+      "order": 60,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/ahoge/odango1L.png": "parts/hair/ahoge/odango1L-gray.png",
+            "parts/hair/ahoge/odango1R.png": "parts/hair/ahoge/odango1R-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "petittail",
@@ -2230,7 +2258,15 @@
           "side": "right"
         }
       ],
-      "order": 70
+      "order": 70,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/ahoge/petittailL.png": "parts/hair/ahoge/petittailL-gray.png",
+            "parts/hair/ahoge/petittailR.png": "parts/hair/ahoge/petittailR-gray.png"
+          }
+        }
+      }
     },
     {
       "id": "bottoms-none",
@@ -4605,6 +4641,24 @@
       ],
       "order": 30,
       "isNone": true
+    },
+    {
+      "id": "ahoge5",
+      "name": "アホ毛5",
+      "category": "ahoge",
+      "zIndex": 1100,
+      "layers": [
+        {
+          "file": "parts/hair/ahoge/ahoge5.png",
+          "animated": false
+        }
+      ],
+      "order": 50,
+      "colors": {
+        "グレー": {
+          "image": "parts/hair/ahoge/ahoge5-gray.png"
+        }
+      }
     }
   ],
   "categories": [
