@@ -291,6 +291,87 @@ function getVisiblePartsInCategory(categoryId) {
     return getSortedPartsInCategory(categoryId).filter(isPartVisible);
 }
 
+// 一覧に出すパーツ（hides で選べないものも含め、グレーアウト表示する）
+function getListedPartsInCategory(categoryId) {
+    return getSortedPartsInCategory(categoryId).filter(p => isSecretUnlocked(p.secret));
+}
+
+function isPartBlockedByHides(part) {
+    return !!part && !!state.hiddenPartIds && state.hiddenPartIds.has(part.id);
+}
+
+function isCategoryBlockedByHides(category) {
+    return !!category && !!state.hiddenByParts && state.hiddenByParts.has(category.id);
+}
+
+/** hides で targetId を隠している表示中パーツ */
+function getHideSourceParts(targetId) {
+    if (!state.partsData) return [];
+    return getVisibleSelectedPartIds()
+        .map(id => state.partsData.parts.find(p => p.id === id))
+        .filter(p => p && Array.isArray(p.hides) && p.hides.includes(targetId));
+}
+
+function formatHideSources(targetId) {
+    const parts = getHideSourceParts(targetId);
+    return parts.length > 0 ? parts.map(p => `「${p.name || p.id}」`).join('・') : '別のパーツ';
+}
+
+/** 原因パーツ名を、押すとそのパーツの場所へ移動するボタンとして並べる */
+function createHideSourceNodes(targetId) {
+    const parts = getHideSourceParts(targetId);
+    if (parts.length === 0) return [document.createTextNode('別のパーツ')];
+    const nodes = [];
+    parts.forEach((part, i) => {
+        if (i > 0) nodes.push(document.createTextNode('・'));
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'part-jump-link';
+        btn.textContent = `「${part.name || part.id}」`;
+        btn.title = `「${part.name || part.id}」の場所を開く`;
+        btn.addEventListener('click', () => jumpToPart(part.id));
+        nodes.push(btn);
+    });
+    return nodes;
+}
+
+/** パーツのカテゴリを開き、一覧上の項目を強調する（修飾カテゴリは親カテゴリのパーツ設定内） */
+function jumpToPart(partId) {
+    if (!state.partsData) return;
+    const part = state.partsData.parts.find(p => p.id === partId);
+    if (!part) return;
+    const category = state.partsData.categories.find(c => c.id === part.category);
+    if (!category) return;
+
+    const isModifier = !!category.hidden;
+    const targetCategoryId = isModifier ? findHostCategoryForModifier(category.id) : category.id;
+    if (!targetCategoryId) return;
+
+    if (state.currentCategory !== targetCategoryId) {
+        selectCategory(targetCategoryId);
+    } else if (isMobile()) {
+        switchTab('controls');
+    }
+
+    const container = isModifier ? elements.modifierCategoriesHost : elements.partsGrid;
+    const item = container && container.querySelector(`[data-part-id="${CSS.escape(partId)}"]`);
+    if (!item) return;
+    item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    item.classList.remove('is-flash');
+    void item.offsetWidth;
+    item.classList.add('is-flash');
+}
+
+function showBlockedPartMessage(part) {
+    renderDependencyFeed([{
+        kind: 'hide',
+        nodes: [
+            ...createHideSourceNodes(part.id),
+            document.createTextNode(`を選択中のため「${part.name}」は選べません`)
+        ]
+    }]);
+}
+
 function getFirstVisiblePartInCategory(categoryId) {
     const parts = getVisiblePartsInCategory(categoryId);
     return parts.length > 0 ? parts[0] : null;
@@ -306,9 +387,11 @@ function isCategoryVisible(category) {
     return true;
 }
 
+// 左一覧に出すか。hides で隠れたカテゴリもグレーアウトで残す（描画判定は isCategoryVisible）
 function isCategoryListedInSidebar(category) {
     if (!category || category.hidden) return false;
-    return isCategoryVisible(category);
+    if (category.secret && !isSecretUnlocked(category.secret)) return false;
+    return true;
 }
 
 function buildModifierCategoriesByPartId(partsData) {
@@ -375,14 +458,14 @@ function findHostCategoryForModifier(modifierCategoryId) {
 function findFirstListedCategoryInGroup(groupId) {
     if (!state.partsData) return null;
     return state.partsData.categories
-        .filter(c => c.group === groupId && isCategoryListedInSidebar(c))
+        .filter(c => c.group === groupId && isCategoryListedInSidebar(c) && !isCategoryBlockedByHides(c))
         .sort((a, b) => a.order - b.order)[0] || null;
 }
 
 function findFirstListedCategoryAnywhere() {
     if (!state.partsData) return null;
     const ungrouped = state.partsData.categories
-        .filter(c => !c.group && isCategoryListedInSidebar(c))
+        .filter(c => !c.group && isCategoryListedInSidebar(c) && !isCategoryBlockedByHides(c))
         .sort((a, b) => a.order - b.order);
     if (ungrouped.length > 0) return ungrouped[0];
     const groups = (state.partsData.categoryGroups || []).sort((a, b) => a.order - b.order);
@@ -422,7 +505,7 @@ function ensureCurrentCategoryVisible() {
 function getHostPartForSettings() {
     if (!state.currentCategory || !state.partsData) return null;
     const category = state.partsData.categories.find(c => c.id === state.currentCategory);
-    if (!category || category.hidden) return null;
+    if (!category || category.hidden || isCategoryBlockedByHides(category)) return null;
 
     if (category.selectionMode === 'multiple') {
         const raw = state.selectedParts[state.currentCategory];
@@ -563,10 +646,14 @@ function fillCategoryItem(div, category) {
     const multiTag = category.selectionMode === 'multiple'
         ? '<span class="multi-badge">複数可</span>'
         : '';
+    const blocked = isCategoryBlockedByHides(category);
+    const blockedTag = blocked ? '<span class="blocked-badge">非表示中</span>' : '';
     const label = document.createElement('span');
     label.className = 'category-item-label';
-    label.innerHTML = `${category.name}${multiTag}`;
+    label.innerHTML = `${category.name}${multiTag}${blockedTag}`;
     div.appendChild(label);
+    div.classList.toggle('is-blocked', blocked);
+    if (blocked) div.title = `${formatHideSources(category.id)}を選択中のため非表示`;
 
     const locked = state.lockedCategories.has(category.id);
     div.classList.toggle('is-locked', locked);
@@ -724,6 +811,7 @@ function updateCategoryRandomButton() {
         ? state.partsData.categories.find(c => c.id === state.currentCategory)
         : null;
     const usable = !!category && isCategoryListedInSidebar(category)
+        && !isCategoryBlockedByHides(category)
         && getVisiblePartsInCategory(category.id).length > 0
         && !!window.CharamakeRandomize;
     btn.hidden = !usable;
@@ -766,7 +854,7 @@ function renderPartsContent() {
     }
     elements.currentCategoryName.textContent = category.name;
     
-    const parts = getVisiblePartsInCategory(state.currentCategory);
+    const parts = getListedPartsInCategory(state.currentCategory);
     
     if (parts.length === 0) {
         elements.partsGrid.innerHTML = '<p class="placeholder">パーツがありません</p>';
@@ -778,8 +866,19 @@ function renderPartsContent() {
     
     const isMultipleCapable = category.selectionMode === 'multiple';
     const isMultiActive = isMultipleCapable && !!state.multiSelectActive[category.id];
+    const categoryBlocked = isCategoryBlockedByHides(category);
+
+    if (categoryBlocked) {
+        const notice = document.createElement('p');
+        notice.className = 'blocked-notice';
+        notice.append(
+            ...createHideSourceNodes(category.id),
+            document.createTextNode('を選択中のため、このカテゴリは表示されません。外すと元に戻ります。')
+        );
+        elements.partsGrid.appendChild(notice);
+    }
     
-    if (isMultipleCapable) {
+    if (isMultipleCapable && !categoryBlocked) {
         // ツールバー行（複数選択トグル + 選択解除）
         const toolbar = document.createElement('div');
         toolbar.className = 'multiple-toolbar';
@@ -811,17 +910,27 @@ function renderPartsContent() {
     }
     
     parts.forEach(part => {
-        const item = createPartItem(part, isMultipleCapable, isMultiActive);
+        const item = createPartItem(part, isMultipleCapable, isMultiActive, categoryBlocked);
         elements.partsGrid.appendChild(item);
     });
 
     updatePartSettingsPanel();
 }
 
+// hides で選べないパーツの見た目とクリック時の案内。カテゴリごと隠れている場合は案内を出さない
+function markBlockedPartItem(div, part, categoryBlocked) {
+    div.classList.add('is-blocked');
+    div.setAttribute('aria-disabled', 'true');
+    if (categoryBlocked) return;
+    div.title = `${formatHideSources(part.id)}を選択中のため選べません`;
+    div.addEventListener('click', () => showBlockedPartMessage(part));
+}
+
 // パーツアイテムの作成
-function createPartItem(part, isMultipleCapable, isMultiActive) {
+function createPartItem(part, isMultipleCapable, isMultiActive, categoryBlocked = false) {
     const div = document.createElement('div');
     div.className = 'part-item';
+    div.dataset.partId = part.id;
     
     // 選択状態をチェック
     const isSelected = isMultipleCapable
@@ -833,6 +942,12 @@ function createPartItem(part, isMultipleCapable, isMultiActive) {
     }
     if (part.secret && isSecretUnlocked(part.secret)) {
         div.classList.add('secret-part');
+    }
+
+    if (categoryBlocked || isPartBlockedByHides(part)) {
+        div.innerHTML = `<div class="part-name">${part.name}</div>`;
+        markBlockedPartItem(div, part, categoryBlocked);
+        return div;
     }
     
     // 色設定が表示されているパーツにインジケータ
@@ -1070,7 +1185,7 @@ function collectDependencyFeedMessages(prevUnlocked, prevHiddenCat, prevHiddenPa
         if (!prevHiddenParts.has(id)) {
             messages.push({
                 kind: 'hide',
-                text: `「${getPartDisplayName(id)}」が選択肢から外れました`
+                text: `「${getPartDisplayName(id)}」が選べなくなりました`
             });
         }
     });
@@ -1079,7 +1194,7 @@ function collectDependencyFeedMessages(prevUnlocked, prevHiddenCat, prevHiddenPa
         if (!hiddenParts.has(id)) {
             messages.push({
                 kind: 'show',
-                text: `「${getPartDisplayName(id)}」が再表示されました`
+                text: `「${getPartDisplayName(id)}」が選べるようになりました`
             });
         }
     });
@@ -1096,7 +1211,11 @@ function renderDependencyFeed(messages) {
     messages.forEach(msg => {
         const line = document.createElement('p');
         line.className = 'dependency-feed-line dependency-feed-line--' + msg.kind;
-        line.textContent = msg.text;
+        if (msg.nodes) {
+            line.append(...msg.nodes);
+        } else {
+            line.textContent = msg.text;
+        }
         el.appendChild(line);
     });
 }
@@ -1289,7 +1408,7 @@ function renderModifierCategoryBlocks(modifierCategories) {
     if (!modifierCategories || modifierCategories.length === 0) return;
 
     modifierCategories.forEach(modCat => {
-        const parts = getVisiblePartsInCategory(modCat.id);
+        const parts = getListedPartsInCategory(modCat.id);
         if (parts.length === 0) return;
 
         const block = document.createElement('div');
@@ -1368,6 +1487,7 @@ function renderModifierCategoryBlocks(modifierCategories) {
 function createModifierPartItem(part, isMultipleCapable) {
     const div = document.createElement('div');
     div.className = 'part-item';
+    div.dataset.partId = part.id;
 
     const isSelected = isMultipleCapable
         ? (state.selectedParts[part.category] && state.selectedParts[part.category].includes(part.id))
@@ -1379,6 +1499,10 @@ function createModifierPartItem(part, isMultipleCapable) {
     }
 
     div.innerHTML = `<div class="part-name">${part.name}</div>`;
+    if (isPartBlockedByHides(part)) {
+        markBlockedPartItem(div, part, false);
+        return div;
+    }
     div.addEventListener('click', () => selectModifierPart(part.id));
 
     return div;

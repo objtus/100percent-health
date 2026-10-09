@@ -2847,6 +2847,14 @@ function validatePart(part) {
             const partExists = state.data.parts.some(p => p.id === unlockId);
             if (!categoryExists && !partExists) {
                 warnings.push(`unlock「${unlockId}」が存在しません`);
+            } else if (!categoryExists) {
+                // パーツ ID の unlocks は表示効果を持たず、他パーツの hides を打ち消すだけ
+                const hiders = state.data.parts
+                    .filter(p => p !== part && Array.isArray(p.hides) && p.hides.includes(unlockId))
+                    .map(p => `「${p.name || p.id}」`);
+                warnings.push(hiders.length > 0
+                    ? `unlock「${unlockId}」はパーツIDです。選択中は ${hiders.join('・')} の hides を打ち消します（意図した設定なら問題ありません）`
+                    : `unlock「${unlockId}」はパーツIDです。パーツへの unlocks には効果がありません`);
             }
         });
     }

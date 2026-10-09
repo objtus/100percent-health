@@ -582,7 +582,8 @@
         }
       ],
       "allowCustomColor": false,
-      "order": 80
+      "order": 80,
+      "isNone": true
     },
     {
       "id": "iris1",
@@ -990,7 +991,7 @@
       "id": "nose1",
       "name": "鼻1",
       "category": "nose",
-      "zIndex": 1105,
+      "zIndex": 1107,
       "layers": [
         {
           "file": "parts/face/nose/nose1.png",
@@ -1003,7 +1004,7 @@
       "id": "nose2",
       "name": "鼻2",
       "category": "nose",
-      "zIndex": 1105,
+      "zIndex": 1106,
       "layers": [
         {
           "file": "parts/face/nose/nose2.png",
@@ -1424,7 +1425,7 @@
       "id": "bangs1",
       "name": "前髪1",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs1.png",
@@ -1442,7 +1443,7 @@
       "id": "bangs2",
       "name": "前髪2",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs2.png",
@@ -1460,7 +1461,7 @@
       "id": "bangs3",
       "name": "前髪3",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs3.png",
@@ -1478,7 +1479,7 @@
       "id": "bangs4",
       "name": "前髪4",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs4.png",
@@ -1496,7 +1497,7 @@
       "id": "bangs5",
       "name": "前髪5",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs5.png",
@@ -1514,7 +1515,7 @@
       "id": "bangs6",
       "name": "前髪6",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs6.png",
@@ -1532,7 +1533,7 @@
       "id": "bangs7",
       "name": "前髪7",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs7.png",
@@ -1550,7 +1551,7 @@
       "id": "bangs8",
       "name": "前髪8",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs8.png",
@@ -1568,7 +1569,7 @@
       "id": "sidehair1",
       "name": "横髪1",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair1R.png",
@@ -1596,7 +1597,7 @@
       "id": "sidehair2",
       "name": "横髪2",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair2R.png",
@@ -1624,7 +1625,7 @@
       "id": "sidehair3",
       "name": "横髪3",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair3R.png",
@@ -1652,7 +1653,7 @@
       "id": "sidehair4",
       "name": "横髪4",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair4R.png",
@@ -1680,7 +1681,7 @@
       "id": "sidehair5",
       "name": "横髪5",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair5R.png",
@@ -1708,7 +1709,7 @@
       "id": "sidehair6",
       "name": "横髪6",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1309,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair6R.png",
@@ -1736,7 +1737,7 @@
       "id": "sidehair7",
       "name": "横髪7",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair7R.png",
@@ -1764,7 +1765,7 @@
       "id": "sidehair8",
       "name": "横髪8",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair8R.png",
@@ -1792,7 +1793,7 @@
       "id": "sidehair9",
       "name": "横髪9",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1311,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair9R.png",
@@ -1820,7 +1821,7 @@
       "id": "sidehair10",
       "name": "横髪10",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair10R.png",
@@ -1866,7 +1867,7 @@
       "id": "bangs9",
       "name": "前髪9",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs9.png",
@@ -1884,7 +1885,7 @@
       "id": "bangs10",
       "name": "前髪10",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs10.png",
@@ -1902,7 +1903,7 @@
       "id": "bangs11",
       "name": "前髪11",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs11.png",
@@ -1920,7 +1921,7 @@
       "id": "bangs12",
       "name": "前髪12",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs12.png",
@@ -1956,7 +1957,7 @@
       "id": "sidehair11",
       "name": "横髪11",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair11R.png",
@@ -2000,7 +2001,7 @@
       "id": "glasses1",
       "name": "眼鏡1",
       "category": "glasses",
-      "zIndex": 1295,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses1-black.png",
@@ -2021,14 +2022,13 @@
       "id": "glasses2",
       "name": "眼鏡2",
       "category": "glasses",
-      "zIndex": 1295,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses2.png",
           "animated": false
         }
       ],
-      "colors": {},
       "order": 30,
       "unlocks": [
         "glasses2-deco"
@@ -2539,7 +2539,7 @@
       "id": "sidehair12",
       "name": "横髪12",
       "category": "sidehair",
-      "zIndex": 1300,
+      "zIndex": 1309,
       "layers": [
         {
           "file": "parts/hair/sidehair/sidehair12R.png",
@@ -3759,42 +3759,39 @@
       "id": "glasses1-deco1",
       "name": "装飾1",
       "category": "glasses1-deco",
-      "zIndex": 1290,
+      "zIndex": 1305,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses1-light/glasses1-light1.png",
           "animated": false
         }
       ],
-      "colors": {},
       "order": 20
     },
     {
       "id": "glasses1-deco2",
       "name": "装飾2",
       "category": "glasses1-deco",
-      "zIndex": 1290,
+      "zIndex": 1305,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses1-light/glasses1-light2.png",
           "animated": false
         }
       ],
-      "colors": {},
       "order": 30
     },
     {
       "id": "glasses1-deco3",
       "name": "装飾3（瓶底）",
       "category": "glasses1-deco",
-      "zIndex": 1290,
+      "zIndex": 1305,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses1-light/glasses1-light3.png",
           "animated": false
         }
       ],
-      "colors": {},
       "order": 40
     },
     {
@@ -4082,7 +4079,7 @@
       "id": "glasses3",
       "name": "眼鏡3",
       "category": "glasses",
-      "zIndex": 1295,
+      "zIndex": 1310,
       "layers": [
         {
           "file": "parts/accessories/head/glasses/glasses3.png",
@@ -4094,7 +4091,6 @@
           "zIndex": 1289
         }
       ],
-      "colors": {},
       "order": 40,
       "unlocks": [
         "glasses3-deco"
@@ -4297,7 +4293,7 @@
       "id": "bangs13",
       "name": "前髪13",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs13.png",
@@ -4315,7 +4311,7 @@
       "id": "bangs14",
       "name": "前髪14",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs14.png",
@@ -4333,7 +4329,7 @@
       "id": "bangs15",
       "name": "前髪15",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1315,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs15.png",
@@ -4351,7 +4347,7 @@
       "id": "bangs16",
       "name": "前髪16",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1289,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs16.png",
@@ -4369,7 +4365,7 @@
       "id": "bangs17",
       "name": "前髪17",
       "category": "bangs",
-      "zIndex": 1300,
+      "zIndex": 1289,
       "layers": [
         {
           "file": "parts/hair/bangs/bangs17.png",

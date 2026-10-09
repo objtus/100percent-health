@@ -366,6 +366,21 @@ body.charamake-page {
   display: none;
 }
 
+/* hides で非表示中（押すと理由を表示） */
+#charamake-app .category-item.is-blocked:not(.active) .category-item-label {
+  color: var(--cm-muted);
+}
+
+#charamake-app .blocked-badge {
+  display: inline-block;
+  margin-left: 0.25rem;
+  padding: 0 0.25rem;
+  font-size: 0.6rem;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
 #charamake-app .category-group {
   margin-bottom: 0.35rem;
 }
@@ -516,6 +531,65 @@ body.charamake-page {
 
 #charamake-app .part-item.selected.color-focused {
   outline: 2px solid light-dark(#e67e22, #fa0);
+}
+
+/* hides で選べないパーツ（一覧の並びは保ったままグレーアウト） */
+#charamake-app .part-item.is-blocked {
+  cursor: not-allowed;
+  opacity: 0.4;
+  border-style: dashed;
+}
+
+#charamake-app .part-item.is-blocked:hover {
+  border-color: var(--cm-panel-border);
+}
+
+#charamake-app .part-item.is-blocked.selected,
+#charamake-app .part-item.is-blocked.selected:hover {
+  opacity: 0.6;
+  border-color: var(--cm-accent);
+}
+
+#charamake-app .blocked-notice {
+  grid-column: 1 / -1;
+  margin: 0 0 0.25rem;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.7rem;
+  color: var(--cm-muted);
+  border: 1px dashed var(--cm-panel-border);
+  border-radius: 3px;
+}
+
+/* 原因パーツ名（押すとそのパーツの場所へ移動） */
+#charamake-app .part-jump-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--cm-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+#charamake-app .part-jump-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+@keyframes cm-part-flash {
+  0%, 60% { box-shadow: 0 0 0 3px var(--cm-accent); }
+  100% { box-shadow: 0 0 0 3px transparent; }
+}
+
+#charamake-app .part-item.is-flash {
+  animation: cm-part-flash 1.2s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #charamake-app .part-item.is-flash {
+    animation: none;
+    box-shadow: 0 0 0 3px var(--cm-accent);
+  }
 }
 
 #charamake-app .color-focus-indicator {

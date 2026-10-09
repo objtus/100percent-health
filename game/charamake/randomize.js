@@ -47,6 +47,17 @@
         partWeights: {
             // 'bangs3': 0.3,
             'frame-deco-leaves': 0.3,
+            'frame-deco-censored': 0.5,
+            'eyepatch1': 0.3,
+            'glasses1-deco2': 0.3,
+            'glasses1-deco3': 0.3,
+            'glasses2-deco2': 0.3,
+            'glasses3-deco2': 0.3,
+            'eye-highlight6': 0.4,
+            'eye-highlight7': 0.4,
+            'eye-highlight8': 0.4,
+            'eye-highlight9': 0.4,
+            'eye-highlight10': 0.4,
         },
         // rankAtMost: target の段階 ≦ source の段階。段階は「通常」= 0、ほかはプリセット名末尾の数字
         colorConstraints: [
