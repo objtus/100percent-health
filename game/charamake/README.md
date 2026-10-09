@@ -17,7 +17,7 @@
 
 - サイト内位置: **misc** コーナー（[`misc/index.html`](../../misc/index.html) からリンク）
 - プレイ向けツールバー: キャラ読込・保存・PNG・シークレット。**JSON 再読込ボタンは非表示**（`#loadDataBtn` は DOM に残すのみ）
-- **カスタム色 UI は非公開** — `#charamake-app` の `data-hide-custom-color="true"` で「カスタム」ボタンと拡張設定を出さない（[`game.js`](game.js) が参照）
+- **カスタム色 UI は非公開** — `#charamake-app` の `data-hide-custom-color="true"` で「カスタム」ボタンと拡張設定を出さない（[`game-colors.js`](game-colors.js) が参照）
 - レイアウト: プレビュー上段 → カテゴリ | パーツ・色（下段）→ 依存関係フィード（固定高さ、`#dependencyFeed`）
 - カテゴリグループ: **アコーディオン**（同時に 1 グループのみ展開）
 - 条件付き（`hidden`）カテゴリ: 左欄には出さず、unlock 元パーツ選択時に **パーツ設定** ペイン内で修飾として選択
@@ -29,7 +29,11 @@
 game/charamake/
 ├── index.html           # 公開着せ替え（正本）
 ├── charamake.css        # 公開 UI 専用スタイル（game.archive.css は使わない）
-├── game.js              # 着せ替え本体ロジック
+├── game.js              # 着せ替え本体（状態・初期化・カテゴリ/パーツ UI・依存/シークレット）
+├── game-colors.js       # 色（カラーグループ・プリセット・カスタム色・色設定 UI）
+├── game-render.js       # 描画（プレビュー・レイヤー合成・日時オーバーレイ）
+├── game-random.js       # 戻す/やり直す・ランダム・固定（ロック）
+├── game-io.js           # キャラ保存・読込・PNG 出力
 ├── inner-groups.js
 ├── layer-resolve.js
 ├── secrets.js
@@ -123,7 +127,7 @@ game/charamake/
 
 | フィールド | 例 | 説明 |
 |------------|-----|------|
-| `dynamicOverlay.type` | `"datetime"` | [`game.js`](game.js) の UI / 描画レジストリが参照 |
+| `dynamicOverlay.type` | `"datetime"` | [`game-render.js`](game-render.js) の UI / 描画レジストリが参照 |
 
 - **`datetime`**: 枠（時刻）など。プレビュー右下に **`signature`**（任意）と時刻を **右揃え**（署名は時刻の 1 行上、saitamaar・1 秒更新）。例: 署名 `♥100%health`。公開 UI では **パーツ設定** パネル内（色プリセットの上）にモードボタン（`jst` / `local` / `unix` / `both`、ラベルなし・`aria-label` あり）。`both` は **JST と Unix 秒（小数3桁）を横並び**（右端から Unix → その左に JST）。
 - 参照実装: パーツ ID `frame1-clock`（画像は `frame1.png` と共通）。

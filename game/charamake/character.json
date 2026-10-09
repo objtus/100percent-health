@@ -1,0 +1,83 @@
+{
+  "unlockedSecrets": [],
+  "clockDisplayMode": "jst",
+  "locks": [],
+  "colorLocks": [],
+  "character": {
+    "background": {
+      "id": "bg_white",
+      "color": "黒"
+    },
+    "body": "body_peace",
+    "glasses": "glasses3",
+    "eyebrow": "eyebrows3",
+    "frame": "frame1-clock",
+    "pupil": "pupil9",
+    "eyelashes": "eyelashes_jito3",
+    "eye-highlight": [
+      "eye-highlight6",
+      "eye-highlight7"
+    ],
+    "sclera": "sclera1",
+    "blush": [
+      "blush-none"
+    ],
+    "ears": "ears1",
+    "nose": [
+      "nose3",
+      "nose4",
+      "nose5"
+    ],
+    "mouth": "mouth12",
+    "backhair": "backhair12",
+    "bangs": "bangs10",
+    "sidehair": [
+      "sidehair1",
+      "sidehair11"
+    ],
+    "basehair": "basehair",
+    "ahoge": [
+      "ahoge_none"
+    ],
+    "bottoms": [
+      "trackpants"
+    ],
+    "socks": [
+      "highsocks1"
+    ],
+    "tops1": "shirts1",
+    "tops2": [
+      "cardigan"
+    ],
+    "outer": "outer-none",
+    "face-accessories": [
+      "cheek-band-aid",
+      "nose-band-aid"
+    ],
+    "head-accessories": {
+      "id": "0per-cap",
+      "color": "黒"
+    },
+    "hair-highlight": "hair-highlight2",
+    "lower_eyelid": "lower_eyelid_none",
+    "frame-deco1": [
+      "frame-deco-none"
+    ],
+    "bg-deco": [
+      "bg-deco-none"
+    ],
+    "sidehair-ear": "sidehair-ear3",
+    "iris": [
+      "iris1",
+      "iris3"
+    ],
+    "eyelashes1-deco": [
+      "eyelashes1-deco2",
+      "eyelashes1-deco1"
+    ],
+    "shirts1-collar": "shirts1-collar1",
+    "shirts1-sleeve": "shirts1-sleeve-none",
+    "eyelashes8-deco": [],
+    "glasses3-deco": "glasses3-deco1"
+  }
+}

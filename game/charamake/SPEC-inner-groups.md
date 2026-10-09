@@ -342,7 +342,7 @@ C 着用時: A の L1・L2 はそれぞれ masked（あれば）、B の L1 も 
 | ファイル | 役割 |
 |----------|------|
 | [inner-groups.js](inner-groups.js) | 共有ロジック |
-| [game.js](game.js) | 着せ替えゲーム描画 |
+| [game-render.js](game-render.js) | 着せ替えゲーム描画 |
 | [editor.js](editor.js) | エディタ UI・プレビュー・バリデーション |
 
 ## 13. 変更履歴

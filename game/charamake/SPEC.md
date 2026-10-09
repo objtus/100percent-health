@@ -987,7 +987,7 @@ function checkUnlockCondition(categoryId) {
 
 ### 9.11 ランダム生成・固定・履歴
 
-実装: [`randomize.js`](./randomize.js)（純関数）、[`game.js`](./game.js)（UI・状態反映）。検査: `node game/charamake/randomize.check.js [回数] [seed]`。
+実装: [`randomize.js`](./randomize.js)（純関数）、[`game-random.js`](./game-random.js)（UI・状態反映）。検査: `node game/charamake/randomize.check.js [回数] [seed]`。
 
 #### 9.11.1 2 種類のランダム
 - **全体ランダム**（プレビュー下のランダムバー、キー `R`）: 固定していない左一覧カテゴリ（`hidden` 以外、未解放シークレットカテゴリ以外）と、その修飾カテゴリを対象にする。固定が 0 件のときはボタン表記が「完全ランダム」。
