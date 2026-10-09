@@ -77,7 +77,9 @@
     ],
     "shirts1-collar": "shirts1-collar1",
     "shirts1-sleeve": "shirts1-sleeve-none",
-    "eyelashes8-deco": [],
-    "glasses3-deco": "glasses3-deco1"
+    "glasses3-deco": "glasses3-deco1",
+    "eyelashes8-deco": [
+      "eyelashes8-deco1"
+    ]
   }
 }
