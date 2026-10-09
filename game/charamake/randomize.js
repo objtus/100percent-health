@@ -38,7 +38,7 @@
             nose: { min: 1, max: 3 },
 
             /* 髪 */
-            ahoge: { min: 0, max: 1, emptyRate: 0.5 },
+            ahoge: { min: 0, max: 3, emptyRate: 0.5, sideWeights: { both: 6, left: 2, right: 2 } },
             sidehair: { min: 1, max: 2, sideWeights: { both: 8, left: 1, right: 1 } },
             'sidehair-ear': { min: 0, max: 1, emptyRate: 0.85, sideWeights: { both: 10, left: 0, right: 0 } },
 

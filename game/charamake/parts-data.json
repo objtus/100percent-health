@@ -2158,7 +2158,13 @@
         "グレー": {
           "image": "parts/hair/ahoge/ahoge1-gray.png"
         }
-      }
+      },
+      "hides": [
+        "ahoge2",
+        "ahoge3",
+        "ahoge4",
+        "ahoge5"
+      ]
     },
     {
       "id": "ahoge2",
@@ -2176,7 +2182,13 @@
         "グレー": {
           "image": "parts/hair/ahoge/ahoge2-gray.png"
         }
-      }
+      },
+      "hides": [
+        "ahoge1",
+        "ahoge3",
+        "ahoge4",
+        "ahoge5"
+      ]
     },
     {
       "id": "ahoge3",
@@ -2194,7 +2206,13 @@
         "グレー": {
           "image": "parts/hair/ahoge/ahoge3-gray.png"
         }
-      }
+      },
+      "hides": [
+        "ahoge1",
+        "ahoge2",
+        "ahoge4",
+        "ahoge5"
+      ]
     },
     {
       "id": "ahoge4",
@@ -2212,13 +2230,19 @@
         "グレー": {
           "image": "parts/hair/ahoge/ahoge4-gray.png"
         }
-      }
+      },
+      "hides": [
+        "ahoge1",
+        "ahoge2",
+        "ahoge3",
+        "ahoge5"
+      ]
     },
     {
       "id": "odango1",
       "name": "おだんご1",
       "category": "ahoge",
-      "zIndex": 1100,
+      "zIndex": 1101,
       "layers": [
         {
           "file": "parts/hair/ahoge/odango1L.png",
@@ -4455,7 +4479,8 @@
         {
           "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear1L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1285
         }
       ],
       "order": 20,
@@ -4483,7 +4508,7 @@
           "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear2L.png",
           "animated": false,
           "side": "left",
-          "zIndex": 1290
+          "zIndex": 1285
         }
       ],
       "order": 30,
@@ -4510,7 +4535,8 @@
         {
           "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear3L.png",
           "animated": false,
-          "side": "left"
+          "side": "left",
+          "zIndex": 1285
         }
       ],
       "order": 40,
@@ -4657,6 +4683,68 @@
       "colors": {
         "グレー": {
           "image": "parts/hair/ahoge/ahoge5-gray.png"
+        }
+      },
+      "hides": [
+        "ahoge1",
+        "ahoge2",
+        "ahoge3",
+        "ahoge4"
+      ]
+    },
+    {
+      "id": "sidehair-ear4",
+      "name": "横髪（耳後ろ）4",
+      "category": "sidehair-ear",
+      "zIndex": 1300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear4R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear4L.png",
+          "animated": false,
+          "side": "left",
+          "zIndex": 1285
+        }
+      ],
+      "order": 40,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair-ear/sidehair-ear4R.png": "parts/hair/sidehair/sidehair-ear/sidehair-ear4R-gray.png",
+            "parts/hair/sidehair/sidehair-ear/sidehair-ear4L.png": "parts/hair/sidehair/sidehair-ear/sidehair-ear4L-gray.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "sidehair-ear5",
+      "name": "横髪（耳後ろ）5",
+      "category": "sidehair-ear",
+      "zIndex": 1300,
+      "layers": [
+        {
+          "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear5R.png",
+          "animated": false,
+          "side": "right"
+        },
+        {
+          "file": "parts/hair/sidehair/sidehair-ear/sidehair-ear5L.png",
+          "animated": false,
+          "side": "left",
+          "zIndex": 1285
+        }
+      ],
+      "order": 40,
+      "colors": {
+        "グレー": {
+          "images": {
+            "parts/hair/sidehair/sidehair-ear/sidehair-ear5R.png": "parts/hair/sidehair/sidehair-ear/sidehair-ear5R-gray.png",
+            "parts/hair/sidehair/sidehair-ear/sidehair-ear5L.png": "parts/hair/sidehair/sidehair-ear/sidehair-ear5L-gray.png"
+          }
         }
       }
     }
