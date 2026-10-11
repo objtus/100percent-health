@@ -4749,34 +4749,6 @@
       }
     },
     {
-      "id": "sidehair13",
-      "name": "横髪13",
-      "category": "sidehair",
-      "zIndex": 1310,
-      "layers": [
-        {
-          "file": "parts/hair/sidehair/sidehair13R.png",
-          "animated": false,
-          "side": "right"
-        },
-        {
-          "file": "parts/hair/sidehair/sidehair13L.png",
-          "animated": false,
-          "side": "left",
-          "zIndex": 1290
-        }
-      ],
-      "order": 110,
-      "colors": {
-        "グレー": {
-          "images": {
-            "parts/hair/sidehair/sidehair13R.png": "parts/hair/sidehair/sidehair13R-gray.png",
-            "parts/hair/sidehair/sidehair13L.png": "parts/hair/sidehair/sidehair13L-gray.png"
-          }
-        }
-      }
-    },
-    {
       "id": "bangs18",
       "name": "前髪18",
       "category": "bangs",
