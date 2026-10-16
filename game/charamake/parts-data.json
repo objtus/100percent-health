@@ -259,8 +259,8 @@
         }
       ],
       "hides": [
-        "eye-highlight",
-        "eyelashes_jito3"
+        "eyelashes_jito3",
+        "eye-highlight"
       ],
       "order": 50
     },
@@ -275,10 +275,12 @@
           "animated": false
         }
       ],
+      "order": 60,
       "hides": [
-        "eye-highlight"
-      ],
-      "order": 60
+        "eye-highlight4",
+        "eye-highlight9",
+        "eye-highlight10"
+      ]
     },
     {
       "id": "pupil7",
@@ -2891,7 +2893,8 @@
         "vest1"
       ],
       "unlocks": [
-        "black-dress-collar"
+        "black-dress-collar",
+        "black-dress-accessories"
       ]
     },
     {
@@ -3203,7 +3206,11 @@
           "animated": false
         }
       ],
-      "order": 100
+      "order": 100,
+      "hides": [
+        "eye-highlight10",
+        "eye-highlight9"
+      ]
     },
     {
       "id": "darkcircles2",
@@ -4845,7 +4852,8 @@
           "animated": false
         }
       ],
-      "order": 10
+      "order": 10,
+      "isNone": true
     },
     {
       "id": "shirts1-collar-accessories-ribbon",
@@ -4891,6 +4899,55 @@
         }
       ],
       "order": 40
+    },
+    {
+      "id": "black-dress-collar-2",
+      "name": "黒ドレス襟2",
+      "category": "black-dress-collar",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts/clothes/tops/black-dress/collar/black-dress-collar1.png",
+          "animated": false
+        },
+        {
+          "file": "parts/clothes/tops/black-dress/collar/black-dress-collar2.png",
+          "zIndex": 301,
+          "animated": false
+        }
+      ],
+      "order": 20,
+      "unlocks": [
+        "pinafore"
+      ]
+    },
+    {
+      "id": "black-dress-accessories-none",
+      "name": "なし",
+      "category": "black-dress-accessories",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10
+    },
+    {
+      "id": "black-dress-accessories-ribbon",
+      "name": "黒リボン",
+      "category": "black-dress-accessories",
+      "zIndex": 305,
+      "layers": [
+        {
+          "file": "parts\\clothes\\tops\\black-dress\\accessories\\black-ribbon.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10
     }
   ],
   "categories": [
@@ -5305,6 +5362,14 @@
       "name": "シャツ1襟アクセサリー",
       "order": 220,
       "selectionMode": "single",
+      "hidden": true,
+      "group": "cloches"
+    },
+    {
+      "id": "black-dress-accessories",
+      "name": "黒ドレスアクセサリー",
+      "order": 230,
+      "selectionMode": "multiple",
       "hidden": true,
       "group": "cloches"
     }

@@ -379,7 +379,7 @@ function getFirstVisiblePartInCategory(categoryId) {
 
 // カテゴリが現在表示すべきかを判定
 function isCategoryVisible(category) {
-    // hides による動的非表示が最優先（ただし unlocks が勝つのは processDependencies で処理済み）
+    // hides による動的非表示が最優先（unlocks より優先）
     if (state.hiddenByParts && state.hiddenByParts.has(category.id)) return false;
     // hidden: true のカテゴリはアンロックされていなければ非表示
     if (category.hidden && !isCategoryUnlocked(category.id)) return false;

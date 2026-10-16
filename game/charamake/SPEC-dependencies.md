@@ -45,11 +45,16 @@
 
 ## 3. `unlocks` と `hides` の優先
 
-**`unlocks` が `hides` より優先**する。
+ID の種別によって優先が異なる（[dependencies.js](./dependencies.js) の `collectDependencySets`）。
 
-選択中のいずれかのパーツが、ある ID を `unlocks` に含めていれば、その ID は `hiddenCategoryIds` / `hiddenPartIds` の両方から除外される。
+| 種別 | 優先 | 用途 |
+|------|------|------|
+| カテゴリ ID | **`hides` が `unlocks` より優先** | 修飾カテゴリ（`hidden: true`）を親パーツで解放しつつ、同時選択中の別パーツで隠す |
+| パーツ ID | **`unlocks` が `hides` より優先** | 特定パーツ選択中だけ、他パーツの `hides` を打ち消す |
 
-例: パーツ A が `hides: ["iris"]`、同時にパーツ B が `unlocks: ["iris"]` を持ち B が選択中 → `iris` カテゴリは表示される。
+例（カテゴリ）: シャツ1 が `unlocks: ["shirts1-collar-accessories"]`、襟3 が `hides: ["shirts1-collar-accessories"]` を持ち両方選択中 → 襟アクセサリーカテゴリは非表示（選択は保持され、襟1・襟2に戻すと再表示）。
+
+例（パーツ）: ピナフォア が `hides: ["cardigan"]`、同時にシャツ1 が `unlocks: ["cardigan"]` を持ち選択中 → `cardigan` パーツは選択可能。
 
 ---
 

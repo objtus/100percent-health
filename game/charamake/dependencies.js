@@ -61,8 +61,8 @@
             }
         });
 
+        // カテゴリは hides が unlocks より優先、パーツは unlocks が hides を打ち消す
         unlockedCategories.forEach(id => {
-            hiddenCategoryIds.delete(id);
             hiddenPartIds.delete(id);
         });
 
