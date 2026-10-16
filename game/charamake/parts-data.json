@@ -4141,14 +4141,7 @@
         "ahoge",
         "backhair9",
         "backhair11"
-      ],
-      "colors": {
-        "白": {
-          "blend": "color-dodge",
-          "color": "#c9c9c9",
-          "opacity": 1
-        }
-      }
+      ]
     },
     {
       "id": "0per-cap",
@@ -4199,7 +4192,7 @@
           "animated": false
         }
       ],
-      "order": 40,
+      "order": 50,
       "hides": [
         "ahoge"
       ],
@@ -4323,7 +4316,7 @@
           "animated": false
         }
       ],
-      "order": 50,
+      "order": 60,
       "hides": [
         "ahoge"
       ],
@@ -4948,6 +4941,174 @@
       ],
       "isNone": true,
       "order": 10
+    },
+    {
+      "id": "glasses4",
+      "name": "眼鏡4",
+      "category": "glasses",
+      "zIndex": 1310,
+      "layers": [
+        {
+          "file": "parts/accessories/head/glasses/glasses4.png",
+          "animated": false
+        }
+      ],
+      "order": 40
+    },
+    {
+      "id": "head-rebbon1",
+      "name": "リボン飾り",
+      "category": "head-accessories",
+      "zIndex": 1350,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\head-rebbon1-black.png",
+          "animated": false
+        }
+      ],
+      "order": 70,
+      "colors": {
+        "白": {
+          "image": "parts/accessories/head/head-rebbon1-white.png",
+          "blend": "color-dodge",
+          "color": "#1a1a1a"
+        }
+      }
+    },
+    {
+      "id": "beret",
+      "name": "ベレー帽",
+      "category": "head-accessories",
+      "zIndex": 1350,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\beret-fg.png",
+          "animated": false
+        },
+        {
+          "file": "parts\\accessories\\head\\beret-bg.png",
+          "zIndex": 1,
+          "animated": false
+        }
+      ],
+      "order": 70,
+      "hides": [
+        "ahoge1",
+        "ahoge2",
+        "ahoge3",
+        "ahoge4",
+        "ahoge5",
+        "odango1"
+      ]
+    },
+    {
+      "id": "hairclip-none",
+      "name": "なし",
+      "category": "hairclip",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10
+    },
+    {
+      "id": "hairclip1",
+      "name": "ヘアピン1",
+      "category": "hairclip",
+      "zIndex": 1320,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\hairclip\\hairclip1-black.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10,
+      "colors": {
+        "白": {
+          "image": "parts/accessories/head/hairclip/hairclip1-white.png"
+        }
+      }
+    },
+    {
+      "id": "hairclip2",
+      "name": "ヘアピン2",
+      "category": "hairclip",
+      "zIndex": 1320,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\hairclip\\hairclip2-black.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10,
+      "colors": {
+        "白": {
+          "image": "parts/accessories/head/hairclip/hairclip2-white.png"
+        }
+      }
+    },
+    {
+      "id": "hairclip3",
+      "name": "ヘアピン3",
+      "category": "hairclip",
+      "zIndex": 1320,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\hairclip\\hairclip3-black.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10,
+      "colors": {
+        "白": {
+          "image": "parts/accessories/head/hairclip/hairclip3-white.png"
+        }
+      }
+    },
+    {
+      "id": "hairclip4",
+      "name": "ヘアピン4",
+      "category": "hairclip",
+      "zIndex": 1320,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\hairclip\\hairclip4-black.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10,
+      "colors": {
+        "白": {
+          "image": "parts/accessories/head/hairclip/hairclip4-white.png"
+        }
+      },
+      "hides": [
+        "bangs1",
+        "bangs4",
+        "bangs5",
+        "bangs6",
+        "sidehair7",
+        "bangs8",
+        "bangs9",
+        "bangs10",
+        "bangs12",
+        "bangs13",
+        "bangs14",
+        "bangs15",
+        "bangs16",
+        "bangs17",
+        "bangs18",
+        "bangs7",
+        "bangs3"
+      ]
     }
   ],
   "categories": [
@@ -5372,6 +5533,14 @@
       "selectionMode": "multiple",
       "hidden": true,
       "group": "cloches"
+    },
+    {
+      "id": "hairclip",
+      "name": "ヘアクリップ",
+      "order": 510,
+      "selectionMode": "multiple",
+      "hidden": false,
+      "group": "accessories"
     }
   ],
   "categoryGroups": [
