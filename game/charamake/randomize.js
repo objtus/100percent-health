@@ -53,6 +53,7 @@
             'glasses2-deco': { emptyRate: 0.7 },
             'head-accessories': { min: 0, max: 1, emptyRate: 0.55 },
             'face-accessories': { min: 0, max: 3, emptyRate: 0.75 },
+            hairclip: { min: 0, max: 3, emptyRate: 0.85 },
 
         },
         /* パーツ ID ごとの選ばれやすさ。未指定は 1。0.3 なら他の 0.3 倍、0 ならランダムでは選ばれない。

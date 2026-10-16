@@ -5109,6 +5109,114 @@
         "bangs7",
         "bangs3"
       ]
+    },
+    {
+      "id": "hairclip5",
+      "name": "ヘアピン5",
+      "category": "hairclip",
+      "zIndex": 1320,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\hairclip\\hairclip5-black.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10,
+      "colors": {
+        "白": {
+          "image": "parts/accessories/head/hairclip/hairclip5-white.png"
+        }
+      },
+      "hides": [
+        "bangs1",
+        "bangs2",
+        "bangs3",
+        "bangs4",
+        "bangs5",
+        "bangs6",
+        "bangs8",
+        "bangs9",
+        "bangs10",
+        "bangs12",
+        "bangs13",
+        "bangs14",
+        "bangs15",
+        "bangs16",
+        "bangs17"
+      ]
+    },
+    {
+      "id": "hairclip6",
+      "name": "ヘアピン6",
+      "category": "hairclip",
+      "zIndex": 1320,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\hairclip\\hairclip6-black.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10,
+      "colors": {
+        "白": {
+          "image": "parts/accessories/head/hairclip/hairclip6-white.png"
+        }
+      },
+      "hides": [
+        "bangs1",
+        "bangs2",
+        "bangs3",
+        "bangs4",
+        "bangs5",
+        "bangs6",
+        "bangs8",
+        "bangs9",
+        "bangs10",
+        "bangs12",
+        "bangs13",
+        "bangs14",
+        "bangs15",
+        "bangs16",
+        "bangs17"
+      ]
+    },
+    {
+      "id": "hairclip7",
+      "name": "ヘアピン7",
+      "category": "hairclip",
+      "zIndex": 1320,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\hairclip\\hairclip7-black.png",
+          "animated": false
+        }
+      ],
+      "isNone": true,
+      "order": 10,
+      "colors": {
+        "白": {
+          "image": "parts/accessories/head/hairclip/hairclip7-white.png"
+        }
+      },
+      "hides": [
+        "bangs1",
+        "bangs2",
+        "bangs3",
+        "bangs4",
+        "bangs5",
+        "bangs6",
+        "bangs8",
+        "bangs9",
+        "bangs10",
+        "bangs12",
+        "bangs13",
+        "bangs14",
+        "bangs15",
+        "bangs16",
+        "bangs17"
+      ]
     }
   ],
   "categories": [
