@@ -12,6 +12,10 @@
       {
         "id": "pinafore1",
         "name": "pinafore1"
+      },
+      {
+        "id": "shirts1-collar2",
+        "name": "shirts1-collar2"
       }
     ],
     "secrets": [
@@ -2071,7 +2075,10 @@
           "animated": false
         }
       ],
-      "order": 10
+      "order": 10,
+      "hides": [
+        "vest1"
+      ]
     },
     {
       "id": "innerwear1",
@@ -2084,7 +2091,10 @@
           "animated": false
         }
       ],
-      "order": 20
+      "order": 20,
+      "hides": [
+        "vest1"
+      ]
     },
     {
       "id": "sportsbra1",
@@ -2097,7 +2107,10 @@
           "animated": false
         }
       ],
-      "order": 30
+      "order": 30,
+      "hides": [
+        "vest1"
+      ]
     },
     {
       "id": "sclera2",
@@ -2402,7 +2415,8 @@
       "unlocks": [
         "shirts1-collar",
         "shirts1-sleeve",
-        "cardigan"
+        "cardigan",
+        "shirts1-collar-accessories"
       ]
     },
     {
@@ -2426,11 +2440,16 @@
       "id": "shirts1-collar1",
       "name": "シャツ1襟1",
       "category": "shirts1-collar",
-      "zIndex": 250,
+      "zIndex": 255,
       "layers": [
         {
-          "file": "parts/clothes/tops/shirts1-collar/shirts1-collar1.png",
+          "file": "parts/clothes/tops/shirts1-collar/shirts1-collar1-fg.png",
           "animated": false
+        },
+        {
+          "file": "parts/clothes/tops/shirts1-collar/shirts1-collar1-bg.png",
+          "animated": false,
+          "zIndex": 251
         }
       ],
       "order": 10
@@ -2439,14 +2458,22 @@
       "id": "shirts1-collar2",
       "name": "シャツ1襟2",
       "category": "shirts1-collar",
-      "zIndex": 250,
+      "zIndex": 255,
       "layers": [
         {
-          "file": "parts/clothes/tops/shirts1-collar/shirts1-collar2.png",
+          "file": "parts/clothes/tops/shirts1-collar/shirts1-collar2-fg.png",
           "animated": false
+        },
+        {
+          "file": "parts/clothes/tops/shirts1-collar/shirts1-collar2-bg.png",
+          "animated": false,
+          "zIndex": 251
         }
       ],
-      "order": 10
+      "order": 10,
+      "masksInnerGroups": [
+        "shirts1-collar2"
+      ]
     },
     {
       "id": "shirts1-collar3",
@@ -2459,7 +2486,10 @@
           "animated": false
         }
       ],
-      "order": 10
+      "order": 10,
+      "hides": [
+        "shirts1-collar-accessories"
+      ]
     },
     {
       "id": "shirts1-sleeve1",
@@ -2660,7 +2690,10 @@
           "animated": false
         }
       ],
-      "order": 40
+      "order": 40,
+      "hides": [
+        "vest1"
+      ]
     },
     {
       "id": "underwear-none",
@@ -2674,7 +2707,10 @@
         }
       ],
       "order": 40,
-      "secret": "secret_1"
+      "secret": "secret_1",
+      "hides": [
+        "vest1"
+      ]
     },
     {
       "id": "hair-highlight1",
@@ -2851,7 +2887,8 @@
         "jacket1",
         "tracktop",
         "bottoms",
-        "cardigan"
+        "cardigan",
+        "vest1"
       ],
       "unlocks": [
         "black-dress-collar"
@@ -4783,6 +4820,77 @@
           "image": "parts/hair/bangs/bangs19-gray.png"
         }
       }
+    },
+    {
+      "id": "vest1",
+      "name": "ベスト",
+      "category": "tops2",
+      "zIndex": 254,
+      "layers": [
+        {
+          "file": "parts\\clothes\\tops\\vest1.png",
+          "animated": false
+        }
+      ],
+      "order": 50
+    },
+    {
+      "id": "shirts1-collar-accessories-none",
+      "name": "なし",
+      "category": "shirts1-collar-accessories",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10
+    },
+    {
+      "id": "shirts1-collar-accessories-ribbon",
+      "name": "リボン",
+      "category": "shirts1-collar-accessories",
+      "zIndex": 300,
+      "layers": [
+        {
+          "file": "parts\\clothes\\tops\\shirts1-collar-accessories\\ribbon.png",
+          "animated": false,
+          "innerGroup": "shirts1-collar2",
+          "maskedFile": "parts\\clothes\\tops\\shirts1-collar-accessories\\shirts1-collar2-ribbon.png"
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "shirts1-collar-accessories-tie",
+      "name": "ネクタイ",
+      "category": "shirts1-collar-accessories",
+      "zIndex": 254,
+      "layers": [
+        {
+          "file": "parts\\clothes\\tops\\shirts1-collar-accessories\\tie.png",
+          "animated": false,
+          "innerGroup": "shirts1-collar2",
+          "maskedFile": "parts\\clothes\\tops\\shirts1-collar-accessories\\shirts1-collar2-tie.png"
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "shirts1-collar-accessories-crosstie",
+      "name": "クロスタイ",
+      "category": "shirts1-collar-accessories",
+      "zIndex": 254,
+      "layers": [
+        {
+          "file": "parts\\clothes\\tops\\shirts1-collar-accessories\\crosstie.png",
+          "animated": false,
+          "innerGroup": "shirts1-collar2",
+          "maskedFile": "parts\\clothes\\tops\\shirts1-collar-accessories\\shirts1-collar2-crosstie.png"
+        }
+      ],
+      "order": 40
     }
   ],
   "categories": [
@@ -5000,7 +5108,7 @@
     {
       "id": "shirts1-sleeve",
       "name": "シャツ1-袖",
-      "order": 220,
+      "order": 221,
       "selectionMode": "single",
       "hidden": true,
       "group": "cloches",
@@ -5191,6 +5299,14 @@
       "group": "hair",
       "hidden": false,
       "colorGroup": "hair"
+    },
+    {
+      "id": "shirts1-collar-accessories",
+      "name": "シャツ1襟アクセサリー",
+      "order": 220,
+      "selectionMode": "single",
+      "hidden": true,
+      "group": "cloches"
     }
   ],
   "categoryGroups": [
