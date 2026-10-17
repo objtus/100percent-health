@@ -2378,7 +2378,7 @@
       "zIndex": 150,
       "layers": [
         {
-          "file": "parts\\clothes\\socks\\blacktights1.png",
+          "file": "parts\\clothes\\socks\\blacktights1_.png",
           "animated": false
         }
       ],
@@ -5217,6 +5217,134 @@
         "bangs16",
         "bangs17"
       ]
+    },
+    {
+      "id": "headband1",
+      "name": "カチューシャ1",
+      "category": "head-accessories",
+      "zIndex": 1350,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\headband\\headband1-black.png",
+          "animated": false
+        }
+      ],
+      "order": 70,
+      "colors": {
+        "白": {
+          "image": "parts/accessories/head/headband/headband1-white.png",
+          "blend": "color-dodge",
+          "color": "#1a1a1a"
+        }
+      },
+      "unlocks": [
+        "headband-accessories"
+      ]
+    },
+    {
+      "id": "headband-accessories-none",
+      "name": "なし",
+      "category": "headband-accessories",
+      "zIndex": 100,
+      "layers": [
+        {
+          "file": "parts/none.png",
+          "animated": false
+        }
+      ],
+      "order": 10,
+      "isNone": true
+    },
+    {
+      "id": "headband-accessories-ribbon1",
+      "name": "リボン1",
+      "category": "headband-accessories",
+      "zIndex": 1350,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\headband\\headband-ribbon1.png",
+          "animated": false
+        }
+      ],
+      "order": 20
+    },
+    {
+      "id": "headband-accessories-ribbon2",
+      "name": "リボン2",
+      "category": "headband-accessories",
+      "zIndex": 1350,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\headband\\headband-ribbon2.png",
+          "animated": false
+        }
+      ],
+      "order": 30
+    },
+    {
+      "id": "headband-accessories-flower",
+      "name": "花",
+      "category": "headband-accessories",
+      "zIndex": 1350,
+      "layers": [
+        {
+          "file": "parts\\accessories\\head\\headband\\headband-flower.png",
+          "animated": false
+        }
+      ],
+      "order": 40
+    },
+    {
+      "id": "mouth20",
+      "name": "口20",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth20.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "mouth21",
+      "name": "口21",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth21.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "mouth22",
+      "name": "口22",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth22.png",
+          "animated": false
+        }
+      ],
+      "order": 120
+    },
+    {
+      "id": "mouth23",
+      "name": "口23",
+      "category": "mouth",
+      "zIndex": 1105,
+      "layers": [
+        {
+          "file": "parts/face/mouth/mouth23.png",
+          "animated": false
+        }
+      ],
+      "order": 120
     }
   ],
   "categories": [
@@ -5648,6 +5776,14 @@
       "order": 510,
       "selectionMode": "multiple",
       "hidden": false,
+      "group": "accessories"
+    },
+    {
+      "id": "headband-accessories",
+      "name": "カチューシャ飾り",
+      "order": 60,
+      "selectionMode": "multiple",
+      "hidden": true,
       "group": "accessories"
     }
   ],

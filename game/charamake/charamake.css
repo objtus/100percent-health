@@ -22,6 +22,31 @@ body.charamake-page .charamake-lead {
   color: light-dark(#444, #bbb);
 }
 
+body.charamake-page .charamake-license {
+  margin: 1.25rem 0 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-align: right;
+  color: light-dark(#999, #777);
+}
+
+body.charamake-page .charamake-license a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted currentcolor;
+
+  &::after {
+    content: "";
+    background-image: none !important;
+    margin: 0 !important;
+    width: 0 !important;
+  }
+}
+
+body.charamake-page .charamake-license a:hover {
+  background-color: transparent;
+}
+
 body.charamake-page {
   --cm-bg-panel: light-dark(#f4f4f4, #1e1e1e);
   --cm-bg-canvas: light-dark(#fff, #282828);

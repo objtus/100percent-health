@@ -74,6 +74,7 @@
             'eye-highlight8': 0.4,
             'eye-highlight9': 0.4,
             'eye-highlight10': 0.4,
+            'mouth22': 0.4,
             'cheek-band-aid': 0.4,
             'nose-band-aid': 0.4,
 
