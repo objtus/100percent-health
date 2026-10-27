@@ -623,10 +623,38 @@ function syncColorStateAfterDependencyResolve() {
     }
 }
 
+/** 再描画前に開いていたグループ ID。全閉じなら null。初回描画前は undefined */
+function captureOpenCategoryGroupId() {
+    if (!elements.categoryList || elements.categoryList.children.length === 0) {
+        return undefined;
+    }
+    const openGroup = elements.categoryList.querySelector('.category-group.category-group--open');
+    if (!openGroup) return null;
+    const content = openGroup.querySelector('.category-group-content[id^="category-group-"]');
+    if (!content?.id) return null;
+    return content.id.replace('category-group-', '');
+}
+
+function resolveInitialOpenCategoryGroupId(sortedGroups) {
+    if (state.currentCategory) {
+        const currentCat = state.partsData.categories.find(c => c.id === state.currentCategory);
+        if (currentCat?.group) return currentCat.group;
+    }
+    for (const group of sortedGroups) {
+        const visible = state.partsData.categories
+            .filter(c => c.group === group.id)
+            .filter(isCategoryListedInSidebar);
+        if (visible.length > 0) return group.id;
+    }
+    return null;
+}
+
 // カテゴリ一覧の描画
 function renderCategories() {
     if (!state.partsData) return;
-    
+
+    const preservedOpenGroupId = captureOpenCategoryGroupId();
+
     elements.categoryList.innerHTML = '';
     
     const groups = state.partsData.categoryGroups || [];
@@ -645,23 +673,14 @@ function renderCategories() {
         
         // グループごとに表示（同時に開くのは1グループのみ）
         const sortedGroups = groups.sort((a, b) => a.order - b.order);
-        let openGroupId = null;
-        if (state.currentCategory) {
-            const currentCat = state.partsData.categories.find(c => c.id === state.currentCategory);
-            if (currentCat && currentCat.group) {
-                openGroupId = currentCat.group;
+        let openGroupId;
+        if (preservedOpenGroupId !== undefined) {
+            openGroupId = preservedOpenGroupId;
+            if (openGroupId && !sortedGroups.some(g => g.id === openGroupId)) {
+                openGroupId = null;
             }
-        }
-        if (!openGroupId) {
-            for (const group of sortedGroups) {
-                const visible = state.partsData.categories
-                    .filter(c => c.group === group.id)
-                    .filter(isCategoryListedInSidebar);
-                if (visible.length > 0) {
-                    openGroupId = group.id;
-                    break;
-                }
-            }
+        } else {
+            openGroupId = resolveInitialOpenCategoryGroupId(sortedGroups);
         }
 
         sortedGroups.forEach(group => {
