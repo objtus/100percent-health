@@ -238,7 +238,8 @@ function handleCharacterFileSelect(e) {
             updatePartSettingsPanel();
             updatePreview();
             syncClockTick();
-            
+            if (window.CharamakeImagePreload) CharamakeImagePreload.warmCurrentSelection();
+
             alert('キャラクターを読み込みました');
         } catch (error) {
             alert('キャラクターの読み込みに失敗しました: ' + error.message);

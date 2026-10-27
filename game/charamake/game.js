@@ -99,6 +99,7 @@ function loadDefaultPartsData() {
             renderCategories();
             updatePreview();
             syncClockTick();
+            if (window.CharamakeImagePreload) CharamakeImagePreload.onPartsDataReady();
         })
         .catch(error => {
             console.error('パーツデータの読み込みに失敗:', error);
@@ -348,7 +349,8 @@ function handleDataFileSelect(e) {
             renderCategories();
             renderParts();
             updatePreview();
-            
+            if (window.CharamakeImagePreload) CharamakeImagePreload.onPartsDataReady();
+
             alert('パーツデータを読み込みました');
         } catch (error) {
             alert('データの読み込みに失敗しました: ' + error.message);

@@ -456,6 +456,7 @@ function renderPreview(options = {}) {
     const showComposeBusy = !!(options && options.transition);
     if (showComposeBusy) setPreviewComposeBusy(true);
 
+    if (window.CharamakeImagePreload) CharamakeImagePreload.setComposePaused(true);
     charamakeProfileMark('renderPreviewStart');
     const composeStarted = performance.now();
     const drawableCount = layers.filter(isDrawableLayer).length;
@@ -512,6 +513,7 @@ function renderPreview(options = {}) {
         paint();
     }).finally(() => {
         if (generation === previewGeneration) setPreviewComposeBusy(false);
+        if (window.CharamakeImagePreload) CharamakeImagePreload.setComposePaused(false);
     });
 }
 

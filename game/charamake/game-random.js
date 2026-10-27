@@ -173,6 +173,7 @@ function applyRandomResult(result, before) {
     (result.targetCategoryIds || []).forEach(syncMultiSelectActive);
 
     state.colorSettingsPart = null;
+    if (window.CharamakeImagePreload) CharamakeImagePreload.warmCurrentSelection();
     updatePreview({ transition: true });
     scheduleRandomPresentation();
     commitHistory(before);
