@@ -366,7 +366,7 @@ function selectColorPreset(partId, colorName) {
         }
     }
 
-    updatePreview();
+    updatePreview({ transition: true });
     commitHistory(before);
 }
 
@@ -435,7 +435,7 @@ function renderSideSelector(part) {
             const before = captureSnapshot();
             state.selectedSide[part.id] = value;
             syncSideSelectorActive(part);
-            updatePreview();
+            updatePreview({ transition: true });
             commitHistory(before);
         });
         selector.appendChild(btn);
@@ -481,5 +481,5 @@ function applyCustomColor() {
         state.customColors[applyPart.id] = customData;
         state.selectedColors[applyPart.id] = 'custom';
     }
-    updatePreview();
+    updatePreview({ transition: true });
 }

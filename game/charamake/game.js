@@ -1085,7 +1085,7 @@ function selectPart(partId) {
     processDependencies();
     
     updatePartSettingsPanel();
-    updatePreview();
+    updatePreview({ transition: true });
     refreshPartsGridAfterSelectionChange();
     renderCategories();
     commitHistory(before);
@@ -1112,7 +1112,7 @@ function selectModifierPart(partId) {
     initPartColorState(part);
     processDependencies();
     updatePartSettingsPanel();
-    updatePreview();
+    updatePreview({ transition: true });
     refreshPartsGridAfterSelectionChange();
     renderCategories();
     commitHistory(before);
@@ -1138,7 +1138,7 @@ function selectPartInMultiCategory(partId) {
     
     processDependencies();
     updatePartSettingsPanel();
-    updatePreview();
+    updatePreview({ transition: true });
     refreshPartsGridAfterSelectionChange();
     renderCategories();
     commitHistory(before);
@@ -1168,7 +1168,7 @@ function togglePartSelection(partId) {
     
     processDependencies();
     updatePartSettingsPanel();
-    updatePreview();
+    updatePreview({ transition: true });
     refreshPartsGridAfterSelectionChange();
     renderCategories();
     commitHistory(before);

@@ -142,7 +142,7 @@ function applyRandomResult(result, before) {
     ensureCurrentCategoryVisible();
     renderCategories();
     renderParts();
-    updatePreview();
+    updatePreview({ transition: true });
     syncClockTick();
     commitHistory(before);
     return countChangedVisibleCategories(before, captureSnapshot());

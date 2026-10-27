@@ -191,20 +191,177 @@ function drawDynamicOverlays(ctx) {
 
 let previewScheduled = false;
 let previewGeneration = 0;
+let pendingPreviewWantsTransition = false;
+
+const PREVIEW_EASE_STOPS = [0, 0.45, 0.48, 0.52, 0.55, 1];
+let characterSnapshotCanvas = null;
+let characterSnapshotCtx = null;
+let characterSnapshotReady = false;
+let previewFadeRaf = null;
+
+function previewEase(t) {
+    const x = Math.max(0, Math.min(1, t));
+    const n = PREVIEW_EASE_STOPS.length - 1;
+    const seg = Math.min(n - 1, Math.floor(x * n));
+    const localT = x * n - seg;
+    return PREVIEW_EASE_STOPS[seg] + (PREVIEW_EASE_STOPS[seg + 1] - PREVIEW_EASE_STOPS[seg]) * localT;
+}
+
+function getPreviewFadeDurationMs() {
+    const raw = getComputedStyle(document.body).getPropertyValue('--cm-duration-interaction').trim();
+    if (raw.endsWith('ms')) return parseFloat(raw) || 100;
+    if (raw.endsWith('s')) return (parseFloat(raw) || 0.1) * 1000;
+    return 100;
+}
+
+function previewTransitionAllowed() {
+    return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function pathLooksLikeGif(path) {
+    return typeof path === 'string' && /\.gif(\?|#|$)/i.test(path);
+}
+
+function layerRasterPathsForTransitionCheck(layer) {
+    const paths = [];
+    if (layer.file) paths.push(layer.file);
+    const presetPath = colorPresetRasterPath(layer);
+    if (presetPath) paths.push(presetPath);
+    const cs = layer.colorSettings;
+    if (cs && cs.image) paths.push(cs.image);
+    return paths;
+}
+
+function layersInvolveGif(layers) {
+    return layers.some(layer => {
+        if (!isDrawableLayer(layer)) return false;
+        return layerRasterPathsForTransitionCheck(layer).some(pathLooksLikeGif);
+    });
+}
+
+function ensureCharacterSnapshotCanvas(width, height) {
+    if (!characterSnapshotCanvas
+        || characterSnapshotCanvas.width !== width
+        || characterSnapshotCanvas.height !== height) {
+        characterSnapshotCanvas = document.createElement('canvas');
+        characterSnapshotCanvas.width = width;
+        characterSnapshotCanvas.height = height;
+        characterSnapshotCtx = characterSnapshotCanvas.getContext('2d');
+        characterSnapshotReady = false;
+    }
+}
+
+function saveCharacterSnapshot(composed, width, height) {
+    if (!composed) {
+        characterSnapshotReady = false;
+        return;
+    }
+    ensureCharacterSnapshotCanvas(width, height);
+    characterSnapshotCtx.clearRect(0, 0, width, height);
+    characterSnapshotCtx.drawImage(composed, 0, 0);
+    characterSnapshotReady = true;
+}
+
+function cancelPreviewCrossfade() {
+    if (previewFadeRaf != null) {
+        cancelAnimationFrame(previewFadeRaf);
+        previewFadeRaf = null;
+    }
+}
+
+function drawPreviewPlaceholder(ctx, canvas) {
+    ctx.fillStyle = '#666';
+    ctx.font = '20px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('パーツを選択してください', canvas.width / 2, canvas.height / 2);
+}
+
+function paintPreviewFrame(ctx, canvas, composed) {
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    if (composed) {
+        ctx.drawImage(composed, 0, 0);
+    } else {
+        drawPreviewPlaceholder(ctx, canvas);
+    }
+    drawDynamicOverlays(ctx);
+}
+
+function paintPreviewInstant(ctx, canvas, composed) {
+    cancelPreviewCrossfade();
+    paintPreviewFrame(ctx, canvas, composed);
+    saveCharacterSnapshot(composed, canvas.width, canvas.height);
+}
+
+function shouldUsePreviewTransition(options, layers) {
+    if (!options || !options.transition) return false;
+    if (!previewTransitionAllowed()) return false;
+    if (!characterSnapshotReady) return false;
+    if (layersInvolveGif(layers)) return false;
+    return true;
+}
+
+function runPreviewCrossfade(generation, composed, canvas, ctx) {
+    cancelPreviewCrossfade();
+    const duration = getPreviewFadeDurationMs();
+    const start = performance.now();
+
+    return new Promise(resolve => {
+        function step(now) {
+            if (generation !== previewGeneration) {
+                previewFadeRaf = null;
+                resolve();
+                return;
+            }
+            const t = duration <= 0 ? 1 : Math.min(1, (now - start) / duration);
+            const alpha = previewEase(t);
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            if (characterSnapshotReady) {
+                ctx.globalAlpha = 1;
+                ctx.drawImage(characterSnapshotCanvas, 0, 0);
+            }
+            if (composed) {
+                ctx.globalAlpha = alpha;
+                ctx.drawImage(composed, 0, 0);
+                ctx.globalAlpha = 1;
+            } else if (!characterSnapshotReady) {
+                drawPreviewPlaceholder(ctx, canvas);
+            }
+            drawDynamicOverlays(ctx);
+
+            if (t < 1) {
+                previewFadeRaf = requestAnimationFrame(step);
+                return;
+            }
+            previewFadeRaf = null;
+            saveCharacterSnapshot(composed, w, h);
+            resolve();
+        }
+        previewFadeRaf = requestAnimationFrame(step);
+    });
+}
 
 // プレビュー更新。同じ操作内の複数回呼び出しは 1 回の描画にまとめる
-function updatePreview() {
+function updatePreview(options = {}) {
+    if (options && options.transition) pendingPreviewWantsTransition = true;
     if (previewScheduled) return;
     previewScheduled = true;
     previewDrawPromise = Promise.resolve().then(() => {
         previewScheduled = false;
-        return renderPreview();
+        const opts = { transition: pendingPreviewWantsTransition };
+        pendingPreviewWantsTransition = false;
+        return renderPreview(opts);
     });
 }
 
-// 合成とフォント待ちが終わってから「消去 → 転写 → 時刻」を同期で行い、途中状態を画面に出さない
-function renderPreview() {
+// 合成とフォント待ちが終わってから表示（能動操作時は短いクロスフェード、時計は毎フレーム上描き）
+function renderPreview(options = {}) {
     const generation = ++previewGeneration;
+    cancelPreviewCrossfade();
     const canvas = elements.previewCanvas;
     const ctx = canvas.getContext('2d');
 
@@ -214,6 +371,7 @@ function renderPreview() {
     }
 
     if (!state.partsData) {
+        characterSnapshotReady = false;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         return Promise.resolve();
     }
@@ -227,16 +385,10 @@ function renderPreview() {
         needsClockFont ? ensureClockFont() : null
     ]).then(([composed]) => {
         if (generation !== previewGeneration) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (composed) {
-            ctx.drawImage(composed, 0, 0);
-        } else {
-            ctx.fillStyle = '#666';
-            ctx.font = '20px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('パーツを選択してください', canvas.width / 2, canvas.height / 2);
+        if (shouldUsePreviewTransition(options, layers) && composed) {
+            return runPreviewCrossfade(generation, composed, canvas, ctx);
         }
-        drawDynamicOverlays(ctx);
+        paintPreviewInstant(ctx, canvas, composed);
     });
 }
 
