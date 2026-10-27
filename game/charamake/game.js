@@ -199,11 +199,93 @@ function setupEventListeners() {
     if (submitSecretBtn) {
         submitSecretBtn.addEventListener('click', () => submitSecretPassword());
     }
-    if (secretPasswordInput) {
-        secretPasswordInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') submitSecretPassword();
-        });
+    initSecretPasswordInput();
+}
+
+const SECRET_PASSWORD_MASK = '♥';
+let secretPasswordPlain = '';
+let secretPasswordComposing = false;
+let secretPasswordImeJustCommitted = false;
+
+function secretPasswordMaskLength(text) {
+    return [...text].length;
+}
+
+function syncSecretPasswordDisplay() {
+    const input = document.getElementById('secretPasswordInput');
+    if (input) {
+        input.value = SECRET_PASSWORD_MASK.repeat(secretPasswordMaskLength(secretPasswordPlain));
     }
+}
+
+function clearSecretPasswordField() {
+    secretPasswordPlain = '';
+    syncSecretPasswordDisplay();
+}
+
+function appendSecretPasswordText(text) {
+    if (!text) return;
+    secretPasswordPlain += text;
+    syncSecretPasswordDisplay();
+}
+
+function initSecretPasswordInput() {
+    const input = document.getElementById('secretPasswordInput');
+    if (!input) return;
+
+    input.addEventListener('compositionstart', () => {
+        secretPasswordComposing = true;
+    });
+
+    input.addEventListener('compositionend', (e) => {
+        secretPasswordComposing = false;
+        secretPasswordImeJustCommitted = true;
+        appendSecretPasswordText(e.data);
+        queueMicrotask(() => {
+            secretPasswordImeJustCommitted = false;
+        });
+    });
+
+    input.addEventListener('beforeinput', (e) => {
+        if (e.inputType === 'deleteContentBackward') {
+            e.preventDefault();
+            const units = [...secretPasswordPlain];
+            units.pop();
+            secretPasswordPlain = units.join('');
+            syncSecretPasswordDisplay();
+            return;
+        }
+        if (e.inputType === 'insertFromPaste') {
+            e.preventDefault();
+            return;
+        }
+        if (secretPasswordComposing) {
+            e.preventDefault();
+            return;
+        }
+        if (secretPasswordImeJustCommitted) {
+            e.preventDefault();
+            return;
+        }
+        if (e.inputType === 'insertText' && e.data != null) {
+            e.preventDefault();
+            appendSecretPasswordText(e.data);
+        }
+    });
+
+    input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        appendSecretPasswordText(e.clipboardData?.getData('text') ?? '');
+    });
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') submitSecretPassword();
+    });
+
+    input.addEventListener('input', () => {
+        if (secretPasswordComposing) return;
+        syncSecretPasswordDisplay();
+    });
 }
 
 // モバイル用タブ切り替え
@@ -643,6 +725,7 @@ function createCategoryItem(category) {
 }
 
 function fillCategoryItem(div, category) {
+    div.dataset.categoryId = category.id;
     const multiTag = category.selectionMode === 'multiple'
         ? '<span class="multi-badge">複数可</span>'
         : '';
@@ -656,16 +739,10 @@ function fillCategoryItem(div, category) {
     if (blocked) div.title = `${formatHideSources(category.id)}を選択中のため非表示`;
 
     const locked = state.lockedCategories.has(category.id);
-    div.classList.toggle('is-locked', locked);
     div.appendChild(createLockToggle(locked ? 'on' : 'off', category.name, () => toggleCategoryLock(category.id)));
 }
 
-const LOCK_ICON_CLOSED = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">'
-    + '<path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/>'
-    + '<rect x="3" y="7" width="10" height="7" rx="1.5" fill="currentColor"/></svg>';
-const LOCK_ICON_OPEN = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">'
-    + '<path d="M5 7V5a3 3 0 0 1 5.8-1.1" fill="none" stroke="currentColor" stroke-width="1.6"/>'
-    + '<rect x="3" y="7" width="10" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
+const LOCK_ICON = '<span class="lock-icon" aria-hidden="true"></span>';
 
 /** @param {'on'|'off'|'mixed'} lockState */
 function createLockToggle(lockState, label, onToggle) {
@@ -678,7 +755,7 @@ function createLockToggle(lockState, label, onToggle) {
         : `「${label}」を固定する（全体ランダムで変えない）`;
     btn.title = title;
     btn.setAttribute('aria-label', title);
-    btn.innerHTML = lockState === 'off' ? LOCK_ICON_OPEN : LOCK_ICON_CLOSED;
+    btn.innerHTML = LOCK_ICON;
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
         onToggle();
@@ -706,7 +783,6 @@ function createCategoryGroup(group, categories, startOpen = false) {
     headerRow.className = 'category-group-header-row';
     headerRow.appendChild(header);
     const lockState = getGroupLockState(group.id);
-    headerRow.classList.toggle('is-locked', lockState === 'on');
     headerRow.appendChild(createLockToggle(lockState, group.name, () => toggleGroupLock(group.id)));
     groupDiv.appendChild(headerRow);
     
@@ -801,6 +877,34 @@ function updateColorSettingsForCurrentCategory() {
 // パーツ一覧の描画
 function renderParts() {
     renderPartsContent();
+    updateCategoryRandomButton();
+}
+
+/** グリッド構成が同じなら .selected だけ更新（CSS トランジション用） */
+function syncPartsGridSelection(category) {
+    if (!elements.partsGrid || !category) return false;
+    const listed = getListedPartsInCategory(category.id);
+    const nodes = [...elements.partsGrid.querySelectorAll('.part-item[data-part-id]')];
+    if (nodes.length !== listed.length) return false;
+    for (let i = 0; i < listed.length; i++) {
+        if (nodes[i].dataset.partId !== listed[i].id) return false;
+    }
+    const isMultiple = category.selectionMode === 'multiple';
+    nodes.forEach((node, i) => {
+        const partId = listed[i].id;
+        const isSelected = isMultiple
+            ? (state.selectedParts[category.id] || []).includes(partId)
+            : state.selectedParts[category.id] === partId;
+        node.classList.toggle('selected', !!isSelected);
+    });
+    return true;
+}
+
+function refreshPartsGridAfterSelectionChange() {
+    const category = state.partsData?.categories.find(c => c.id === state.currentCategory);
+    if (!category || !syncPartsGridSelection(category)) {
+        renderPartsContent();
+    }
     updateCategoryRandomButton();
 }
 
@@ -950,15 +1054,7 @@ function createPartItem(part, isMultipleCapable, isMultiActive, categoryBlocked 
         return div;
     }
     
-    // 色設定が表示されているパーツにインジケータ
-    const hostPart = isMultipleCapable ? getHostPartForSettings() : null;
-    const isColorFocused = !!hostPart && hostPart.id === part.id;
-    if (isColorFocused) {
-        div.classList.add('color-focused');
-    }
-    
-    div.innerHTML = `<div class="part-name">${part.name}</div>`
-        + (isColorFocused ? `<div class="color-focus-indicator">🎨</div>` : '');
+    div.innerHTML = `<div class="part-name">${part.name}</div>`;
     
     if (isMultipleCapable && isMultiActive) {
         // 複数選択モード: トグル
@@ -990,7 +1086,7 @@ function selectPart(partId) {
     
     updatePartSettingsPanel();
     updatePreview();
-    renderParts();
+    refreshPartsGridAfterSelectionChange();
     renderCategories();
     commitHistory(before);
 }
@@ -1017,7 +1113,7 @@ function selectModifierPart(partId) {
     processDependencies();
     updatePartSettingsPanel();
     updatePreview();
-    renderParts();
+    refreshPartsGridAfterSelectionChange();
     renderCategories();
     commitHistory(before);
 }
@@ -1043,7 +1139,7 @@ function selectPartInMultiCategory(partId) {
     processDependencies();
     updatePartSettingsPanel();
     updatePreview();
-    renderParts();
+    refreshPartsGridAfterSelectionChange();
     renderCategories();
     commitHistory(before);
 }
@@ -1073,7 +1169,7 @@ function togglePartSelection(partId) {
     processDependencies();
     updatePartSettingsPanel();
     updatePreview();
-    renderParts();
+    refreshPartsGridAfterSelectionChange();
     renderCategories();
     commitHistory(before);
 }
@@ -1369,7 +1465,7 @@ async function submitSecretPassword() {
     const S = window.CharamakeSecrets;
     if (!input || !S || !state.partsData) return;
 
-    const plain = input.value.trim();
+    const plain = secretPasswordPlain.trim();
     if (!plain) {
         showSecretMessage('パスワードを入力', false);
         return;
@@ -1383,7 +1479,7 @@ async function submitSecretPassword() {
 
     if (state.unlockedSecrets.has(secretId)) {
         showSecretMessage('すでに解放済み', true);
-        input.value = '';
+        clearSecretPasswordField();
         return;
     }
 
@@ -1398,7 +1494,7 @@ async function submitSecretPassword() {
     const entry = secrets.find(s => s.id === secretId);
     const label = entry && entry.name ? entry.name : secretId;
     showSecretMessage(`「${label}」を解放`, true);
-    input.value = '';
+    clearSecretPasswordField();
 }
 
 function renderModifierCategoryBlocks(modifierCategories) {

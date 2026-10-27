@@ -303,7 +303,7 @@ function createColorLockToggle(groupId) {
     btn.title = locked
         ? `「${name}」の色の固定を外す`
         : `「${name}」の色を固定する（ランダムで色を変えない）`;
-    btn.innerHTML = (locked ? LOCK_ICON_CLOSED : LOCK_ICON_OPEN)
+    btn.innerHTML = LOCK_ICON
         + `<span>${locked ? `${name}の色を固定中` : `${name}の色を固定`}</span>`;
     btn.addEventListener('click', () => toggleColorGroupLock(groupId));
     return btn;

@@ -61,15 +61,15 @@
           <div id="charamake-toolbar" class="charamake-toolbar">
             <div class="charamake-toolbar-actions">
               <div class="secret-unlock-bar">
-                <input type="password" id="secretPasswordInput" class="secret-password-input"
-                  placeholder="シークレット" autocomplete="off">
+                <input type="text" id="secretPasswordInput" class="secret-password-input"
+                  placeholder="シークレット" autocomplete="off" spellcheck="false" autocapitalize="off">
                 <button type="button" id="submitSecretBtn" class="btn btn-small">解放</button>
                 <span id="secretMessage" class="secret-message" aria-live="polite"></span>
               </div>
               <button type="button" id="loadDataBtn" class="btn charamake-hidden" tabindex="-1" hidden>JSONを再読込</button>
               <button type="button" id="loadCharacterBtn" class="btn">キャラ読込</button>
-              <button type="button" id="saveCharacterBtn" class="btn btn-primary">キャラ保存</button>
-              <button type="button" id="exportPngBtn" class="btn btn-accent">PNG出力</button>
+              <button type="button" id="saveCharacterBtn" class="btn">キャラ保存</button>
+              <button type="button" id="exportPngBtn" class="btn">PNG出力</button>
             </div>
           </div>
 
@@ -80,7 +80,7 @@
                 <canvas id="previewCanvas" width="800" height="900"></canvas>
               </div>
               <div id="randomBar" class="random-bar" role="group" aria-label="ランダムと履歴">
-                <button type="button" id="randomAllBtn" class="btn btn-primary random-all-btn">完全ランダム</button>
+                <button type="button" id="randomAllBtn" class="btn random-all-btn">完全ランダム</button>
                 <div class="random-bar-history">
                   <button type="button" id="undoBtn" class="btn btn-small" title="戻す（Ctrl+Z）" disabled>戻す</button>
                   <button type="button" id="redoBtn" class="btn btn-small" title="やり直す（Ctrl+Y）" disabled>やり直す</button>
@@ -179,7 +179,7 @@
             </div>
           </div>
         </div>
-        <details class="charamake-changelog">
+        <details class="charamake-changelog" open>
           <summary>更新履歴</summary>
           <ul>
             <li><time datetime="2026-10-27">2026-10-27</time>初版公開</li>

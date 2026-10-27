@@ -196,6 +196,33 @@ function partHasColorPresetUI(part) {
     return false;
 }
 
+/** 色プリセットボタンの .active だけ更新（トランジション用） */
+function syncColorPresetButtonStates(part) {
+    if (!elements.colorPresetSelector) return false;
+    const buttons = elements.colorPresetSelector.querySelectorAll('.color-preset-btn');
+    if (buttons.length === 0) return false;
+    const current = getEffectiveColorPreset(part);
+    buttons.forEach(btn => {
+        const label = btn.textContent;
+        let active = false;
+        if (label === '通常') active = current === 'normal';
+        else if (label === 'カスタム') active = current === 'custom';
+        else active = label === current;
+        btn.classList.toggle('active', active);
+    });
+    return true;
+}
+
+function syncSideSelectorActive(part) {
+    const selector = document.getElementById('sideSelector');
+    if (!selector) return;
+    const currentSide = state.selectedSide[part.id] || 'both';
+    const sideByLabel = { '両方': 'both', '左のみ': 'left', '右のみ': 'right' };
+    selector.querySelectorAll('.side-btn').forEach(btn => {
+        btn.classList.toggle('active', sideByLabel[btn.textContent] === currentSide);
+    });
+}
+
 function renderColorBlockForPart(part) {
     elements.colorPresetSelector.innerHTML = '';
     
@@ -324,7 +351,19 @@ function selectColorPreset(partId, colorName) {
 
     const part = state.partsData.parts.find(p => p.id === partId);
     if (part) {
-        updateColorSettings(part);
+        const effective = getEffectiveColorPreset(part);
+        if (!syncColorPresetButtonStates(part)) {
+            updateColorSettings(part);
+        } else if (effective === 'custom' && isCustomColorPickerEnabled()) {
+            const groupId = getColorGroupIdForPart(part);
+            const customData = (groupId && state.colorGroupCustom[groupId])
+                ? { ...state.colorGroupCustom[groupId] }
+                : (state.customColors[part.id] || { ...DEFAULT_CUSTOM_COLOR });
+            loadCustomColorValues(customData);
+            updateAdvancedColorSettings(true);
+        } else {
+            updateAdvancedColorSettings(false);
+        }
     }
 
     updatePreview();
@@ -395,7 +434,7 @@ function renderSideSelector(part) {
         btn.addEventListener('click', () => {
             const before = captureSnapshot();
             state.selectedSide[part.id] = value;
-            renderSideSelector(part);
+            syncSideSelectorActive(part);
             updatePreview();
             commitHistory(before);
         });

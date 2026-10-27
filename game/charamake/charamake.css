@@ -83,8 +83,11 @@ body.charamake-page {
   --cm-bg-canvas: light-dark(#fff, #282828);
   --cm-fg: light-dark(#111, #eaeaea);
   --cm-muted: #888;
-  --cm-accent: light-dark(rgb(0, 0, 255), #6ae);
+  --cm-accent: light-dark(#111, #eaeaea);
   --cm-accent-on: light-dark(#fff, #111);
+  --cm-select-bg: light-dark(#111, #f4f4f4);
+  --cm-select-fg: light-dark(#fff, #111);
+  --cm-select-border: light-dark(#111, #eaeaea);
   --cm-panel-border: light-dark(#ddd, #555);
   --cm-font: saitamaar, PikoA, "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   --cm-workspace-max-h: min(28rem, 52vh);
@@ -93,6 +96,13 @@ body.charamake-page {
   --cm-canvas-max-h: min(23.75rem, 38vh);
   /* 依存フィード: 最大3行分を常に確保 */
   --cm-dependency-feed-h: 4rem;
+  --cm-duration-interaction: 0.1s;
+  --cm-ease-interaction: linear(0, 0.45, 0.48, 0.52, 0.55, 1);
+  --cm-transition-interaction:
+    color var(--cm-duration-interaction) var(--cm-ease-interaction),
+    background-color var(--cm-duration-interaction) var(--cm-ease-interaction),
+    border-color var(--cm-duration-interaction) var(--cm-ease-interaction),
+    opacity var(--cm-duration-interaction) var(--cm-ease-interaction);
 }
 
 .charamake-hidden {
@@ -116,6 +126,19 @@ body.charamake-page {
   border-radius: 4px;
   background: var(--cm-bg-panel);
   overflow: hidden;
+}
+
+/* 白黒が反転する操作だけトランジション */
+#charamake-app :where(
+  #exportPngBtn,
+  #randomAllBtn,
+  .category-item,
+  .part-item,
+  .side-btn,
+  .color-preset-btn,
+  .multi-toggle-btn
+) {
+  transition: var(--cm-transition-interaction);
 }
 
 #charamake-app img {
@@ -196,12 +219,11 @@ body.charamake-page {
   border-radius: 3px;
   cursor: pointer;
   white-space: nowrap;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 
-#charamake-app .btn:hover {
-  border-color: var(--cm-accent);
-  color: var(--cm-accent);
+#charamake-app .btn:hover:not(:disabled) {
+  border-color: light-dark(#111, #bbb);
+  color: var(--cm-fg);
   background: light-dark(#fff, #333);
 }
 
@@ -218,16 +240,60 @@ body.charamake-page {
   border-color: var(--cm-accent);
 }
 
-#charamake-app .btn-accent {
-  background: light-dark(#111, #eaeaea);
-  border-color: light-dark(#111, #eaeaea);
-  color: light-dark(#fff, #111);
+#charamake-app #loadCharacterBtn,
+#charamake-app #saveCharacterBtn,
+#charamake-app #submitSecretBtn,
+#charamake-app #clearLocksBtn,
+#charamake-app #undoBtn,
+#charamake-app #redoBtn {
+  background: #fff;
+  border: 1px solid #000;
+  color: #000;
 }
 
-#charamake-app .btn-accent:hover {
-  border-color: var(--cm-accent);
-  background: var(--cm-accent);
-  color: var(--cm-accent-on);
+#charamake-app #loadCharacterBtn:hover,
+#charamake-app #saveCharacterBtn:hover,
+#charamake-app #submitSecretBtn:hover,
+#charamake-app #clearLocksBtn:hover:not(:disabled),
+#charamake-app #undoBtn:hover:not(:disabled),
+#charamake-app #redoBtn:hover:not(:disabled) {
+  background: #fff;
+  border-color: #000;
+  color: #000;
+}
+
+#charamake-app #clearLocksBtn:disabled,
+#charamake-app #clearLocksBtn:disabled:hover,
+#charamake-app #undoBtn:disabled,
+#charamake-app #undoBtn:disabled:hover,
+#charamake-app #redoBtn:disabled,
+#charamake-app #redoBtn:disabled:hover {
+  background: #fff;
+  border-color: #000;
+  color: #000;
+  opacity: 0.45;
+}
+
+#charamake-app #exportPngBtn,
+#charamake-app #randomAllBtn {
+  background: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+#charamake-app #exportPngBtn:hover,
+#charamake-app #randomAllBtn:hover:not(:disabled) {
+  background: #fff;
+  border-color: #fff;
+  color: #000;
+}
+
+#charamake-app #randomAllBtn:disabled,
+#charamake-app #randomAllBtn:disabled:hover {
+  background: #000;
+  border-color: #000;
+  color: #fff;
+  opacity: 0.45;
 }
 
 #charamake-app .btn-small {
@@ -300,12 +366,9 @@ body.charamake-page {
   background: light-dark(rgb(0 0 0 / 35%), rgb(255 255 255 / 40%));
 }
 
-#charamake-app .dependency-feed-line--unlock {
-  color: light-dark(#1e7e4a, #9cf0b0);
-}
-
+#charamake-app .dependency-feed-line--unlock,
 #charamake-app .dependency-feed-line--show {
-  color: light-dark(#2c6fad, #9cf);
+  color: var(--cm-fg);
 }
 
 #charamake-app .dependency-feed-line--hide {
@@ -380,7 +443,6 @@ body.charamake-page {
   border: 1px solid transparent;
   border-radius: 3px;
   font-size: 0.75rem;
-  transition: border-color 0.12s, background 0.12s;
 }
 
 #charamake-app .category-item:hover {
@@ -389,33 +451,33 @@ body.charamake-page {
 }
 
 #charamake-app .category-item.active {
-  background: var(--cm-accent);
-  border-color: var(--cm-accent);
-  color: var(--cm-accent-on);
+  background: var(--cm-select-bg);
+  border-color: var(--cm-select-border);
+  color: var(--cm-select-fg);
 }
 
 #charamake-app .category-item.unlocked-category {
-  border-left: 3px solid light-dark(#f39c12, #fa0);
+  border-left: 3px solid light-dark(#888, #777);
   padding-left: calc(0.5rem - 3px);
-  background: light-dark(#fff8e6, #332a10);
+  background: light-dark(#f8f8f8, #2a2a2a);
 }
 
 #charamake-app .category-item.unlocked-category.active {
-  background: light-dark(#f39c12, #a60);
-  border-color: light-dark(#c87f0a, #fa0);
-  color: var(--cm-accent-on);
+  background: var(--cm-select-bg);
+  border-color: var(--cm-select-border);
+  color: var(--cm-select-fg);
 }
 
 #charamake-app .category-item.secret-category {
-  border-left: 3px solid light-dark(#8e7cc3, #a8f);
+  border-left: 3px solid light-dark(#666, #999);
   padding-left: calc(0.5rem - 3px);
-  background: light-dark(#f6f3fb, #2a2538);
+  background: light-dark(#f4f4f4, #282828);
 }
 
 #charamake-app .category-item.secret-category.active {
-  background: light-dark(#8e7cc3, #7560a8);
-  border-color: light-dark(#6c5a9a, #a8f);
-  color: var(--cm-accent-on);
+  background: var(--cm-select-bg);
+  border-color: var(--cm-select-border);
+  color: var(--cm-select-fg);
 }
 
 #charamake-app .category-item.hidden {
@@ -457,12 +519,11 @@ body.charamake-page {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  transition: border-color 0.15s, color 0.15s;
 }
 
 #charamake-app .category-group-header:hover {
-  border-color: var(--cm-accent);
-  color: var(--cm-accent);
+  border-color: light-dark(#111, #bbb);
+  color: var(--cm-fg);
 }
 
 #charamake-app .category-group-header .group-toggle {
@@ -557,36 +618,27 @@ body.charamake-page {
   border: 1px solid var(--cm-panel-border);
   border-radius: 3px;
   background: light-dark(#fff, #333);
-  transition: border-color 0.12s, color 0.12s;
 }
 
-#charamake-app .part-item:hover {
-  border-color: var(--cm-accent);
+#charamake-app .part-item:hover:not(.selected) {
+  border-color: light-dark(#111, #bbb);
 }
 
 #charamake-app .part-item.selected {
-  border-color: var(--cm-accent);
-  background: light-dark(#dde8ff, #234);
-  color: var(--cm-fg);
+  border-color: light-dark(#111, #eaeaea);
+  background: light-dark(#111, #f4f4f4);
+  color: light-dark(#fff, #111);
 }
 
 #charamake-app .part-item.secret-part {
-  border-color: light-dark(#c5b8e0, #86a);
-  background: light-dark(#faf8fd, #2e2840);
+  border-color: light-dark(#888, #777);
+  background: light-dark(#f8f8f8, #2a2a2a);
 }
 
 #charamake-app .part-item.secret-part.selected {
-  border-color: light-dark(#8e7cc3, #a8f);
-  background: light-dark(#ebe6f5, #3a3250);
-}
-
-#charamake-app .part-item.color-focused {
-  outline: 2px solid light-dark(#e67e22, #fa0);
-  outline-offset: -2px;
-}
-
-#charamake-app .part-item.selected.color-focused {
-  outline: 2px solid light-dark(#e67e22, #fa0);
+  border-color: light-dark(#111, #eaeaea);
+  background: light-dark(#111, #f4f4f4);
+  color: light-dark(#fff, #111);
 }
 
 /* hides で選べないパーツ（一覧の並びは保ったままグレーアウト） */
@@ -603,7 +655,7 @@ body.charamake-page {
 #charamake-app .part-item.is-blocked.selected,
 #charamake-app .part-item.is-blocked.selected:hover {
   opacity: 0.6;
-  border-color: var(--cm-accent);
+  border-color: light-dark(#111, #eaeaea);
 }
 
 #charamake-app .blocked-notice {
@@ -622,7 +674,7 @@ body.charamake-page {
   border: 0;
   background: none;
   font: inherit;
-  color: var(--cm-accent);
+  color: var(--cm-fg);
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
@@ -633,8 +685,8 @@ body.charamake-page {
 }
 
 @keyframes cm-part-flash {
-  0%, 60% { box-shadow: 0 0 0 3px var(--cm-accent); }
-  100% { box-shadow: 0 0 0 3px transparent; }
+  0%, 60% { box-shadow: 0 0 0 2px light-dark(#111, #eaeaea); }
+  100% { box-shadow: 0 0 0 2px transparent; }
 }
 
 #charamake-app .part-item.is-flash {
@@ -644,15 +696,8 @@ body.charamake-page {
 @media (prefers-reduced-motion: reduce) {
   #charamake-app .part-item.is-flash {
     animation: none;
-    box-shadow: 0 0 0 3px var(--cm-accent);
+    box-shadow: 0 0 0 2px light-dark(#111, #eaeaea);
   }
-}
-
-#charamake-app .color-focus-indicator {
-  font-size: 0.65rem;
-  line-height: 1;
-  margin-top: 0.15rem;
-  opacity: 0.85;
 }
 
 #charamake-app .part-name {
@@ -682,9 +727,9 @@ body.charamake-page {
 }
 
 #charamake-app .multi-toggle-btn.active {
-  background: var(--cm-accent);
-  border-color: var(--cm-accent);
-  color: var(--cm-accent-on);
+  background: var(--cm-select-bg);
+  border-color: var(--cm-select-border);
+  color: var(--cm-select-fg);
 }
 
 #charamake-app .multi-badge {
@@ -741,8 +786,8 @@ body.charamake-page {
 
 #charamake-app .btn-primary:disabled,
 #charamake-app .btn-primary:disabled:hover {
-  border-color: var(--cm-accent);
-  color: var(--cm-accent-on);
+  border-color: var(--cm-panel-border);
+  color: var(--cm-fg);
 }
 
 /* Category random */
@@ -793,27 +838,41 @@ body.charamake-page {
   color: inherit;
   cursor: pointer;
   opacity: 0.22;
-  transition: opacity 0.12s, border-color 0.12s, color 0.12s;
 }
 
-#charamake-app .lock-toggle svg {
+#charamake-app .lock-icon {
   display: block;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  background-color: currentColor;
+  mask: url(lock.png) center / contain no-repeat;
+  -webkit-mask: url(lock.png) center / contain no-repeat;
 }
 
-#charamake-app .lock-toggle:hover,
-#charamake-app .lock-toggle:focus-visible {
+#charamake-app .lock-toggle--off:hover,
+#charamake-app .lock-toggle--off:focus-visible {
+  opacity: 1;
+  border-color: var(--cm-panel-border);
+  color: inherit;
+}
+
+#charamake-app .lock-toggle--on:hover,
+#charamake-app .lock-toggle--on:focus-visible,
+#charamake-app .lock-toggle--mixed:hover,
+#charamake-app .lock-toggle--mixed:focus-visible {
   opacity: 1;
   border-color: var(--cm-panel-border);
 }
 
 #charamake-app .lock-toggle--on {
   opacity: 1;
-  color: var(--cm-accent);
+  color: light-dark(#111, #eaeaea);
 }
 
 #charamake-app .lock-toggle--mixed {
   opacity: 0.65;
-  color: var(--cm-accent);
+  color: light-dark(#111, #eaeaea);
 }
 
 @media (hover: none) {
@@ -847,17 +906,18 @@ body.charamake-page {
 }
 
 #charamake-app .category-group-header-row .lock-toggle--off:hover,
+#charamake-app .category-group-header-row .lock-toggle--off:focus-visible {
+  border-color: var(--cm-fg);
+  color: var(--cm-fg);
+}
+
 #charamake-app .category-group-header-row .lock-toggle--on {
-  border-color: var(--cm-accent);
-  color: var(--cm-accent);
+  border-color: #000;
+  color: #000;
 }
 
 #charamake-app .category-group-header-row .lock-toggle--mixed {
   opacity: 1;
-}
-
-#charamake-app .category-group-header-row.is-locked .category-group-header {
-  box-shadow: inset 3px 0 0 var(--cm-accent);
 }
 
 #charamake-app .category-item:hover .lock-toggle--off {
@@ -866,16 +926,12 @@ body.charamake-page {
 
 #charamake-app .category-item.active .lock-toggle--on,
 #charamake-app .category-item.active .lock-toggle--mixed {
-  color: var(--cm-accent-on);
-}
-
-#charamake-app .category-item.is-locked:not(.active) {
-  box-shadow: inset 3px 0 0 var(--cm-accent);
+  color: inherit;
 }
 
 /* Feed: random / history */
 #charamake-app .dependency-feed-line--random {
-  color: var(--cm-accent);
+  color: var(--cm-fg);
 }
 
 #charamake-app .dependency-feed-line--history {
@@ -921,14 +977,14 @@ body.charamake-page {
 }
 
 #charamake-app .color-preset-btn:hover {
-  border-color: var(--cm-accent);
-  color: var(--cm-accent);
+  border-color: light-dark(#111, #bbb);
+  color: var(--cm-fg);
 }
 
 #charamake-app .color-preset-btn.active {
-  border-color: var(--cm-accent);
-  background: var(--cm-accent);
-  color: var(--cm-accent-on);
+  border-color: var(--cm-select-border);
+  background: var(--cm-select-bg);
+  color: var(--cm-select-fg);
 }
 
 #charamake-app .color-preset-buttons {
@@ -952,20 +1008,19 @@ body.charamake-page {
   cursor: pointer;
 }
 
-#charamake-app .color-lock-toggle:hover,
-#charamake-app .color-lock-toggle:focus-visible {
-  color: var(--cm-accent);
-  border-color: var(--cm-accent);
+#charamake-app .color-lock-toggle:not(.is-locked):hover,
+#charamake-app .color-lock-toggle:not(.is-locked):focus-visible {
+  color: var(--cm-fg);
+  border-color: var(--cm-fg);
 }
 
 #charamake-app .color-lock-toggle.is-locked {
-  color: var(--cm-accent);
+  color: var(--cm-fg);
   border-style: solid;
-  border-color: var(--cm-accent);
+  border-color: #000;
 }
 
-#charamake-app .color-lock-toggle svg {
-  display: block;
+#charamake-app .color-lock-toggle .lock-icon {
   flex-shrink: 0;
 }
 
@@ -1022,8 +1077,8 @@ body.charamake-page {
 }
 
 #charamake-app .side-btn:hover {
-  border-color: var(--cm-accent);
-  color: var(--cm-accent);
+  border-color: light-dark(#111, #bbb);
+  color: var(--cm-fg);
 }
 
 #charamake-app .side-selector {
@@ -1037,7 +1092,9 @@ body.charamake-page {
 }
 
 #charamake-app .side-btn.active {
-  border-color: light-dark(#e67e22, #fa0);
+  background: var(--cm-select-bg);
+  border-color: var(--cm-select-border);
+  color: var(--cm-select-fg);
 }
 
 #charamake-app .mobile-tabs {
@@ -1058,8 +1115,8 @@ body.charamake-page {
 }
 
 #charamake-app .tab-btn.active {
-  border-bottom-color: var(--cm-accent);
-  color: var(--cm-accent);
+  border-bottom-color: light-dark(#111, #eaeaea);
+  color: light-dark(#111, #eaeaea);
 }
 
 /* Desktop: both workspace panels visible */
