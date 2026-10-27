@@ -47,7 +47,6 @@ game/charamake/
 ├── game.archive.html    # 旧着せ替え UI（アーカイブ・凍結）
 ├── game.archive.css
 ├── parts-data.json      # パーツマスタ（ゲームが自動 fetch）
-├── sampledata.json      # エディタ動作確認用サンプル
 ├── SPEC.md              # 詳細仕様
 ├── SPEC-*.md            # 依存・IG・ポーズ・シークレット等
 ├── README.md
