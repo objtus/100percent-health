@@ -335,8 +335,13 @@ function createColorLockToggle(groupId) {
     btn.title = locked
         ? `「${name}」の色の固定を外す`
         : `「${name}」の色を固定する（ランダムで色を変えない）`;
+    const labelLocked = `${name}の色を固定中`;
+    const labelUnlocked = `${name}の色を固定`;
     btn.innerHTML = LOCK_ICON
-        + `<span>${locked ? `${name}の色を固定中` : `${name}の色を固定`}</span>`;
+        + '<span class="color-lock-toggle-label">'
+        + `<span class="color-lock-toggle-label-measure" aria-hidden="true">${labelLocked}</span>`
+        + `<span class="color-lock-toggle-label-text">${locked ? labelLocked : labelUnlocked}</span>`
+        + '</span>';
     btn.addEventListener('click', () => toggleColorGroupLock(groupId));
     return btn;
 }
@@ -395,9 +400,13 @@ function updateRandomBar() {
         elements.randomAllBtn.disabled = !window.CharamakeRandomize;
     }
     if (elements.lockSummary) {
-        elements.lockSummary.textContent = colorCount > 0
-            ? `固定 ${count} 件・色 ${colorCount}`
-            : `固定 ${count} 件`;
+        const visible = colorCount > 0
+            ? `固定${count}・色${colorCount}`
+            : `固定${count}件`;
+        const measure = `固定${count}・色${colorCount || 1}`;
+        elements.lockSummary.innerHTML =
+            `<span class="random-lock-summary-measure" aria-hidden="true">${measure}</span>`
+            + `<span class="random-lock-summary-text">${visible}</span>`;
     }
     if (elements.clearLocksBtn) elements.clearLocksBtn.disabled = count === 0 && colorCount === 0;
     if (elements.undoBtn) elements.undoBtn.disabled = state.undoStack.length === 0;
