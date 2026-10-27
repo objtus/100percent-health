@@ -22,6 +22,37 @@ body.charamake-page .charamake-lead {
   color: light-dark(#444, #bbb);
 }
 
+body.charamake-page .charamake-changelog {
+  margin: 1.5rem 0 0;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  color: light-dark(#666, #999);
+
+  & summary {
+    cursor: pointer;
+    width: fit-content;
+    letter-spacing: 0.08em;
+  }
+
+  & ul {
+    margin: 0.5rem 0 0;
+    padding: 0 0 0 0.9rem;
+    list-style: none;
+    border-left: 1px solid light-dark(#ddd, #444);
+  }
+
+  & li {
+    margin: 0;
+    padding: 0;
+  }
+
+  & time {
+    margin-right: 1em;
+    font-variant-numeric: tabular-nums;
+    color: light-dark(#999, #777);
+  }
+}
+
 body.charamake-page .charamake-license {
   margin: 1.25rem 0 0;
   font-size: 0.62rem;

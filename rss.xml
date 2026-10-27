@@ -5,9 +5,17 @@
     <link>https://yuinoid.neocities.org</link>
     <description>100%healthサイトの更新履歴</description>
     <language>ja</language>
-    <lastBuildDate>Wed, 16 Sep 2026 08:08:05 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 27 Oct 2026 06:26:55 GMT</lastBuildDate>
     <generator>100%health RSS Generator</generator>
     
+    <item>
+      <title>miscコーナーにキャラメイクができるミニゲームページを作成</title>
+      <link>https://yuinoid.neocities.org/game/charamake/index.html</link>
+      <description>キャラメイクページを作成しました。今後気が向いたらパーツを増やしていきます。</description>
+      <pubDate>Tue, 27 Oct 2026 06:21:18 GMT</pubDate>
+      <category>misc</category>
+      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#29jecu-20261027</guid>
+    </item>
     <item>
       <title>linksページに、altalenaeさん、めがねーどさん、ei personさん、新居藍さんのサイトのリンクを追加</title>
       <link>https://yuinoid.neocities.org/links/crosslinks.html</link>
@@ -159,14 +167,6 @@
       <pubDate>Thu, 18 Dec 2025 16:00:00 GMT</pubDate>
       <category>zakki</category>
       <guid isPermaLink="false">https://yuinoid.neocities.org/rss#8byjqq-20251218</guid>
-    </item>
-    <item>
-      <title>プロフィールページを作成</title>
-      <link>https://yuinoid.neocities.org/txt/profile.html</link>
-      <description>プロフィールページを作成しました。個人のプロフィールや利用サービス、お気に入りアルバムなどをまとめたページです。前略プロフィールを意識したけど前略プロフィールにはなりませんでした。</description>
-      <pubDate>Wed, 17 Dec 2025 14:50:41 GMT</pubDate>
-      <category>txt</category>
-      <guid isPermaLink="false">https://yuinoid.neocities.org/rss#a4rmrp-20251217</guid>
     </item>
   </channel>
 </rss>
