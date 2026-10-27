@@ -118,9 +118,11 @@
                 <span id="secretMessage" class="secret-message" aria-live="polite"></span>
               </div>
               <button type="button" id="loadDataBtn" class="btn charamake-hidden" tabindex="-1" hidden>JSONを再読込</button>
-              <button type="button" id="loadCharacterBtn" class="btn">キャラ読込</button>
-              <button type="button" id="saveCharacterBtn" class="btn">キャラ保存</button>
-              <button type="button" id="exportPngBtn" class="btn">PNG出力</button>
+              <div class="charamake-toolbar-file-actions" role="group" aria-label="キャラの読込・保存・出力">
+                <button type="button" id="loadCharacterBtn" class="btn">キャラ読込</button>
+                <button type="button" id="saveCharacterBtn" class="btn">キャラ保存</button>
+                <button type="button" id="exportPngBtn" class="btn">PNG出力</button>
+              </div>
             </div>
           </div>
 
@@ -135,10 +137,11 @@
                 <div class="random-bar-history">
                   <button type="button" id="undoBtn" class="btn btn-small" title="戻す（Ctrl+Z）" disabled>戻す</button>
                   <button type="button" id="redoBtn" class="btn btn-small" title="やり直す（Ctrl+Y）" disabled>やり直す</button>
+                  <button type="button" id="resetInitialBtn" class="btn btn-small" title="パーツと固定を初回表示と同じ状態に戻す">初期</button>
                 </div>
                 <div class="random-bar-locks">
-                  <span id="lockSummary" class="random-lock-summary">固定 0 件</span>
-                  <button type="button" id="clearLocksBtn" class="btn btn-small" disabled>すべて解除</button>
+                  <button type="button" id="lockSummary" class="random-lock-summary" disabled
+                    aria-label="固定はありません">固定0件</button>
                 </div>
               </div>
             </section>

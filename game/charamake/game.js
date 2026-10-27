@@ -45,7 +45,7 @@ const elements = {
     undoBtn: document.getElementById('undoBtn'),
     redoBtn: document.getElementById('redoBtn'),
     lockSummary: document.getElementById('lockSummary'),
-    clearLocksBtn: document.getElementById('clearLocksBtn'),
+    resetInitialBtn: document.getElementById('resetInitialBtn'),
     categoryRandomBtn: document.getElementById('categoryRandomBtn')
 };
 
@@ -185,7 +185,8 @@ function setupEventListeners() {
     if (elements.randomAllBtn) elements.randomAllBtn.addEventListener('click', randomizeAll);
     if (elements.undoBtn) elements.undoBtn.addEventListener('click', undo);
     if (elements.redoBtn) elements.redoBtn.addEventListener('click', redo);
-    if (elements.clearLocksBtn) elements.clearLocksBtn.addEventListener('click', clearAllLocks);
+    if (elements.lockSummary) elements.lockSummary.addEventListener('click', clearAllLocks);
+    if (elements.resetInitialBtn) elements.resetInitialBtn.addEventListener('click', resetToInitialAccessState);
     if (elements.categoryRandomBtn) {
         elements.categoryRandomBtn.addEventListener('click', () => {
             if (state.currentCategory) randomizeCategory(state.currentCategory);

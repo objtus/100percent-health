@@ -385,6 +385,41 @@ function clearAllLocks() {
     onLocksChanged();
 }
 
+function resetLocksToInitialAccess() {
+    setLockedCategories(getDefaultLocks());
+    setLockedColorGroups([]);
+    saveLocksToStorage();
+    saveColorLocksToStorage();
+}
+
+/** 初回アクセス時と同じパーツ・固定・色グループに戻す（履歴も消す） */
+function resetToInitialAccessState() {
+    if (!state.partsData) return;
+
+    resetDependencyFeedSnapshot();
+    state.selectedParts = {};
+    state.selectedColors = {};
+    state.customColors = {};
+    state.selectedSide = {};
+    state.colorGroupPresets = {};
+    state.colorGroupCustom = {};
+    state.multiSelectActive = {};
+    state.colorSettingsPart = null;
+
+    resetLocksToInitialAccess();
+    clearHistory();
+    initializeDefaultSelections();
+    rebuildColorGroupsFromPartColors();
+    processDependencies();
+    ensureCurrentCategoryVisible();
+    renderCategories();
+    renderParts();
+    updatePreview({ transition: true });
+    syncClockTick();
+    if (window.CharamakeImagePreload) CharamakeImagePreload.warmCurrentSelection();
+    updateRandomBar();
+}
+
 function updateRandomBar() {
     const count = state.lockedCategories.size;
     const colorCount = state.lockedColorGroups.size;
@@ -400,15 +435,24 @@ function updateRandomBar() {
         elements.randomAllBtn.disabled = !window.CharamakeRandomize;
     }
     if (elements.lockSummary) {
+        const hasLocks = count > 0 || colorCount > 0;
         const visible = colorCount > 0
             ? `固定${count}・色${colorCount}`
             : `固定${count}件`;
         const measure = `固定${count}・色${colorCount || 1}`;
+        const actionLabel = 'すべて解除';
+        elements.lockSummary.disabled = !hasLocks;
+        elements.lockSummary.setAttribute(
+            'aria-label',
+            hasLocks ? `${visible}。クリックで${actionLabel}` : '固定はありません'
+        );
+        elements.lockSummary.title = hasLocks ? actionLabel : '';
         elements.lockSummary.innerHTML =
             `<span class="random-lock-summary-measure" aria-hidden="true">${measure}</span>`
-            + `<span class="random-lock-summary-text">${visible}</span>`;
+            + `<span class="random-lock-summary-measure random-lock-summary-measure--action" aria-hidden="true">${actionLabel}</span>`
+            + `<span class="random-lock-summary-text">${visible}</span>`
+            + `<span class="random-lock-summary-action" aria-hidden="true">${actionLabel}</span>`;
     }
-    if (elements.clearLocksBtn) elements.clearLocksBtn.disabled = count === 0 && colorCount === 0;
     if (elements.undoBtn) elements.undoBtn.disabled = state.undoStack.length === 0;
     if (elements.redoBtn) elements.redoBtn.disabled = state.redoStack.length === 0;
 }
