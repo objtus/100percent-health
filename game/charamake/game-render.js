@@ -75,8 +75,26 @@ function syncClockTick() {
         clockTickInterval = null;
     }
     if (hasActiveDatetimeOverlay()) {
-        clockTickInterval = setInterval(() => updatePreview(), 1000);
+        clockTickInterval = setInterval(() => repaintPreviewClockOverlay(), 1000);
     }
+}
+
+/** 時計文字だけ更新（1s ごとの full compose / プレビュー pump を避ける） */
+function repaintPreviewClockOverlay() {
+    if (!hasActiveDatetimeOverlay() || !elements.previewCanvas) return;
+    ensureClockFont().then(() => {
+        const canvas = elements.previewCanvas;
+        const ctx = canvas.getContext('2d');
+        if (!characterSnapshotReady || !characterSnapshotCanvas) {
+            updatePreview();
+            return;
+        }
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        ctx.drawImage(characterSnapshotCanvas, 0, 0);
+        drawDynamicOverlays(ctx);
+    });
 }
 
 function formatDateTimeParts(date, timeZone) {
@@ -189,9 +207,41 @@ function drawDynamicOverlays(ctx) {
     ctx.restore();
 }
 
-let previewScheduled = false;
+let previewPumpRunning = false;
+let previewRunGeneration = 0;
 let previewGeneration = 0;
 let pendingPreviewWantsTransition = false;
+
+/** 合成がこれ以上かかったらクロスフェードしない（遅延後に古いスナップショットを長く見せない） */
+const PREVIEW_COMPOSE_SLOW_MS = 150;
+
+/** localStorage.setItem('charamake.previewProfile','1') でクリック〜描画の内訳を console に出す */
+function isCharamakePreviewProfile() {
+    try {
+        return localStorage.getItem('charamake.previewProfile') === '1';
+    } catch (_) {
+        return false;
+    }
+}
+
+const charamakePreviewProfile = { randomApplyAt: 0, randomOpId: 0, marks: {} };
+
+function charamakeProfileMark(label) {
+    if (!isCharamakePreviewProfile()) return;
+    charamakePreviewProfile.marks[label] = performance.now();
+}
+
+function charamakeProfileLog(event, detail) {
+    if (!isCharamakePreviewProfile()) return;
+    console.log('[charamake preview]', event, detail);
+}
+
+function charamakeProfileDelta(from, to) {
+    const a = charamakePreviewProfile.marks[from];
+    const b = charamakePreviewProfile.marks[to];
+    if (a == null || b == null) return null;
+    return Math.round(b - a);
+}
 
 const PREVIEW_EASE_STOPS = [0, 0.45, 0.48, 0.52, 0.55, 1];
 let characterSnapshotCanvas = null;
@@ -294,6 +344,13 @@ function paintPreviewInstant(ctx, canvas, composed) {
     saveCharacterSnapshot(composed, canvas.width, canvas.height);
 }
 
+function setPreviewComposeBusy(busy) {
+    const wrap = elements.previewCanvas && elements.previewCanvas.parentElement;
+    if (!wrap) return;
+    wrap.classList.toggle('preview-compose-busy', !!busy);
+    wrap.setAttribute('aria-busy', busy ? 'true' : 'false');
+}
+
 function shouldUsePreviewTransition(options, layers) {
     if (!options || !options.transition) return false;
     if (!previewTransitionAllowed()) return false;
@@ -337,7 +394,10 @@ function runPreviewCrossfade(generation, composed, canvas, ctx) {
                 previewFadeRaf = requestAnimationFrame(step);
                 return;
             }
+            // 最終フレーム: 旧スナップショットを下に敷いたまま alpha=1 で重ねると、
+            // 新合成の透明画素から古いパーツが透けて残る（時計再描画まで消えないことがある）
             previewFadeRaf = null;
+            paintPreviewFrame(ctx, canvas, composed);
             saveCharacterSnapshot(composed, w, h);
             resolve();
         }
@@ -345,17 +405,31 @@ function runPreviewCrossfade(generation, composed, canvas, ctx) {
     });
 }
 
-// プレビュー更新。同じ操作内の複数回呼び出しは 1 回の描画にまとめる
+// プレビュー更新。進行中の合成がある間に来た要求は世代だけ進め、描画は最新 1 回にまとめる
 function updatePreview(options = {}) {
     if (options && options.transition) pendingPreviewWantsTransition = true;
-    if (previewScheduled) return;
-    previewScheduled = true;
-    previewDrawPromise = Promise.resolve().then(() => {
-        previewScheduled = false;
-        const opts = { transition: pendingPreviewWantsTransition };
-        pendingPreviewWantsTransition = false;
-        return renderPreview(opts);
-    });
+    previewRunGeneration++;
+    schedulePreviewPump();
+}
+
+function schedulePreviewPump() {
+    if (previewPumpRunning) return;
+    previewPumpRunning = true;
+    previewDrawPromise = previewDrawPromise.then(() => runPreviewPump());
+}
+
+async function runPreviewPump() {
+    try {
+        while (true) {
+            const runGen = previewRunGeneration;
+            const opts = { transition: pendingPreviewWantsTransition };
+            pendingPreviewWantsTransition = false;
+            await renderPreview(opts);
+            if (runGen === previewRunGeneration) break;
+        }
+    } finally {
+        previewPumpRunning = false;
+    }
 }
 
 // 合成とフォント待ちが終わってから表示（能動操作時は短いクロスフェード、時計は毎フレーム上描き）
@@ -379,16 +453,65 @@ function renderPreview(options = {}) {
     const layers = collectAllLayers();
     layers.sort((a, b) => a.zIndex - b.zIndex);
     const needsClockFont = hasActiveDatetimeOverlay();
+    const showComposeBusy = !!(options && options.transition);
+    if (showComposeBusy) setPreviewComposeBusy(true);
 
+    charamakeProfileMark('renderPreviewStart');
+    const composeStarted = performance.now();
+    const drawableCount = layers.filter(isDrawableLayer).length;
     return Promise.all([
         composeLayers(layers, canvas.width, canvas.height),
         needsClockFont ? ensureClockFont() : null
     ]).then(([composed]) => {
-        if (generation !== previewGeneration) return;
-        if (shouldUsePreviewTransition(options, layers) && composed) {
-            return runPreviewCrossfade(generation, composed, canvas, ctx);
+        if (generation !== previewGeneration) {
+            if (isCharamakePreviewProfile()) {
+                charamakeProfileLog('renderPreviewSkipped', {
+                    reason: 'superseded',
+                    generation,
+                    previewGeneration
+                });
+            }
+            return;
+        }
+        const composeMs = performance.now() - composeStarted;
+        charamakeProfileMark('composeDone');
+        let useTransition = !!(composed && shouldUsePreviewTransition(options, layers));
+        if (useTransition && composeMs > PREVIEW_COMPOSE_SLOW_MS) useTransition = false;
+        const profileOpId = charamakePreviewProfile.randomOpId;
+        const paint = () => {
+            charamakeProfileMark('paintDone');
+            if (!isCharamakePreviewProfile()) return;
+            const fromRandom = charamakePreviewProfile.randomApplyAt;
+            const sinceApply = fromRandom ? Math.round(performance.now() - fromRandom) : null;
+            const baseDetail = {
+                randomOpId: profileOpId,
+                drawableLayers: drawableCount,
+                composeMs: Math.round(composeMs),
+                usedTransition: useTransition,
+                sinceRandomApplyMs: profileOpId === charamakePreviewProfile.randomOpId ? sinceApply : null,
+                queueToComposeMs: charamakeProfileDelta('randomApply', 'renderPreviewStart'),
+                paintMs: charamakeProfileDelta('composeDone', 'paintDone')
+            };
+            charamakeProfileLog('renderPreview (canvas書込み完了)', baseDetail);
+            // JS で canvas に描いた時点と、ブラウザが画面に載せる時点は別（クロスフェード中はさらに遅れる）
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    charamakeProfileLog('renderPreview (画面反映目安)', {
+                        ...baseDetail,
+                        sinceRandomApplyMs: profileOpId === charamakePreviewProfile.randomOpId && fromRandom
+                            ? Math.round(performance.now() - fromRandom)
+                            : null
+                    });
+                });
+            });
+        };
+        if (useTransition) {
+            return runPreviewCrossfade(generation, composed, canvas, ctx).then(paint);
         }
         paintPreviewInstant(ctx, canvas, composed);
+        paint();
+    }).finally(() => {
+        if (generation === previewGeneration) setPreviewComposeBusy(false);
     });
 }
 
@@ -570,7 +693,13 @@ function composeLayers(layers, width, height) {
     const key = JSON.stringify([width, height, validLayers.map(l => [l.file, l.blendMode || '', l.colorSettings || null])]);
     if (composedCache.key === key) return Promise.resolve(composedCache.canvas);
 
+    const loadStarted = isCharamakePreviewProfile() ? performance.now() : 0;
     return Promise.all(validLayers.map(loadLayerRaster)).then(items => {
+        const loadMs = isCharamakePreviewProfile() ? performance.now() - loadStarted : 0;
+        const syncStarted = isCharamakePreviewProfile() ? performance.now() : 0;
+        let blendTintLayers = 0;
+        let hueTintLayers = 0;
+
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
@@ -578,10 +707,24 @@ function composeLayers(layers, width, height) {
 
         items.forEach(({ img, layer }) => {
             if (!img) return;
+            const cs = layer.colorSettings;
+            if (cs && cs.blend && cs.color) blendTintLayers++;
+            if (cs && cs.hueShift !== undefined && cs.hueShift !== 0 && cs.hueOpacity > 0) hueTintLayers++;
             ctx.globalCompositeOperation = layer.blendMode || 'source-over';
             ctx.drawImage(getLayerSource(img, layer.colorSettings, width, height), 0, 0);
         });
         ctx.globalCompositeOperation = 'source-over';
+
+        if (isCharamakePreviewProfile()) {
+            charamakeProfileLog('composeLayers (オフスクリーン合成のみ・プレビュー未更新)', {
+                drawableLayers: validLayers.length,
+                loadMs: Math.round(loadMs),
+                syncDrawMs: Math.round(performance.now() - syncStarted),
+                blendTintLayers,
+                hueTintLayers,
+                cacheHit: false
+            });
+        }
 
         composedCache = { key, canvas };
         return canvas;

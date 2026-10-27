@@ -122,7 +122,41 @@ function countChangedVisibleCategories(before, after) {
     }).length;
 }
 
+let randomPresentationScheduled = false;
+
+/** 連続ランダム時は DOM / プレビュー更新を 1 フレームにまとめる（state と履歴は即時） */
+function scheduleRandomPresentation() {
+    if (randomPresentationScheduled) return;
+    randomPresentationScheduled = true;
+    requestAnimationFrame(() => {
+        randomPresentationScheduled = false;
+        charamakeProfileMark('randomRafStart');
+        ensureCurrentCategoryVisible();
+        renderCategories();
+        charamakeProfileMark('afterRenderCategories');
+        renderParts();
+        charamakeProfileMark('afterRenderParts');
+        if (isCharamakePreviewProfile()) {
+            charamakeProfileLog('randomUi', {
+                randomOpId: charamakePreviewProfile.randomOpId,
+                sinceApplyMs: charamakePreviewProfile.randomApplyAt
+                    ? Math.round(performance.now() - charamakePreviewProfile.randomApplyAt)
+                    : null,
+                rafWaitMs: charamakeProfileDelta('randomApply', 'randomRafStart'),
+                renderCategoriesMs: charamakeProfileDelta('randomRafStart', 'afterRenderCategories'),
+                renderPartsMs: charamakeProfileDelta('afterRenderCategories', 'afterRenderParts')
+            });
+        }
+        syncClockTick();
+    });
+}
+
 function applyRandomResult(result, before) {
+    if (isCharamakePreviewProfile()) {
+        charamakePreviewProfile.randomOpId += 1;
+        charamakePreviewProfile.randomApplyAt = performance.now();
+        charamakeProfileMark('randomApply');
+    }
     state.selectedParts = result.selectedParts;
     state.previouslyUnlockedCategories = new Set(result.unlockedCategories);
     processDependencies();
@@ -139,11 +173,8 @@ function applyRandomResult(result, before) {
     (result.targetCategoryIds || []).forEach(syncMultiSelectActive);
 
     state.colorSettingsPart = null;
-    ensureCurrentCategoryVisible();
-    renderCategories();
-    renderParts();
     updatePreview({ transition: true });
-    syncClockTick();
+    scheduleRandomPresentation();
     commitHistory(before);
     return countChangedVisibleCategories(before, captureSnapshot());
 }

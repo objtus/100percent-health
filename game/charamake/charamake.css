@@ -330,6 +330,11 @@ body.charamake-page {
   margin: 0 auto;
 }
 
+#charamake-app .preview-canvas-wrapper.preview-compose-busy #previewCanvas {
+  opacity: 0.82;
+  transition: opacity var(--cm-duration-interaction) var(--cm-ease-interaction);
+}
+
 #charamake-app #previewCanvas {
   display: block;
   width: auto;
